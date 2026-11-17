@@ -636,11 +636,28 @@ export function AdultDashboard() {
                     <span className="text-stone-500">Thứ bậc</span>
                     <span className="text-stone-200 text-right">{life.family.birthOrderLabel}</span>
                   </div>
+                  {life.family.familyAssetsSummary && life.family.familyAssetsSummary.length > 0 && (
+                    <div className="pt-1 border-t border-stone-800/70">
+                      <div className="text-stone-500 mb-1">Gia sản gốc</div>
+                      <div className="flex flex-wrap gap-1">
+                        {life.family.familyAssetsSummary.map((item, idx) => (
+                          <span
+                            key={idx}
+                            className="px-1.5 py-0.5 rounded bg-stone-950 border border-stone-800 text-[10px] text-stone-300"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
               <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
-                {life.npcs.map((npc) => (
+                {life.npcs
+                  .filter((npc) => npc.age === undefined || npc.age + age >= 0)
+                  .map((npc) => (
                   <div
                     key={npc.id}
                     className="flex items-center justify-between text-xs p-2 rounded-lg bg-stone-950/60 border border-stone-800/70"
@@ -1084,7 +1101,9 @@ export function AdultDashboard() {
               </button>
             </div>
             <div className="space-y-2 max-h-80 overflow-y-auto">
-              {life.npcs.map((npc) => (
+              {life.npcs
+                .filter((npc) => npc.age === undefined || npc.age + age >= 0)
+                .map((npc) => (
                 <div
                   key={npc.id}
                   className="flex items-center justify-between p-3 rounded-lg bg-stone-950 border border-stone-800 text-xs"

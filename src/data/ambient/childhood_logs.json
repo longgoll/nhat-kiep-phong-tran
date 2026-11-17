@@ -1,9 +1,29 @@
 {
   "infancyMilestones": [
     {
+      "day": 150,
+      "text": "Trong căn nhà vắng bóng cha, chỉ có mẹ lặng lẽ ru bạn ngủ qua những đêm gió lạnh.",
+      "tone": "negative",
+      "conditions": {
+        "has_flags": [
+          "mo_coi_cha"
+        ]
+      }
+    },
+    {
       "day": 240,
       "text": "Bạn đã biết lẫy và ê a gọi tên cha mẹ.",
       "tone": "positive"
+    },
+    {
+      "day": 300,
+      "text": "Nhũ mẫu bế bạn dạo quanh hành lang sơn son thếp vàng, tiếng bước chân thái giám khẽ khàng như gió thoảng.",
+      "tone": "neutral",
+      "conditions": {
+        "origin_in": [
+          "hoang_toc"
+        ]
+      }
     },
     {
       "day": 420,
@@ -11,9 +31,39 @@
       "tone": "milestone"
     },
     {
+      "day": 480,
+      "text": "Bạn chập chững bước qua ngưỡng cửa thư phòng, tò mò nhìn những cuộn văn thư và nghiên mực đá của cha.",
+      "tone": "positive",
+      "conditions": {
+        "origin_in": [
+          "quan_lai"
+        ]
+      }
+    },
+    {
       "day": 600,
       "text": "Bạn nói được từ đầu tiên rõ ràng, đôi mắt sáng long lanh.",
       "tone": "positive"
+    },
+    {
+      "day": 660,
+      "text": "Sân gạch rộng thênh thang đầy thóc phơi vàng óng là nơi bạn tập chạy mỗi buổi sáng.",
+      "tone": "neutral",
+      "conditions": {
+        "origin_in": [
+          "dia_chu"
+        ]
+      }
+    },
+    {
+      "day": 810,
+      "text": "Tiếng đục gỗ, quay bàn xoay hay tiếng búa gõ nhịp nhàng ngoài xưởng sớm trở thành âm thanh quen thuộc quanh nôi bạn.",
+      "tone": "positive",
+      "conditions": {
+        "origin_in": [
+          "thu_cong"
+        ]
+      }
     },
     {
       "day": 900,
@@ -21,14 +71,74 @@
       "tone": "neutral"
     },
     {
+      "day": 990,
+      "text": "Bờ ao, lũy tre và mùi rạ mới sau vụ gặt là cả thế giới tuổi thơ bình dị của bạn.",
+      "tone": "neutral",
+      "conditions": {
+        "origin_in": [
+          "ban_nong"
+        ]
+      }
+    },
+    {
+      "day": 1140,
+      "text": "Nơi cung viện hẻo lánh ít người lui tới, bữa cơm hàng ngày của hai mẹ con bạn chỉ đơn sơ vài món nguội lạnh.",
+      "tone": "negative",
+      "conditions": {
+        "origin_in": [
+          "hoang_toc"
+        ],
+        "has_flags": [
+          "that_sung_cung_dinh"
+        ]
+      }
+    },
+    {
       "day": 1200,
       "text": "Tối nào trước khi ngủ, mẹ cũng kể chuyện cổ tích cho bạn nghe.",
       "tone": "positive"
     },
     {
+      "day": 1320,
+      "text": "Thấy mẹ tảo tần một mình lo toan từ sáng sớm, bạn nhỏ xíu đã biết chạy lại đấm lưng cho mẹ đỡ mỏi.",
+      "tone": "positive",
+      "conditions": {
+        "has_flags": [
+          "mo_coi_cha"
+        ],
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu"
+        ]
+      }
+    },
+    {
+      "day": 1500,
+      "text": "Từ bé bạn đã quen với lễ nghi chốn quyền quý, biết khoanh tay cúi chào mỗi khi có khách lớn ghé phủ.",
+      "tone": "neutral",
+      "conditions": {
+        "origin_in": [
+          "quan_lai",
+          "hoang_toc"
+        ]
+      }
+    },
+    {
       "day": 1560,
       "text": "Bạn bắt đầu tò mò với thế giới bên ngoài, hay chạy quanh sân hỏi đủ chuyện.",
       "tone": "neutral"
+    },
+    {
+      "day": 1710,
+      "text": "Chiều muộn, bạn theo lũ trẻ chân đất ra đầu ngõ đón mẹ đi chợ về với gói bỏng gạo thơm lừng.",
+      "tone": "positive",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong"
+        ]
+      }
     },
     {
       "day": 1890,
@@ -46,12 +156,51 @@
       "text": "Buổi tối bên ánh đèn dầu, bạn chăm chỉ luyện viết từng nét chữ ngay ngắn."
     },
     {
+      "focusId": "hoc_tap",
+      "text": "Trong thư viện phủ đệ thơm mùi trầm hương, bạn miệt mài đọc Tứ Thư Ngũ Kinh dưới sự chỉ bảo của thầy đồ riêng.",
+      "conditions": {
+        "origin_in": [
+          "hoang_toc",
+          "quan_lai"
+        ]
+      }
+    },
+    {
+      "focusId": "hoc_tap",
+      "text": "Ngoài giờ học chữ thánh hiền với ông đồ, bạn còn tập nhẩm tính sổ sách thu tô cho điền trang.",
+      "conditions": {
+        "origin_in": [
+          "dia_chu"
+        ]
+      }
+    },
+    {
+      "focusId": "hoc_tap",
+      "text": "Không có sách quý, bạn lấy que tre viết chữ xuống nền đất sân nhà để ôn lại từng mặt chữ mới học.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong"
+        ]
+      }
+    },
+    {
       "focusId": "ban_be",
       "text": "Bạn cùng đám trẻ trong xóm thả diều, chơi ô ăn quan rộn rã cả buổi chiều."
     },
     {
       "focusId": "ban_be",
       "text": "Lũ bạn đồng niên kéo nhau ra bờ đê hóng gió và chia nhau trái ổi vườn nhà."
+    },
+    {
+      "focusId": "ban_be",
+      "text": "Các công tử, tiểu thư con nhà danh giá tụ họp trong hoa viên làm thơ, thả diều và bàn chuyện kinh thành.",
+      "conditions": {
+        "origin_in": [
+          "dia_chu",
+          "quan_lai"
+        ]
+      }
     },
     {
       "focusId": "giup_nha",
@@ -62,6 +211,33 @@
       "text": "Thấy bạn chăm chỉ đỡ đần việc nhà, cha mẹ mỉm cười đầy tự hào."
     },
     {
+      "focusId": "giup_nha",
+      "text": "Thương mẹ góa bụa sớm hôm vất vả, bạn cố gắng làm hết phần việc nặng nhẹ trong nhà để mẹ bớt nhọc nhằn.",
+      "conditions": {
+        "has_flags": [
+          "mo_coi_cha"
+        ]
+      }
+    },
+    {
+      "focusId": "giup_nha",
+      "text": "Bạn ngồi phụ cha mẹ phân loại nguyên liệu, đánh bóng đồ thủ công và trông chừng sạp hàng mỗi khi đông khách.",
+      "conditions": {
+        "origin_in": [
+          "thu_cong"
+        ]
+      }
+    },
+    {
+      "focusId": "giup_nha",
+      "text": "Sáng sớm bạn lùa đàn vịt ra đồng, chiều về lại cắt cỏ cho trâu và gom rơm khô vào bếp.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong"
+        ]
+      }
+    },
+    {
       "focusId": "ren_vo",
       "text": "Sáng sớm bạn ra sân hít thở khí trời, tập vài đường quyền cơ bản cho dẻo dai."
     },
@@ -70,12 +246,41 @@
       "text": "Bạn chạy quanh bờ ao rèn sức bền, mồ hôi ướt đẫm nhưng tinh thần rất sảng khoái."
     },
     {
+      "focusId": "ren_vo",
+      "text": "Bạn tập cưỡi ngựa gỗ, kéo cung nhẹ và luyện thân pháp cùng các võ sư được mời về phủ.",
+      "conditions": {
+        "origin_in": [
+          "hoang_toc",
+          "quan_lai"
+        ]
+      }
+    },
+    {
       "focusId": "so_thich",
       "text": "Bạn say sưa với thú vui riêng, quên cả thời gian trôi qua."
     },
     {
       "focusId": "so_thich",
       "text": "Những giờ phút thư thái giúp tâm hồn bạn thêm nhẹ nhàng và sáng tạo."
+    },
+    {
+      "focusId": "so_thich",
+      "text": "Bạn dạo bước trong ngự hoa viên, ngắm đàn cá chép dưới hồ sen và tập vẽ tranh thủy mặc.",
+      "conditions": {
+        "origin_in": [
+          "hoang_toc"
+        ]
+      }
+    },
+    {
+      "focusId": "so_thich",
+      "text": "Ngồi dưới gốc đa đầu làng, bạn khéo léo thắt cào cào lá dừa và đẽo con quay gỗ chơi suốt buổi chiều.",
+      "conditions": {
+        "origin_in": [
+          "thu_cong",
+          "ban_nong"
+        ]
+      }
     }
   ]
 }

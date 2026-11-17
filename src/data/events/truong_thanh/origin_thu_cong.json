@@ -1,0 +1,471 @@
+[
+  {
+    "id": "evt_adult_exp_thu_cong_guild",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lập Phường Hội Thợ Nghề",
+    "conditions": {
+      "min_age": 16,
+      "origin_in": [
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_craft_trade": 15
+          },
+          "addWeight": 25
+        },
+        {
+          "conditions": {
+            "has_any_trait": [
+              "kheo_tay",
+              "tham_vong"
+            ]
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Các bác thợ lành nghề quanh phố chợ đang bàn chuyện gom góp vốn liếng lập thành một phường hội chính thức để giữ giá hàng, đỡ đần lúc ốm đau và đối phó với đám lính lệ nhũng nhiễu.",
+    "choices": [
+      {
+        "label": "Đứng ra bỏ vốn chủ trì, nhận chức Trùm Phường (Cần Thủ công/Thương >= 15, -400 đồng)",
+        "conditions": {
+          "min_craft_trade": 15,
+          "min_copper": 400
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 50
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Anh em thợ nghề đồng lòng suy tôn bạn làm Trùm Phường. Đơn hàng từ các phủ lân cận đổ về tấp nập, tiếng tăm phường hội vang xa.",
+            "effects": {
+              "copper": -400,
+              "craft_trade": 6,
+              "fame": 10,
+              "relationships": 10,
+              "happiness": 10,
+              "add_flags": [
+                "trum_phuong_tho"
+              ],
+              "milestone_title": "Lập phường hội thợ nghề, giữ chức Trùm Phường"
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Phường hội thành lập thuận lợi nhưng mấy tay thợ cả lớn tuổi vẫn ngấm ngầm ganh tị, khiến bạn phải mất công dàn xếp.",
+            "effects": {
+              "copper": -400,
+              "craft_trade": 4,
+              "fame": 5,
+              "relationships": 4,
+              "happiness": -4,
+              "add_flags": [
+                "trum_phuong_tho"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Góp 150 đồng làm thành viên chính thức của phường hội",
+        "conditions": {
+          "min_copper": 150
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Gia nhập phường hội giúp bạn có chỗ dựa vững chắc, học hỏi thêm nhiều bí quyết nghề gia truyền và có thêm bạn hàng tin cậy.",
+            "effects": {
+              "copper": -150,
+              "craft_trade": 4,
+              "relationships": 6,
+              "happiness": 5,
+              "add_flags": [
+                "thanh_vien_phuong_tho"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo từ chối, giữ cửa hàng làm ăn độc lập",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn không muốn vướng vào chuyện hội hè phức tạp nên tiếp tục tự xoay xở. Mấy người hàng xóm có phần dè dặt hơn trước.",
+            "effects": {
+              "relationships": -3,
+              "happiness": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_thu_cong_merchant_order",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 480,
+    "title": "Thương Nhân Phương Xa Đặt Lô Hàng Lớn",
+    "conditions": {
+      "min_age": 15,
+      "origin_in": [
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 32,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_craft_trade": 18
+          },
+          "addWeight": 20
+        },
+        {
+          "conditions": {
+            "has_any_flag": [
+              "trum_phuong_tho",
+              "thanh_vien_phuong_tho"
+            ]
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Một đoàn buôn đường thủy từ tận trấn ngoài cập bến, tìm đến tận cửa hiệu hỏi đặt một lô hàng lớn với giá cao ngất, nhưng yêu cầu giao đủ hàng tinh xảo trong vòng nửa tháng.",
+    "choices": [
+      {
+        "label": "Nhận trọn đơn lớn và tự tay chế tác hàng thượng hạng (Cần Thủ công/Thương >= 20, -300 đồng vốn nguyên liệu)",
+        "conditions": {
+          "min_craft_trade": 20,
+          "min_copper": 300
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "has_any_trait": [
+                      "kheo_tay"
+                    ]
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Lô hàng hoàn thành đúng hẹn, đường nét tinh xảo khiến vị đại thương trầm trồ khen ngợi, trả sòng phẳng cả vốn lẫn lãi lớn!",
+            "effects": {
+              "copper": 1100,
+              "craft_trade": 5,
+              "fame": 8,
+              "stamina": -25,
+              "happiness": 12
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Gần ngày giao hàng gặp mưa ẩm làm hỏng mất một phần mẻ hàng, bạn phải thức trắng đêm bù đắp nên lãi thu về chỉ đủ hòa vốn công sức.",
+            "effects": {
+              "copper": 180,
+              "craft_trade": 2,
+              "health": -6,
+              "stamina": -35
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhận phần vừa sức, thuê thêm thợ phụ làm hàng trung bình (Cần Thủ công/Thương >= 10)",
+        "conditions": {
+          "min_craft_trade": 10
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Chia việc hợp lý giúp hàng giao kịp chuyến thuyền. Thương nhân hài lòng trả tiền mặt và hẹn mùa sau quay lại.",
+            "effects": {
+              "copper": 420,
+              "craft_trade": 3,
+              "relationships": 4
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Thợ phụ làm ẩu khiến khách hàng bắt bẻ trừ bớt tiền công, bù lại bạn giữ được mối làm ăn lâu dài.",
+            "effects": {
+              "copper": 140,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Từ chối khéo vì sợ không kịp tiến độ giao hàng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giữ chữ tín không nhận liều khi chưa đủ lực. Vị thương nhân tuy tiếc nuối nhưng vẫn mua lẻ ít món đồ bày sẵn.",
+            "effects": {
+              "copper": 75,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_thu_cong_workshop_fire",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 600,
+    "title": "Hỏa Hoạn Tại Xưởng Nghề",
+    "conditions": {
+      "min_age": 15,
+      "origin_in": [
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": [
+        {
+          "conditions": {
+            "season_in": [
+              "summer",
+              "winter"
+            ]
+          },
+          "addWeight": 12
+        },
+        {
+          "conditions": {
+            "housing_in": [
+              "nha_tranh",
+              "gam_cau"
+            ]
+          },
+          "addWeight": 10
+        }
+      ]
+    },
+    "description": "Nửa đêm gió bấc thổi mạnh, tàn lửa từ lò nung bén vào đống gỗ khô và phên nứa khiến góc xưởng nghề bùng cháy dữ dội!",
+    "choices": [
+      {
+        "label": "Liều mình lao vào biển lửa cứu hòm tiền và lô hàng quý",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_health": 60
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Khói lửa mù mịt khiến bạn bỏng rát tay chân và ho sặc sụa, nhưng cuối cùng cũng ôm được hòm tiền cùng đồ nghề quý thoát ra ngoài.",
+            "effects": {
+              "health": -22,
+              "stamina": -30,
+              "copper": -120,
+              "fame": 3,
+              "happiness": -6
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Một cây xà cháy sập xuống chắn lối, bạn bị thương nặng mà vẫn không cứu kịp đống hàng, thiệt hại cả người lẫn của.",
+            "effects": {
+              "health": -32,
+              "copper": -450,
+              "happiness": -15
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bỏ của chạy lấy người, hô hoán hàng xóm dập lửa chống cháy lan",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giữ được tính mạng an toàn và giúp dập lửa không lan sang nhà lân cận. Tiền hàng cháy rụi gần hết, nhưng hàng xóm cảm kích tấm lòng biết nghĩ cho chung quanh.",
+            "effects": {
+              "copper": -550,
+              "relationships": 6,
+              "happiness": -10
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_thu_cong_magistrate_repair",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Lên Phủ Huyện Sửa Đồ Quý Cho Quan Lớn",
+    "conditions": {
+      "min_age": 16,
+      "origin_in": [
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_craft_trade": 15
+          },
+          "addWeight": 20
+        },
+        {
+          "conditions": {
+            "min_fame": 15
+          },
+          "addWeight": 12
+        }
+      ]
+    },
+    "description": "Nha sai mang lệnh bài tới tận nhà triệu bạn lên dinh phủ huyện. Nghe nói chiếc bình phong khảm trai và bộ đồ cổ trong thư phòng quan lớn bị nứt vỡ, cần thợ giỏi tu sửa gấp trước ngày tiếp sứ.",
+    "choices": [
+      {
+        "label": "Dốc toàn bộ tâm huyết trổ tài phục chế tinh xảo (Cần Thủ công/Thương >= 18)",
+        "conditions": {
+          "min_craft_trade": 18
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 85,
+              "modifiers": []
+            },
+            "resultText": "Vết nứt được hàn gắn tài tình không lộ dấu vết. Quan lớn vô cùng hài lòng, thưởng hậu hĩnh và ban chữ khen ngợi treo trước cửa hiệu.",
+            "effects": {
+              "copper": 750,
+              "fame": 12,
+              "craft_trade": 5,
+              "relationships": 8,
+              "happiness": 10
+            }
+          },
+          {
+            "weight": {
+              "base": 15,
+              "modifiers": []
+            },
+            "resultText": "Dù sửa được đẹp mắt nhưng lính hầu trong phủ vòi vĩnh tiền trà nước mất một khoản kha khá.",
+            "effects": {
+              "copper": 350,
+              "fame": 6,
+              "craft_trade": 3,
+              "happiness": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhận lời lên phủ làm cẩn trọng hết sức mình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": []
+            },
+            "resultText": "Bạn thức hai đêm liền sửa xong món đồ tuy chưa thật xuất sắc nhưng tròn vai. Quan huyện trả công sòng phẳng rồi cho về.",
+            "effects": {
+              "copper": 260,
+              "craft_trade": 3,
+              "stamina": -20
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Lỡ tay làm xước một góc hoa văn quý! Quan lớn nổi giận đuổi cổ về, không trả tiền công lại còn phạt vạ.",
+            "effects": {
+              "copper": -200,
+              "fame": -5,
+              "happiness": -12
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cáo bệnh từ khước để tránh họa chốn cửa quan",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn gửi ít lễ mọn cáo ốm xin miễn. Đám nha sai càu nhàu đôi câu rồi bỏ đi tìm thợ khác, giữ được sự bình yên cho gia đình.",
+            "effects": {
+              "copper": -60,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

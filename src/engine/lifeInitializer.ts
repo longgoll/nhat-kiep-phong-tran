@@ -11,6 +11,7 @@ import {
   type OriginClass,
 } from '../types/activeLife';
 import { calculateRicePrice } from './economy';
+import { ORIGIN_CORE_CONFIG } from './originConfigs';
 import { generateRandomSeed, mulberry32Next, pickWeightedIndex, randomInt } from './prng';
 
 export const ORIGIN_METADATA: Record<
@@ -301,55 +302,19 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     fullName = `${surname} ${middle} ${pool[nPick.value]}`;
   }
 
-  // 4. Starting family wealth, rice, stats, occupations & circumstances
-  let familyWealthCopper = 40;
-  let health = 70;
-  let happiness = 70;
-  let education = 0;
-  let martial = 0;
-  let craftTrade = 0;
-  let fame = 0;
+  // 4. Starting family wealth, stats, occupations & circumstances (Core Cứng + Core Động)
+  const coreCfg = ORIGIN_CORE_CONFIG[originClass];
+  const wealthRoll = randomInt(prng, coreCfg.wealthRange[0], coreCfg.wealthRange[1]);
+  prng = wealthRoll.nextState;
+  let familyWealthCopper = wealthRoll.value;
 
-  if (originClass === 'ban_nong') {
-    const c = randomInt(prng, 30, 120);
-    prng = c.nextState;
-    familyWealthCopper = c.value;
-    const r = randomInt(prng, 4, 10);
-    prng = r.nextState;
-    health = 75;
-  } else if (originClass === 'thu_cong') {
-    const c = randomInt(prng, 400, 1100);
-    prng = c.nextState;
-    familyWealthCopper = c.value;
-    const r = randomInt(prng, 15, 30);
-    prng = r.nextState;
-    craftTrade = 5;
-  } else if (originClass === 'dia_chu') {
-    const c = randomInt(prng, 5000, 15000);
-    prng = c.nextState;
-    familyWealthCopper = c.value;
-    const r = randomInt(prng, 100, 250);
-    prng = r.nextState;
-    health = 75;
-    education = 5;
-    fame = 5;
-  } else if (originClass === 'quan_lai') {
-    const c = randomInt(prng, 15000, 40000);
-    prng = c.nextState;
-    familyWealthCopper = c.value;
-    const r = randomInt(prng, 200, 500);
-    prng = r.nextState;
-    health = 72;
-    education = 10;
-    fame = 15;
-  } else {
-    const c = randomInt(prng, 80000, 200000);
-    prng = c.nextState;
-    familyWealthCopper = c.value;
-    health = 62;
-    education = 12;
-    fame = 30;
-  }
+  let health = coreCfg.baseStats.health;
+  let happiness = coreCfg.baseStats.happiness;
+  let relationships = coreCfg.baseStats.relationships;
+  let education = coreCfg.baseStats.education;
+  let martial = coreCfg.baseStats.martial;
+  let craftTrade = coreCfg.baseStats.craftTrade;
+  let fame = coreCfg.baseStats.fame;
 
   // Parent occupations
   const fOccList = FATHER_OCCUPATIONS[originClass];
@@ -391,8 +356,49 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
   fame = Math.max(0, fame + (circ.fameDelta ?? 0));
 
   const initialFlags: string[] = [...(circ.extraFlags ?? [])];
-  if (initialFlags.includes('gia_phong_thu_huong')) education += 3;
-  if (initialFlags.includes('gia_phong_vo_hoc')) martial += 3;
+  const initialTraits: string[] = [];
+  const initialInterests: string[] = [...coreCfg.innateInterests];
+  const pushUnique = (arr: string[], val: string) => {
+    if (!arr.includes(val)) arr.push(val);
+  };
+
+  if (initialFlags.includes('gia_phong_thu_huong')) {
+    education += 3;
+    pushUnique(initialTraits, 'ham_hoc');
+    pushUnique(initialInterests, 'kinh_su');
+  }
+  if (initialFlags.includes('gia_phong_vo_hoc')) {
+    martial += 3;
+    pushUnique(initialTraits, 'hieu_dong');
+    pushUnique(initialInterests, 'vo_nghe');
+  }
+  if (
+    (originClass === 'ban_nong' || originClass === 'thu_cong') &&
+    (initialFlags.includes('gia_dinh_mac_no') || initialFlags.includes('mo_coi_cha'))
+  ) {
+    pushUnique(initialTraits, 'kien_cuong');
+  }
+  if (
+    (originClass === 'quan_lai' || originClass === 'hoang_toc') &&
+    (initialFlags.includes('gia_toc_sa_sut') || initialFlags.includes('that_sung_cung_dinh'))
+  ) {
+    pushUnique(initialTraits, 'da_nghi');
+    relationships = Math.max(25, relationships - 10);
+  }
+  if (originClass === 'hoang_toc' && circ.id === 'duoc_sung_ai') {
+    happiness = Math.min(95, happiness + 6);
+    relationships = Math.min(100, relationships + 4);
+  }
+  if (circ.id === 'hoa_thuan') {
+    relationships = Math.min(100, relationships + 8);
+  }
+
+  const isStartDeclined =
+    initialFlags.includes('gia_toc_sa_sut') ||
+    initialFlags.includes('that_sung_cung_dinh') ||
+    initialFlags.includes('gia_dinh_mac_no') ||
+    initialFlags.includes('mo_coi_cha');
+  const initialLifestyle = isStartDeclined ? coreCfg.declinedLifestyle : coreCfg.defaultLifestyle;
 
   // 5. Initial NPCs (Named Parents + Siblings)
   const fNamePick = randomInt(prng, 0, MALE_GIVEN_NAMES.length - 1);
@@ -452,7 +458,63 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     },
   ];
 
-  // Siblings & Birth order
+  // Feudal polygamy (Vợ lẽ / Phi tần) for wealthy/noble families
+  const canHaveConcubines =
+    originClass === 'hoang_toc' ||
+    ((originClass === 'quan_lai' || originClass === 'dia_chu') && !isStartDeclined);
+  const concubineRoll = mulberry32Next(prng);
+  prng = concubineRoll.nextState;
+  const concubineChance =
+    originClass === 'hoang_toc' ? 0.85 : originClass === 'quan_lai' ? 0.55 : 0.35;
+  const hasConcubines = canHaveConcubines && concubineRoll.value < concubineChance;
+
+  const motherStatusRoll = mulberry32Next(prng);
+  prng = motherStatusRoll.nextState;
+  let motherStatus: 'chinh_that' | 'thu_that' | 'phi_tan' = 'chinh_that';
+  if (originClass === 'hoang_toc' && !circ.isTonThat) {
+    motherStatus = motherStatusRoll.value < 0.28 ? 'chinh_that' : 'phi_tan';
+  } else if (hasConcubines && motherStatusRoll.value < 0.35) {
+    motherStatus = 'thu_that';
+  }
+
+  if (motherStatus === 'thu_that') {
+    npcs[1].role = `Mẹ ruột (Thứ thất / Di nương) • ${motherOcc.label}`;
+  } else if (originClass === 'hoang_toc' && motherStatus === 'phi_tan' && !circ.isTonThat) {
+    npcs[1].role = circ.id === 'that_sung' ? 'Mẹ ruột (Phi tần thất sủng)' : 'Mẹ ruột (Phi tần)';
+  }
+
+  if (hasConcubines && circ.fatherAlive !== false) {
+    const concCountRoll = randomInt(prng, 1, originClass === 'hoang_toc' ? 2 : 1);
+    prng = concCountRoll.nextState;
+    for (let cIdx = 0; cIdx < concCountRoll.value; cIdx += 1) {
+      const cnPick = randomInt(prng, 0, FEMALE_GIVEN_NAMES.length - 1);
+      prng = cnPick.nextState;
+      const cAff = randomInt(prng, 15, 55);
+      prng = cAff.nextState;
+      const cAgeDiff = randomInt(prng, 17, 29);
+      prng = cAgeDiff.nextState;
+      npcs.push({
+        id: `npc_concubine_${cIdx + 1}`,
+        name:
+          originClass === 'hoang_toc'
+            ? `${FEMALE_GIVEN_NAMES[cnPick.value]} Phi`
+            : `Bà ${FEMALE_GIVEN_NAMES[cnPick.value]}`,
+        gender: 'female',
+        relation: 'parent',
+        affinity: cAff.value,
+        isAlive: true,
+        role:
+          originClass === 'hoang_toc'
+            ? 'Phi tần của phụ hoàng'
+            : motherStatus === 'chinh_that'
+              ? 'Thứ mẫu (Vợ lẽ của cha)'
+              : 'Chính thất / Vợ khác của cha',
+        age: cAgeDiff.value,
+      });
+    }
+  }
+
+  // Siblings & Birth order (with staggered, realistic ages — never 0 for younger siblings)
   const sibCountRoll = randomInt(prng, 0, 3);
   prng = sibCountRoll.nextState;
   const sibCount = sibCountRoll.value;
@@ -474,6 +536,16 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     }
   }
 
+  if (hasConcubines) {
+    if (motherStatus === 'chinh_that' && (birthOrder === 'con_truong' || birthOrder === 'con_mot')) {
+      birthOrderLabel = `${birthOrderLabel} (Đích tử)`;
+    } else if (motherStatus === 'thu_that') {
+      birthOrderLabel = `${birthOrderLabel} (Thứ xuất)`;
+    }
+  }
+
+  let olderAgeOffset = 0;
+  let youngerAgeOffset = 0;
   for (let i = 0; i < sibCount; i += 1) {
     const sgRoll = mulberry32Next(prng);
     prng = sgRoll.nextState;
@@ -483,10 +555,25 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     prng = snPick.nextState;
     const spPick = randomInt(prng, 0, SIBLING_PERSONALITIES.length - 1);
     prng = spPick.nextState;
-    const sAff = randomInt(prng, 35, 80);
+    const sAff = randomInt(prng, 30, 80);
     prng = sAff.nextState;
 
     const isOlder = birthOrder === 'con_ut' || (birthOrder === 'con_thu' && i === 0);
+    const gapPick = randomInt(prng, 2, 4);
+    prng = gapPick.nextState;
+    let sibAge: number;
+    if (isOlder) {
+      olderAgeOffset += gapPick.value;
+      sibAge = olderAgeOffset;
+    } else {
+      youngerAgeOffset -= gapPick.value;
+      sibAge = youngerAgeOffset;
+    }
+
+    const halfSibRoll = mulberry32Next(prng);
+    prng = halfSibRoll.nextState;
+    const isHalfSibling = hasConcubines && halfSibRoll.value < 0.45;
+
     const sibTitle = isOlder
       ? sGender === 'male'
         ? 'Anh trai'
@@ -494,18 +581,16 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       : sGender === 'male'
         ? 'Em trai'
         : 'Em gái';
-    const sibAgePick = randomInt(prng, 2, 7);
-    prng = sibAgePick.nextState;
-    const sibAge = isOlder ? sibAgePick.value : 0;
+    const halfTag = isHalfSibling ? ' cùng cha khác mẹ' : '';
 
     npcs.push({
       id: `npc_sibling_${i + 1}`,
       name: `${surname} ${sGender === 'male' ? 'Văn' : 'Thị'} ${sPool[snPick.value]}`,
       gender: sGender,
       relation: 'sibling',
-      affinity: sAff.value,
+      affinity: isHalfSibling ? Math.max(10, sAff.value - 12) : sAff.value,
       isAlive: true,
-      role: `${sibTitle} (${SIBLING_PERSONALITIES[spPick.value]})`,
+      role: `${sibTitle}${halfTag} (${SIBLING_PERSONALITIES[spPick.value]})`,
       age: sibAge,
     });
   }
@@ -525,6 +610,90 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     });
   }
 
+  // Household staff (Quản gia, Nhũ mẫu, Gia nhân) for affluent / noble families
+  let servantCount = 0;
+  if (!isStartDeclined) {
+    if (originClass === 'thu_cong' && familyWealthCopper >= 800) {
+      servantCount = 1;
+    } else if (originClass === 'dia_chu') {
+      const sCount = randomInt(prng, 3, 7);
+      prng = sCount.nextState;
+      servantCount = sCount.value;
+      const bNamePick = randomInt(prng, 0, MALE_GIVEN_NAMES.length - 1);
+      prng = bNamePick.nextState;
+      npcs.push({
+        id: 'npc_butler',
+        name: `Ông ${MALE_GIVEN_NAMES[bNamePick.value]}`,
+        gender: 'male',
+        relation: 'household',
+        affinity: 50,
+        isAlive: true,
+        role: `Quản gia điền trang (${servantCount} gia đinh)`,
+        age: 38,
+      });
+    } else if (originClass === 'quan_lai') {
+      const sCount = randomInt(prng, 6, 14);
+      prng = sCount.nextState;
+      servantCount = sCount.value;
+      const bNamePick = randomInt(prng, 0, MALE_GIVEN_NAMES.length - 1);
+      prng = bNamePick.nextState;
+      const wNamePick = randomInt(prng, 0, FEMALE_GIVEN_NAMES.length - 1);
+      prng = wNamePick.nextState;
+      npcs.push(
+        {
+          id: 'npc_butler',
+          name: `Tổng quản ${MALE_GIVEN_NAMES[bNamePick.value]}`,
+          gender: 'male',
+          relation: 'household',
+          affinity: 48,
+          isAlive: true,
+          role: `Quản gia phủ đệ (${servantCount} người hầu)`,
+          age: 40,
+        },
+        {
+          id: 'npc_wetnurse',
+          name: `Vú ${FEMALE_GIVEN_NAMES[wNamePick.value]}`,
+          gender: 'female',
+          relation: 'household',
+          affinity: 68,
+          isAlive: true,
+          role: 'Nhũ mẫu chăm bẵm từ nhỏ',
+          age: 34,
+        },
+      );
+    } else if (originClass === 'hoang_toc') {
+      const sCount = randomInt(prng, 14, 28);
+      prng = sCount.nextState;
+      servantCount = sCount.value;
+      const bNamePick = randomInt(prng, 0, MALE_GIVEN_NAMES.length - 1);
+      prng = bNamePick.nextState;
+      const wNamePick = randomInt(prng, 0, FEMALE_GIVEN_NAMES.length - 1);
+      prng = wNamePick.nextState;
+      npcs.push(
+        {
+          id: 'npc_butler',
+          name: `Thái giám ${MALE_GIVEN_NAMES[bNamePick.value]}`,
+          gender: 'male',
+          relation: 'household',
+          affinity: 45,
+          isAlive: true,
+          role: `Thái giám tổng quản (${servantCount} cung nữ, thị vệ)`,
+          age: 42,
+        },
+        {
+          id: 'npc_wetnurse',
+          name: `Nhũ mẫu ${FEMALE_GIVEN_NAMES[wNamePick.value]}`,
+          gender: 'female',
+          relation: 'household',
+          affinity: 70,
+          isAlive: true,
+          role: 'Nhũ mẫu cung đình',
+          age: 35,
+        },
+      );
+    }
+  }
+
   const bpPool = BIRTH_PLACES_BY_ORIGIN[originClass];
   const bpPick = randomInt(prng, 0, bpPool.length - 1);
   prng = bpPick.nextState;
@@ -534,6 +703,97 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       : originClass === 'quan_lai' && initialFlags.includes('gia_toc_sa_sut')
         ? 'Quê cũ vùng ngoại ô'
         : bpPool[bpPick.value];
+
+  const familyAssetsSummary: string[] = [];
+  if (originClass === 'ban_nong') {
+    familyAssetsSummary.push(
+      circ.id === 'mac_no' ? 'Mái nhà tranh dột nát' : 'Mái nhà tranh vách đất',
+    );
+    if (fatherOcc.id === 'ngu_dan') {
+      familyAssetsSummary.push('Thuyền nan cũ & lưới đánh cá');
+    } else if (fatherOcc.id === 'tho_san') {
+      familyAssetsSummary.push('Cung nỏ & bẫy thú rừng');
+    } else if (fatherOcc.id === 'thay_do_ngheo') {
+      familyAssetsSummary.push('Vài hòm sách cũ & nghiên mực sứt');
+    } else if (familyWealthCopper >= 85 && circ.id !== 'mac_no') {
+      const saoRoll = randomInt(prng, 1, 3);
+      prng = saoRoll.nextState;
+      familyAssetsSummary.push(`${saoRoll.value} sào ruộng xấu & nông cụ`);
+    } else {
+      familyAssetsSummary.push('Vài sào ruộng cấy rẽ');
+    }
+    if (circ.id === 'mac_no') {
+      familyAssetsSummary.push('Văn tự nợ nhà địa chủ');
+    }
+  } else if (originClass === 'thu_cong') {
+    familyAssetsSummary.push(
+      isStartDeclined
+        ? 'Nhà tranh nhỏ cạnh chợ'
+        : familyWealthCopper >= 900
+          ? 'Nhà ngói nhỏ & sân phơi'
+          : 'Nhà gỗ vách ván',
+    );
+    const craftAssetByOcc: Record<string, string> = {
+      tho_ren: 'Lò rèn & bễ thổi gia truyền',
+      tho_moc: 'Xưởng mộc & bộ đục chạm',
+      thay_lang: 'Tủ thuốc bắc & sách y',
+      lai_buon: 'Sạp hàng & ghe buôn nhỏ',
+      tho_gom: 'Bàn xoay & lò gốm nhỏ',
+    };
+    familyAssetsSummary.push(craftAssetByOcc[fatherOcc.id] ?? 'Đồ nghề mưu sinh tổ truyền');
+    if (circ.id === 'mac_no' || circ.id === 'bi_chen_ep') {
+      familyAssetsSummary.push('Đồ nghề cầm cố một phần');
+    } else if (servantCount > 0) {
+      familyAssetsSummary.push(`${servantCount} thợ phụ lành nghề`);
+    }
+  } else if (originClass === 'dia_chu') {
+    const minAcres = isStartDeclined ? 2 : familyWealthCopper >= 12000 ? 16 : 7;
+    const maxAcres = isStartDeclined ? 5 : familyWealthCopper >= 12000 ? 28 : 15;
+    const acresRoll = randomInt(prng, minAcres, maxAcres);
+    prng = acresRoll.nextState;
+    familyAssetsSummary.push(
+      isStartDeclined ? 'Nhà gạch cũ xuống cấp' : 'Nhà gạch 5 gian khang trang',
+      `${acresRoll.value} mẫu ruộng tư & kho thóc`,
+    );
+    if (!isStartDeclined) {
+      const bonusRoll = mulberry32Next(prng);
+      prng = bonusRoll.nextState;
+      if (bonusRoll.value < 0.5) {
+        familyAssetsSummary.push('Ao cá & vườn cây ăn quả');
+      } else {
+        familyAssetsSummary.push('Vài gian ki-ốt cho thuê ngoài chợ');
+      }
+    }
+    familyAssetsSummary.push(
+      servantCount > 0 ? `Quản gia & ${servantCount} gia đinh` : 'Ít người làm thuê',
+    );
+  } else if (originClass === 'quan_lai') {
+    familyAssetsSummary.push(
+      isStartDeclined ? 'Gian nhà nhỏ nơi quê cũ' : 'Phủ đệ rộng rãi chốn quan trường',
+      fatherOcc.id === 'quan_vo'
+        ? 'Binh thư & binh khí gia truyền'
+        : fatherOcc.id === 'tham_quan'
+          ? 'Thư phòng & hòm bạc tích trữ'
+          : 'Thư viện kinh sử gia truyền',
+      servantCount > 0 ? `Tổng quản, vú em & ${servantCount} gia nhân` : 'Gia nhân đã ly tán',
+    );
+  } else {
+    const royalAcres = randomInt(prng, 15, 35);
+    prng = royalAcres.nextState;
+    familyAssetsSummary.push(
+      circ.isTonThat
+        ? 'Phủ Tôn thất Kinh thành'
+        : circ.id === 'that_sung'
+          ? 'Tẩm cung hẻo lánh'
+          : 'Cung điện trong Tử Cấm Thành',
+      isStartDeclined
+        ? 'Bổng lộc bị cắt giảm'
+        : circ.isTonThat
+          ? `${royalAcres.value} mẫu đất phong & bổng lộc`
+          : 'Đất phong & bổng lộc Hoàng gia',
+      servantCount > 0 ? `Thái giám, nhũ mẫu & ${servantCount} cung nữ` : 'Ít người hầu hạ',
+    );
+  }
 
   const family: FamilyContext = {
     fatherOccupation: fatherOcc.id,
@@ -549,6 +809,9 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     birthPlace,
     fatherAgeAtBirth,
     motherAgeAtBirth,
+    motherStatus,
+    servantCount,
+    familyAssetsSummary,
   };
 
   // Generate 4 cohort peers born at the exact same moment across the realm
@@ -622,12 +885,12 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       totalDays: 0,
     },
     family,
-    traits: [],
-    interests: [],
+    traits: initialTraits,
+    interests: initialInterests,
     stats: {
       health: Math.max(25, Math.min(100, health)),
       happiness,
-      relationships: 60,
+      relationships,
       education,
       stamina: 100,
       maxStamina: 100,
@@ -650,12 +913,12 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       worldState: 'binh_on',
     },
     schedule: {
-      childhoodFocus: undefined,
+      childhoodFocus: coreCfg.defaultChildhoodFocus,
       morning: 'act_nghi_ngoi',
       afternoon: 'act_nghi_ngoi',
       evening: 'act_nghi_ngoi',
       night: 'act_ngu',
-      lifestyle: originClass === 'ban_nong' ? 'chao_loang' : 'com_rau',
+      lifestyle: initialLifestyle,
       lifeFocus: 'sinh_ton',
       fallbackRules: [],
       autoBuyRice: true,

@@ -1,0 +1,257 @@
+[
+  {
+    "id": "evt_chain_bao_hieu_1",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Song Thân Lâm Trọng Bệnh",
+    "conditions": {
+      "min_age": 26,
+      "max_age": 48
+    },
+    "weight": {
+      "base": 60,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_age": 34
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Trở trời gió bấc thổi rát mặt, song thân tuổi đã cao bỗng đổ bệnh nặng, cơm cháo chẳng nuốt nổi, cơn sốt kéo dài triền miên. Nhìn mái tóc bạc phơ của cha mẹ trên giường bệnh, ruột gan bạn như lửa đốt.",
+    "choices": [
+      {
+        "label": "Dốc tiền mời danh y giỏi nhất vùng đến chẩn trị và bốc thuốc bắc (Cần 300 Đồng)",
+        "conditions": {
+          "min_copper": 300
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn lập tức mang ba trăm đồng tiền kẽm tới tận nhà vị lang y nổi tiếng nhất phủ huyện, khẩn thiết mời ông về bắt mạch kê đơn. Thấy lòng hiếu thảo của bạn, vị danh y nhận lời thăm khám suốt một tháng trời.",
+            "effects": {
+              "copper": -300,
+              "happiness": -4,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 10
+                }
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_bao_hieu_2_tot",
+                  "delay_days": 30
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tự tìm bài thuốc dân gian, ngày đêm sắc lá cứu cha mẹ cho tiết kiệm",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Túi tiền eo hẹp chẳng dám mời thầy thuốc lớn, bạn đành hỏi thăm các cụ già trong làng rồi lặn lội hái lá thuốc nam về tự sắc. Mỗi đêm bạn thức trắng canh lửa bên bếp than.",
+            "effects": {
+              "stamina": -12,
+              "copper": -40,
+              "happiness": -6,
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_bao_hieu_2_nguy",
+                  "delay_days": 30
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_bao_hieu_2_tot",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Danh Y Diệu Thủ Hồi Xuân",
+    "conditions": {
+      "min_age": 26
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Sau một tháng dùng những thang thuốc quý giá do vị danh y đích thân gia giảm, sắc mặt cha mẹ bạn dần hồng hào trở lại, đã có thể ngồi dậy húp bát cháo hoa nóng hổi.",
+    "choices": [
+      {
+        "label": "Kính cẩn tạ ơn danh y, tiếp tục túc trực chăm sóc cha mẹ bình phục hẳn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ được chữa trị kịp thời và chăm sóc chu đáo, cha mẹ bạn đã hoàn toàn qua cơn nguy kịch. Tiếng thơm về tấm lòng hiếu thuận của bạn truyền khắp đầu làng cuối xóm.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 20
+                }
+              ],
+              "happiness": 8,
+              "relationships": 6,
+              "fame": 5,
+              "milestone_title": "Tận hiếu cứu cha mẹ qua cơn nguy kịch"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Sửa mâm cơm cúng gia tiên tạ trời đất đã phù hộ cha mẹ tai qua nạn khỏi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Khói hương trầm nghi ngút trước bàn thờ tổ tiên. Cha mẹ nhìn bạn rơm rớm nước mắt, nắm tay dặn dò gia đình hòa thuận là phúc đức lớn nhất đời người.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 20
+                }
+              ],
+              "happiness": 8,
+              "copper": -50,
+              "milestone_title": "Cha mẹ bình an qua cơn bạo bệnh"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_bao_hieu_2_nguy",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Bệnh Tình Trở Nặng Lúc Canh Khuya",
+    "conditions": {
+      "min_age": 26
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Thuốc nam sắc mãi không dứt cơn hàn nhiệt, đêm nay bệnh tình của cha bạn bất ngờ trở nặng, hơi thở yếu ớt, tay chân lạnh buốt như băng. Cả nhà hoảng loạn đứng ngồi không yên trước giờ phút sinh tử.",
+    "choices": [
+      {
+        "label": "Dốc cạn bạc tiền mua nhân sâm thượng hạng cứu nguy phút chót (Cần 450 Đồng)",
+        "conditions": {
+          "min_copper": 450
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": []
+            },
+            "resultText": "Chén nước sâm ấm nóng vừa đổ xuống, sắc mặt cha bạn bỗng dần hồi sinh, nhịp thở đều đặn trở lại! Cả nhà ôm nhau khóc òa trong niềm vui vỡ òa.",
+            "effects": {
+              "copper": -450,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 25
+                }
+              ],
+              "happiness": 10,
+              "milestone_title": "Kỳ tích cứu cha khỏi cơn thập tử nhất sinh"
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Dù bạn đã chạy đôn chạy đáo tìm mua sâm quý, bệnh căn đã thấm sâu vào lục phủ ngũ tạng. Cha bạn mỉm cười nhìn bạn lần cuối rồi thanh thản nhắm mắt xuôi tay.",
+            "effects": {
+              "copper": -450,
+              "kill_npc_id": "npc_father",
+              "happiness": -25,
+              "fame": 6,
+              "milestone_title": "Tiễn biệt phụ thân trọn vẹn chữ hiếu"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Quỳ bên giường bệnh nắm chặt tay cha, đắp khăn ấm và cầu trời khấn Phật",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_health": 70
+                  },
+                  "addWeight": 10
+                }
+              ]
+            },
+            "resultText": "Suốt ba đêm liền bạn không chợp mắt, dùng hơi ấm cơ thể sưởi ấm đôi bàn tay gầy guộc của cha. Trời cao cảm động trước tấm lòng thành, sáng sớm ngày thứ tư cha bạn bỗng tỉnh lại, qua được cửa tử!",
+            "effects": {
+              "health": -10,
+              "stamina": -20,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 20
+                }
+              ],
+              "happiness": 12,
+              "milestone_title": "Phép màu hồi sinh của phụ thân"
+            }
+          },
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Ngọn đèn dầu chập chờn rồi tắt lịm lúc gà gáy canh năm. Cha bạn khẽ siết tay bạn dặn dò thay ông chăm lo cho mẹ rồi trút hơi thở cuối cùng trong tiếng khóc xé lòng của người thân.",
+            "effects": {
+              "kill_npc_id": "npc_father",
+              "happiness": -30,
+              "health": -8,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 10
+                }
+              ],
+              "milestone_title": "Chịu tang phụ thân"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

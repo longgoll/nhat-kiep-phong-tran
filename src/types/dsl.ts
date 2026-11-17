@@ -79,7 +79,7 @@ export interface EffectSpec {
   };
 
   npc_affinity?: Array<{
-    relation?: 'parent' | 'sibling' | 'spouse' | 'child' | 'friend' | 'rival' | 'mentor';
+    relation?: 'parent' | 'sibling' | 'spouse' | 'child' | 'friend' | 'rival' | 'mentor' | 'household';
     npc_id?: string;
     delta: number;
   }>;

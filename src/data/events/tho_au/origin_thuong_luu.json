@@ -1,0 +1,198 @@
+[
+  {
+    "id": "evt_infant_exp_tl_1",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Đầy Tháng Linh Đình",
+    "conditions": {
+      "min_age": 0,
+      "max_age": 1,
+      "origin_in": [
+        "dia_chu",
+        "quan_lai"
+      ]
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": []
+    },
+    "description": "Tròn một tháng chào đời, phủ đệ nhà bạn giăng đèn kết hoa, hương trầm nghi ngút đón quan khách và bà con thân thích đến mừng.",
+    "choices": [
+      {
+        "label": "Gia đình tiếp đãi quan khách",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "origin_in": [
+                      "quan_lai"
+                    ]
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Quan khách nườm nượp mang theo khánh vàng, lụa quý đến chúc phúc. Gia đình mở tiệc thết đãi linh đình, tiếng cười nói vang dội cả một góc phố.",
+            "effects": {
+              "family_copper": 250,
+              "fame": 4,
+              "happiness": 5,
+              "relationships": 4
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Khách khứa đến chúc tụng rất đông nhưng tiệc tùng linh đình cũng ngốn không ít bạc trong kho. Dù vậy, thanh thế gia tộc tăng lên rõ rệt.",
+            "effects": {
+              "family_copper": -180,
+              "fame": 5,
+              "relationships": 5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_exp_tl_2",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Nếp Nhà Gia Giáo",
+    "conditions": {
+      "min_age": 2,
+      "max_age": 4,
+      "origin_in": [
+        "dia_chu",
+        "quan_lai"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Từ khi biết đi biết nói, lúc nào bên cạnh bạn cũng có nhũ mẫu và gia nhân theo sát nhắc nhở từng dáng ngồi, cách chắp tay chào hỏi khách khứa.",
+    "choices": [
+      {
+        "label": "Lớn lên trong khuôn phép",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "has_flags": [
+                      "gia_phong_thu_huong"
+                    ]
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Nhờ được uốn nắn cẩn thận từ bé, bạn đi đứng khoan thai, nói năng lễ phép, ai nhìn vào cũng tấm tắc khen con nhà gia giáo.",
+            "effects": {
+              "education": 3,
+              "relationships": 5,
+              "fame": 2,
+              "happiness": 2
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Quá nhiều quy củ khiến đứa trẻ hiếu động như bạn đôi lúc thấy gò bó, nhưng nếp nhà nghiêm cẩn vẫn ngấm dần vào tính cách.",
+            "effects": {
+              "education": 2,
+              "relationships": 3,
+              "happiness": -3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_exp_tl_3",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Báu Vật Trong Thư Phòng",
+    "conditions": {
+      "min_age": 3,
+      "max_age": 5,
+      "origin_in": [
+        "dia_chu",
+        "quan_lai"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": []
+    },
+    "description": "Một buổi chiều cửa thư phòng khép hờ, ánh nắng chiếu lên những giá sách cao ngất cùng chiếc bàn gỗ lim bày sẵn ấn triện đồng và bàn tính gụ. Bạn tò mò bước vào và chạm tay vào thứ gì?",
+    "choices": [
+      {
+        "label": "Kiễng chân với lấy cuốn sách bìa gấm trên giá",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Mùi giấy dó và mực tàu thơm dịu làm bạn thích mê. Bạn ngồi lật từng trang sách vẽ minh họa cổ tích suốt cả buổi chiều.",
+            "effects": {
+              "education": 6,
+              "happiness": 4,
+              "add_traits": [
+                "ham_hoc"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chạm tay vào chiếc ấn triện đồng và bàn tính gỗ trên bàn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Những hạt bàn tính lách cách và khối ấn triện mát lạnh khiến mắt bạn sáng rỡ. Từ nhỏ bạn đã có cảm giác nhạy bén với sổ sách và quyền thế.",
+            "effects": {
+              "craft_trade": 5,
+              "relationships": 3,
+              "happiness": 4,
+              "add_traits": [
+                "tham_vong"
+              ],
+              "add_interests": [
+                "thuong_buon"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -13,6 +13,9 @@
         "quan_lai",
         "hoang_toc",
         "dia_chu"
+      ],
+      "missing_flags": [
+        "mo_coi_cha"
       ]
     },
     "weight": {

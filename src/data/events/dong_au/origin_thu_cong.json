@@ -1,0 +1,421 @@
+[
+  {
+    "id": "evt_child_exp_thu_cong_apprentice",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Học Nghề Tổ Truyền Nơi Xưởng Nhỏ",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_trait": [
+              "kheo_tay",
+              "ham_hoc"
+            ]
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Từ sáng sớm, tiếng đục đẽo và mùi sơn mộc đã quen thuộc bên hiên nhà. Cha mẹ gọi bạn ra xưởng phụ việc, dạy cho những bước vỡ lòng của nghề tổ truyền.",
+    "choices": [
+      {
+        "label": "Chăm chú ngồi bên cha mẹ học từng đường nét thủ công",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_craft_trade": 6
+                  },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": {
+                    "has_any_trait": [
+                      "kheo_tay"
+                    ]
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Bạn tiếp thu rất nhanh, đôi tay thoăn thoắt làm cha mẹ gật gù khen có căn cơ giữ nghề.",
+            "effects": {
+              "craft_trade": 6,
+              "happiness": 6,
+              "add_traits": [
+                "kheo_tay"
+              ],
+              "add_interests": [
+                "thu_cong"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Cổ tay còn non nên bạn lỡ làm hỏng mất một mẻ nguyên liệu, bị cha nhắc nhở nhưng cũng rút ra bài học quý.",
+            "effects": {
+              "craft_trade": 3,
+              "family_copper": -20,
+              "happiness": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Xin phụ coi sổ sách, tập tính toán giá cả và tiếp khách",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nhanh nhẹn ghi chép từng món hàng xuất nhập, sớm hiểu cách cân đong đo đếm lời lãi chốn chợ búa.",
+            "effects": {
+              "education": 4,
+              "craft_trade": 4,
+              "relationships": 4,
+              "happiness": 4,
+              "add_interests": [
+                "thuong_buon"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 6
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_thu_cong_extortion",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Quan Lệ Vòi Tiền Bảo Kê Sạp Hàng",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_flags": [
+              "gia_dinh_bi_chen_ep"
+            ]
+          },
+          "addWeight": 30
+        }
+      ]
+    },
+    "description": "Giữa buổi chợ đông, viên lại mục địa phương dẫn hai tên nha lệ mặt mày bặm trợn sà xuống sạp hàng nhà bạn, hạch sách đủ thứ lệ phí rồi trắng trợn đòi tiền bảo kê.",
+    "choices": [
+      {
+        "label": "Khuyên cha mẹ nhẫn nhịn nộp tiền cho yên chuyện làm ăn (-80 đồng gia đình)",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cha mẹ nén tiếng thở dài móc túi nộp đủ tiền. Bọn nha lệ cười khẩy bỏ đi, còn bạn thấm thía nỗi cơ cực của kiếp thợ thuyền.",
+            "effects": {
+              "family_copper": -80,
+              "happiness": -8,
+              "education": 2,
+              "add_traits": [
+                "da_nghi"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 5
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bất bình đứng ra cãi lý giữa đám đông",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Bị một đứa trẻ bóc mẽ giữa chợ, tên nha lệ thẹn quá hóa giận, vung gậy hất tung sạp hàng rồi đập phá đồ đạc tan tành trước khi bỏ đi.",
+            "effects": {
+              "family_copper": -120,
+              "health": -5,
+              "happiness": -12,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "add_flags": [
+                "nho_thu_quan_tham"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": -4
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_fame": 6
+                  },
+                  "addWeight": 20
+                },
+                {
+                  "conditions": {
+                    "min_relationships": 65
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Bà con tiểu thương xung quanh thấy bất bình liền xúm lại lên tiếng bênh vực. Bọn nha lệ hậm hực đạp đổ vài món hàng dằn mặt rồi đành rút lui.",
+            "effects": {
+              "family_copper": -35,
+              "fame": 4,
+              "relationships": 5,
+              "happiness": -3,
+              "add_traits": [
+                "trong_nghia"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_thu_cong_first_craft",
+    "stage": "childhood",
+    "severity": "minor",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Món Đồ Đầu Tay Nơi Chợ Phiên",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_craft_trade": 8
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Sau nhiều buổi tối cặm cụi bên ngọn đèn dầu, bạn tự tay hoàn thành món đồ nhỏ đầu tiên và mang ra chợ phiên bày bán thử.",
+    "choices": [
+      {
+        "label": "Bày ở góc sạp chờ khách mua",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_craft_trade": 10
+                  },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": {
+                    "has_any_trait": [
+                      "kheo_tay"
+                    ]
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Một vị khách qua đường ngắm nghía rồi tấm tắc khen khéo, trả giá rất hậu để mua ngay món đồ đầu tay của bạn!",
+            "effects": {
+              "copper": 25,
+              "family_copper": 60,
+              "craft_trade": 4,
+              "fame": 3,
+              "happiness": 10,
+              "milestone_title": "Bán được món đồ thủ công đầu tay"
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Mãi đến xế chiều mới có người ghé mua với giá bình dân, nhưng cầm đồng tiền đầu tiên tự tay kiếm được khiến bạn vui khôn xiết.",
+            "effects": {
+              "copper": 10,
+              "family_copper": 25,
+              "craft_trade": 2,
+              "happiness": 6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_thu_cong_guild_contest",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Hội Thi Tay Nghề Làng Nghề Cổ Truyền",
+    "conditions": {
+      "min_age": 9,
+      "max_age": 12,
+      "origin_in": [
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_interest": [
+              "thu_cong"
+            ]
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Phường hội mở hội thi tay nghề cho lớp thợ trẻ kế cận trước sân đình. Các bậc thợ cả ngồi chấm giải rất kỹ, cha mẹ khích lệ bạn ghi danh thử sức.",
+    "choices": [
+      {
+        "label": "Dốc hết tâm sức chế tác món đồ dự thi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_craft_trade": 12
+                  },
+                  "addWeight": 30
+                },
+                {
+                  "conditions": {
+                    "has_any_trait": [
+                      "kheo_tay"
+                    ]
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Đường nét tinh xảo của bạn chinh phục hoàn toàn các bậc thợ cả, rinh về giải nhất thiếu niên cùng tiền thưởng hậu hĩnh!",
+            "effects": {
+              "fame": 8,
+              "craft_trade": 6,
+              "copper": 40,
+              "family_copper": 100,
+              "happiness": 12,
+              "add_interests": [
+                "thu_cong"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 10
+                }
+              ],
+              "milestone_title": "Đoạt giải hội thi tay nghề cổ truyền"
+            }
+          },
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": []
+            },
+            "resultText": "Tác phẩm của bạn còn đôi chỗ gượng gạo nên chưa có giải, nhưng các bậc tiền bối đã chỉ dạy nhiều bí quyết nhà nghề đáng giá.",
+            "effects": {
+              "craft_trade": 4,
+              "education": 2,
+              "relationships": 4,
+              "happiness": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đứng ngoài quan sát kỹ nghệ của các thí sinh khác",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn lặng lẽ học lỏm được nhiều mẹo hay từ các lò thợ khác và làm quen thêm vài người bạn cùng nghề.",
+            "effects": {
+              "craft_trade": 3,
+              "education": 3,
+              "relationships": 4,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

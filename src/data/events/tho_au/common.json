@@ -132,19 +132,19 @@
     "severity": "major",
     "cooldownDays": 99999,
     "oncePerLife": true,
-    "title": "Buổi Trưa Trong Sân Nhà",
+    "title": "Buổi Trưa Yến Tĩnh",
     "conditions": {
       "min_age": 3,
       "max_age": 4
     },
     "weight": {
-      "base": 70,
+      "base": 45,
       "modifiers": []
     },
-    "description": "Nắng trưa rải vàng ngoài sân, người lớn đang bận việc. Đứa trẻ 3–4 tuổi như bạn tự tìm trò chơi gì cho mình?",
+    "description": "Nắng trưa rải vàng qua khung cửa, người lớn đang bận việc. Đứa trẻ 3–4 tuổi như bạn tự tìm trò gì để chơi?",
     "choices": [
       {
-        "label": "Chạy ùa ra góc vườn đuổi bướm, nghịch đất",
+        "label": "Chạy nhảy khắp sân đuổi bướm, leo trèo nghịch ngợm",
         "conditions": {},
         "outcomes": [
           {
@@ -152,7 +152,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn lấm lem bùn đất nhưng cười vang cả xóm, chân tay ngày một cứng cáp.",
+            "resultText": "Bạn chạy nhảy không biết mệt, chân tay ngày một cứng cáp và hoạt bát.",
             "effects": {
               "health": 4,
               "happiness": 6,
@@ -160,14 +160,14 @@
                 "hieu_dong"
               ],
               "add_interests": [
-                "dien_vien"
+                "vo_nghe"
               ]
             }
           }
         ]
       },
       {
-        "label": "Ngồi chăm chú nhìn cha mẹ làm việc rồi bắt chước theo",
+        "label": "Ngồi tỉ mẩn xếp sỏi, gấp lá hoặc bắt chước người lớn làm đồ vật",
         "conditions": {},
         "outcomes": [
           {
@@ -175,7 +175,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Đôi tay nhỏ xíu của bạn loay hoay xếp đồ rất khéo, cha mẹ nhìn thấy chỉ biết phì cười.",
+            "resultText": "Đôi tay nhỏ xíu của bạn loay hoay xếp đồ rất khéo, người lớn nhìn thấy chỉ biết phì cười.",
             "effects": {
               "craft_trade": 3,
               "happiness": 4,

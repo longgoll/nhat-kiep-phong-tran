@@ -1,0 +1,536 @@
+[
+  {
+    "id": "evt_adult_exp_world_famine_rice",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 360,
+    "title": "Nạn Đói Hoành Hành, Giá Gạo Tăng Vọt",
+    "conditions": {
+      "min_age": 14,
+      "world_state_in": [
+        "mat_mua"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_rice": 6
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Mất mùa liên tiếp khiến khắp vùng lâm vào cảnh đói kém, ngoài đường dân phiêu tán gầy gò xin ăn, còn giá gạo ngoài chợ tăng vọt gấp ba bốn lần ngày thường!",
+    "choices": [
+      {
+        "label": "Mở kho xuất gạo nấu cháo chẩn bần cứu dân đói (-5 đấu gạo, -150 đồng)",
+        "conditions": {
+          "min_rice": 5,
+          "min_copper": 150
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nồi cháo loãng giữa cơn đói đã cứu sống bao mạng người. Dân làng cảm kích khắc ghi công đức, tiếng thơm thiện nhân vang khắp vùng.",
+            "effects": {
+              "rice": -5,
+              "copper": -150,
+              "fame": 15,
+              "relationships": 12,
+              "happiness": 12,
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "milestone_title": "Mở chẩn bần cứu đói giữa năm mất mùa"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bỏ vốn thu mua gạo ém hàng chờ giá lên cao rồi bán tháo (-300 đồng)",
+        "conditions": {
+          "min_copper": 300
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Bạn gom hàng đúng lúc giá lên đỉnh, thu về món lợi khổng lồ trong cơn khốn khó của thiên hạ, dù tiếng xấu đầu cơ lan khắp chợ.",
+            "effects": {
+              "copper": 750,
+              "rice": 4,
+              "infamy": 12,
+              "fame": -8,
+              "relationships": -10,
+              "craft_trade": 3
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Đám dân đói phát hiện kho gạo ém hàng liền kéo tới phá cửa cướp sạch, bạn chẳng thu được lời lãi nào mà còn bị đòn!",
+            "effects": {
+              "copper": -300,
+              "health": -14,
+              "infamy": 8,
+              "happiness": -14
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thắt lưng buộc bụng, chia phần ăn tiết kiệm để gia đình vượt qua cơn đói",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn đong đếm từng bát cơm độn khoai sắn, dè sẻn giữ sức cho cả nhà cầm cự qua ngày tháng cơ hàn.",
+            "effects": {
+              "health": -4,
+              "stamina": -15,
+              "happiness": -5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_world_war_conscription",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 420,
+    "title": "Lệnh Tổng Động Viên Thời Chiến",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 50,
+      "world_state_in": [
+        "chien_tranh"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": [
+        {
+          "conditions": {
+            "gender": "male"
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Chiến sự ngoài biên ải ngày một ác liệt, trống thúc quân vang rền khắp các ngả đường. Triều đình ban lệnh tổng động viên, bắt các phủ huyện tuyển gấp đinh tráng và quyên góp quân lương.",
+    "choices": [
+      {
+        "label": "Hăng hái tòng quân hoặc tình nguyện ra tuyến đầu lập công (Cần Võ nghệ >= 10)",
+        "conditions": {
+          "min_martial": 10
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 25
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Trong trận phục kích quân địch, bạn chiến đấu dũng mãnh lập được chiến công, được chủ tướng thưởng bạc và phong khen trước ba quân!",
+            "effects": {
+              "martial": 5,
+              "fame": 16,
+              "copper": 550,
+              "health": -12,
+              "stamina": -30,
+              "milestone_title": "Lập công ngoài chiến trận trong lệnh tổng động viên"
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Chiến trường khốc liệt khiến bạn bị thương nặng ở vai, may nhờ đồng đội dìu về hậu phương chữa trị kịp thời.",
+            "effects": {
+              "health": -28,
+              "martial": 3,
+              "fame": 6,
+              "happiness": -10
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đóng tiền thay quân dịch và quyên góp quân lương để ở lại hậu phương (-550 đồng)",
+        "conditions": {
+          "min_copper": 550
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Quan tuyển quân thu đủ tiền bạc rồi gạch tên bạn khỏi danh sách ra trận, đổi lấy sự bình yên tạm thời nơi quê nhà.",
+            "effects": {
+              "copper": -550,
+              "fame": -2,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhận chân dân công vận tải lương thảo cho đoàn quân",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn gồng gánh vượt đèo suốt nhiều ngày tiếp tế cho tiền tuyến. Tuy mệt rã rời nhưng tránh được cảnh đao kiếm trực diện và được phát ít lương khô.",
+            "effects": {
+              "health": -8,
+              "stamina": -30,
+              "rice": 3,
+              "copper": 100,
+              "fame": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_world_war_looting",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 360,
+    "title": "Quân Lính Cướp Bóc Làng Xã",
+    "conditions": {
+      "min_age": 14,
+      "world_state_in": [
+        "chien_tranh"
+      ]
+    },
+    "weight": {
+      "base": 38,
+      "modifiers": []
+    },
+    "description": "Một toán tàn quân bại trận kéo ngang qua vùng, kỷ luật tan rã. Chúng xông vào các xóm trại cướp gà bắt lợn, đập phá cửa nhà vơ vét lương thực và tiền bạc của dân lành!",
+    "choices": [
+      {
+        "label": "Vận dụng võ nghệ hô hào tráng đinh đánh đuổi toán lính cướp (Cần Võ nghệ >= 12)",
+        "conditions": {
+          "min_martial": 12
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 24
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Toán tàn quân vốn đã mệt mỏi hoảng hốt bỏ chạy trước khí thế của bạn và dân làng. Bà con reo hò cảm phục, thu lại được cả thóc gạo bị cướp.",
+            "effects": {
+              "martial": 3,
+              "fame": 12,
+              "relationships": 10,
+              "rice": 3,
+              "happiness": 8
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Bạn đánh gục được hai tên nhưng bị mũi giáo đâm sượt sườn, phải lui vào cố thủ chờ chúng rút đi.",
+            "effects": {
+              "health": -22,
+              "copper": -120,
+              "fame": 5,
+              "happiness": -8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đem chút tiền bạc ra điều đình cho chúng rút đi êm thấm (-220 đồng)",
+        "conditions": {
+          "min_copper": 220
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tên đội trưởng cầm túi tiền rồi huýt sáo gọi đồng bọn kéo sang làng khác. Cả nhà bạn giữ được mạng và kho lương.",
+            "effects": {
+              "copper": -220,
+              "happiness": -6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giấu kỹ người nhà và ít gạo quý rồi lánh tạm vào rừng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Khi trở về sau một đêm nấp trong rừng, đồ đạc trong nhà bị xới tung và mất mát ít nhiều, nhưng may mắn mọi người đều bình an.",
+            "effects": {
+              "copper": -120,
+              "rice": -2,
+              "stamina": -20,
+              "happiness": -10
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_world_plague_quarantine",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 360,
+    "title": "Dịch Bệnh Lan Tràn Khắp Phủ",
+    "conditions": {
+      "min_age": 14,
+      "world_state_in": [
+        "dich_benh"
+      ]
+    },
+    "weight": {
+      "base": 42,
+      "modifiers": []
+    },
+    "description": "Trận dịch ôn hoàng hoành hành dữ dội khắp phủ huyện, người phát sốt ho ra máu nằm la liệt. Quan phủ ra lệnh hạn chế đi lại, còn vị thầy lang già trong vùng đang thiếu người phụ giúp bốc thuốc cứu dân.",
+    "choices": [
+      {
+        "label": "Ra trạm y tế phụ thầy lang sắc thuốc và chăm sóc bệnh nhân (Cần Học vấn >= 10)",
+        "conditions": {
+          "min_education": 10
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_health": 65
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Nhờ biết chữ đọc đơn thuốc chuẩn xác và giữ vệ sinh cẩn thận, bạn cùng thầy lang cứu chữa được hàng chục người khỏi lưỡi hái tử thần!",
+            "effects": {
+              "education": 4,
+              "fame": 15,
+              "relationships": 12,
+              "copper": 180,
+              "stamina": -25,
+              "happiness": 10,
+              "milestone_title": "Phụ thầy lang cứu người giữa cơn đại dịch"
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Trong lúc ngày đêm bốc thuốc, bạn cũng bị lây khí độc sốt cao mấy ngày liền mới gượng dậy nổi, nhưng lòng không hối tiếc.",
+            "effects": {
+              "health": -22,
+              "fame": 10,
+              "relationships": 8,
+              "education": 3,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Mua sẵn thảo dược xông nhà cho gia quyến (-180 đồng)",
+        "conditions": {
+          "min_copper": 180
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn mua lá xông, gừng tỏi và thuốc phòng dịch trữ sẵn trong nhà, cả gia đình bình an tránh được làn sóng lây nhiễm.",
+            "effects": {
+              "copper": -180,
+              "health": 4,
+              "happiness": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đóng chặt cửa cài then, đốt bồ kết tránh tiếp xúc với bên ngoài",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 85,
+              "modifiers": []
+            },
+            "resultText": "Bế quan tỏa cảng nhiều ngày khiến tinh thần bí bách, nhưng nhờ cẩn trọng mà bạn không mắc phải ôn dịch.",
+            "effects": {
+              "happiness": -8,
+              "relationships": -4
+            }
+          },
+          {
+            "weight": {
+              "base": 15,
+              "modifiers": []
+            },
+            "resultText": "Dù đã đóng cửa kỹ lưỡng nhưng nguồn nước giếng bị nhiễm bẩn vẫn khiến bạn sốt nhẹ mất vài hôm.",
+            "effects": {
+              "health": -12,
+              "happiness": -10
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_world_plague_herb_relief",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 420,
+    "title": "Khan Hiếm Dược Liệu Giữa Cơn Dịch",
+    "conditions": {
+      "min_age": 15,
+      "world_state_in": [
+        "dich_benh"
+      ]
+    },
+    "weight": {
+      "base": 36,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_copper": 350
+          },
+          "addWeight": 12
+        }
+      ]
+    },
+    "description": "Dịch bệnh kéo dài khiến các hiệu thuốc cạn sạch sâm, cam thảo và lá thanh nhiệt. Giá thuốc tăng vùn vụt trong khi người nghèo chỉ biết trông chờ vào nồi nước lá dại.",
+    "choices": [
+      {
+        "label": "Góp bạc mua dược liệu lập ấm thuốc miễn phí đầu ngõ (-350 đồng)",
+        "conditions": {
+          "min_copper": 350
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Những bát thuốc nóng hổi phát miễn phí giúp nhiều người qua cơn nguy kịch. Tiếng lành đồn xa, ai nấy đều kính trọng tấm lòng nhân ái của bạn.",
+            "effects": {
+              "copper": -350,
+              "fame": 14,
+              "relationships": 10,
+              "happiness": 12
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thu mua gom hết lô thuốc hiếm từ lái buôn để bán lại giá cao (-250 đồng)",
+        "conditions": {
+          "min_copper": 250
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": []
+            },
+            "resultText": "Bạn kiếm bộn tiền từ sự hoảng loạn của người bệnh, nhưng bị hàng xóm khinh bỉ gọi là kẻ trục lợi trên xương máu đồng bào.",
+            "effects": {
+              "copper": 650,
+              "infamy": 14,
+              "fame": -10,
+              "relationships": -12,
+              "craft_trade": 3
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Quan phủ bất ngờ ra lệnh tịch thu toàn bộ thuốc đầu cơ và phạt vạ nặng kẻ tích trữ!",
+            "effects": {
+              "copper": -450,
+              "infamy": 10,
+              "happiness": -15
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lên sườn đồi tự hái cây thuốc nam về dùng và chia sẻ cho xóm giềng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Chuyến leo núi lấy thuốc tuy mệt nhọc nhưng bạn tìm được kha khá cây sả, tía tô và cỏ nhọ nồi, đủ giúp gia đình và vài nhà bên cạnh cầm cự.",
+            "effects": {
+              "stamina": -25,
+              "health": -4,
+              "relationships": 6,
+              "fame": 4,
+              "education": 2
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

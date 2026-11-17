@@ -1,0 +1,412 @@
+[
+  {
+    "id": "evt_child_exp_dia_chu_rent_harvest",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Theo Cha Đi Thu Tô Mùa Gặt",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "dia_chu"
+      ],
+      "missing_flags": [
+        "mo_coi_cha"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "season_in": [
+              "autumn"
+            ]
+          },
+          "addWeight": 30
+        }
+      ]
+    },
+    "description": "Mùa gặt về, bạn theo cha ra sân kho đong thóc tô. Một gia đình tá điền áo vải vá chằng chịt quỳ sụp xuống xin khất bớt phần tô vì ruộng năm nay bị sâu bệnh thất bát.",
+    "choices": [
+      {
+        "label": "Kéo tay áo cha xin giảm bớt phần tô cho nhà tá điền",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 62
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Cha trầm ngâm hồi lâu rồi gật đầu cho khất lại nửa phần tô. Nhà tá điền dập đầu cảm tạ, tiếng lành về lòng nhân hậu của bạn lan khắp ấp.",
+            "effects": {
+              "relationships": 8,
+              "fame": 4,
+              "happiness": 6,
+              "family_copper": -150,
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 4
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Cha nghiêm giọng từ chối vì sợ tạo tiền lệ xấu, nhưng bạn vẫn lén dúi cho đứa con nhà tá điền nắm cơm nắm.",
+            "effects": {
+              "relationships": 5,
+              "happiness": -3,
+              "add_traits": [
+                "trong_nghia"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ nghiêm phép nhà, thúc gia đinh đong đủ thóc theo khế ước",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thóc đầy bồ, tiền bạc rủng rỉnh hơn hẳn và cha khen bạn sớm có bản lĩnh chủ điền, dù ánh mắt đám tá điền nhìn theo đầy oán thán.",
+            "effects": {
+              "family_copper": 220,
+              "rice": 5,
+              "craft_trade": 3,
+              "relationships": -5,
+              "happiness": -2,
+              "add_traits": [
+                "tham_vong"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_dia_chu_strict_tutor",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Thước Kẻ Thầy Đồ Nghiêm Khắc",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "dia_chu"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_flags": [
+              "gia_phong_thu_huong"
+            ]
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Nhà mời riêng thầy đồ về dạy học trong thư phòng. Hôm nay bạn lơ đãng ngắm đàn chuồn chuồn ngoài sân nên đọc vấp bài kinh sử, thầy liền giơ thước gỗ bắt xòe tay chịu phạt.",
+    "choices": [
+      {
+        "label": "Nghiến răng chịu đòn, tối về chép phạt gấp đôi cho thuộc làu",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bàn tay rát bỏng nhưng bạn không rơi một giọt nước mắt. Đêm đó bạn học thuộc vanh vách cả thiên sách, khiến thầy đồ nể phục.",
+            "effects": {
+              "health": -3,
+              "happiness": -8,
+              "education": 7,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vội vàng chắp tay nhận lỗi khéo, xin được giảng lại bài",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 60
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Thấy thái độ lễ phép của bạn, thầy nguôi giận chỉ đánh khẽ hai roi rồi kiên nhẫn giảng giải lại từng câu chữ.",
+            "effects": {
+              "health": -1,
+              "happiness": -3,
+              "education": 4,
+              "relationships": 3
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Thầy ghét thói lanh lợi né đòn nên phạt càng nặng hơn, tối về lại bị cha mẹ rầy la vì tội chểnh mảng.",
+            "effects": {
+              "health": -4,
+              "happiness": -10,
+              "education": 2,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": -5
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_dia_chu_night_thieves",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Trộm Rình Rập Điền Trang Ban Đêm",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "origin_in": [
+        "dia_chu"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_trait": [
+              "da_nghi"
+            ]
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Đêm khuya thanh vắng, bạn tỉnh giấc vì tiếng sột soạt ngoài sân gạch. Qua khe cửa sổ, hai bóng đen đang lén lút cạy khóa kho thóc của điền trang.",
+    "choices": [
+      {
+        "label": "Giữ bình tĩnh, lén chạy đi đánh thức cha mẹ và gia đinh vây bắt",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "has_any_trait": [
+                      "da_nghi",
+                      "kien_cuong"
+                    ]
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Gia đinh kịp thời ập ra tóm gọn kẻ gian trước khi chúng kịp tẩu thoát. Cả nhà hết lời khen bạn gan dạ và cẩn trọng.",
+            "effects": {
+              "fame": 4,
+              "happiness": 6,
+              "add_traits": [
+                "da_nghi"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 10
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Bọn trộm đánh hơi thấy động nên vơ vội vài món đồ rồi nhảy tường trốn mất, may mà kho thóc vẫn còn nguyên.",
+            "effects": {
+              "family_copper": -100,
+              "happiness": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Hét lớn báo động rồi vớ cây gậy tre lao ra dọa trộm",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 50,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 8
+                  },
+                  "addWeight": 30
+                },
+                {
+                  "conditions": {
+                    "has_any_trait": [
+                      "hieu_dong"
+                    ]
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Tiếng quát lanh lảnh giữa đêm làm hai tên trộm giật mình tháo chạy tán loạn. Bạn từ đó thêm mê luyện võ bảo vệ gia trang.",
+            "effects": {
+              "martial": 3,
+              "fame": 5,
+              "happiness": 8,
+              "add_interests": [
+                "vo_nghe"
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 50,
+              "modifiers": []
+            },
+            "resultText": "Tên trộm cuống cuồng xô ngã bạn vào bậc thềm đá rồi chạy mất hút cùng túi bạc nhỏ ngoài sảnh.",
+            "effects": {
+              "health": -8,
+              "happiness": -8,
+              "family_copper": -120
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_dia_chu_inheritance_talk",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Chuyện Chia Ruộng Đất Sau Này",
+    "conditions": {
+      "min_age": 9,
+      "max_age": 12,
+      "origin_in": [
+        "dia_chu"
+      ],
+      "birth_order_in": [
+        "con_truong",
+        "con_thu",
+        "con_ut"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Đi ngang qua hành lang nhà ngang, bạn vô tình nghe mấy anh chị em đang rì rầm bàn tán xem sau này cha mẹ sẽ chia bao nhiêu mẫu ruộng tốt và phần điền trang cho từng người.",
+    "choices": [
+      {
+        "label": "Lặng lẽ bỏ đi, tự nhủ phải tự tạo cơ nghiệp riêng chứ không trông chờ chia chác",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cuộc trò chuyện sớm nhen nhóm trong bạn ý thức cạnh tranh và khát vọng tự lập vững vàng.",
+            "effects": {
+              "education": 3,
+              "happiness": -2,
+              "add_traits": [
+                "tham_vong"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bước vào cười xòa, nhắc anh chị em một nhà đừng tính toán hơn thua",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cả đám hơi ngượng ngùng rồi cũng vui vẻ kéo bạn ngồi cùng, tình cảm anh chị em thêm gắn bó.",
+            "effects": {
+              "relationships": 6,
+              "happiness": 4,
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 10
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

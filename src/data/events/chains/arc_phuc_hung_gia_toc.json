@@ -1,0 +1,181 @@
+[
+  {
+    "id": "evt_chain_phuc_hung_1",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Di Thư Và Tín Vật Trong Rương Cũ",
+    "conditions": {
+      "min_age": 18,
+      "has_any_flag": [
+        "gia_toc_sa_sut",
+        "that_sung_cung_dinh"
+      ]
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_fame": 25
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Trong lúc dọn dẹp lại chiếc rương gỗ mục nát nơi góc buồng tối, bạn vô tình chạm phải một ngăn bí mật dưới đáy rương. Bên trong bọc lụa vàng đã sờn rách là một bức di thư của tiền nhân cùng mảnh ngọc bội khắc gia huy cũ.",
+    "choices": [
+      {
+        "label": "Giữ kín tín vật, âm thầm lần theo địa chỉ trong di thư tìm cố nhân năm xưa",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nét mực nhòe dần theo năm tháng vẫn kịp chỉ rõ tên tuổi một vị cựu thần từng chịu ơn nặng của gia tộc bạn. Bạn cất kỹ mảnh ngọc bội vào ngực áo, lặng lẽ gửi thư dò hỏi tung tích người xưa.",
+            "effects": {
+              "add_flags": [
+                "giu_tin_vat_gia_toc"
+              ],
+              "education": 3,
+              "happiness": 5,
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_phuc_hung_2",
+                  "delay_days": 90
+                }
+              ],
+              "milestone_title": "Tìm thấy di thư và tín vật gia tộc"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thắp hương khấn trước linh vị tổ tiên, thề sẽ dùng tín vật này phục hưng môn hộ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Trước bàn thờ tổ tiên phủ bụi, bạn dập đầu ba lạy thề không để thanh danh dòng họ mai một thêm nữa, rồi tức tốc mang tín vật lên đường tìm lại những mối giao hảo cũ.",
+            "effects": {
+              "add_flags": [
+                "giu_tin_vat_gia_toc"
+              ],
+              "fame": 4,
+              "stamina": -5,
+              "happiness": 6,
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_phuc_hung_2",
+                  "delay_days": 90
+                }
+              ],
+              "milestone_title": "Lập lời thề phục hưng gia tộc"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cất sâu di thư vào đáy rương, chọn sống đời bình lặng tránh khơi lại ân oán xưa",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Biến cố năm xưa đã đủ thảm khốc rồi. Bạn khẽ thở dài rồi đóng nắp rương lại, tự nhủ bình an qua ngày mới là điều đáng quý nhất.",
+            "effects": {
+              "happiness": 4,
+              "health": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_phuc_hung_2",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Cố Nhân Tương Phùng, Cơ Đồ Tái Khởi",
+    "conditions": {
+      "min_age": 18,
+      "has_flags": [
+        "giu_tin_vat_gia_toc"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Ba tháng sau ngày gửi thư, một cỗ xe ngựa giản dị dừng lại trước ngõ. Vị lão nhân râu bạc bước xuống, vừa trông thấy mảnh ngọc bội khắc gia huy trên tay bạn liền sững người rơi lệ: 'Quả nhiên là hậu duệ của ân công năm xưa!'",
+    "choices": [
+      {
+        "label": "Tiếp nhận ân tình và vốn liếng của cố nhân, chính thức gây dựng lại cơ đồ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Lão nhân dốc lòng báo đáp nghĩa cũ, trao cho bạn một khoản ngân lượng lớn cùng giấy tờ giao lại một số sản nghiệp tổ tiên từng ký gửi. Từ nay môn hộ nhà bạn rạng rỡ trở lại, chẳng còn cảnh sa sút năm nào!",
+            "effects": {
+              "remove_flags": [
+                "gia_toc_sa_sut",
+                "that_sung_cung_dinh",
+                "giu_tin_vat_gia_toc"
+              ],
+              "add_flags": [
+                "gia_toc_phuc_hung"
+              ],
+              "fame": 25,
+              "copper": 1200,
+              "relationships": 12,
+              "happiness": 18,
+              "milestone_title": "Phục hưng cơ đồ gia tộc"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ nhận lời tiến cử mối làm ăn chứ không nhận bạc bố thí, giữ vẹn khí tiết",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cảm phục khí phách tự tôn của bạn, vị cố nhân hết lời ca ngợi trước giới thân hào và trực tiếp giới thiệu cho bạn nhiều thương vụ béo bở. Thanh danh dòng họ nhờ đó mà vang dội khắp vùng.",
+            "effects": {
+              "remove_flags": [
+                "gia_toc_sa_sut",
+                "that_sung_cung_dinh",
+                "giu_tin_vat_gia_toc"
+              ],
+              "add_flags": [
+                "gia_toc_phuc_hung"
+              ],
+              "fame": 30,
+              "copper": 450,
+              "craft_trade": 8,
+              "education": 5,
+              "relationships": 15,
+              "happiness": 15,
+              "milestone_title": "Tự lực phục hưng thanh danh gia tộc"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

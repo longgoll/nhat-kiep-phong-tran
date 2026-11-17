@@ -14,6 +14,7 @@ import type {
 } from '../types/dsl';
 import { computeWeight, evaluateConditions } from './conditionEvaluator';
 import { appendLog, applyEffects } from './effectApplier';
+import { ORIGIN_CORE_CONFIG } from './originConfigs';
 import { mulberry32Next, pickWeightedIndex } from './prng';
 
 export interface ChildhoodFocusOption {
@@ -347,7 +348,8 @@ export function advanceChildhoodMonth(
 
   // Monthly stat progression
   if (prevAge >= 6) {
-    const focusId = state.schedule.childhoodFocus || 'giup_nha';
+    const focusId =
+      state.schedule.childhoodFocus || ORIGIN_CORE_CONFIG[state.profile.originClass].defaultChildhoodFocus;
     const focusOpt =
       CHILDHOOD_FOCUS_OPTIONS.find((f) => f.id === focusId) ?? CHILDHOOD_FOCUS_OPTIONS[2];
     state = applyEffects(state, focusOpt.monthlyEffects);
@@ -540,21 +542,15 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
   }
 
   // Assign a sensible starter schedule at age 13 if still on infant default ('act_nghi_ngoi')
+  const starterCfg = ORIGIN_CORE_CONFIG[originClass].teenStarterSchedule;
   let starterMorning = inputState.schedule.morning;
   let starterAfternoon = inputState.schedule.afternoon;
+  let starterEvening = inputState.schedule.evening;
   if (starterMorning === 'act_nghi_ngoi' && starterAfternoon === 'act_nghi_ngoi') {
-    if (originClass === 'ban_nong') {
-      starterMorning = 'act_lam_thue_nong_vu';
-      starterAfternoon = 'act_lam_thue_nong_vu';
-    } else if (originClass === 'thu_cong') {
-      starterMorning = 'act_phu_ban_hang';
-      starterAfternoon = 'act_phu_ban_hang';
-    } else if (originClass === 'dia_chu') {
-      starterMorning = 'act_buon_ban_nho';
-      starterAfternoon = 'act_tu_hoc_chu';
-    } else {
-      starterMorning = 'act_tu_hoc_chu';
-      starterAfternoon = 'act_luyen_vo_cong';
+    starterMorning = starterCfg.morning;
+    starterAfternoon = starterCfg.afternoon;
+    if (starterEvening === 'act_nghi_ngoi') {
+      starterEvening = starterCfg.evening;
     }
   }
 
@@ -587,6 +583,7 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
       ...inputState.schedule,
       morning: starterMorning,
       afternoon: starterAfternoon,
+      evening: starterEvening,
       fallbackRules: starterFallbackRules,
     },
   };
@@ -596,13 +593,25 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
     milestone_title: 'Bước vào tuổi 13 tự lập',
   });
 
+  const teenLogByOrigin: Record<ActiveLifeState['profile']['originClass'], string> = {
+    ban_nong: `Tuổi 13 thành đinh! Cha mẹ chắt chiu chia cho ${familyGrantCopper} đồng tiền vốn và ${personalRice} đấu gạo làm hành trang tự lập.`,
+    thu_cong: `Tuổi 13 học nghề lập nghiệp! Gia đình trích ${familyGrantCopper} đồng vốn liếng cùng ${personalRice} đấu gạo để bạn tự xoay xở.`,
+    dia_chu: `Tuổi 13 nối dõi cơ nghiệp! Gia đình cấp ${familyGrantCopper} đồng tiền tiêu và ${personalRice} đấu gạo làm vốn lập thân.`,
+    quan_lai: isDeclined
+      ? `Tuổi 13 giữa lúc gia đạo sa sút, nhà chỉ còn gom được ${familyGrantCopper} đồng và ${personalRice} đấu gạo cho bạn tự lập.`
+      : `Tuổi 13 trưởng thành trong phủ quan! Gia đình cấp ${familyGrantCopper} đồng bạc cùng ${personalRice} đấu gạo để bạn dùi mài công danh.`,
+    hoang_toc: isDeclined
+      ? `Tuổi 13 nơi lãnh cung thất thế, bạn chỉ nhận được ${familyGrantCopper} đồng và ${personalRice} đấu gạo ít ỏi để tự mưu sinh.`
+      : `Tuổi 13 khai phủ Tôn thất! Triều đình ban ${familyGrantCopper} đồng bổng lộc cùng ${personalRice} đấu gạo theo lệ Hoàng gia.`,
+  };
+
   state = {
     ...state,
     logs: appendLog(
       state.logs,
       state.profile.totalDays,
       'childhood',
-      `Tuổi 13 thành đinh tự lập! Gia đình chia cho ${familyGrantCopper} đồng tiền vốn và ${personalRice} đấu gạo làm hành trang bước vào đời.`,
+      teenLogByOrigin[originClass],
     ),
   };
 

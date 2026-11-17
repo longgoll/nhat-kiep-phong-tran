@@ -239,6 +239,21 @@ export function ChildhoodView() {
                       <span className="text-stone-500">Hoàn cảnh: </span>
                       <span className="text-stone-200">{life.family.circumstanceLabel}</span>
                     </div>
+                    {life.family.familyAssetsSummary && life.family.familyAssetsSummary.length > 0 && (
+                      <div className="pt-1.5 border-t border-stone-800/70">
+                        <div className="text-stone-500 mb-1">Gia sản:</div>
+                        <div className="flex flex-wrap gap-1">
+                          {life.family.familyAssetsSummary.map((item, idx) => (
+                            <span
+                              key={idx}
+                              className="px-1.5 py-0.5 rounded bg-stone-950 border border-stone-800 text-[10px] text-stone-300"
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {life.assets.wealthCopper > 0 && (
                       <div className="flex items-center gap-1.5 text-emerald-300 pt-1">
                         <Coins className="w-3.5 h-3.5 shrink-0" />
@@ -445,7 +460,9 @@ export function ChildhoodView() {
                 Gia Đình &amp; Quan Hệ
               </h3>
               <div className="space-y-1.5">
-                {life.npcs.map((npc) => (
+                {life.npcs
+                  .filter((npc) => npc.age === undefined || npc.age + age >= 0)
+                  .map((npc) => (
                   <div
                     key={npc.id}
                     className="flex items-center justify-between text-xs p-2 rounded-lg bg-stone-950/60 border border-stone-800/70"

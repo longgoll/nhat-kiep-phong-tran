@@ -1,0 +1,411 @@
+[
+  {
+    "id": "evt_child_exp_hoang_toc_etiquette",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Nghi Khắt Khe Nơi Nội Cung",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_trait": [
+              "hieu_dong"
+            ]
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Thái phó Quốc Tử Giám và các nữ quan nội cung bắt đầu rèn giũa phép tắc Tôn thất: từ dáng đi, ánh mắt đến cách thưa bẩm. Chỉ một chút thất lễ là phải quỳ gối chép sách suốt buổi.",
+    "choices": [
+      {
+        "label": "Nghiêm chỉnh chịu khổ luyện từng khuôn phép hoàng gia",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Sau những buổi tập mỏi nhừ đầu gối, phong thái của bạn trở nên chững chạc, uy nghi khiến triều thần đều khen ngợi.",
+            "effects": {
+              "education": 6,
+              "fame": 5,
+              "health": -2,
+              "happiness": -5,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo lấy lòng thái phó và các ma ma để được nương tay",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ biết ăn nói lễ phép lại tâm lý, bạn sớm nắm bắt được nhân tình thế thái chốn cung đình.",
+            "effects": {
+              "relationships": 6,
+              "education": 3,
+              "happiness": 2,
+              "add_interests": [
+                "giao_du"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_hoang_toc_archery_rival",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Tỷ Thí Cung Tiễn Nơi Trường Tập",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_interest": [
+              "vo_nghe"
+            ]
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Tại trường tập cung tiễn hoàng gia, vị hoàng thân đồng niên vốn luôn ngầm ganh đua với bạn bước ra buông lời khích bác, thách đấu mười mũi tên ngay trước mắt các võ quan.",
+    "choices": [
+      {
+        "label": "Nhận lời tỷ thí thẳng thắn, giương cung trổ tài",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 8
+                  },
+                  "addWeight": 35
+                },
+                {
+                  "conditions": {
+                    "has_any_interest": [
+                      "vo_nghe"
+                    ]
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Mũi tên cuối của bạn xé gió găm trúng hồng tâm! Các võ quan trầm trồ tán thưởng, còn đối thủ siết chặt nắm tay đầy hậm hực.",
+            "effects": {
+              "martial": 5,
+              "fame": 8,
+              "happiness": 10,
+              "add_interests": [
+                "vo_nghe"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "rival",
+                  "delta": -12
+                }
+              ],
+              "milestone_title": "Thắng tỷ thí cung tiễn hoàng gia"
+            }
+          },
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": []
+            },
+            "resultText": "Bạn để thua sát nút một mũi tên, nhưng khí phách điềm tĩnh khi nhận thua vẫn khiến đối thủ phải dè chừng.",
+            "effects": {
+              "martial": 3,
+              "happiness": -4,
+              "npc_affinity": [
+                {
+                  "relation": "rival",
+                  "delta": -6
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khiêm tốn từ chối khéo để tránh chuốc thêm hiềm khích",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn mỉm cười thoái thác vì không muốn tranh hơn thua trẻ con. Đối thủ hả hê ra mặt, còn bạn càng thêm cảnh giác lòng người nơi cung cấm.",
+            "effects": {
+              "relationships": 3,
+              "happiness": -3,
+              "add_traits": [
+                "da_nghi"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "rival",
+                  "delta": 6
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_hoang_toc_harem_intrigue",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Sóng Gió Hậu Cung: Mẫu Thân Bị Gièm Pha",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "missing_flags": [
+        "that_sung_cung_dinh"
+      ]
+    },
+    "weight": {
+      "base": 42,
+      "modifiers": []
+    },
+    "description": "Một phe cánh trong hậu cung ngấm ngầm tung lời gièm pha, vu khống mẫu thân bạn dùng tà thuật tranh sủng. Không khí trong tẩm cung bỗng chốc căng như dây đàn.",
+    "choices": [
+      {
+        "label": "Cùng tâm phúc của mẫu thân lặng lẽ thu thập chứng cứ minh oan",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 50,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 15
+                  },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": {
+                    "min_relationships": 65
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Nhờ đối chứng rành mạch và lời lẽ sắc sảo của bạn, âm mưu vu oan bị vạch trần. Mẫu thân giữ vững địa vị, ôm bạn rơi nước mắt tự hào.",
+            "effects": {
+              "fame": 6,
+              "education": 3,
+              "happiness": 10,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 15
+                }
+              ],
+              "milestone_title": "Giúp mẫu thân vượt qua sóng gió hậu cung"
+            }
+          },
+          {
+            "weight": {
+              "base": 50,
+              "modifiers": []
+            },
+            "resultText": "Thế lực đối địch quá mạnh, mẫu thân vẫn bị giáng vị và dời sang cung hẻo lánh. Bổng lộc cắt giảm, hai mẹ con sống lặng lẽ qua ngày.",
+            "effects": {
+              "scale_family_copper": 0.4,
+              "fame": -12,
+              "happiness": -15,
+              "add_flags": [
+                "that_sung_cung_dinh"
+              ],
+              "set_circumstance": {
+                "id": "that_sung",
+                "label": "Mẫu thân bị gièm pha thất sủng, sống ở cung hẻo lánh"
+              },
+              "add_traits": [
+                "da_nghi"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 8
+                }
+              ],
+              "milestone_title": "Mẫu thân thất sủng nơi hậu cung"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khuyên mẫu thân nhẫn nhịn lùi một bước để bảo toàn bình an",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": []
+            },
+            "resultText": "Mẫu thân chấp nhận lui về cung hẻo lánh tránh thị phi. Tuy giữ được bình an nhưng cuộc sống từ nay đạm bạc và lạnh lẽo hơn trước nhiều.",
+            "effects": {
+              "scale_family_copper": 0.45,
+              "fame": -10,
+              "happiness": -10,
+              "add_flags": [
+                "that_sung_cung_dinh"
+              ],
+              "set_circumstance": {
+                "id": "that_sung",
+                "label": "Mẫu thân bị gièm pha thất sủng, sống ở cung hẻo lánh"
+              },
+              "add_traits": [
+                "nhut_nhat"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 6
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Sự điềm tĩnh nhún nhường của mẫu thân lại được bậc tôn trưởng thương xót, giữ lại nguyên vị nhưng bổng lộc vẫn bị bớt xén ít nhiều.",
+            "effects": {
+              "family_copper": -500,
+              "fame": -2,
+              "happiness": -3,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 10
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_hoang_toc_royal_banquet",
+    "stage": "childhood",
+    "severity": "minor",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Yến Tiệc Mừng Thọ Trong Cung",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "missing_flags": [
+        "that_sung_cung_dinh"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_fame": 25
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Trong cung mở đại yến mừng thọ rực rỡ ánh đèn lồng. Nhã nhạc vang lên giữa điện vàng, các bậc hoàng thân quốc thích tề tựu dâng rượu chúc phúc.",
+    "choices": [
+      {
+        "label": "Cung kính dâng chén chúc thọ đúng lễ nghi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 14
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Bậc tôn trưởng khen bạn lễ độ khôi ngô, ban thưởng gấm vóc và một túi tiền vàng làm quà mừng tuổi.",
+            "effects": {
+              "copper": 80,
+              "family_copper": 500,
+              "fame": 5,
+              "happiness": 10,
+              "relationships": 4
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Bạn hoàn thành trọn vẹn nghi thức chúc thọ giữa chốn đông người, được ban thưởng thêm bánh ngọt và lụa quý.",
+            "effects": {
+              "copper": 30,
+              "happiness": 6,
+              "relationships": 3
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,358 @@
+[
+  {
+    "id": "evt_infant_exp_cm_1",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 1080,
+    "title": "Tiếng Pháo Đêm Giao Thừa",
+    "conditions": {
+      "min_age": 1,
+      "max_age": 5,
+      "season_in": [
+        "winter"
+      ]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": []
+    },
+    "description": "Đêm Trừ Tịch gió lạnh se sắt, ngoài ngõ tiếng pháo nổ đì đùng hòa cùng mùi hương trầm và nồi bánh chưng đang sôi lục bục trên bếp.",
+    "choices": [
+      {
+        "label": "Đón khoảnh khắc Giao thừa",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Bạn giật mình ôm chặt lấy mẹ khi tràng pháo đầu tiên nổ giòn, rồi lại cười khanh khách khi được lì xì vài đồng tiền kẽm buộc chỉ đỏ.",
+            "effects": {
+              "happiness": 7,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 6
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_tier_in": [
+                      "tung_thieu"
+                    ]
+                  },
+                  "addWeight": 30
+                }
+              ]
+            },
+            "resultText": "Tiếng pháo nhà giàu đầu xóm vọng sang rộn rã, trong khi mâm cúng nhà mình chỉ có nén hương và đĩa xôi đỗ giản dị nhưng ấm tình thân.",
+            "effects": {
+              "happiness": 2,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 5
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_exp_cm_2",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Trận Ốm Sốt Mùa Hè",
+    "conditions": {
+      "min_age": 1,
+      "max_age": 5,
+      "season_in": [
+        "summer"
+      ]
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": [
+        {
+          "conditions": {
+            "max_health": 65
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Nắng tháng Năm oi bức như đổ lửa, bạn bỗng lên cơn sốt hầm hập, người nóng ran. Người nhà cuống quýt chạy chữa, đưa chén thuốc đắng tới bên môi.",
+    "choices": [
+      {
+        "label": "Cắn răng nuốt từng thìa thuốc đắng dù mặt nhăn nhó",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_tier_in": [
+                      "kha_gia",
+                      "sung_tuc",
+                      "hoang_gia"
+                    ]
+                  },
+                  "addWeight": 60
+                }
+              ]
+            },
+            "resultText": "Nhờ nhà có điều kiện mời thầy thuốc giỏi kê đơn mát lành lại thêm bạn ngoan ngoãn uống hết thuốc, cơn sốt hạ nhanh chỉ sau hai đêm.",
+            "effects": {
+              "family_copper": -60,
+              "health": -2,
+              "happiness": 2,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": []
+            },
+            "resultText": "Mẹ thức suốt đêm vắt nước lá mát lau trán và dỗ bạn uống từng ngụm thuốc. Nhờ sức chịu đựng lì lợm, đến sáng cơn sốt đã lui hẳn.",
+            "effects": {
+              "health": -4,
+              "happiness": -2,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 9
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Quấy khóc òa lên, bám chặt lấy mẹ đòi bế ru mới chịu ngủ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn khóc nấc suốt đêm trong vòng tay mẹ, mãi tới gần sáng mới thiếp đi. Trận ốm qua đi nhưng bạn trở nên bám hơi mẹ hơn.",
+            "effects": {
+              "health": -6,
+              "happiness": -1,
+              "add_traits": [
+                "nhut_nhat"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 5
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vùng vằng hất đổ chén thuốc, nhất quyết không chịu nằm yên",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thuốc đổ vương vãi khiến cả nhà phen hú vía, cơn sốt kéo dài thêm mấy hôm làm bạn sụt cân rõ rệt.",
+            "effects": {
+              "health": -10,
+              "happiness": -5,
+              "add_traits": [
+                "hieu_dong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_exp_cm_3",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 720,
+    "title": "Trò Chơi Dân Gian Ngoài Ngõ",
+    "conditions": {
+      "min_age": 3,
+      "max_age": 5,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": []
+    },
+    "description": "Buổi chiều nắng dịu, lũ trẻ quanh xóm tụ tập chơi rồng rắn lên mây, thả diều giấy và nhảy lò cò vang tiếng cười.",
+    "choices": [
+      {
+        "label": "Hòa mình vào cuộc chơi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": []
+            },
+            "resultText": "Bạn chạy theo đám anh chị em cười vang cả khoảng sân, tuy trầy xước nhẹ đầu gối nhưng vui quên cả giờ cơm tối.",
+            "effects": {
+              "happiness": 7,
+              "relationships": 5,
+              "health": 2,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 6
+                }
+              ],
+              "add_interests": [
+                "giao_du"
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Đang chơi hăng say thì vấp ngã sưng đầu gối, bạn mếu máo chạy về mách mẹ rồi lại lén ra hóng chuyện tiếp.",
+            "effects": {
+              "happiness": 3,
+              "relationships": 3,
+              "health": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_exp_cm_4",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Cơn Bão Lũ Đầu Mùa",
+    "conditions": {
+      "min_age": 2,
+      "max_age": 5,
+      "season_in": [
+        "autumn"
+      ]
+    },
+    "weight": {
+      "base": 22,
+      "modifiers": [
+        {
+          "conditions": {
+            "world_state_in": [
+              "mat_mua",
+              "chien_tranh"
+            ]
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Mưa bão đầu thu trút xuống suốt ba ngày đêm, gió rít ầm ầm ngoài mái hiên và tiếng sấm chớp vang rền khiến trẻ nhỏ dễ giật mình.",
+    "choices": [
+      {
+        "label": "Nép chặt vào lòng mẹ, bịt tai mỗi khi sấm nổ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hơi ấm của mẹ giúp bạn yên tâm ngủ thiếp đi giữa tiếng mưa gào gió thét, nhưng từ đó bạn rất sợ tiếng sấm lớn.",
+            "effects": {
+              "happiness": 1,
+              "add_traits": [
+                "nhut_nhat"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 6
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tò mò ghé mắt nhìn qua khe cửa xem mưa gió táp vào mái hiên",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nhìn chằm chằm vào màn mưa trắng xóa không hề nao núng, người lớn ngạc nhiên khen đứa nhỏ mới tí tuổi đã gan dạ.",
+            "effects": {
+              "happiness": 2,
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ôm khư khư món đồ chơi yêu thích của mình không rời nửa bước",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giữ chặt món đồ chơi quý nhất bên mình suốt cơn bão, sớm bộc lộ tính chiếm hữu rõ rệt.",
+            "effects": {
+              "happiness": 3,
+              "add_traits": [
+                "tham_vong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

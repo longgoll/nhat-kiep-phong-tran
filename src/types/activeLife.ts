@@ -10,7 +10,7 @@ export interface NPC {
   id: string;
   name: string;
   gender: Gender;
-  relation: 'parent' | 'sibling' | 'spouse' | 'child' | 'friend' | 'rival' | 'mentor';
+  relation: 'parent' | 'sibling' | 'spouse' | 'child' | 'friend' | 'rival' | 'mentor' | 'household';
   affinity: number; // -100 to +100
   isAlive: boolean;
   role: string;
@@ -72,6 +72,9 @@ export interface FamilyContext {
   birthPlace?: string;
   fatherAgeAtBirth?: number;
   motherAgeAtBirth?: number;
+  motherStatus?: 'chinh_that' | 'thu_that' | 'phi_tan';
+  servantCount?: number;
+  familyAssetsSummary?: string[];
 }
 
 export interface AnnualFinanceLedger {

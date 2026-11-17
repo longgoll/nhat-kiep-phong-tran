@@ -1,0 +1,460 @@
+[
+  {
+    "id": "evt_adult_exp_hoang_toc_title_estate",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "isMilestone": true,
+    "title": "Lễ Gia Quan & Khai Phủ Tôn Thất",
+    "conditions": {
+      "min_age": 16,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_age": 18
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Bạn đã đến tuổi trưởng thành theo lệ Hoàng gia. Bệ hạ hạ chiếu hỏi ý: muốn được ban thái ấp để tự lập phủ đệ riêng ngoài kinh thành, hay lưu lại nội triều nhận tước vị cùng bổng lộc hàng năm?",
+    "choices": [
+      {
+        "label": "Tạ ơn Thánh thượng, xin khai phủ riêng làm chủ một cõi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Chiếu chỉ ban xuống! Bạn được cấp đất xây phủ đệ son thiếp nguy nga, gia nhân tấp nập hầu hạ, chính thức tự lập môn hộ chốn kinh kỳ.",
+            "effects": {
+              "set_housing": "phu_de",
+              "copper": 1500,
+              "fame": 14,
+              "happiness": 15,
+              "add_flags": [
+                "da_khai_phu_hoang_toc"
+              ],
+              "milestone_title": "Được ban phủ đệ, chính thức khai phủ Tôn thất"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Xin nhận tước vị và trọng bổng lưu lại triều đình hầu cận",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hoàng thượng khen bạn hiếu thuận, ban tước hiệu tôn quý cùng 3.500 đồng bổng lộc và một khoảnh ruộng tư làm hoa lợi.",
+            "effects": {
+              "copper": 3500,
+              "fame": 12,
+              "relationships": 8,
+              "happiness": 10,
+              "add_flags": [
+                "da_nhan_tuoc_vi"
+              ],
+              "milestone_title": "Nhận sắc phong tước vị và bổng lộc triều đình"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khiêm nhường xin giữ tước nhỏ, chuyên tâm học hỏi kinh sử",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thái độ điềm đạm không màng quyền thế của bạn khiến bậc trưởng bối trong Hoàng tộc rất mực an tâm, ban cho ít ngân lượng và sách quý.",
+            "effects": {
+              "copper": 1000,
+              "education": 6,
+              "fame": 5,
+              "happiness": 6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_hoang_toc_succession",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 600,
+    "title": "Vòng Xoáy Tranh Đoạt Trữ Vị",
+    "conditions": {
+      "min_age": 17,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_fame": 25
+          },
+          "addWeight": 15
+        },
+        {
+          "conditions": {
+            "has_any_trait": [
+              "tham_vong"
+            ]
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Long thể Bệ hạ dạo này khiếm an, trong triều lập tức chia thành hai phe ngấm ngầm tranh giành ngôi Trữ quân. Cả hai vị thân vương cầm đầu đều sai tâm phúc mang mật thư tới mời bạn ngả theo.",
+    "choices": [
+      {
+        "label": "Dốc bạc và uy tín ủng hộ phe Đích trưởng tử chính thống (-1.200 đồng)",
+        "conditions": {
+          "min_copper": 1200
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 25
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Phe Đích trưởng tử giành được thế thượng phong trước đại triều. Bạn được ghi công phò tá, uy thế trong Tôn thất tăng cao.",
+            "effects": {
+              "copper": -1200,
+              "fame": 18,
+              "relationships": 10,
+              "happiness": 10,
+              "add_flags": [
+                "theo_phe_chinh_thong"
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Đối thủ bất ngờ tung mật sớ công kích khiến phe bạn chao đảo, bạn bị triều đình khiển trách và cắt giảm bổng lộc.",
+            "effects": {
+              "copper": -2000,
+              "fame": -10,
+              "happiness": -12
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bắt tay phe Hoàng tử thế lực để mưu cầu quyền bính",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": []
+            },
+            "resultText": "Chuyến mạo hiểm mang lại lợi ích lớn! Phe mới thâu tóm được Binh bộ và chia cho bạn một khoản lợi lộc hậu hĩnh.",
+            "effects": {
+              "copper": 1800,
+              "fame": 10,
+              "infamy": 8,
+              "relationships": 6
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Mưu sự bại lộ trước tai mắt Ngự sử đài! Bạn bị giam lỏng trong phủ suốt mấy tháng và tổn hao sức khỏe lẫn gia sản.",
+            "effects": {
+              "copper": -1500,
+              "health": -14,
+              "fame": -14,
+              "happiness": -15
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đốt ngay mật thư, giữ thân trung lập ngoài vòng thị phi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn đóng cổng phủ từ chối mọi yến tiệc chính trị. Tuy mất đi cơ hội thăng tiến nhanh nhưng giữ được đầu óc thanh thản và an toàn cho gia quyến.",
+            "effects": {
+              "education": 3,
+              "relationships": -4,
+              "happiness": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_hoang_toc_slander",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Bị Kẻ Tiểu Nhân Gièm Pha Trước Ngai Vàng",
+    "conditions": {
+      "min_age": 16,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_fame": 30
+          },
+          "addWeight": 15
+        },
+        {
+          "conditions": {
+            "min_infamy": 10
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Một viên quan ghen ghét thanh thế của bạn đã dâng mật sớ vu khống bạn ngầm tụ tập môn khách, nuôi chí bất thần. Hoàng thượng nổi giận triệu bạn vào điện vấn tội!",
+    "choices": [
+      {
+        "label": "Khẳng khái dâng biểu đối chất, dẫn kinh luật minh oan (Cần Học vấn >= 22)",
+        "conditions": {
+          "min_education": 22
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 85,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_fame": 40
+                  },
+                  "addWeight": 10
+                }
+              ]
+            },
+            "resultText": "Lý lẽ sắc bén và chứng cứ rõ ràng khiến kẻ gian nín họng. Hoàng thượng thấu rõ nỗi oan, phạt kẻ vu cáo và ban thưởng an ủi bạn.",
+            "effects": {
+              "fame": 14,
+              "copper": 600,
+              "happiness": 10,
+              "relationships": 6
+            }
+          },
+          {
+            "weight": {
+              "base": 15,
+              "modifiers": []
+            },
+            "resultText": "Dù giải được tội lớn nhưng giọng điệu cứng rắn khiến Long nhan chưa thật nguôi giận, bạn bị phạt bổng nửa năm.",
+            "effects": {
+              "copper": -800,
+              "fame": 2,
+              "happiness": -6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bỏ bạc nhờ cậy thái giám và ngoại thích nói đỡ trước Bệ hạ (-1.000 đồng)",
+        "conditions": {
+          "min_copper": 1000
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ những lời gièm pha được dập tắt kịp thời nơi hậu cung, cơn giận của Hoàng thượng lắng xuống, vụ án được cho qua nhẹ nhàng.",
+            "effects": {
+              "copper": -1000,
+              "infamy": 3,
+              "happiness": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cởi mũ quỳ chịu tội nhẹ, xin tự kiểm điểm nơi phủ đệ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Thấy bạn nhún nhường thành khẩn, Hoàng thượng chỉ giáng chức nhẹ và phạt tiền chuộc lỗi rồi cho lui.",
+            "effects": {
+              "copper": -900,
+              "fame": -8,
+              "happiness": -10
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Sự im lặng bị coi là ngầm nhận tội! Bạn bị đánh trượng răn đe và giam lỏng mất một thời gian.",
+            "effects": {
+              "health": -20,
+              "copper": -1200,
+              "fame": -14,
+              "happiness": -16
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_hoang_toc_royal_marriage",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Thánh Chỉ Ban Hôn Hoàng Gia",
+    "conditions": {
+      "min_age": 16,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_age": 19
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Thái hậu và Hoàng thượng có ý ban chỉ hôn, gán ghép bạn với con cái một nhà đại công thần thế lực bậc nhất triều đình để củng cố vây cánh Hoàng thất.",
+    "choices": [
+      {
+        "label": "Tuân chỉ kết duyên môn đăng hộ đối vì đại cục gia tộc",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hôn lễ cử hành linh đình khắp kinh thành! Nhà thông gia tặng hồi môn hậu hĩnh và trở thành chỗ dựa vững chắc cho bạn trên chốn quan trường.",
+            "effects": {
+              "copper": 2200,
+              "fame": 12,
+              "relationships": 12,
+              "happiness": 5,
+              "add_flags": [
+                "ket_hon_chi_hon"
+              ],
+              "milestone_title": "Tuân chỉ hôn Hoàng gia, kết thông gia đại thần"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lấy hết can đảm quỳ xin từ hôn để giữ tự do cho bản thân (Cần Thanh danh >= 20)",
+        "conditions": {
+          "min_fame": 20
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Nể danh tiếng và sự thành khẩn của bạn, Bệ hạ miễn cưỡng thu hồi ý chỉ. Bạn giữ được tự do nhưng nhà công thần kia sinh lòng oán hận.",
+            "effects": {
+              "fame": -6,
+              "relationships": -10,
+              "happiness": 14,
+              "add_flags": [
+                "tu_choi_chi_hon"
+              ],
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "milestone_title": "Khéo léo từ chối chỉ hôn Hoàng gia để giữ tự do"
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Hoàng thượng nổi giận cho rằng bạn coi thường ý chỉ, phạt cắt bổng lộc một năm rồi mới tha cho.",
+            "effects": {
+              "copper": -1500,
+              "fame": -12,
+              "relationships": -12,
+              "happiness": 4,
+              "add_flags": [
+                "tu_choi_chi_hon"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Viện cớ thân thể yếu nhược cần tịnh dưỡng để xin hoãn vô thời hạn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn đành giả ốm uống thuốc đắng nửa tháng trời để tránh né cuộc hôn sự sắp đặt. Phía triều đình tạm gác chuyện chỉ hôn lại.",
+            "effects": {
+              "health": -6,
+              "copper": -300,
+              "happiness": 3
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

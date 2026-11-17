@@ -1,0 +1,312 @@
+[
+  {
+    "id": "evt_infant_exp_ht_1",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Thái Y Bắt Mạch Nơi Cung Cấm",
+    "conditions": {
+      "min_age": 1,
+      "max_age": 4,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "max_health": 65
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Khí hậu nơi cung cấm ẩm lạnh, thể trạng bẩm sinh của bạn vốn mảnh mai yếu ớt. Sáng nay Thái y vào bắt mạch, tâu rằng mạch tượng hư hàn cần điều dưỡng cẩn thận.",
+    "choices": [
+      {
+        "label": "Ngoan ngoãn uống chén thuốc bổ sâm nhung ấm nóng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_tier_in": [
+                      "hoang_gia"
+                    ]
+                  },
+                  "addWeight": 10
+                }
+              ]
+            },
+            "resultText": "Mỗi ngày một chén yến chưng nhân sâm tuy đắt đỏ nhưng giúp khí huyết của bạn dần ấm lại, sắc mặt hồng hào hơn hẳn.",
+            "effects": {
+              "family_copper": -550,
+              "health": 10,
+              "stamina": 5,
+              "happiness": -2
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Thuốc bổ quá nồng hơi quá sức với tỳ vị non nớt của bạn, khiến bạn phát sốt nhẹ mấy hôm mới ổn.",
+            "effects": {
+              "family_copper": -400,
+              "health": 3,
+              "happiness": -5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhăn mặt đẩy chén thuốc đắng, đòi ăn cháo hạt sen và chạy ra nắng chơi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": []
+            },
+            "resultText": "Nhờ nếp sinh hoạt điều độ và phơi nắng sớm ngoài ngự hoa viên, cơ thể bạn tự thích nghi dần mà chẳng cần dùng quá nhiều dược liệu đắt tiền.",
+            "effects": {
+              "health": 4,
+              "happiness": 4,
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Không có thuốc quý nâng đỡ, gặp đợt gió mùa bất chợt khiến bạn ho dai dẳng suốt nửa tháng.",
+            "effects": {
+              "health": -6,
+              "happiness": -3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_exp_ht_2",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Sóng Ngầm Nơi Hậu Cung",
+    "conditions": {
+      "min_age": 2,
+      "max_age": 5,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "missing_flags": [
+        "that_sung_cung_dinh",
+        "mo_coi_cha"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Trong yến tiệc thưởng hoa tại ngự uyển, mẫu thân bạn cùng các phi tần khác đều dâng trà chúc thọ. Bỗng nhiên Bệ hạ dừng bước trước chỗ hai mẹ con, ánh mắt vừa dò xét vừa như đang cân nhắc điều gì.",
+    "choices": [
+      {
+        "label": "Ríu rít tiến lên khoe vài chữ vừa học để lấy lòng phụ hoàng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 8
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Lời nói ngây thơ mà lễ phép của bạn khiến phụ hoàng bật cười, bế bổng lên và ban thưởng lụa là cho mẫu thân. Địa vị của hai mẹ con thêm vững vàng.",
+            "effects": {
+              "happiness": 8,
+              "fame": 5,
+              "family_copper": 400,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 8
+                },
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 10
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Một câu lỡ miệng ngây ngô của bạn bị phi tần đối thủ thêu dệt thành vô lễ. Phụ hoàng lạnh mặt bỏ đi, từ đó ít ghé qua cung của mẫu thân.",
+            "effects": {
+              "happiness": -10,
+              "fame": -6,
+              "add_flags": [
+                "that_sung_cung_dinh"
+              ],
+              "set_circumstance": {
+                "id": "that_sung",
+                "label": "Mẫu thân thất sủng, sống ở cung hẻo lánh"
+              },
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": -6
+                },
+                {
+                  "npc_id": "npc_father",
+                  "delta": -8
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ngoan ngoãn nép sau vạt áo mẫu thân, giữ tròn lễ nghi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Bạn cúi đầu hành lễ chuẩn mực rồi im lặng. Dù không quá nổi bật, mẫu thân vẫn thầm hài lòng vì bạn biết giữ phép tắc nơi thâm cung.",
+            "effects": {
+              "relationships": 3,
+              "happiness": 2,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 6
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Giữa chốn hậu cung ganh đua khốc liệt, sự trầm lặng của hai mẹ con bị kẻ khác thừa cơ gièm pha. Dần dà cung của mẫu thân trở nên lạnh lẽo, thất sủng.",
+            "effects": {
+              "happiness": -8,
+              "fame": -4,
+              "add_flags": [
+                "that_sung_cung_dinh"
+              ],
+              "set_circumstance": {
+                "id": "that_sung",
+                "label": "Mẫu thân thất sủng, sống ở cung hẻo lánh"
+              },
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 4
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_exp_ht_3",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Ánh Mắt Lạnh Nơi Đại Yến Tông Thất",
+    "conditions": {
+      "min_age": 3,
+      "max_age": 5,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Trong buổi lễ tế tổ của hoàng tộc, giữa tiếng chuông khánh trang nghiêm, vài vị hoàng huynh và công tử tôn thất lớn tuổi hơn liếc nhìn bạn bằng ánh mắt dò xét đầy lạnh nhạt.",
+    "choices": [
+      {
+        "label": "Ứng xử nơi tôn thất",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "has_flags": [
+                      "that_sung_cung_dinh"
+                    ]
+                  },
+                  "addWeight": 40
+                }
+              ]
+            },
+            "resultText": "Thấy cung của bạn vắng vẻ thất thế, đám tôn thất xì xào bàn tán rồi cố ý gạt bạn ra rìa mâm cỗ. Bạn sớm hiểu tình đời ấm lạnh chốn hoàng gia.",
+            "effects": {
+              "happiness": -6,
+              "fame": -2,
+              "add_traits": [
+                "da_nghi"
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "missing_flags": [
+                      "that_sung_cung_dinh"
+                    ]
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Dù nghe thoáng tiếng ghen tị sau lưng, bạn vẫn ngẩng cao đầu giữ đúng nghi trượng hoàng gia khiến đám người kia không dám làm càn.",
+            "effects": {
+              "fame": 3,
+              "relationships": -2,
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

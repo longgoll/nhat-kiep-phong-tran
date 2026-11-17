@@ -44,6 +44,7 @@ describe('Core Engine (MVP 1)', () => {
 
   it('ConditionEvaluator and EffectApplier handle stats, flags, NPC affinity, and death', () => {
     let life = createNewLife(42);
+    const relBefore = life.stats.relationships;
     expect(evaluateConditions(life, { min_age: 0, max_age: 0 })).toBe(true);
     expect(evaluateConditions(life, { min_age: 5 })).toBe(false);
 
@@ -55,7 +56,7 @@ describe('Core Engine (MVP 1)', () => {
     });
 
     expect(evaluateConditions(life, { min_education: 15, has_flags: ['duoc_thay_do_quy'] })).toBe(true);
-    expect(life.stats.relationships).toBe(62); // 60 + 20% of 10
+    expect(life.stats.relationships).toBe(relBefore + 2); // +20% of 10
 
     life = applyEffects(life, { kill_reason: 'Bạo bệnh qua đời' });
     expect(life.isAlive).toBe(false);
@@ -181,5 +182,43 @@ describe('Core Engine (MVP 1)', () => {
 
     expect(life.profile.totalDays).toBe(13 * 360);
     expect(life.flags).toContain('da_truong_thanh_13');
+  });
+
+  it('differentiates all 5 origins with static core config and dynamic circumstance overrides', () => {
+    const seenByOrigin = new Map<string, ReturnType<typeof createNewLife>>();
+    for (let s = 1; s <= 800 && seenByOrigin.size < 5; s += 1) {
+      const life = createNewLife(s);
+      if (!seenByOrigin.has(life.profile.originClass)) {
+        seenByOrigin.set(life.profile.originClass, life);
+      }
+    }
+
+    expect(seenByOrigin.size).toBe(5);
+    const banNong = seenByOrigin.get('ban_nong')!;
+    const thuCong = seenByOrigin.get('thu_cong')!;
+    const diaChu = seenByOrigin.get('dia_chu')!;
+    const quanLai = seenByOrigin.get('quan_lai')!;
+    const hoangToc = seenByOrigin.get('hoang_toc')!;
+
+    expect(banNong.schedule.childhoodFocus).toBe('giup_nha');
+    expect(thuCong.schedule.childhoodFocus).toBe('so_thich');
+    expect(diaChu.schedule.childhoodFocus).toBe('hoc_tap');
+    expect(quanLai.schedule.childhoodFocus).toBe('hoc_tap');
+    expect(hoangToc.schedule.childhoodFocus).toBe('hoc_tap');
+
+    expect(banNong.interests).toContain('dien_vien');
+    expect(thuCong.interests).toContain('thu_cong');
+    expect(quanLai.interests).toContain('kinh_su');
+    expect(hoangToc.stats.fame).toBeGreaterThan(quanLai.stats.fame);
+    expect(quanLai.stats.fame).toBeGreaterThan(diaChu.stats.fame);
+
+    // Verify siblings never share age 0 with player at birth
+    for (const life of seenByOrigin.values()) {
+      const siblings = life.npcs.filter((n) => n.relation === 'sibling');
+      for (const sib of siblings) {
+        expect(sib.age).not.toBe(0);
+      }
+      expect(life.family?.familyAssetsSummary?.length).toBeGreaterThan(0);
+    }
   });
 });

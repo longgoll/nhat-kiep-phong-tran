@@ -1,0 +1,350 @@
+[
+  {
+    "id": "evt_child_exp_circ_eldest_burden",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Trọng Trách Phận Con Cả",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "birth_order_in": [
+        "con_truong"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "family_tier_in": [
+              "tung_thieu",
+              "du_an"
+            ]
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Cha mẹ bận rộn việc nhà việc cửa suốt ngày, mọi chuyện trông nom, dỗ dành và chăm lo cho đàn em nhỏ đều đặt cả lên đôi vai người con trưởng là bạn.",
+    "choices": [
+      {
+        "label": "Ân cần dỗ dành, nhường phần ngon cho các em và đỡ đần cha mẹ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Dù có lúc mệt nhoài, nhìn các em quấn quýt bên mình và nụ cười an lòng của cha mẹ, bạn thấy lòng ấm áp lạ thường.",
+            "effects": {
+              "stamina": -5,
+              "happiness": -2,
+              "relationships": 8,
+              "craft_trade": 3,
+              "add_traits": [
+                "trong_nghia",
+                "kien_cuong"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 15
+                },
+                {
+                  "relation": "parent",
+                  "delta": 10
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Phân công việc rõ ràng, nghiêm khắc rèn các em vào nề nếp",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Các em hơi sợ uy của anh chị cả nhưng nhà cửa gọn gàng ngăn nắp hơn hẳn, cha mẹ rất hài lòng với khả năng quản xuyến của bạn.",
+            "effects": {
+              "education": 3,
+              "relationships": 3,
+              "add_traits": [
+                "tham_vong"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": -6
+                },
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_circ_youngest_pampered",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Phận Con Út Được Cưng Chiều",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "birth_order_in": [
+        "con_ut"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": []
+    },
+    "description": "Là con út trong nhà, hễ có tấm bánh ngon hay đồng quà vặt nào là cha mẹ đều phần cho bạn trước, anh chị cũng thường nhường nhịn mỗi khi bạn mè nheo.",
+    "choices": [
+      {
+        "label": "Vui vẻ nhận phần hơn, tận hưởng sự nuông chiều của cả nhà",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn lớn lên vô tư lự trong sự bao bọc của cha mẹ, dù thỉnh thoảng anh chị có hơi tị nạnh vì thấy bạn được chiều quá mức.",
+            "effects": {
+              "happiness": 12,
+              "health": 4,
+              "relationships": 4,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 5
+                },
+                {
+                  "relation": "sibling",
+                  "delta": -4
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bẻ đôi phần bánh ngon chia lại cho các anh chị cùng ăn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Các anh chị ngạc nhiên rồi cười tít mắt xoa đầu bạn, cả nhà rộn ràng tiếng cười nói đầm ấm.",
+            "effects": {
+              "happiness": 8,
+              "relationships": 8,
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 14
+                },
+                {
+                  "relation": "parent",
+                  "delta": 6
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_circ_fatherless",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Sóng Gió Dưới Mái Nhà Thiếu Bóng Cha",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "has_flags": [
+        "mo_coi_cha"
+      ]
+    },
+    "weight": {
+      "base": 60,
+      "modifiers": []
+    },
+    "description": "Từ ngày cha mất, ngôi nhà trở nên trống trải hiu quạnh. Mấy người họ hàng cậy thế nhà bạn không còn đàn ông trụ cột bèn kéo sang lấn đất vườn và buông lời ức hiếp mẹ con bạn.",
+    "choices": [
+      {
+        "label": "Đứng chắn trước mặt mẹ giữ lấy gia sản, cùng mẹ gồng gánh vượt qua",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "has_any_trait": [
+                      "kien_cuong",
+                      "trong_nghia"
+                    ]
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Ánh mắt cứng cỏi của bạn cùng sự bênh vực của hàng xóm khiến đám họ hàng chùn bước. Bạn sớm chững chạc để làm chỗ dựa tinh thần cho mẹ.",
+            "effects": {
+              "craft_trade": 4,
+              "happiness": -4,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 16
+                }
+              ],
+              "milestone_title": "Cùng mẹ gồng gánh giữ nhà sau khi mất cha"
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Sức cô thế yếu, đám họ hàng vẫn ngang nhiên chiếm mất một phần hoa lợi. Hai mẹ con chỉ biết siết tay nhau tự nhủ phải sống thật kiên cường.",
+            "effects": {
+              "family_copper": -100,
+              "happiness": -12,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 12
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nín nhịn nhượng bộ một phần để mẹ con được yên ổn làm ăn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Mất đi chút tài sản nhưng tránh được cảnh xô xát triền miên, bạn sớm hiểu nỗi cay đắng khi không có chỗ dựa.",
+            "effects": {
+              "family_copper": -80,
+              "happiness": -8,
+              "education": 2,
+              "add_traits": [
+                "da_nghi"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 6
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_circ_fall_betrayal",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Thế Thái Nhân Tình Lúc Gia Đạo Sa Sút",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "has_any_flag": [
+        "gia_toc_sa_sut",
+        "that_sung_cung_dinh"
+      ]
+    },
+    "weight": {
+      "base": 60,
+      "modifiers": []
+    },
+    "description": "Thuở nhà còn quyền quý, đám bạn đồng trang lứa lúc nào cũng săn đón tâng bốc. Nay gia đạo sa sút, gặp lại ngoài đường, đứa thì ngoảnh mặt làm ngơ, đứa lại buông lời mỉa mai lạnh nhạt.",
+    "choices": [
+      {
+        "label": "Ngẩng cao đầu bước qua, khắc ghi nỗi nhục hôm nay làm chí lớn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Ánh mắt khinh miệt của bạn cũ trở thành ngọn lửa hun đúc ý chí phục hưng gia tộc trong lòng bạn.",
+            "effects": {
+              "happiness": -8,
+              "education": 3,
+              "add_traits": [
+                "tham_vong",
+                "kien_cuong"
+              ],
+              "add_flags": [
+                "chi_lon_phuc_hung"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lạnh lùng thu mình lại, tự nhủ từ nay không dễ tin người",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn khép lòng mình trước thói đời ấm lạnh, trở nên dè chừng và kín kẽ hơn bạn bè cùng trang lứa.",
+            "effects": {
+              "happiness": -10,
+              "relationships": -6,
+              "add_traits": [
+                "da_nghi"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

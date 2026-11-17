@@ -1,0 +1,456 @@
+[
+  {
+    "id": "evt_adult_exp_dia_chu_tenant_rent",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 480,
+    "title": "Tá Điền Kéo Đến Xin Khất Tô",
+    "conditions": {
+      "min_age": 15,
+      "origin_in": [
+        "dia_chu"
+      ]
+    },
+    "weight": {
+      "base": 30,
+      "modifiers": [
+        {
+          "conditions": {
+            "world_state_in": [
+              "mat_mua",
+              "chien_tranh"
+            ]
+          },
+          "addWeight": 25
+        },
+        {
+          "conditions": {
+            "season_in": [
+              "autumn"
+            ]
+          },
+          "addWeight": 12
+        }
+      ]
+    },
+    "description": "Sau trận hạn hán kéo dài, lúa ngoài đồng lép hạt cả. Hàng chục hộ tá điền bế theo con nhỏ kéo tới trước cổng điền trang quỳ xin gia chủ giảm tô hoặc cho khất nợ đến vụ chiêm sang năm.",
+    "choices": [
+      {
+        "label": "Khoan dung giảm nửa số tô và cho khất phần còn lại",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Đám tá điền rưng rưng nước mắt cảm tạ ân đức. Danh tiếng gia chủ nhân hậu lan khắp tổng, mùa sau dân làng càng chăm chỉ cày cấy giữ đất cho nhà bạn.",
+            "effects": {
+              "rice": -3,
+              "fame": 10,
+              "relationships": 10,
+              "happiness": 8,
+              "add_traits": [
+                "trong_nghia"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Sai gia đinh siết nợ thẳng tay, thu lại ruộng cấy của hộ chây ỳ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Gia đinh lăm lăm tay thước dỡ thóc, thu trâu và đòi lại mấy sào ruộng tốt. Kho lẫm đầy ắp thêm nhưng tiếng oán thán nổi lên khắp xóm.",
+            "effects": {
+              "copper": 480,
+              "rice": 5,
+              "infamy": 10,
+              "relationships": -12,
+              "happiness": -4
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Bị dồn vào đường cùng, mấy thanh niên tá điền nổi xung xô xát với gia đinh rồi kéo nhau bỏ làng đi phiêu bạt, ruộng bỏ hoang một khoảnh.",
+            "effects": {
+              "copper": 180,
+              "infamy": 12,
+              "relationships": -15,
+              "health": -6,
+              "happiness": -10
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thu đúng nửa tô bằng thóc, phần thiếu cho làm công trừ nợ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cách xử lý thấu tình đạt lý giúp điền trang vẫn có người đắp bờ vét mương, lại không mất lòng dân cày.",
+            "effects": {
+              "copper": 220,
+              "rice": 2,
+              "fame": 3,
+              "relationships": 3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_dia_chu_buy_land",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Cơ Hội Mua Ruộng Tốt Giá Hời",
+    "conditions": {
+      "min_age": 16,
+      "origin_in": [
+        "dia_chu"
+      ]
+    },
+    "weight": {
+      "base": 30,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_copper": 500
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Một gia đình hào lý bên tổng kế đang sa sút vì con trai cờ bạc, đành đem bán gấp mấy mẫu ruộng bờ xôi ruộng mật sát cánh đồng nhà bạn với giá rẻ hơn thị trường phân nửa.",
+    "choices": [
+      {
+        "label": "Xuất tiền mua trọn thửa ruộng và lập văn khế ngay (-500 đồng)",
+        "conditions": {
+          "min_copper": 500
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": []
+            },
+            "resultText": "Bờ cõi điền trang mở rộng thêm một khoảnh phì nhiêu! Vụ thu hoạch tới hứa hẹn mang lại nguồn thu dồi dào cho gia tộc.",
+            "effects": {
+              "copper": -500,
+              "rice": 8,
+              "fame": 6,
+              "craft_trade": 3,
+              "happiness": 10,
+              "add_property": "ruong_tu",
+              "milestone_title": "Thâu tóm ruộng tốt mở rộng điền trang"
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Sau khi ký văn khế mới phát hiện mảnh ruộng đang vướng tranh chấp mốc giới với nhà bên, phải tốn thêm chút tiền lót tay lý trưởng giải quyết.",
+            "effects": {
+              "copper": -650,
+              "rice": 5,
+              "craft_trade": 2,
+              "happiness": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Mặc cả chỉ mua phần ruộng tốt nhất đầu nguồn (-320 đồng)",
+        "conditions": {
+          "min_copper": 320
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn mặc cả sắc sảo, lấy được đúng phần ruộng đầu nguồn tưới tiêu thuận lợi nhất với giá hời, còn giữ lại được chút lời ngay từ vụ lúa chét.",
+            "effects": {
+              "copper": -320,
+              "rice": 5,
+              "craft_trade": 4,
+              "happiness": 6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ tiền phòng thân, không ham mua thêm đất lúc này",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn từ chối lời chào mua để giữ vững tiền mặt trong rương, tránh rủi ro thuế điền tăng cao.",
+            "effects": {
+              "happiness": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_dia_chu_bandit_raid",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Thảo Khấu Đe Dọa Cướp Điền Trang",
+    "conditions": {
+      "min_age": 16,
+      "origin_in": [
+        "dia_chu"
+      ]
+    },
+    "weight": {
+      "base": 26,
+      "modifiers": [
+        {
+          "conditions": {
+            "world_state_in": [
+              "chien_tranh",
+              "mat_mua"
+            ]
+          },
+          "addWeight": 28
+        },
+        {
+          "conditions": {
+            "min_copper": 1000
+          },
+          "addWeight": 10
+        }
+      ]
+    },
+    "description": "Chập tối, một toán thảo khấu mặt mũi bặm trợn áp sát cổng điền trang, bắn tên kèm thư tối hậu đòi gia chủ phải nộp bạc chuộc trước canh ba, nếu không chúng sẽ phóng hỏa cướp kho thóc!",
+    "choices": [
+      {
+        "label": "Cầm binh khí dẫn đầu gia đinh xông ra đánh đuổi bọn cướp (Cần Võ nghệ >= 15)",
+        "conditions": {
+          "min_martial": 15
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 28
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Bạn vung gươm chém gãy giáo tên đầu sỏ khiến cả bọn kinh hãi tháo chạy tán loạn, để lại cả ít bạc cướp được từ nơi khác!",
+            "effects": {
+              "copper": 350,
+              "martial": 4,
+              "fame": 14,
+              "happiness": 12,
+              "stamina": -25,
+              "milestone_title": "Đánh tan toán thảo khấu bảo vệ điền trang"
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Trong đêm tối hỗn chiến, bạn đẩy lùi được chúng nhưng bị trúng một nhát dao sượt vai, gia đinh cũng bị thương vài người.",
+            "effects": {
+              "health": -20,
+              "martial": 2,
+              "fame": 8,
+              "copper": -120,
+              "happiness": -6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nộp 600 đồng tiền chuộc để bảo toàn người và kho thóc",
+        "conditions": {
+          "min_copper": 600
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bọn thảo khấu vơ bọc bạc rồi rút vào rừng sâu. Tuy xót của nhưng cả nhà bình an vô sự, kho thóc không bị đốt phá.",
+            "effects": {
+              "copper": -600,
+              "happiness": -10,
+              "fame": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đóng chặt cổng gỗ, gõ mõ báo động cả làng cùng ra ứng cứu",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 55
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Tiếng mõ và đuốc sáng rực từ xóm dưới kéo lên khiến bọn cướp chùn bước rút lui, chỉ kịp cướp ít thóc ngoài sân phơi.",
+            "effects": {
+              "rice": -4,
+              "relationships": 4,
+              "stamina": -15
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Dân làng đến chậm, bọn cướp phá cổng tràn vào vơ vét sạch tiền bạc và làm bạn bị thương khi ngăn cản.",
+            "effects": {
+              "copper": -450,
+              "rice": -5,
+              "health": -16,
+              "happiness": -14
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_dia_chu_bribe_corvee",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Chạy Chọt Miễn Sưu Dịch Cho Điền Trang",
+    "conditions": {
+      "min_age": 16,
+      "origin_in": [
+        "dia_chu"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": [
+        {
+          "conditions": {
+            "season_in": [
+              "spring",
+              "summer"
+            ]
+          },
+          "addWeight": 10
+        }
+      ]
+    },
+    "description": "Đúng mùa cày cấy bận rộn, nha huyện lại đưa trát đòi đinh tráng trong điền trang đi phu sửa đường quan và thu thêm phụ thu điền thổ. Nếu không xoay xở sớm, mùa màng năm nay e sẽ lỡ hết thời vụ.",
+    "choices": [
+      {
+        "label": "Mang lễ vật hậu hĩnh lên tư dinh đút lót quan huyện (-700 đồng)",
+        "conditions": {
+          "min_copper": 700
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 85,
+              "modifiers": []
+            },
+            "resultText": "Quan huyện vuốt râu hài lòng, lập tức ký giấy miễn sưu dịch cho toàn bộ người làm trong điền trang nhà bạn. Nhân công đủ đầy, mùa vụ bội thu.",
+            "effects": {
+              "copper": -700,
+              "rice": 6,
+              "relationships": 6,
+              "infamy": 4
+            }
+          },
+          {
+            "weight": {
+              "base": 15,
+              "modifiers": []
+            },
+            "resultText": "Quan huyện nhận bạc nhưng vẫn lén sai nha lại vòi thêm phần lễ cho chánh tổng, khiến bạn tốn kém hơn dự tính.",
+            "effects": {
+              "copper": -900,
+              "rice": 4,
+              "happiness": -5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Biếu lễ mọn cho thư lại giữ sổ để giảm bớt một nửa suất phu (-250 đồng)",
+        "conditions": {
+          "min_copper": 250
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ khéo ăn nói cùng phong bao vừa phải, viên thư lại gạch bớt nửa số nhân công trên sổ, điền trang vẫn kịp gieo cấy đúng tiết.",
+            "effects": {
+              "copper": -250,
+              "rice": 2,
+              "craft_trade": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chấp hành lệnh quan, cắt cử người đi phu và nộp đủ thuế theo lệ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Việc đồng áng bị chậm trễ mất một phần do thiếu nhân lực, nhưng bạn giữ được tiếng ngay thẳng, không mang tiếng hối lộ cửa quan.",
+            "effects": {
+              "copper": -180,
+              "rice": -2,
+              "fame": 5,
+              "happiness": -4
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

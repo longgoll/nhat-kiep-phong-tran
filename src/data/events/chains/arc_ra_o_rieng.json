@@ -1,0 +1,335 @@
+[
+  {
+    "id": "evt_chain_ra_o_rieng_1",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Thưa Chuyện Ra Ở Riêng",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 28,
+      "missing_flags": [
+        "da_ra_o_rieng"
+      ]
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_age": 20
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Tuổi xuân đã chớm trưởng thành, dưới mái nhà chung nay bắt đầu chật chội trước những dự tính riêng tư. Sau bữa cơm chiều bên ánh đèn dầu leo lét, bạn định bụng thưa với song thân chuyện tách hộ ra ở riêng để tự thân lập nghiệp.",
+    "choices": [
+      {
+        "label": "Xin cha mẹ ra ở riêng lập nghiệp, nhận chút vốn liếng tự lập",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_tier_in": [
+                      "kha_gia",
+                      "sung_tuc",
+                      "hoang_gia"
+                    ]
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Cha mẹ gật đầu ưng thuận, tuy trong mắt thoáng chút bùi ngùi nhưng vẫn vui lòng trích từ rương gỗ một ít đồng kẽm cùng mấy đấu gạo làm vốn ban đầu. Người dặn dò hai tháng nữa thu xếp ổn thỏa hãy dựng nếp nhà cho đàng hoàng.",
+            "effects": {
+              "copper": 260,
+              "rice": 18,
+              "happiness": 6,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 5
+                }
+              ],
+              "add_flags": [
+                "da_ra_o_rieng"
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_ra_o_rieng_2",
+                  "delay_days": 60
+                }
+              ],
+              "milestone_title": "Xin phép cha mẹ ra ở riêng"
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Cảnh nhà vốn thanh bần nên cha mẹ thở dài thương con vất vả, chỉ có thể gói ghém ít gạo mới và vài chục đồng tiền lẻ làm lộ phí. Dù vốn mỏng, bạn vẫn quyết tâm tự dựng cơ đồ bằng đôi tay mình.",
+            "effects": {
+              "copper": 90,
+              "rice": 10,
+              "happiness": 2,
+              "add_flags": [
+                "da_ra_o_rieng"
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_ra_o_rieng_2",
+                  "delay_days": 60
+                }
+              ],
+              "milestone_title": "Tay trắng xin ra ở riêng"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ở lại phụng dưỡng cha mẹ, giữ tròn hòa khí gia đình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nghe bạn thưa sẽ tiếp tục ở lại sớm hôm đỡ đần cơm nước và giữ ấm nếp nhà, cha mẹ rưng rưng cảm động. Cả nhà quây quần bên ấm trà nóng, tình thân thêm phần khăng khít.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 15
+                }
+              ],
+              "relationships": 5,
+              "happiness": 8,
+              "add_flags": [
+                "da_ra_o_rieng"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_ra_o_rieng_2",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Ngày Dựng Mái Nhà Riêng",
+    "conditions": {
+      "min_age": 16,
+      "has_flags": [
+        "da_ra_o_rieng"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Sau hai tháng tích góp và chọn ngày lành tháng tốt, mảnh đất mới đã phát quang sạch sẽ. Bà con lối xóm xúm lại hỏi han xem bạn định dựng nếp nhà thế nào để còn phụ một tay kéo xà cất nóc.",
+    "choices": [
+      {
+        "label": "Dốc vốn thuê thợ nề dựng căn nhà gạch ngói khang trang (Cần 800 Đồng)",
+        "conditions": {
+          "min_copper": 800
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tiếng bay gõ gạch rộn rã suốt nửa tháng trời. Ngôi nhà ba gian tường vôi trắng, mái ngói đỏ au hoàn thành khiến cả xóm trầm trồ khen ngợi chí lớn của bạn.",
+            "effects": {
+              "copper": -800,
+              "set_housing": "nha_gach",
+              "fame": 8,
+              "happiness": 15,
+              "milestone_title": "Dựng cơ ngơi nhà gạch riêng",
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_ra_o_rieng_3",
+                  "delay_days": 180
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Mua tre nứa dựng nếp nhà tranh giản dị cho tiết kiệm (Cần 200 Đồng)",
+        "conditions": {
+          "min_copper": 200
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Dù chỉ là mái tranh vách đất mộc mạc, nhưng mùi rạ mới thơm nồng và khoảng sân nhỏ sạch sẽ cũng đủ mang lại cảm giác ấm áp của một chốn đi về thực thụ.",
+            "effects": {
+              "copper": -200,
+              "set_housing": "nha_tranh",
+              "happiness": 8,
+              "stamina": -5,
+              "milestone_title": "Dựng nếp nhà tranh tự lập",
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_ra_o_rieng_3",
+                  "delay_days": 180
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tự tay vào bãi bồi chặt tre kết lá, dựng tạm mái tranh đơn sơ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Túi tiền eo hẹp chẳng đủ thuê thợ, bạn đành tự mình đốn tre, bện tranh lợp mái suốt mấy ngày liền đến rã rời gân cốt. Dẫu gian nhà còn thưa vách, ít ra bạn đã có mái che đầu qua mùa mưa nắng.",
+            "effects": {
+              "stamina": -12,
+              "health": -4,
+              "set_housing": "nha_tranh",
+              "happiness": 4,
+              "milestone_title": "Tự tay dựng mái tranh đơn sơ",
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_ra_o_rieng_3",
+                  "delay_days": 180
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_ra_o_rieng_3",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Anh Chị Em Ghé Thăm Nhà Mới",
+    "conditions": {
+      "min_age": 16,
+      "has_flags": [
+        "da_ra_o_rieng"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Nửa năm kể từ ngày bạn ra ở riêng đã trôi qua. Hôm nay, mấy anh chị em trong nhà bỗng kéo nhau qua cổng với tay nải quà quê, vừa nhìn quanh cơ ngơi mới của bạn vừa dò hỏi chuyện làm ăn dạo gần đây.",
+    "choices": [
+      {
+        "label": "Niềm nở mời vào trong, làm mâm cơm thân mật sum họp hàn huyên",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 50
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Bữa cơm tuy đạm bạc nhưng tiếng cười nói râm ran suốt buổi trưa. Thấy bạn tự lập vững vàng, anh chị em ai nấy đều mừng rỡ, còn dúi thêm ít tiền lẻ bảo phụ mua sắm vật dụng trong nhà.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 15
+                }
+              ],
+              "relationships": 8,
+              "happiness": 12,
+              "copper": 120,
+              "milestone_title": "Anh em sum họp nơi nhà mới"
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Đang lúc chén rượu đưa cay, có người bỗng buột miệng tị nạnh chuyện cha mẹ năm xưa chia phần không đều, khiến bữa cơm sum họp bỗng trở nên gượng gạo, sượng sùng.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": -10
+                }
+              ],
+              "relationships": -4,
+              "happiness": -6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ thái độ rạch ròi, nói thẳng phận ai nấy lo kẻo sinh chuyện gia tài",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": []
+            },
+            "resultText": "Lời nói thẳng thừng của bạn khiến sắc mặt anh chị em sa sầm. Đôi bên lời qua tiếng lại hồi lâu rồi họ hậm hực xách nón ra về, bỏ lại khoảng sân vắng lặng nặng nề.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": -18
+                }
+              ],
+              "relationships": -8,
+              "happiness": -10
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Tuy không khí có phần xa cách, nhưng việc nói rõ tiền bạc rạch ròi ngay từ đầu giúp bạn tránh được cảnh vay mượn lằng nhằng và những phiền toái về sau.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": -5
+                }
+              ],
+              "craft_trade": 2,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

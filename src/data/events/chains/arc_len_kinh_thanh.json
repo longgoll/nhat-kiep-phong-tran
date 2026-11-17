@@ -1,0 +1,350 @@
+[
+  {
+    "id": "evt_chain_len_kinh_1",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Khăn Gói Lên Kinh Thành",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 35,
+      "missing_flags": [
+        "da_len_kinh_thanh"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_education": 40
+          },
+          "addWeight": 20
+        },
+        {
+          "conditions": {
+            "min_craft_trade": 40
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Nghe thương khách qua bến đò kể chuyện Kinh thành phồn hoa đô hội, ba mươi sáu phố phường tấp nập kẻ bán người mua, khoa bảng và võ trường rộng mở cơ hội tiến thân. Lòng bạn bỗng rộn ràng khát vọng đổi đời nơi đất Kinh kỳ.",
+    "choices": [
+      {
+        "label": "Mang lều chõng, sách vở lên Kinh ứng thí lập công danh (Cần 150 Đồng)",
+        "conditions": {
+          "min_copper": 150
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn xếp gọn kinh sử, gói ít gạo rang vào tay nải rồi theo thuyền xuôi dòng tiến về Kinh sư. Suốt dọc đường đi, tâm trí bạn chỉ hướng về bảng vàng và ánh đèn dầu nơi Quốc Tử Giám.",
+            "effects": {
+              "copper": -150,
+              "education": 4,
+              "stamina": -10,
+              "add_flags": [
+                "da_len_kinh_thanh",
+                "kinh_thanh_ung_thi"
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_len_kinh_2",
+                  "delay_days": 45
+                }
+              ],
+              "milestone_title": "Khăn gói lên Kinh ứng thí"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Gom chút vốn liếng theo đoàn lái buôn lên Kinh mở mang thương lộ (Cần 150 Đồng)",
+        "conditions": {
+          "min_copper": 150
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nhập hội cùng đoàn xe thồ hàng tơ lụa tiến ra Kẻ Chợ. Dọc đường nghe các lão thương nhân truyền dạy mánh khóe mua bán, bạn thấy tầm mắt mình mở mang hơn hẳn.",
+            "effects": {
+              "copper": -150,
+              "craft_trade": 4,
+              "stamina": -10,
+              "add_flags": [
+                "da_len_kinh_thanh",
+                "kinh_thanh_buon_ban"
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_len_kinh_2",
+                  "delay_days": 45
+                }
+              ],
+              "milestone_title": "Lên Kinh thành tìm đường buôn bán"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vai mang tay nải, quyết chí lên Kinh đầu quân rèn luyện võ nghệ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Không cần nhiều lộ phí, bạn băng rừng vượt suối đi bộ suốt nhiều ngày trời để tới doanh trại ngoài thành Kinh sư, xin nhập ngũ với ước mong lập công nơi sa trường.",
+            "effects": {
+              "martial": 4,
+              "stamina": -12,
+              "health": -3,
+              "add_flags": [
+                "da_len_kinh_thanh",
+                "kinh_thanh_dau_quan"
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_len_kinh_2",
+                  "delay_days": 45
+                }
+              ],
+              "milestone_title": "Lên Kinh thành đầu quân lập nghiệp"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chưa nỡ rời xa quê nhà, ở lại giữ nếp sống bình yên nơi thôn dã",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nghĩ đến cha mẹ tuổi cao và ruộng vườn quen thuộc, bạn gác lại mộng công danh nơi phồn hoa, chọn ở lại quê hương an ổn qua ngày.",
+            "effects": {
+              "add_flags": [
+                "da_len_kinh_thanh"
+              ],
+              "happiness": 4,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_len_kinh_2",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Những Ngày Đầu Nơi Kinh Kỳ",
+    "conditions": {
+      "min_age": 16,
+      "has_flags": [
+        "da_len_kinh_thanh"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Đặt chân đến cửa ô Kinh thành sau chặng đường dài bụi bặm, bạn choáng ngợp trước phố xá san sát ngói âm dương, kiệu quan qua lại nườm nượp. Giữa chốn đất chật người đông, bạn phải tính cách ổn định chỗ ăn chốn ở và tìm mối quen.",
+    "choices": [
+      {
+        "label": "Thuê một gian trọ bình dân đầu phố, ngày ngày nghe ngóng tin tức triều chính",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Quán trọ tuy nhỏ hẹp nhưng ngay sát bến đò, khách vãng lai đủ mọi hạng người. Nhờ chịu khó lắng nghe chuyện thời cuộc từ các ông đồ và lính lệ, bạn nắm bắt được không ít lề thói chốn Kinh kỳ.",
+            "effects": {
+              "copper": -60,
+              "education": 3,
+              "fame": 3,
+              "happiness": 4,
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_len_kinh_3",
+                  "delay_days": 120
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tìm đến trà quán nơi sĩ tử và thương nhân tụ hội để kết giao bằng hữu",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 45
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Nhờ ứng xử khéo léo và biết kính trên nhường dưới, bạn nhanh chóng kết giao được vài người bạn tâm đầu ý hợp. Họ chỉ cho bạn nhiều mối quan hệ quý giá nơi Kẻ Chợ.",
+            "effects": {
+              "copper": -80,
+              "relationships": 10,
+              "craft_trade": 3,
+              "fame": 4,
+              "happiness": 6,
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_len_kinh_3",
+                  "delay_days": 120
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Bạn gặp phải mấy tay tú tài dởm chỉ giỏi khoác lác câu chữ, mời họ chén trà chén rượu tốn kém một khoản mà chẳng thu được lời khuyên nào ra hồn.",
+            "effects": {
+              "copper": -80,
+              "relationships": 2,
+              "happiness": -5,
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_len_kinh_3",
+                  "delay_days": 120
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_len_kinh_3",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Ánh Mắt Của Quý Nhân Nơi Phồn Hoa",
+    "conditions": {
+      "min_age": 16,
+      "has_flags": [
+        "da_len_kinh_thanh"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Bốn tháng lăn lộn nơi Kinh thành, tiếng tăm về sự chăm chỉ và bản lĩnh của bạn ít nhiều lọt vào tai giới quyền quý. Một buổi sáng, gia nhân mặc áo lụa tìm đến tận nơi trọ, trao thiếp mời bạn tối nay tới phủ đệ diện kiến một vị đại nhân.",
+    "choices": [
+      {
+        "label": "Chỉnh tề y phục, mạnh dạn tới dinh phủ yết kiến quý nhân",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 45
+                  },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": {
+                    "min_craft_trade": 45
+                  },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": {
+                    "min_martial": 45
+                  },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": {
+                    "min_fame": 30
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Sau vài câu đối đáp sắc sảo, vị đại nhân vỗ đùi khen ngợi không ngớt. Ngài trọng thưởng bạc nén, đồng thời nhận lời nâng đỡ bạn trên con đường tiến thân nơi Kinh sư!",
+            "effects": {
+              "fame": 18,
+              "copper": 600,
+              "relationships": 12,
+              "happiness": 15,
+              "add_flags": [
+                "duoc_quy_nhan_nang_do"
+              ],
+              "milestone_title": "Được quý nhân Kinh thành trọng dụng"
+            }
+          },
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": []
+            },
+            "resultText": "Nào ngờ đó là cái bẫy của đám nha lại tham lam dựng lên để vòi vĩnh người mới lên Kinh! Bạn bị đám gia đinh ép nộp một khoản tiền lót tay nặng nề mới được thả về trong đêm tối.",
+            "effects": {
+              "copper": -300,
+              "health": -10,
+              "happiness": -15,
+              "infamy": 5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cảnh giác giữ mình, khéo léo cáo từ để tự thân lập nghiệp",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hiểu rõ lòng người chốn quan trường sâu như đáy biển, bạn viết thư tạ lỗi khéo léo từ chối. Nhờ giữ mình tỉnh táo và chuyên tâm làm ăn, bạn tích góp được một khoản vốn kha khá nơi Kinh thành.",
+            "effects": {
+              "craft_trade": 4,
+              "education": 3,
+              "copper": 180,
+              "happiness": 6,
+              "milestone_title": "Vững bước tự lập nơi Kinh kỳ"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
