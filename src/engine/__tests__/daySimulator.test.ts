@@ -136,4 +136,76 @@ describe('Day Simulator (MVP 2)', () => {
     expect(sim.pausedReason).toBe('birthday');
     expect(sim.state.actionCooldowns?.inst_see_physician).toBe(20 * 360);
   });
+
+  it('covers household meals and monthly allowance while living at home for wealthier origins', () => {
+    let life = createNewLife(505);
+    life = {
+      ...life,
+      profile: { ...life.profile, originClass: 'dia_chu', totalDays: 13 * 360 },
+      family: {
+        ...life.family!,
+        familyWealthCopper: 10000,
+      },
+      npcs: life.npcs.map((n) => (n.relation === 'parent' ? { ...n, isAlive: true } : n)),
+      flags: life.flags.filter((f) => f !== 'da_ra_o_rieng' && f !== 'gia_toc_sa_sut'),
+      assets: { ...life.assets, rice: 10, wealthCopper: 500 },
+      schedule: {
+        ...life.schedule,
+        lifestyle: 'thit_ca',
+        morning: 'act_tu_hoc_chu',
+        afternoon: 'act_nghi_ngoi',
+        evening: 'act_nghi_ngoi',
+        night: 'act_ngu',
+      },
+    };
+
+    const res = advanceDays(life, 30, ACTIONS, [], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: true,
+    });
+
+    // Family covers thit_ca meals (rice & personal copper not drained) and grants monthly allowance
+    expect(res.state.assets.rice).toBe(10);
+    expect(res.state.finance?.currentYear.livingExpenseCopper).toBe(0);
+    expect(res.state.assets.wealthCopper).toBeGreaterThan(500);
+  });
+
+  it('does not trap player in a 2-day no_food pause loop when foraging fallback runs', () => {
+    let life = createNewLife(606);
+    life = {
+      ...life,
+      profile: { ...life.profile, originClass: 'ban_nong', totalDays: 13 * 360 + 334 },
+      assets: { ...life.assets, rice: 0, wealthCopper: 0 },
+      schedule: {
+        ...life.schedule,
+        lifestyle: 'com_rau',
+        morning: 'act_nghi_ngoi',
+        afternoon: 'act_nghi_ngoi',
+        evening: 'act_nghi_ngoi',
+        night: 'act_ngu',
+        fallbackRules: [
+          {
+            id: 'fb_auto_mot_lua',
+            stat: 'rice',
+            operator: '<=',
+            threshold: 0,
+            targetSlot: 'morning',
+            fallbackActionId: 'act_survival_mot_lua',
+          },
+        ],
+      },
+    };
+
+    const res = advanceDays(life, 30, ACTIONS, [], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: true,
+    });
+
+    expect(res.daysSimulated).toBe(30);
+    expect(res.pausedReason).toBeUndefined();
+  });
 });

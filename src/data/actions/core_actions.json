@@ -135,7 +135,7 @@
     "category": "trade",
     "allowedSlots": ["morning", "afternoon"],
     "description": "Tự bỏ vốn nhỏ buôn vải vóc, muối mắm ngoài chợ phiên. Lợi nhuận tăng mạnh theo Thương tài.",
-    "conditions": { "min_age": 14, "min_copper": 200, "missing_flags": ["bi_ep_lam_gia_no"] },
+    "conditions": { "min_age": 13, "min_copper": 200, "missing_flags": ["bi_ep_lam_gia_no"] },
     "costs": { "stamina": 22 },
     "rewards": { "copper": 95, "craft_trade": 0.6 }
   },

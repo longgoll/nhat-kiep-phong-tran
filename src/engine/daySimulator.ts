@@ -202,19 +202,87 @@ function addLedger(
   };
 }
 
+const LIFESTYLE_ORDER: LifestyleTier[] = ['thit_ca', 'com_rau', 'chao_loang', 'nhin_doi'];
+
+function canReceiveFamilySupport(state: ActiveLifeState): boolean {
+  if (!state.family) return false;
+  if (state.flags.includes('da_ra_o_rieng')) return false;
+  if (state.flags.includes('gia_toc_sa_sut') || state.flags.includes('that_sung_cung_dinh')) {
+    return false;
+  }
+  return state.npcs.some((n) => n.relation === 'parent' && n.isAlive);
+}
+
+/**
+ * Determines the highest lifestyle tier covered by the family household
+ * while the character is still living at home (not moved out, not declined).
+ */
+export function getFamilyCoveredLifestyleTier(state: ActiveLifeState): LifestyleTier | null {
+  if (!canReceiveFamilySupport(state) || !state.family) return null;
+
+  const { originClass } = state.profile;
+  const familyWealth = state.family.familyWealthCopper;
+
+  if (originClass === 'ban_nong') return null;
+  if (originClass === 'thu_cong') {
+    return familyWealth >= 300 ? 'com_rau' : null;
+  }
+  if (originClass === 'dia_chu') {
+    return familyWealth >= 3000 ? 'thit_ca' : 'com_rau';
+  }
+  if (originClass === 'quan_lai') {
+    return familyWealth >= 5000 ? 'thit_ca' : 'com_rau';
+  }
+  // hoang_toc
+  return 'thit_ca';
+}
+
+function applyMonthlyFamilyAllowance(state: ActiveLifeState, ageYears: number): ActiveLifeState {
+  if (ageYears < 13 || ageYears > 20) return state;
+  if (!canReceiveFamilySupport(state) || !state.family) return state;
+
+  const { originClass } = state.profile;
+  const familyWealth = state.family.familyWealthCopper;
+  let baseAllowance = 0;
+
+  if (originClass === 'thu_cong') {
+    baseAllowance = Math.min(60, Math.round(familyWealth * 0.015));
+  } else if (originClass === 'dia_chu') {
+    baseAllowance = Math.min(300, Math.round(familyWealth * 0.015));
+  } else if (originClass === 'quan_lai') {
+    baseAllowance = Math.min(600, Math.round(familyWealth * 0.015));
+  } else if (originClass === 'hoang_toc') {
+    baseAllowance = Math.min(1500, Math.round(familyWealth * 0.012));
+  }
+
+  if (baseAllowance <= 0) return state;
+  // Half allowance from age 18-20 to encourage eventual independence
+  const ageScale = ageYears <= 17 ? 1 : 0.5;
+  const allowance = Math.round(baseAllowance * ageScale);
+  if (allowance <= 0 || familyWealth < allowance * 2) return state;
+
+  const nextState = applyEffects(state, { copper: allowance });
+  return addLedger(nextState, { propertyIncomeCopper: allowance });
+}
+
 function applyDailyLifestyle(inputState: ActiveLifeState): ActiveLifeState {
-  const order: LifestyleTier[] = ['thit_ca', 'com_rau', 'chao_loang', 'nhin_doi'];
-  const startIdx = order.indexOf(inputState.schedule.lifestyle);
+  const startIdx = LIFESTYLE_ORDER.indexOf(inputState.schedule.lifestyle);
+  const familyCoveredTier = getFamilyCoveredLifestyleTier(inputState);
+  const familyCoveredIdx = familyCoveredTier ? LIFESTYLE_ORDER.indexOf(familyCoveredTier) : -1;
   let state = inputState;
 
-  for (let i = startIdx; i < order.length; i += 1) {
-    const tier = order[i];
+  for (let i = startIdx; i < LIFESTYLE_ORDER.length; i += 1) {
+    const tier = LIFESTYLE_ORDER[i];
     const spec = LIFESTYLE_TABLE[tier];
 
-    let neededCopper = spec.copper;
-    let riceToDeduct = spec.rice;
+    // If the family household covers this tier (i >= familyCoveredIdx since order is rich -> poor),
+    // the character eats at the family table with no personal copper/rice cost.
+    const isCoveredByFamily = familyCoveredIdx !== -1 && i >= familyCoveredIdx;
 
-    if (state.assets.rice < spec.rice) {
+    let neededCopper = isCoveredByFamily ? 0 : spec.copper;
+    let riceToDeduct = isCoveredByFamily ? 0 : spec.rice;
+
+    if (!isCoveredByFamily && state.assets.rice < spec.rice) {
       if (state.schedule.autoBuyRice) {
         const deficitRice = spec.rice - state.assets.rice;
         const buyCost = Math.ceil(deficitRice * state.world.ricePriceInCopper);
@@ -244,7 +312,7 @@ function applyDailyLifestyle(inputState: ActiveLifeState): ActiveLifeState {
       state = addLedger(state, { livingExpenseCopper: neededCopper });
     }
 
-    if (tier !== inputState.schedule.lifestyle && i === order.length - 1) {
+    if (tier !== inputState.schedule.lifestyle && i === LIFESTYLE_ORDER.length - 1) {
       state = {
         ...state,
         logs: appendLog(
@@ -304,7 +372,9 @@ export function advanceDays(
   let wasLowHealth = state.stats.health < 20;
   let wasLowHappiness = state.stats.happiness < 20;
   let wasNoFood =
-    state.assets.rice <= 0 && state.assets.wealthCopper < state.world.ricePriceInCopper;
+    getFamilyCoveredLifestyleTier(state) === null &&
+    state.assets.rice <= 0 &&
+    state.assets.wealthCopper < state.world.ricePriceInCopper;
 
   for (let d = 0; d < daysToRun; d += 1) {
     if (!state.isAlive) {
@@ -444,6 +514,9 @@ export function advanceDays(
 
     // 3. Daily lifestyle consumption & LifeFocus passive tick
     state = applyDailyLifestyle(state);
+    if (nextTotalDays % 30 === 0) {
+      state = applyMonthlyFamilyAllowance(state, newAge);
+    }
     const focusMod = getDailyFocusModifiers(state.schedule.lifeFocus);
     if (
       Object.keys(focusMod.dailyEffects).length > 0 ||
@@ -561,12 +634,24 @@ export function advanceDays(
     }
     wasLowHappiness = isLowHappinessNow;
 
+    const isFamilySupported = getFamilyCoveredLifestyleTier(state) !== null;
     const isNoFoodNow =
-      state.assets.rice <= 0 && state.assets.wealthCopper < state.world.ricePriceInCopper;
+      !isFamilySupported &&
+      state.assets.rice <= 0 &&
+      state.assets.wealthCopper < state.world.ricePriceInCopper;
     if (autoPause.pauseOnNoFood && isNoFoodNow && !wasNoFood) {
       return { state, daysSimulated, pausedReason: 'no_food' };
     }
-    wasNoFood = isNoFoodNow;
+    if (isNoFoodNow) {
+      wasNoFood = true;
+    } else if (
+      isFamilySupported ||
+      state.assets.rice >= 3 ||
+      state.assets.wealthCopper >= state.world.ricePriceInCopper * 3
+    ) {
+      // Only re-arm no_food pause after a real recovery (prevents 2-day loop with act_survival_mot_lua)
+      wasNoFood = false;
+    }
   }
 
   return { state, daysSimulated };
