@@ -1,0 +1,371 @@
+[
+  {
+    "id": "evt_milestone_thoi_noi",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Thôi Nôi Tròn Một Tuổi",
+    "conditions": {
+      "min_age": 1,
+      "max_age": 1
+    },
+    "weight": { "base": 100, "modifiers": [] },
+    "description": "Tròn một tuổi, cha mẹ bày một chiếc mâm trước mặt để xem thiên hướng tương lai của bạn. Đôi tay nhỏ xíu của bạn hướng về món đồ nào?",
+    "choices": [
+      {
+        "label": "Bốc cây bút lông",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn nắm chặt cây bút lông không buông. Cả nhà trầm trồ khen sau này ắt có đường công danh chữ nghĩa.",
+            "effects": {
+              "education": 5,
+              "happiness": 5,
+              "add_flags": ["thien_huong_but_long"],
+              "add_traits": ["ham_hoc"],
+              "add_interests": ["kinh_su"],
+              "milestone_title": "Thôi nôi bốc bút lông"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chụp lấy thanh gươm gỗ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn vung vẩy thanh gươm gỗ cười khanh khách. Cha bạn gật gù khen đứa trẻ có khí phách võ biền.",
+            "effects": {
+              "martial": 5,
+              "health": 3,
+              "add_flags": ["thien_huong_kiem_go"],
+              "add_traits": ["hieu_dong"],
+              "add_interests": ["vo_nghe"],
+              "milestone_title": "Thôi nôi bốc gươm gỗ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vớ lấy thỏi bạc / bàn tính nhỏ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Ánh mắt bạn sáng rực khi chạm vào thỏi bạc. Người lớn cười bảo số này khéo tay tính toán, không sợ chết đói.",
+            "effects": {
+              "craft_trade": 5,
+              "add_flags": ["thien_huong_thoi_bac"],
+              "add_traits": ["kheo_tay"],
+              "add_interests": ["thuong_buon"],
+              "milestone_title": "Thôi nôi bốc thỏi bạc"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ôm chặt nắm xôi gấc",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn bốc ngay nắm xôi cho vào miệng nhai ngon lành. Ai nấy đều chúc bạn một đời no ấm bình an.",
+            "effects": {
+              "health": 6,
+              "happiness": 8,
+              "add_flags": ["thien_huong_nam_xoi"],
+              "add_traits": ["trong_nghia"],
+              "add_interests": ["dien_vien"],
+              "milestone_title": "Thôi nôi bốc nắm xôi"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_toddler_curiosity",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Buổi Trưa Trong Sân Nhà",
+    "conditions": {
+      "min_age": 3,
+      "max_age": 4
+    },
+    "weight": { "base": 70, "modifiers": [] },
+    "description": "Nắng trưa rải vàng ngoài sân, người lớn đang bận việc. Đứa trẻ 3–4 tuổi như bạn tự tìm trò chơi gì cho mình?",
+    "choices": [
+      {
+        "label": "Chạy ùa ra góc vườn đuổi bướm, nghịch đất",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn lấm lem bùn đất nhưng cười vang cả xóm, chân tay ngày một cứng cáp.",
+            "effects": {
+              "health": 4,
+              "happiness": 6,
+              "add_traits": ["hieu_dong"],
+              "add_interests": ["dien_vien"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ngồi chăm chú nhìn cha mẹ làm việc rồi bắt chước theo",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Đôi tay nhỏ xíu của bạn loay hoay xếp đồ rất khéo, cha mẹ nhìn thấy chỉ biết phì cười.",
+            "effects": {
+              "craft_trade": 3,
+              "happiness": 4,
+              "add_traits": ["kheo_tay"],
+              "add_interests": ["thu_cong"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nép bên vạt áo mẹ, nghe kể chuyện cổ tích & ca dao",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Giọng mẹ trầm ấm đưa bạn vào những câu chuyện trạng nguyên, anh hùng thuở xưa.",
+            "effects": {
+              "education": 3,
+              "npc_affinity": [{ "relation": "parent", "delta": 6 }],
+              "add_traits": ["ham_hoc"],
+              "add_interests": ["kinh_su"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_share_cake",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Miếng Bánh Ngon Đầu Ngõ",
+    "conditions": {
+      "min_age": 4,
+      "max_age": 5
+    },
+    "weight": { "base": 65, "modifiers": [] },
+    "description": "Hôm nay mẹ đi chợ về mua được một tấm bánh mật thơm lừng chia cho bạn. Đám trẻ bên cạnh (hoặc anh chị em trong nhà) đang nhìn đầy thèm thuồng.",
+    "choices": [
+      {
+        "label": "Bẻ đôi miếng bánh chia cho mọi người cùng ăn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Ai nấy đều xuýt xoa khen bạn nhỏ tuổi mà biết điều. Tình cảm trong nhà và hàng xóm thêm gắn bó.",
+            "effects": {
+              "relationships": 6,
+              "happiness": 5,
+              "npc_affinity": [{ "relation": "sibling", "delta": 10 }],
+              "add_traits": ["trong_nghia"],
+              "add_interests": ["giao_du"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ôm chặt miếng bánh chạy vào góc ăn một mình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn ăn no nê một bụng nhưng bị mẹ nhắc nhở nhẹ vì tính ích kỷ.",
+            "effects": {
+              "health": 3,
+              "happiness": 4,
+              "npc_affinity": [{ "relation": "sibling", "delta": -6 }],
+              "add_traits": ["tham_vong"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_illness_poor",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 1080,
+    "title": "Cơn Sốt Phong Hàn Mùa Đông",
+    "conditions": {
+      "min_age": 2,
+      "max_age": 5,
+      "origin_in": ["ban_nong", "thu_cong"]
+    },
+    "weight": {
+      "base": 25,
+      "modifiers": [
+        { "conditions": { "max_health": 65 }, "addWeight": 30 },
+        { "conditions": { "family_tier_in": ["tung_thieu"] }, "addWeight": 15 }
+      ]
+    },
+    "description": "Gió bấc lùa qua vách nhà, bạn lên cơn sốt cao li bì suốt ba đêm.",
+    "choices": [
+      {
+        "label": "Cha mẹ lo liệu",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": [
+                { "conditions": { "family_tier_in": ["du_an", "kha_gia", "sung_tuc"] }, "addWeight": 45 }
+              ]
+            },
+            "resultText": "Cha bạn vội chạy đi mời thầy lang về cắt ba thang thuốc bắc. Dù tốn kém tiền nhà, bạn nhanh chóng hồng hào trở lại.",
+            "effects": {
+              "family_copper": -45,
+              "health": -2,
+              "npc_affinity": [{ "relation": "parent", "delta": 6 }]
+            }
+          },
+          {
+            "weight": { "base": 40, "modifiers": [] },
+            "resultText": "Nhà không đủ tiền mời thầy, mẹ bạn thức trắng đêm vào rừng hái lá thuốc nam đắp trán. Cơn sốt dần lui nhưng người bạn hơi gầy rộc.",
+            "effects": {
+              "health": -8,
+              "npc_affinity": [{ "relation": "parent", "delta": 10 }]
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": [
+                { "conditions": { "max_health": 60 }, "addWeight": 20 }
+              ]
+            },
+            "resultText": "Bệnh tình kéo dài cả tháng trời khiến thể trạng non nớt của bạn suy nhược hẳn.",
+            "effects": {
+              "health": -15,
+              "happiness": -6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_court_poison",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Án Ngữ Trong Chén Thuốc Bổ",
+    "conditions": {
+      "min_age": 2,
+      "max_age": 5,
+      "origin_in": ["quan_lai", "hoang_toc"]
+    },
+    "weight": { "base": 35, "modifiers": [] },
+    "description": "Nhũ mẫu phát hiện chén cháo yến có mùi hạnh nhân đắng bất thường.",
+    "choices": [
+      {
+        "label": "Gia đình xử lý",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                { "conditions": { "family_tier_in": ["hoang_gia", "sung_tuc"] }, "addWeight": 20 }
+              ]
+            },
+            "resultText": "Mẫu thân lập tức cho đổ bỏ, mời Thái y kiểm tra và âm thầm thanh trừng kẻ nội gián. Bạn bình an vô sự nhưng lớn lên trong cảnh đề phòng.",
+            "effects": {
+              "family_copper": -400,
+              "fame": 2,
+              "happiness": -4,
+              "add_traits": ["da_nghi"]
+            }
+          },
+          {
+            "weight": { "base": 25, "modifiers": [] },
+            "resultText": "Dù phát hiện kịp thời, hơi độc vẫn khiến tỳ vị non nớt của bạn bị ảnh hưởng nhẹ.",
+            "effects": {
+              "family_copper": -250,
+              "health": -10,
+              "happiness": -6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_minor_harvest",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 720,
+    "title": "Mùa Màng Bội Thu",
+    "conditions": {
+      "min_age": 2,
+      "max_age": 5,
+      "origin_in": ["ban_nong", "thu_cong"]
+    },
+    "weight": { "base": 35, "modifiers": [] },
+    "description": "Năm nay mưa thuận gió hòa.",
+    "choices": [
+      {
+        "label": "Tiếp tục",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Mùa gặt năm nay khấm khá hơn hẳn, bữa cơm nhà có thêm chút cá kho và kinh tế gia đình đỡ chật vật.",
+            "effects": {
+              "family_copper": 40,
+              "health": 3,
+              "happiness": 5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_debt_pressure",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 1080,
+    "title": "Tiếng Thở Dài Đêm Khuya",
+    "conditions": {
+      "min_age": 2,
+      "max_age": 5,
+      "family_circumstance_in": ["mac_no"]
+    },
+    "weight": { "base": 45, "modifiers": [] },
+    "description": "Gia đình đang gánh món nợ cũ.",
+    "choices": [
+      {
+        "label": "Tiếp tục",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Đêm khuya bạn nghe tiếng cha mẹ bàn chuyện khất nợ địa chủ. Bữa cơm độn khoai khiến bạn sớm hiểu sự cơ cực.",
+            "effects": {
+              "happiness": -4,
+              "add_traits": ["kien_cuong"]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

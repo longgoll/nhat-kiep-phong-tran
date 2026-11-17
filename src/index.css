@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Noto Serif", "Times New Roman", Cambria, Times, serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+}
+
+/* Chế độ Sáng (Light Mode — Giấy Dó / Sắc Phong) */
+html.light {
+  color-scheme: light;
+
+  /* Neutral Stone palette -> Warm Parchment & Ink */
+  --color-stone-950: #faf6ee;
+  --color-stone-900: #f2eadc;
+  --color-stone-800: #dfd2be;
+  --color-stone-700: #c5b49b;
+  --color-stone-600: #8f7e67;
+  --color-stone-500: #6b5e4d;
+  --color-stone-400: #524739;
+  --color-stone-300: #382f25;
+  --color-stone-200: #261f18;
+  --color-stone-100: #18130e;
+  --color-stone-50: #0f0c08;
+
+  /* Slate palette (used in some cards/themes) */
+  --color-slate-950: #f8fafc;
+  --color-slate-900: #f1f5f9;
+  --color-slate-800: #cbd5e1;
+  --color-slate-700: #94a3b8;
+  --color-slate-400: #475569;
+  --color-slate-300: #334155;
+  --color-slate-200: #1e293b;
+  --color-slate-100: #0f172a;
+
+  /* Amber accents -> Deep readable bronze/gold on paper */
+  --color-amber-950: #fef3c7;
+  --color-amber-900: #fde68a;
+  --color-amber-700: #b45309;
+  --color-amber-600: #b45309;
+  --color-amber-500: #d97706;
+  --color-amber-400: #b45309;
+  --color-amber-300: #92400e;
+  --color-amber-200: #78350f;
+  --color-amber-100: #5c280a;
+
+  /* Semantic Emerald */
+  --color-emerald-950: #ecfdf5;
+  --color-emerald-900: #d1fae5;
+  --color-emerald-700: #059669;
+  --color-emerald-400: #059669;
+  --color-emerald-300: #047857;
+  --color-emerald-200: #065f46;
+  --color-emerald-100: #064e3b;
+
+  /* Semantic Rose & Red */
+  --color-rose-950: #fff1f2;
+  --color-rose-700: #be123c;
+  --color-rose-400: #e11d48;
+  --color-rose-300: #be123c;
+  --color-rose-200: #9f1239;
+  --color-rose-100: #881337;
+
+  /* Semantic Sky */
+  --color-sky-950: #f0f9ff;
+  --color-sky-900: #e0f2fe;
+  --color-sky-700: #0284c7;
+  --color-sky-600: #0284c7;
+  --color-sky-400: #0284c7;
+  --color-sky-300: #0369a1;
+  --color-sky-200: #075985;
+  --color-sky-100: #0c4a6e;
+}
+
+/* Keep high-contrast light text on solid CTA buttons in Light Mode */
+html.light .bg-amber-500,
+html.light .bg-amber-600,
+html.light .bg-sky-600 {
+  color: #fffbeb;
+}
+
+/* Keep imperial crimson-gold gradient banners readable in Light Mode */
+html.light [class*="from-rose-900"] {
+  --color-rose-900: #881337;
+  --color-amber-900: #78350f;
+  --color-amber-800: #92400e;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  color: #fef3c7;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes progressSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.animate-fade-slide-in {
+  animation: fadeSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-progress-sweep {
+  animation: progressSweep 1.2s linear infinite;
+}

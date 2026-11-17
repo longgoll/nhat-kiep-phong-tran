@@ -1,0 +1,893 @@
+{
+  "activities": [
+    {
+      "id": "chan_trau",
+      "name": "Chăn trâu, cắt cỏ, mót lúa phụ gia đình",
+      "category": "Gia đình",
+      "description": "Theo cha mẹ ra đồng từ sáng sớm. Rèn luyện sức khỏe dẻo dai và phụ thêm thóc gạo cho nhà.",
+      "conditions": { "min_age": 6, "max_age": 10, "origin_in": ["ban_nong"] },
+      "costCopper": 0,
+      "effects": { "health": 3, "relationships": 2, "family_copper": 35, "add_interests": ["dien_vien"] }
+    },
+    {
+      "id": "lam_ruong_lon",
+      "name": "Phụ cày cấy, tát nước ngoài đồng",
+      "category": "Gia đình",
+      "description": "Đã lớn hơn một chút, bạn đủ sức gánh vác việc nặng ngoài ruộng cùng cha mẹ.",
+      "conditions": { "min_age": 10, "max_age": 12, "origin_in": ["ban_nong"] },
+      "costCopper": 0,
+      "effects": { "health": 4, "martial": 2, "family_copper": 75 }
+    },
+    {
+      "id": "o_do",
+      "name": "Đi ở đợ cho nhà địa chủ",
+      "category": "Mưu sinh",
+      "description": "Phụ giúp kinh tế cho gia đình đang túng thiếu, nhưng thường xuyên bị sai vặt và quát mắng.",
+      "conditions": { "min_age": 7, "max_age": 12, "origin_in": ["ban_nong"] },
+      "costCopper": 0,
+      "effects": { "family_copper": 180, "happiness": -6, "craft_trade": 2, "add_traits": ["kien_cuong"] }
+    },
+    {
+      "id": "hoc_lom",
+      "name": "Trốn việc đứng ngoài cửa lớp thầy đồ \"học lỏm\"",
+      "category": "Học tập",
+      "description": "Lén nghe giảng Tam Tự Kinh và lấy que vạch chữ xuống đất. Học thức tăng chậm nhưng là tia hy vọng thoát nghèo.",
+      "conditions": { "min_age": 6, "max_age": 12, "origin_in": ["ban_nong"] },
+      "costCopper": 0,
+      "effects": { "education": 4, "happiness": 2, "add_interests": ["kinh_su"] }
+    },
+    {
+      "id": "phu_thay_do",
+      "name": "Mài mực, quét sân đổi lấy chữ nhà thầy đồ",
+      "category": "Học tập",
+      "description": "Nhờ có căn bản và sự quý mến, bạn được thầy đồ cho phép vào lớp ngồi nghe giảng phụ.",
+      "conditions": { "min_age": 8, "max_age": 12, "origin_in": ["ban_nong"], "min_education": 10 },
+      "costCopper": 0,
+      "effects": { "education": 6, "fame": 1, "relationships": 2 }
+    },
+    {
+      "id": "phu_tho_ren",
+      "name": "Phụ cha thổi bễ rèn sắt trong lò",
+      "category": "Nghề nhà",
+      "description": "Hơi nóng lò rèn rèn giũa cánh tay rắn chắc và tay nghề rèn đúc gia truyền.",
+      "conditions": { "min_age": 7, "max_age": 12, "family_occupation_in": ["tho_ren"], "missing_flags": ["mo_coi_cha"] },
+      "costCopper": 0,
+      "effects": { "martial": 3, "craft_trade": 5, "family_copper": 120, "add_interests": ["thu_cong"] }
+    },
+    {
+      "id": "phu_thay_lang",
+      "name": "Theo cha hái thuốc nam & nhận mặt dược liệu",
+      "category": "Nghề nhà",
+      "description": "Sớm thuộc tên hàng chục vị thuốc quý và cách bốc thuốc cứu người.",
+      "conditions": { "min_age": 6, "max_age": 12, "family_occupation_in": ["thay_lang", "chu_duoc_phong"], "missing_flags": ["mo_coi_cha"] },
+      "costCopper": 0,
+      "effects": { "education": 4, "craft_trade": 4, "health": 2, "add_interests": ["thu_cong"] }
+    },
+    {
+      "id": "theo_cha_di_bien",
+      "name": "Theo cha thả lưới trên sông / vào rừng đặt bẫy",
+      "category": "Nghề nhà",
+      "description": "Học cách nhìn con nước, dấu chân thú và rèn sự nhanh nhẹn.",
+      "conditions": { "min_age": 7, "max_age": 12, "family_occupation_in": ["ngu_dan", "tho_san"], "missing_flags": ["mo_coi_cha"] },
+      "costCopper": 0,
+      "effects": { "health": 4, "martial": 3, "craft_trade": 2, "family_copper": 90 }
+    },
+    {
+      "id": "hoc_chu_cung_cha",
+      "name": "Ngồi nghe cha giảng Kinh Sử tại nhà",
+      "category": "Nghề nhà",
+      "description": "Dù nhà nghèo nhưng cha bạn là thầy đồ, tối nào cũng thắp đèn dầu dạy chữ.",
+      "conditions": { "min_age": 6, "max_age": 12, "family_occupation_in": ["thay_do_ngheo"], "missing_flags": ["mo_coi_cha"] },
+      "costCopper": 0,
+      "effects": { "education": 6, "npc_affinity": [{ "relation": "parent", "delta": 4 }] }
+    },
+    {
+      "id": "phu_me_mo_coi",
+      "name": "Phụ mẹ gánh vác việc nhà & giữ nếp gia đình",
+      "category": "Gia đình",
+      "description": "Cha mất sớm, bạn sớm hiểu chuyện, phụ giúp mẫu thân đỡ đần mọi việc trong ngoài.",
+      "conditions": { "min_age": 6, "max_age": 12, "has_flags": ["mo_coi_cha"] },
+      "costCopper": 0,
+      "effects": { "craft_trade": 3, "relationships": 3, "family_copper": 70, "add_traits": ["kien_cuong"], "npc_affinity": [{ "npc_id": "npc_mother", "delta": 6 }] }
+    },
+    {
+      "id": "phu_xuong",
+      "name": "Phụ việc trong xưởng / Gảy bàn tính",
+      "category": "Nghề nhà",
+      "description": "Sớm làm quen với sổ sách, cân đo đong đếm và tay nghề thủ công của gia đình.",
+      "conditions": { "min_age": 6, "max_age": 12, "origin_in": ["thu_cong", "dia_chu"] },
+      "costCopper": 0,
+      "effects": { "craft_trade": 5, "family_copper": 220, "add_interests": ["thuong_buon"] }
+    },
+    {
+      "id": "xin_hoc_chu",
+      "name": "Xin cha mẹ cho đi học chữ trường làng",
+      "category": "Học tập",
+      "description": "Gia đình bỏ tiền đóng học phí để bạn theo học bài bản, tìm đường đổi đời qua khoa cử.",
+      "conditions": { "min_age": 6, "max_age": 12, "origin_in": ["thu_cong", "dia_chu"] },
+      "costCopper": 250,
+      "effects": { "education": 7, "fame": 1, "add_interests": ["kinh_su"] }
+    },
+    {
+      "id": "hoc_truong",
+      "name": "Nhập học danh sư / Quốc Tử Giám",
+      "category": "Học tập",
+      "description": "Được thầy giỏi kèm cặp kinh sử từ nhỏ, tạo lợi thế cực lớn cho kỳ Thi Hương sau này.",
+      "conditions": { "min_age": 6, "max_age": 12, "origin_in": ["dia_chu", "quan_lai", "hoang_toc"] },
+      "costCopper": 550,
+      "effects": { "education": 10, "fame": 3, "add_interests": ["kinh_su"] }
+    },
+    {
+      "id": "luyen_vo",
+      "name": "Luyện võ nghệ / Cưỡi ngựa bắn cung",
+      "category": "Rèn luyện",
+      "description": "Rèn luyện gân cốt, học binh pháp căn bản cùng võ sư trong phủ.",
+      "conditions": { "min_age": 6, "max_age": 12, "origin_in": ["dia_chu", "quan_lai", "hoang_toc"] },
+      "costCopper": 350,
+      "effects": { "martial": 8, "health": 4, "add_interests": ["vo_nghe"] }
+    },
+    {
+      "id": "tap_vat_dau_dinh",
+      "name": "Tụ tập tập võ gậy, đấu vật ngoài bãi đình",
+      "category": "Rèn luyện",
+      "description": "Cùng lũ trẻ lớn trong làng rèn sức vóc và học vài thế võ phòng thân.",
+      "conditions": { "min_age": 8, "max_age": 12, "min_health": 55 },
+      "costCopper": 0,
+      "effects": { "martial": 5, "health": 3, "happiness": 3, "add_interests": ["vo_nghe"] }
+    },
+    {
+      "id": "nu_cong_gia_chanh",
+      "name": "Học thêu thùa, dệt vải & nữ công gia chánh",
+      "category": "Nghề nhà",
+      "description": "Rèn sự khéo léo, tỉ mỉ theo đúng khuôn phép nữ nhi thời xưa.",
+      "conditions": { "min_age": 7, "max_age": 12, "gender": "female" },
+      "costCopper": 0,
+      "effects": { "craft_trade": 4, "happiness": 2, "relationships": 3, "add_traits": ["kheo_tay"] }
+    },
+    {
+      "id": "doi_chac_cho_phien",
+      "name": "Tập buôn bán vặt ngoài chợ phiên",
+      "category": "Mưu sinh",
+      "description": "Nhờ sớm nhanh nhạy tính toán, bạn tập gom rau rừng, đồ lặt vặt mang ra chợ đổi tiền.",
+      "conditions": { "min_age": 9, "max_age": 12, "min_craft_trade": 8 },
+      "costCopper": 0,
+      "effects": { "craft_trade": 6, "copper": 25, "relationships": 3, "add_interests": ["thuong_buon"] }
+    },
+    {
+      "id": "ket_giao",
+      "name": "Kết giao bạn nối khố & dạo chơi",
+      "category": "Giao du",
+      "description": "Vui chơi cùng lũ trẻ đồng trang lứa, mở rộng quan hệ và giữ tinh thần sảng khoái.",
+      "conditions": { "min_age": 6, "max_age": 12 },
+      "costCopper": 0,
+      "effects": { "happiness": 8, "relationships": 6, "add_interests": ["giao_du"] }
+    },
+    {
+      "id": "duong_benh_nha",
+      "name": "Nghỉ ngơi dưỡng bệnh, bồi bổ thân thể",
+      "category": "Sức khỏe",
+      "description": "Thể trạng yếu ớt khiến cha mẹ giữ bạn ở nhà nghỉ ngơi, uống thuốc bổ.",
+      "conditions": { "min_age": 6, "max_age": 12, "max_health": 55 },
+      "costCopper": 0,
+      "effects": { "health": 12, "happiness": 4 }
+    }
+  ],
+  "events": [
+    {
+      "id": "evt_child_eavesdrop_01",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 99999,
+      "oncePerLife": true,
+      "title": "Nghe lỏm ngoài cửa lớp thầy đồ",
+      "conditions": {
+        "min_age": 7,
+        "max_age": 12,
+        "origin_in": ["ban_nong"],
+        "childhood_focus": "hoc_lom"
+      },
+      "weight": {
+        "base": 60,
+        "modifiers": [
+          { "conditions": { "has_any_trait": ["ham_hoc"] }, "addWeight": 30 },
+          { "conditions": { "has_flags": ["thien_huong_but_long"] }, "addWeight": 25 }
+        ]
+      },
+      "description": "Trời mưa phùn, bạn trốn việc chăn trâu, nép bên hiên nhà thầy đồ nghe tiếng ê a đọc Tam Tự Kinh. Thầy đồ vô tình nhìn ra bắt gặp ánh mắt ham học của bạn.",
+      "choices": [
+        {
+          "label": "Mạnh dạn quỳ xuống xin thầy cho nghe ké",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": {
+                "base": 45,
+                "modifiers": [
+                  { "conditions": { "min_education": 8 }, "addWeight": 25 },
+                  { "conditions": { "min_relationships": 60 }, "addWeight": 15 },
+                  { "conditions": { "has_any_trait": ["ham_hoc"] }, "addWeight": 15 }
+                ]
+              },
+              "resultText": "Thầy đồ cảm động trước tấm lòng hiếu học và trí thông minh của bạn, tặng một cây bút cùn và cho phép rảnh rỗi ghé lớp.",
+              "effects": {
+                "education": 7,
+                "happiness": 14,
+                "relationships": 5,
+                "add_flags": ["duoc_thay_do_quy"],
+                "add_traits": ["ham_hoc"],
+                "milestone_title": "Được thầy đồ nhận cảm tình"
+              }
+            },
+            {
+              "weight": { "base": 35, "modifiers": [] },
+              "resultText": "Thầy đồ sợ mang tiếng với nhà giàu nên xua đuổi bạn về. Về nhà bạn lại bị cha mắng vì bỏ bê đàn trâu.",
+              "effects": {
+                "happiness": -10,
+                "relationships": -3
+              }
+            }
+          ]
+        },
+        {
+          "label": "Sợ hãi bỏ chạy về đồng",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Bạn vội vàng chạy biến về bãi cỏ, nhưng vẫn kịp nhớ mặt hai chữ thầy vừa giảng.",
+              "effects": {
+                "education": 2,
+                "happiness": -2,
+                "add_traits": ["nhut_nhat"]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_noble_banquet",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 99999,
+      "oncePerLife": true,
+      "title": "Yến Tiệc Phủ Tể Tướng",
+      "conditions": {
+        "min_age": 7,
+        "max_age": 12,
+        "origin_in": ["quan_lai", "hoang_toc", "dia_chu"]
+      },
+      "weight": {
+        "base": 40,
+        "modifiers": [
+          { "conditions": { "min_education": 15 }, "addWeight": 25 },
+          { "conditions": { "has_any_interest": ["kinh_su"] }, "addWeight": 15 }
+        ]
+      },
+      "description": "Theo phụ thân dự đại thọ của bậc nguyên lão. Các công tử nhà quyền quý đang tụ tập đối thơ và khoe tài nghệ trước mặt nhiều đại thần.",
+      "choices": [
+        {
+          "label": "Bước lên ứng khẩu một bài thơ chúc thọ",
+          "conditions": { "min_education": 14 },
+          "outcomes": [
+            {
+              "weight": {
+                "base": 50,
+                "modifiers": [
+                  { "conditions": { "min_education": 25 }, "addWeight": 35 },
+                  { "conditions": { "has_any_trait": ["ham_hoc"] }, "addWeight": 15 }
+                ]
+              },
+              "resultText": "Lời thơ tao nhã, đối đáp trôi chảy khiến cả sảnh đường trầm trồ khen là thần đồng.",
+              "effects": {
+                "fame": 12,
+                "happiness": 10,
+                "relationships": 6,
+                "milestone_title": "Nổi danh thần đồng tại yến tiệc"
+              }
+            },
+            {
+              "weight": { "base": 30, "modifiers": [] },
+              "resultText": "Hơi run trước mặt quan lớn nên câu cuối hơi vấp, nhưng vẫn được khen là có chí khí.",
+              "effects": {
+                "fame": 3,
+                "happiness": -2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Khiêm tốn ngồi yên bên phụ thân quan sát",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Bạn lặng lẽ ghi nhớ từng ánh mắt, phe cánh và lễ nghi chốn quan trường.",
+              "effects": {
+                "education": 3,
+                "relationships": 4,
+                "add_traits": ["da_nghi"]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_tax_collector",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 99999,
+      "oncePerLife": true,
+      "title": "Lính Lệ Về Làng Thúc Thuế",
+      "conditions": {
+        "min_age": 6,
+        "max_age": 12,
+        "origin_in": ["ban_nong"]
+      },
+      "weight": { "base": 40, "modifiers": [] },
+      "description": "Tiếng mõ thúc sưu thuế vang rền đầu ngõ. Đám lính lệ mặt mày hung tợn xộc vào sân đòi thu thêm gạo phụ thu khi cha mẹ chưa kịp về.",
+      "choices": [
+        {
+          "label": "Nhanh trí giấu hũ gạo ra bụi tre sau nhà",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": {
+                "base": 45,
+                "modifiers": [
+                  { "conditions": { "min_craft_trade": 5 }, "addWeight": 25 },
+                  { "conditions": { "has_any_trait": ["hieu_dong", "kheo_tay"] }, "addWeight": 20 }
+                ]
+              },
+              "resultText": "Bạn nhanh trí ôm hũ gạo trốn qua hàng rào dâm bụt, giữ lại được bát cơm cho cả nhà.",
+              "effects": {
+                "craft_trade": 3,
+                "happiness": 5,
+                "npc_affinity": [{ "relation": "parent", "delta": 8 }]
+              }
+            },
+            {
+              "weight": { "base": 35, "modifiers": [] },
+              "resultText": "Bị lính lệ phát hiện, cha bạn vừa về phải đứng ra hứng trọn mấy roi tre thay cho bạn.",
+              "effects": {
+                "happiness": -12,
+                "family_copper": -40,
+                "npc_affinity": [{ "relation": "parent", "delta": 6 }]
+              }
+            }
+          ]
+        },
+        {
+          "label": "Cúi đầu van xin chúng chờ cha mẹ về nộp đủ",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Đám lính chửi bới vài câu rồi lấy đi ít đồ dùng trong nhà trừ vào phần thuế.",
+              "effects": {
+                "family_copper": -50,
+                "happiness": -8
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_village_festival",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 1440,
+      "title": "Hội Làng Đầu Xuân",
+      "conditions": {
+        "min_age": 6,
+        "max_age": 12
+      },
+      "weight": {
+        "base": 45,
+        "modifiers": [
+          { "conditions": { "has_any_interest": ["giao_du", "vo_nghe"] }, "addWeight": 15 }
+        ]
+      },
+      "description": "Đình làng mở hội đầu xuân rộn ràng tiếng trống. Trẻ con trong vùng tụ tập quanh sới vật thiếu niên, bàn cờ tướng và các gian hàng tò he.",
+      "choices": [
+        {
+          "label": "Lên sới vật thiếu niên thử sức",
+          "conditions": { "min_health": 50 },
+          "outcomes": [
+            {
+              "weight": {
+                "base": 40,
+                "modifiers": [
+                  { "conditions": { "min_martial": 6 }, "addWeight": 35 },
+                  { "conditions": { "has_any_trait": ["hieu_dong", "kien_cuong"] }, "addWeight": 20 }
+                ]
+              },
+              "resultText": "Bạn quật ngã được cậu bé to con nhất xóm, được cụ tiên chỉ thưởng 20 đồng tiền kẽm làm quà!",
+              "effects": {
+                "copper": 20,
+                "fame": 4,
+                "martial": 3,
+                "happiness": 10,
+                "add_interests": ["vo_nghe"]
+              }
+            },
+            {
+              "weight": { "base": 40, "modifiers": [] },
+              "resultText": "Bạn bị đối thủ vật ngã lăn ra bãi cỏ, ê ẩm cả người nhưng cũng học được vài thế thủ.",
+              "effects": {
+                "health": -4,
+                "martial": 2,
+                "happiness": -2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Tham gia giải câu đố chữ trước cửa đình",
+          "conditions": { "min_education": 6 },
+          "outcomes": [
+            {
+              "weight": {
+                "base": 45,
+                "modifiers": [
+                  { "conditions": { "min_education": 14 }, "addWeight": 40 }
+                ]
+              },
+              "resultText": "Bạn giải trúng câu đối khó, được ông đồ thưởng cho tập giấy bản và 15 đồng!",
+              "effects": {
+                "copper": 15,
+                "education": 4,
+                "fame": 4,
+                "happiness": 8
+              }
+            },
+            {
+              "weight": { "base": 35, "modifiers": [] },
+              "resultText": "Bạn nghĩ mãi chưa ra vế đối, đành đứng nghe người lớn giải đáp để học thêm.",
+              "effects": {
+                "education": 2
+              }
+            }
+          ]
+        },
+        {
+          "label": "Dạo chơi cùng đám bạn nhỏ, xem hát chèo",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Một ngày hội vui quên lối về, tình bạn giữa bạn và lũ trẻ trong xóm thêm khăng khít.",
+              "effects": {
+                "happiness": 10,
+                "relationships": 6,
+                "add_interests": ["giao_du"]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_best_friend",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 99999,
+      "oncePerLife": true,
+      "title": "Lời Hẹn Dưới Gốc Đa Đầu Làng",
+      "conditions": {
+        "min_age": 8,
+        "max_age": 12
+      },
+      "weight": {
+        "base": 45,
+        "modifiers": [
+          { "conditions": { "min_relationships": 60 }, "addWeight": 30 },
+          { "conditions": { "has_any_trait": ["trong_nghia"] }, "addWeight": 25 }
+        ]
+      },
+      "description": "Bạn và một người bạn đồng trang lứa hợp tính nhau lạ thường. Chiều nay cả hai ngồi dưới gốc đa nhìn nắng tắt, bạn bè rủ kết nghĩa huynh đệ/tỷ muội.",
+      "choices": [
+        {
+          "label": "Bẻ cành đa làm dấu, thề sau này có phúc cùng hưởng",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Hai đứa trẻ khắc tên lên thân cây đa. Tình bạn thuở thiếu thời này có thể sẽ mở ra cơ duyên lớn khi trưởng thành.",
+              "effects": {
+                "relationships": 8,
+                "happiness": 10,
+                "add_flags": ["co_ban_noi_kho"],
+                "add_traits": ["trong_nghia"],
+                "milestone_title": "Kết nghĩa bạn nối khố"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Cười trừ cho qua, không muốn ràng buộc",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Bạn cho rằng lớn lên mỗi người một ngả, không cần thề thốt làm gì.",
+              "effects": {
+                "add_traits": ["da_nghi"]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_sibling_bond",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 99999,
+      "oncePerLife": true,
+      "title": "Chuyện Riêng Với Anh Chị Em Trong Nhà",
+      "conditions": {
+        "min_age": 7,
+        "max_age": 12,
+        "birth_order_in": ["con_truong", "con_thu", "con_ut"]
+      },
+      "weight": { "base": 50, "modifiers": [] },
+      "description": "Anh chị em trong nhà lén lấy đồ ăn vặt ngoài bếp nhưng làm vỡ chiếc bát sành của mẹ. Cả đám đang cuống cuồng nhìn bạn.",
+      "choices": [
+        {
+          "label": "Đứng ra nhận lỗi thay để che chở cho anh chị em",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Bạn bị mẹ mắng một trận nhưng anh chị em cảm kích vô cùng, tình cảm ruột thịt gắn bó keo sơn.",
+              "effects": {
+                "happiness": -4,
+                "relationships": 6,
+                "npc_affinity": [{ "relation": "sibling", "delta": 18 }, { "relation": "parent", "delta": -4 }],
+                "add_traits": ["trong_nghia"]
+              }
+            }
+          ]
+        },
+        {
+          "label": "Khai thật với mẹ để không bị vạ lây",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Mẹ khen bạn thật thà, nhưng anh chị em trong nhà giận dỗi không thèm nói chuyện với bạn cả tuần.",
+              "effects": {
+                "npc_affinity": [{ "relation": "sibling", "delta": -14 }, { "relation": "parent", "delta": 6 }]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_female_ambition",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 99999,
+      "oncePerLife": true,
+      "title": "Định Kiến \"Nữ Nhi Ngoại Tộc\"",
+      "conditions": {
+        "min_age": 10,
+        "max_age": 12,
+        "gender": "female"
+      },
+      "weight": { "base": 55, "modifiers": [] },
+      "description": "Họ hàng sang chơi, buông lời rằng con gái lớn lên chỉ cần biết may vá rồi gả chồng, học chữ hay múa gươm làm gì cho phí công.",
+      "choices": [
+        {
+          "label": "Lặng lẽ nung nấu quyết tâm tự lập, không chịu an phận",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Lời nói khinh thường đó lại trở thành ngọn lửa thúc đẩy bạn nỗ lực gấp bội để chứng minh bản thân.",
+              "effects": {
+                "education": 3,
+                "happiness": -3,
+                "add_traits": ["kien_cuong", "tham_vong"]
+              }
+            }
+          ]
+        },
+        {
+          "label": "Nghe lời người lớn, chú tâm giữ gìn khuôn phép",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Bạn ngoan ngoãn vâng lời, được họ hàng khen là hiền thục đoan trang.",
+              "effects": {
+                "relationships": 5,
+                "happiness": 3,
+                "npc_affinity": [{ "relation": "parent", "delta": 8 }]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_low_health_crisis",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 1080,
+      "title": "Sức Khỏe Suy Nhược",
+      "conditions": {
+        "min_age": 6,
+        "max_age": 12,
+        "max_health": 45
+      },
+      "weight": {
+        "base": 80,
+        "modifiers": [
+          { "conditions": { "max_health": 30 }, "addWeight": 60 }
+        ]
+      },
+      "description": "Do lao lực hoặc ăn uống kham khổ kéo dài, bạn gầy rộc hẳn đi và thường xuyên ho khan giữa đêm.",
+      "choices": [
+        {
+          "label": "Cha mẹ tạm gác việc, dốc tiền thuốc thang cho bạn nghỉ ngơi",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": {
+                "base": 50,
+                "modifiers": [
+                  { "conditions": { "family_tier_in": ["kha_gia", "sung_tuc", "hoang_gia"] }, "addWeight": 40 }
+                ]
+              },
+              "resultText": "Nhờ được tẩm bổ kịp thời, sắc mặt bạn dần hồng hào trở lại.",
+              "effects": {
+                "health": 18,
+                "family_copper": -120,
+                "npc_affinity": [{ "relation": "parent", "delta": 8 }]
+              }
+            },
+            {
+              "weight": { "base": 30, "modifiers": [] },
+              "resultText": "Thuốc thang chỉ giúp bạn qua cơn nguy kịch, nhưng thể trạng vẫn còn khá yếu.",
+              "effects": {
+                "health": 8,
+                "family_copper": -60
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_low_happiness_rebel",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 1080,
+      "title": "Nỗi Uất Ức Tuổi Thơ",
+      "conditions": {
+        "min_age": 7,
+        "max_age": 12,
+        "max_happiness": 35
+      },
+      "weight": { "base": 75, "modifiers": [] },
+      "description": "Áp lực việc nhà, đòn roi hoặc cảnh túng thiếu kéo dài khiến bạn cảm thấy ngột ngạt, chỉ muốn bỏ trốn khỏi nhà.",
+      "choices": [
+        {
+          "label": "Ra bờ sông ngồi khóc một trận rồi tự vực dậy tinh thần",
+          "conditions": {},
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Gió sông thổi mát lòng, bạn tự nhủ phải sống mạnh mẽ để sau này đổi đời.",
+              "effects": {
+                "happiness": 14,
+                "add_traits": ["kien_cuong"]
+              }
+            }
+          ]
+        },
+        {
+          "label": "Tâm sự với bạn bè hoặc anh chị em thân thiết",
+          "conditions": { "min_relationships": 45 },
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Những lời an ủi chân thành giúp bạn nhẹ lòng đi rất nhiều.",
+              "effects": {
+                "happiness": 20,
+                "relationships": 5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_craft_discovery",
+      "stage": "childhood",
+      "severity": "minor",
+      "cooldownDays": 720,
+      "title": "Thạo Việc Nhà Nghề",
+      "conditions": {
+        "min_age": 8,
+        "max_age": 12,
+        "min_craft_trade": 10
+      },
+      "weight": { "base": 40, "modifiers": [] },
+      "description": "Nhờ đôi tay khéo léo, bạn tự làm được một món đồ nhỏ hữu ích.",
+      "choices": [
+        {
+          "label": "Tiếp tục",
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Hàng xóm tấm tắc khen bạn khéo tay, đặt mua thử vài món giúp gia đình có thêm thu nhập.",
+              "effects": {
+                "family_copper": 80,
+                "fame": 2,
+                "happiness": 5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_quan_lai_fall",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 99999,
+      "oncePerLife": true,
+      "title": "Biến Cố Quan Trường Của Phụ Thân",
+      "conditions": {
+        "min_age": 6,
+        "max_age": 12,
+        "origin_in": ["quan_lai"],
+        "missing_flags": ["mo_coi_cha", "gia_toc_sa_sut"]
+      },
+      "weight": { "base": 32, "modifiers": [] },
+      "description": "Một buổi chiều u ám, tin dữ từ kinh thành đưa về: phụ thân bạn vướng vào vụ án phe phái trên triều, bị hặc tội nặng và lâm bệnh nguy kịch trong ngục.",
+      "choices": [
+        {
+          "label": "Theo mẹ thu dọn hành lý về quê, giữ gìn sách vở gia phong",
+          "outcomes": [
+            {
+              "weight": { "base": 65, "modifiers": [] },
+              "resultText": "Phụ thân qua đời nơi lao ngục, triều đình thu hồi phủ đệ. Hai mẹ con về quê sống trong nếp nhà gạch cũ, gia đạo sa sút nhưng bạn giữ trọn khí tiết.",
+              "effects": {
+                "kill_npc_id": "npc_father",
+                "scale_family_copper": 0.3,
+                "set_housing": "nha_gach",
+                "set_circumstance": {
+                  "id": "cha_quan_mat",
+                  "label": "Cha làm quan mất sớm, mất chỗ dựa triều đình, gia đạo sa sút"
+                },
+                "add_flags": ["mo_coi_cha", "gia_toc_sa_sut"],
+                "add_traits": ["kien_cuong"],
+                "fame": -8,
+                "happiness": -15,
+                "education": 3,
+                "milestone_title": "Gia đạo sa sút sau biến cố triều đình"
+              }
+            },
+            {
+              "weight": { "base": 35, "modifiers": [] },
+              "resultText": "Nhờ đồng liêu cũ hết lòng chạy chọt, phụ thân giữ được mạng sống nhưng bị biếm chức về quê làm dân thường. Gia sản tiêu tán quá nửa.",
+              "effects": {
+                "scale_family_copper": 0.35,
+                "set_housing": "nha_gach",
+                "set_circumstance": {
+                  "id": "biem_chuc",
+                  "label": "Cha bị biếm chức về quê, gia đạo sa sút"
+                },
+                "add_flags": ["gia_toc_sa_sut"],
+                "fame": -6,
+                "happiness": -10,
+                "milestone_title": "Phụ thân bị biếm chức về quê"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Cùng mẹ dốc sạch gia tài chạy án minh oan cho cha",
+          "outcomes": [
+            {
+              "weight": { "base": 55, "modifiers": [] },
+              "resultText": "Tốn kém gần hết bạc tích trữ, cuối cùng cha bạn cũng được minh oan và giữ lại chức vị, nhưng cả nhà phải thắt lưng buộc bụng một thời gian dài.",
+              "effects": {
+                "scale_family_copper": 0.4,
+                "fame": 2,
+                "happiness": -4,
+                "npc_affinity": [{ "npc_id": "npc_father", "delta": 15 }]
+              }
+            },
+            {
+              "weight": { "base": 45, "modifiers": [] },
+              "resultText": "Tiền mất tật mang! Kẻ gian nuốt lời khiến phụ thân uất ức qua đời, gia tài khánh kiệt chỉ còn lại ít vốn liếng còm cõi.",
+              "effects": {
+                "kill_npc_id": "npc_father",
+                "scale_family_copper": 0.15,
+                "set_housing": "nha_gach",
+                "set_circumstance": {
+                  "id": "cha_quan_mat",
+                  "label": "Cha làm quan mất sớm, gia sản khánh kiệt"
+                },
+                "add_flags": ["mo_coi_cha", "gia_toc_sa_sut"],
+                "fame": -10,
+                "happiness": -18,
+                "milestone_title": "Mồ côi cha, gia đạo khánh kiệt"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evt_child_ban_nong_corvee",
+      "stage": "childhood",
+      "severity": "major",
+      "cooldownDays": 99999,
+      "oncePerLife": true,
+      "title": "Trát Bắt Phu Đắp Đê",
+      "conditions": {
+        "min_age": 6,
+        "max_age": 12,
+        "origin_in": ["ban_nong"],
+        "missing_flags": ["mo_coi_cha"]
+      },
+      "weight": { "base": 28, "modifiers": [] },
+      "description": "Lính lệ làng mang trát quan xuống bắt đinh đi phu đắp đê ngoài sông cái giữa mùa mưa bão.",
+      "choices": [
+        {
+          "label": "Cha đành gạt nước mắt lên đường đi phu",
+          "outcomes": [
+            {
+              "weight": { "base": 70, "modifiers": [] },
+              "resultText": "Ba tháng ròng dầm mưa dãi nắng, cha trở về gầy rộc nhưng vẫn bình an. Bạn sớm thấm thía nỗi cơ cực của kiếp dân đen.",
+              "effects": {
+                "family_copper": -20,
+                "happiness": -5,
+                "add_traits": ["kien_cuong"]
+              }
+            },
+            {
+              "weight": { "base": 30, "modifiers": [] },
+              "resultText": "Đê vỡ giữa đêm mưa bão, cha bị nước cuốn không qua khỏi. Từ nay mẹ con bạn phải tự nương tựa vào nhau.",
+              "effects": {
+                "kill_npc_id": "npc_father",
+                "scale_family_copper": 0.6,
+                "set_circumstance": {
+                  "id": "mo_coi_cha",
+                  "label": "Cha đi phu mất sớm, mẹ tần tảo nuôi con"
+                },
+                "add_flags": ["mo_coi_cha"],
+                "happiness": -15,
+                "add_traits": ["kien_cuong"],
+                "milestone_title": "Cha mất khi đi phu đắp đê"
+              }
+            }
+          ]
+        },
+        {
+          "label": "Vét sạch tiền dành dụm đút lót lý trưởng xin miễn (-60 đồng)",
+          "conditions": { "min_copper": 60 },
+          "outcomes": [
+            {
+              "weight": { "base": 100, "modifiers": [] },
+              "resultText": "Lý trưởng nhận tiền rồi gạch tên cha khỏi sổ đi phu. Cả nhà thở phào nhẹ nhõm.",
+              "effects": {
+                "family_copper": -60,
+                "happiness": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
