@@ -1,0 +1,78 @@
+[
+  {
+    "id": "evt_adult_major_corvee",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 360,
+    "title": "Trát Bắt Đi Phu Đắp Đê",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 50,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong"
+      ],
+      "missing_flags": [
+        "do_tu_tai",
+        "do_cu_nhan",
+        "do_tien_si"
+      ]
+    },
+    "weight": {
+      "base": 25,
+      "modifiers": []
+    },
+    "description": "Nước sông dâng cao, nha môn phát trát bắt tráng đinh trong làng đi phu đắp đê suốt nửa tháng.",
+    "choices": [
+      {
+        "label": "Đút lót lý trưởng để miễn đi phu (-250 đồng)",
+        "conditions": {
+          "min_copper": 250
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Lý trưởng nhận tiền rồi gạch tên bạn khỏi sổ đinh kỳ này.",
+            "effects": {
+              "copper": -250,
+              "happiness": -2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cầm cuốc theo đoàn dân phu ra công trường",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Phơi nắng dầm mưa nửa tháng trời, bạn kiệt sức nhưng nhận được chút gạo trợ cấp.",
+            "effects": {
+              "health": -8,
+              "stamina": -30,
+              "rice": 4,
+              "fame": 1
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Đoạn đê sạt lở bất ngờ làm bạn bị thương ở chân, may mà giữ được mạng.",
+            "effects": {
+              "health": -22,
+              "happiness": -10
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

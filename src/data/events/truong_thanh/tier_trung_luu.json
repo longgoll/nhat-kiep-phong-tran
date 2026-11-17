@@ -1,0 +1,71 @@
+[
+  {
+    "id": "evt_adult_corrupt_official_bribe",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Quan Phủ Vòi Tiền Bảo Kê",
+    "conditions": {
+      "min_age": 18,
+      "origin_in": [
+        "thu_cong",
+        "dia_chu"
+      ],
+      "min_copper": 1200
+    },
+    "weight": {
+      "base": 25,
+      "modifiers": []
+    },
+    "description": "Viên tri phủ mới nhậm chức sai lính mang giấy tới nhắc khéo về \"lệ phí bình an\" cho cửa hiệu và ruộng đất nhà bạn.",
+    "choices": [
+      {
+        "label": "Nộp 800 đồng tiền lễ cho yên chuyện làm ăn",
+        "conditions": {
+          "min_copper": 800
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Quan phủ cười ha hả nhận bạc, hứa sẽ chiếu cố cho công việc buôn bán của bạn.",
+            "effects": {
+              "copper": -800,
+              "relationships": 4,
+              "craft_trade": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cứng rắn từ chối, viện dẫn luật triều đình",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 50,
+              "modifiers": []
+            },
+            "resultText": "Quan phủ tức giận nhưng thấy bạn có tiếng tăm nên tạm nhịn, chỉ gây khó dễ vài thủ tục.",
+            "effects": {
+              "fame": 5,
+              "happiness": -6
+            }
+          },
+          {
+            "weight": {
+              "base": 50,
+              "modifiers": []
+            },
+            "resultText": "Bị quan phủ trả thù, sai người niêm phong kho hàng mất mấy ngày và phạt vạ 1.200 đồng!",
+            "effects": {
+              "copper": -1200,
+              "happiness": -12
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

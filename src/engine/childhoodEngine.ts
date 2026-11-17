@@ -6,7 +6,12 @@ import {
   type ActiveLifeState,
   type LogEntry,
 } from '../types/activeLife';
-import type { ChildhoodActivityDef, EffectSpec, GameEventDef } from '../types/dsl';
+import type {
+  ChildhoodActivityDef,
+  ChildhoodAmbientData,
+  EffectSpec,
+  GameEventDef,
+} from '../types/dsl';
 import { computeWeight, evaluateConditions } from './conditionEvaluator';
 import { appendLog, applyEffects } from './effectApplier';
 import { mulberry32Next, pickWeightedIndex } from './prng';
@@ -166,18 +171,24 @@ export function advanceChildhoodYear(
     return { state, pendingEvent: null };
   }
 
-  // Check fixed milestone event: Lễ Thôi Nôi at age 1
-  if (newAge === 1) {
-    const thoiNoi = eventsPool.find((e) => e.id === 'evt_milestone_thoi_noi');
-    if (thoiNoi && evaluateConditions(state, thoiNoi.conditions)) {
-      return { state, pendingEvent: thoiNoi };
-    }
+  const stage = newAge <= 5 ? 'infancy' : 'childhood';
+
+  // Check data-driven milestone events (e.g. Lễ Thôi Nôi at age 1, etc.)
+  const milestoneEvent = findEligibleMilestoneEvent(state, eventsPool, stage);
+  if (milestoneEvent) {
+    state = {
+      ...state,
+      eventCooldowns: {
+        ...state.eventCooldowns,
+        [milestoneEvent.id]: state.profile.totalDays,
+      },
+    };
+    return { state, pendingEvent: milestoneEvent };
   }
 
-  // Roll eligible events for current age
-  const stage = newAge <= 5 ? 'infancy' : 'childhood';
+  // Roll eligible events for current age (excluding deterministic milestones)
   const eligible = eventsPool.filter((evt) => {
-    if (evt.id === 'evt_milestone_thoi_noi') return false;
+    if (evt.isMilestone) return false;
     if (evt.stage !== stage && evt.stage !== 'any') return false;
     if (evt.oncePerLife && state.eventCooldowns[evt.id] !== undefined) return false;
     const lastDay = state.eventCooldowns[evt.id] ?? -99999;
@@ -264,36 +275,42 @@ export function resolveEventChoice(
   return { state: nextState, resultText: outcome.resultText };
 }
 
-const INFANCY_MILESTONE_LOGS: Record<number, { text: string; tone: LogEntry['tone'] }> = {
-  240: { text: 'Bạn đã biết lẫy và ê a gọi tên cha mẹ.', tone: 'positive' },
-  420: { text: 'Bạn chập chững những bước đi đầu tiên. Cả nhà vỗ tay reo mừng.', tone: 'milestone' },
-  600: { text: 'Bạn nói được từ đầu tiên rõ ràng, đôi mắt sáng long lanh.', tone: 'positive' },
-  900: { text: 'Chỉ một nắm đất, vài hòn sỏi cũng đủ để bạn chơi đùa suốt buổi.', tone: 'neutral' },
-  1200: { text: 'Tối nào trước khi ngủ, mẹ cũng kể chuyện cổ tích cho bạn nghe.', tone: 'positive' },
-  1560: { text: 'Bạn bắt đầu tò mò với thế giới bên ngoài, hay chạy quanh sân hỏi đủ chuyện.', tone: 'neutral' },
-  1890: { text: 'Người lớn trong xóm khen bạn lanh lợi, ngoan ngoãn.', tone: 'positive' },
-};
+function findEligibleMilestoneEvent(
+  state: ActiveLifeState,
+  eventsPool: GameEventDef[],
+  stage: 'infancy' | 'childhood',
+): GameEventDef | undefined {
+  return eventsPool.find((evt) => {
+    if (!evt.isMilestone) return false;
+    if (evt.stage !== stage && evt.stage !== 'any') return false;
+    if (evt.oncePerLife && state.eventCooldowns[evt.id] !== undefined) return false;
+    const lastDay = state.eventCooldowns[evt.id] ?? -99999;
+    if (state.profile.totalDays - lastDay < evt.cooldownDays) return false;
+    return evaluateConditions(state, evt.conditions);
+  });
+}
 
-const FOCUS_AMBIENT_LOGS: Record<string, string[]> = {
-  hoc_tap: [
-    'Bạn mượn sách cũ ngồi đọc dưới hiên nhà, thuộc thêm nhiều mặt chữ.',
-    'Buổi tối bên ánh đèn dầu, bạn chăm chỉ luyện viết từng nét chữ ngay ngắn.',
+const DEFAULT_AMBIENT_DATA: ChildhoodAmbientData = {
+  infancyMilestones: [
+    { day: 240, text: 'Bạn đã biết lẫy và ê a gọi tên cha mẹ.', tone: 'positive' },
+    { day: 420, text: 'Bạn chập chững những bước đi đầu tiên. Cả nhà vỗ tay reo mừng.', tone: 'milestone' },
+    { day: 600, text: 'Bạn nói được từ đầu tiên rõ ràng, đôi mắt sáng long lanh.', tone: 'positive' },
+    { day: 900, text: 'Chỉ một nắm đất, vài hòn sỏi cũng đủ để bạn chơi đùa suốt buổi.', tone: 'neutral' },
+    { day: 1200, text: 'Tối nào trước khi ngủ, mẹ cũng kể chuyện cổ tích cho bạn nghe.', tone: 'positive' },
+    { day: 1560, text: 'Bạn bắt đầu tò mò với thế giới bên ngoài, hay chạy quanh sân hỏi đủ chuyện.', tone: 'neutral' },
+    { day: 1890, text: 'Người lớn trong xóm khen bạn lanh lợi, ngoan ngoãn.', tone: 'positive' },
   ],
-  ban_be: [
-    'Bạn cùng đám trẻ trong xóm thả diều, chơi ô ăn quan rộn rã cả buổi chiều.',
-    'Lũ bạn đồng niên kéo nhau ra bờ đê hóng gió và chia nhau trái ổi vườn nhà.',
-  ],
-  giup_nha: [
-    'Bạn phụ cha mẹ thu dọn đồ đạc, quét sân và làm những việc vừa sức.',
-    'Thấy bạn chăm chỉ đỡ đần việc nhà, cha mẹ mỉm cười đầy tự hào.',
-  ],
-  ren_vo: [
-    'Sáng sớm bạn ra sân hít thở khí trời, tập vài đường quyền cơ bản cho dẻo dai.',
-    'Bạn chạy quanh bờ ao rèn sức bền, mồ hôi ướt đẫm nhưng tinh thần rất sảng khoái.',
-  ],
-  so_thich: [
-    'Bạn say sưa với thú vui riêng, quên cả thời gian trôi qua.',
-    'Những giờ phút thư thái giúp tâm hồn bạn thêm nhẹ nhàng và sáng tạo.',
+  focusAmbientLogs: [
+    { focusId: 'hoc_tap', text: 'Bạn mượn sách cũ ngồi đọc dưới hiên nhà, thuộc thêm nhiều mặt chữ.' },
+    { focusId: 'hoc_tap', text: 'Buổi tối bên ánh đèn dầu, bạn chăm chỉ luyện viết từng nét chữ ngay ngắn.' },
+    { focusId: 'ban_be', text: 'Bạn cùng đám trẻ trong xóm thả diều, chơi ô ăn quan rộn rã cả buổi chiều.' },
+    { focusId: 'ban_be', text: 'Lũ bạn đồng niên kéo nhau ra bờ đê hóng gió và chia nhau trái ổi vườn nhà.' },
+    { focusId: 'giup_nha', text: 'Bạn phụ cha mẹ thu dọn đồ đạc, quét sân và làm những việc vừa sức.' },
+    { focusId: 'giup_nha', text: 'Thấy bạn chăm chỉ đỡ đần việc nhà, cha mẹ mỉm cười đầy tự hào.' },
+    { focusId: 'ren_vo', text: 'Sáng sớm bạn ra sân hít thở khí trời, tập vài đường quyền cơ bản cho dẻo dai.' },
+    { focusId: 'ren_vo', text: 'Bạn chạy quanh bờ ao rèn sức bền, mồ hôi ướt đẫm nhưng tinh thần rất sảng khoái.' },
+    { focusId: 'so_thich', text: 'Bạn say sưa với thú vui riêng, quên cả thời gian trôi qua.' },
+    { focusId: 'so_thich', text: 'Những giờ phút thư thái giúp tâm hồn bạn thêm nhẹ nhàng và sáng tạo.' },
   ],
 };
 
@@ -304,6 +321,7 @@ const FOCUS_AMBIENT_LOGS: Record<string, string[]> = {
 export function advanceChildhoodMonth(
   inputState: ActiveLifeState,
   eventsPool: GameEventDef[],
+  ambientData: ChildhoodAmbientData = DEFAULT_AMBIENT_DATA,
 ): StepYearResult {
   if (!inputState.isAlive) {
     return { state: inputState, pendingEvent: null };
@@ -356,12 +374,19 @@ export function advanceChildhoodMonth(
     return { state, pendingEvent: null };
   }
 
-  // Fixed milestone event: Lễ Thôi Nôi at age 1
-  if (isBirthday && newAge === 1) {
-    const thoiNoi = eventsPool.find((e) => e.id === 'evt_milestone_thoi_noi');
-    if (thoiNoi && evaluateConditions(state, thoiNoi.conditions)) {
-      return { state, pendingEvent: thoiNoi };
-    }
+  const stage = newAge <= 5 ? 'infancy' : 'childhood';
+
+  // Check data-driven milestone events (e.g. Lễ Thôi Nôi at age 1, etc.)
+  const milestoneEvent = findEligibleMilestoneEvent(state, eventsPool, stage);
+  if (milestoneEvent) {
+    state = {
+      ...state,
+      eventCooldowns: {
+        ...state.eventCooldowns,
+        [milestoneEvent.id]: state.profile.totalDays,
+      },
+    };
+    return { state, pendingEvent: milestoneEvent };
   }
 
   // Roll eligible events on birthday OR ~22% chance each month
@@ -371,9 +396,8 @@ export function advanceChildhoodMonth(
 
   let eventTriggered = false;
   if (shouldRollEvent) {
-    const stage = newAge <= 5 ? 'infancy' : 'childhood';
     const eligible = eventsPool.filter((evt) => {
-      if (evt.id === 'evt_milestone_thoi_noi') return false;
+      if (evt.isMilestone) return false;
       if (evt.stage !== stage && evt.stage !== 'any') return false;
       if (evt.oncePerLife && state.eventCooldowns[evt.id] !== undefined) return false;
       const lastDay = state.eventCooldowns[evt.id] ?? -99999;
@@ -410,7 +434,11 @@ export function advanceChildhoodMonth(
 
   // Ambient / Milestone timeline entries when no event fired this month
   if (!eventTriggered) {
-    const infancyNote = INFANCY_MILESTONE_LOGS[nextTotalDays];
+    const infancyNote = ambientData.infancyMilestones.find(
+      (m) =>
+        m.day === nextTotalDays &&
+        (!m.conditions || evaluateConditions(state, m.conditions)),
+    );
     if (infancyNote) {
       state = {
         ...state,
@@ -442,14 +470,20 @@ export function advanceChildhoodMonth(
       state = { ...state, prngState: ambientRoll.nextState };
       if (ambientRoll.value < 0.2) {
         const focusId = state.schedule.childhoodFocus || 'giup_nha';
-        const pool = FOCUS_AMBIENT_LOGS[focusId] ?? FOCUS_AMBIENT_LOGS.giup_nha;
-        const idx = Math.floor((ambientRoll.value / 0.2) * pool.length) % pool.length;
-        state = {
-          ...state,
-          logs: appendLog(state.logs, nextTotalDays, 'childhood', pool[idx], {
-            tone: 'neutral',
-          }),
-        };
+        const pool = ambientData.focusAmbientLogs.filter(
+          (l) =>
+            l.focusId === focusId &&
+            (!l.conditions || evaluateConditions(state, l.conditions)),
+        );
+        if (pool.length > 0) {
+          const idx = Math.floor((ambientRoll.value / 0.2) * pool.length) % pool.length;
+          state = {
+            ...state,
+            logs: appendLog(state.logs, nextTotalDays, 'childhood', pool[idx].text, {
+              tone: 'neutral',
+            }),
+          };
+        }
       }
     }
   }

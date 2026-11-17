@@ -10,9 +10,7 @@ import {
   getAvailableChildhoodActivities,
   resolveEventChoice,
 } from '../childhoodEngine';
-import thoAuEvents from '../../data/events_tho_au.json';
-import dongAuData from '../../data/events_dong_au.json';
-import type { GameEventDef } from '../../types/dsl';
+import { ALL_CHILDHOOD_EVENTS, CHILDHOOD_ACTIVITIES } from '../../data/registry';
 
 describe('Core Engine (MVP 1)', () => {
   it('mulberry32 produces deterministic sequence for the same seed', () => {
@@ -66,10 +64,7 @@ describe('Core Engine (MVP 1)', () => {
   });
 
   it('advances from 0 to 13 years old and triggers Lễ Thôi Nôi at age 1', () => {
-    const events: GameEventDef[] = [
-      ...(thoAuEvents as GameEventDef[]),
-      ...(dongAuData.events as GameEventDef[]),
-    ];
+    const events = ALL_CHILDHOOD_EVENTS;
 
     let life = createNewLife(777);
     const step1 = advanceChildhoodYear(life, events);
@@ -106,7 +101,7 @@ describe('Core Engine (MVP 1)', () => {
 
     const acts = getAvailableChildhoodActivities(
       { ...life, profile: { ...life.profile, totalDays: 10 * 360 } },
-      dongAuData.activities as never,
+      CHILDHOOD_ACTIVITIES,
     );
     expect(acts.length).toBeGreaterThanOrEqual(4);
   });
@@ -125,7 +120,7 @@ describe('Core Engine (MVP 1)', () => {
       flags: life.flags.filter((f) => f !== 'mo_coi_cha'),
     };
 
-    const beforeActs = getAvailableChildhoodActivities(life, dongAuData.activities as never);
+    const beforeActs = getAvailableChildhoodActivities(life, CHILDHOOD_ACTIVITIES);
     expect(beforeActs.some((a) => a.id === 'phu_tho_ren')).toBe(true);
     expect(beforeActs.some((a) => a.id === 'phu_me_mo_coi')).toBe(false);
 
@@ -142,7 +137,7 @@ describe('Core Engine (MVP 1)', () => {
     expect(life.family?.familyWealthCopper).toBe(300);
     expect(life.family?.circumstance).toBe('cha_quan_mat');
 
-    const afterActs = getAvailableChildhoodActivities(life, dongAuData.activities as never);
+    const afterActs = getAvailableChildhoodActivities(life, CHILDHOOD_ACTIVITIES);
     expect(afterActs.some((a) => a.id === 'phu_tho_ren')).toBe(false);
     expect(afterActs.some((a) => a.id === 'phu_me_mo_coi')).toBe(true);
   });
@@ -163,10 +158,7 @@ describe('Core Engine (MVP 1)', () => {
   });
 
   it('advanceChildhoodMonth updates stats monthly and reaches age 13 cleanly', () => {
-    const events: GameEventDef[] = [
-      ...(thoAuEvents as GameEventDef[]),
-      ...(dongAuData.events as GameEventDef[]),
-    ];
+    const events = ALL_CHILDHOOD_EVENTS;
 
     let life = createNewLife(123);
     life = {

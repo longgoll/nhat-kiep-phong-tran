@@ -1,0 +1,189 @@
+[
+  {
+    "id": "evt_nu_cai_nam_trang_exposed",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Bại Lộ Thân Phận Nữ Nhi!",
+    "conditions": {
+      "min_age": 15,
+      "gender": "female",
+      "has_flags": [
+        "nu_cai_nam_trang"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Một kẻ đồng liêu ghen ghét đã phát hiện ra bí mật bạn cải nam trang dự thi và làm quan. Tờ sấu tố tội Khi quân đã trình lên Hoàng thượng!",
+    "choices": [
+      {
+        "label": "Quỳ trước điện Kim Loan, dâng sớ xin Hoàng thượng đặc xá (Cần Thanh danh >= 75)",
+        "conditions": {
+          "min_fame": 75
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 85,
+              "modifiers": []
+            },
+            "resultText": "Cảm phục tài đức và công lao lẫy lừng của bạn, Hoàng thượng phá lệ đặc xá và phong bạn làm Nữ Quan đầu tiên của triều đình!",
+            "effects": {
+              "remove_flags": [
+                "nu_cai_nam_trang"
+              ],
+              "add_flags": [
+                "nu_quan_dac_xa"
+              ],
+              "fame": 25,
+              "milestone_title": "Được Hoàng thượng đặc xá phong Nữ Quan"
+            }
+          },
+          {
+            "weight": {
+              "base": 15,
+              "modifiers": []
+            },
+            "resultText": "Các đại thần bảo thủ phản đối dữ dội, bạn bị tước hết chức tước và đuổi về quê làm dân thường.",
+            "effects": {
+              "remove_flags": [
+                "nu_cai_nam_trang",
+                "dang_lam_quan"
+              ],
+              "fame": -20,
+              "happiness": -20
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chấp nhận phán quyết của triều đình",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tội Khi quân khó dung tha! Bạn bị giải ra pháp trường xử trảm trước sự ngỡ ngàng của sĩ phu.",
+            "effects": {
+              "kill_reason": "Bị xử trảm vì tội Khi quân (Nữ cải nam trang bại lộ)"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_reunion_best_friend",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Tái Ngộ Bạn Nối Khố Năm Xưa",
+    "conditions": {
+      "min_age": 17,
+      "has_flags": [
+        "co_ban_noi_kho"
+      ]
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_relationships": 60
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Trên đường phố huyện, một người quen bước tới gọi tên bạn. Hóa ra đó chính là người bạn từng bẻ cành đa kết nghĩa dưới gốc đa năm nào, nay đang làm ăn khấm khá.",
+    "choices": [
+      {
+        "label": "Cùng bạn vào quán rượu ôn lại chuyện cũ, bàn kế làm ăn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn cũ mừng rỡ biếu bạn chút vốn luyến làm ăn và hứa sẵn sàng tương trợ khi gặp hoạn nạn.",
+            "effects": {
+              "copper": 350,
+              "relationships": 10,
+              "happiness": 15,
+              "craft_trade": 3,
+              "milestone_title": "Tái ngộ bạn nối khố"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ khoảng cách xã giao vì đời người đã khác",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hai người trò chuyện vài câu xã giao rồi chia tay, mỗi người một ngả.",
+            "effects": {
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_teacher_gift",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lời Nhắn Nhủ Của Thầy Đồ Xưa",
+    "conditions": {
+      "min_age": 16,
+      "has_flags": [
+        "duoc_thay_do_quy"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_education": 25
+          },
+          "addWeight": 30
+        }
+      ]
+    },
+    "description": "Thầy đồ năm xưa từng cho bạn nghe ké nay tuổi đã cao, sai người mang tặng bạn một bộ sách Kinh Sử chép tay quý giá.",
+    "choices": [
+      {
+        "label": "Đến tận nhà bái tạ ân sư",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Đọc bộ sách quý thầy để lại, kiến thức của bạn tiến bộ vượt bậc, danh tiếng sĩ tử hiếu học lan xa.",
+            "effects": {
+              "education": 12,
+              "fame": 6,
+              "happiness": 10,
+              "milestone_title": "Kế thừa tủ sách của ân sư"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

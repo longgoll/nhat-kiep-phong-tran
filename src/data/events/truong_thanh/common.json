@@ -1,0 +1,459 @@
+[
+  {
+    "id": "evt_adult_minor_coin",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 210,
+    "title": "Nhặt được tiền rơi",
+    "conditions": {
+      "min_age": 13
+    },
+    "weight": {
+      "base": 30,
+      "modifiers": []
+    },
+    "description": "Trên đường đi làm, bạn tình cờ nhặt được vài đồng xu rơi bên vệ đường.",
+    "choices": [
+      {
+        "label": "Nhặt lấy",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nhặt được 18 đồng tiền kẽm rơi bên vệ đường, đủ mua thêm ít muối mắm.",
+            "effects": {
+              "copper": 18,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_minor_cold",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 180,
+    "title": "Cảm lạnh trở trời",
+    "conditions": {
+      "min_age": 13,
+      "season_in": [
+        "winter"
+      ]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": [
+        {
+          "conditions": {
+            "housing_in": [
+              "gam_cau",
+              "nha_tranh"
+            ]
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Gió mùa đông bắc tràn về khiến bạn hắt hơi sổ mũi nhẹ.",
+    "choices": [
+      {
+        "label": "Chịu đựng",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Gió rét mùa đông khiến bạn nhiễm phong hàn nhẹ, người uể oải mất mấy hôm.",
+            "effects": {
+              "health": -4,
+              "stamina": -15
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_minor_neighbor_gift",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 240,
+    "title": "Hàng xóm biếu khoai",
+    "conditions": {
+      "min_age": 13,
+      "min_relationships": 45
+    },
+    "weight": {
+      "base": 25,
+      "modifiers": []
+    },
+    "description": "Bà hàng xóm tốt bụng mang sang biếu rổ khoai lang mới luộc.",
+    "choices": [
+      {
+        "label": "Cảm ơn",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hàng xóm sang biếu hai đấu gạo và rổ khoai nóng, tình làng nghĩa xóm thêm ấm áp.",
+            "effects": {
+              "rice": 2,
+              "happiness": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_major_noble_patron",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Gặp Quý Nhân Giữa Chợ Phiên",
+    "conditions": {
+      "min_age": 15,
+      "min_education": 15
+    },
+    "weight": {
+      "base": 20,
+      "modifiers": []
+    },
+    "description": "Một vị nho sĩ cao niên ghé hàng nước nghe bạn bàn luận thế sự, tỏ ý rất lấy làm tâm đắc.",
+    "choices": [
+      {
+        "label": "Chắp tay thỉnh giáo và xin kết giao",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": []
+            },
+            "resultText": "Vị lão nho tặng bạn bộ sách quý và 300 đồng lộ phí, khuyên bạn dốc sức cho kỳ khoa cử tới.",
+            "effects": {
+              "education": 6,
+              "copper": 300,
+              "fame": 4,
+              "relationships": 5,
+              "milestone_title": "Được quý nhân tặng sách quý"
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Hai người đàm đạo tâm đầu ý hợp suốt buổi chiều trước khi chia tay.",
+            "effects": {
+              "happiness": 8,
+              "education": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_major_desperate_theft",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 180,
+    "title": "Cơn Quẫn Bách Đêm Khuya",
+    "conditions": {
+      "min_age": 14,
+      "max_happiness": 19,
+      "max_copper": 30
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": []
+    },
+    "description": "Bụng đói cồn cào, tinh thần tuyệt vọng, bạn đi ngang qua kho thóc sơ hở của gã phú hộ keo kiệt.",
+    "choices": [
+      {
+        "label": "Cắn răng bỏ đi, thà đói chứ không làm kẻ trộm",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giữ được sự trong sạch của bản thân dù cái đói vẫn hành hạ.",
+            "effects": {
+              "fame": 2,
+              "happiness": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lẻn vào kho vơ tạm bao gạo (Rủi ro bị bắt)",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": []
+            },
+            "resultText": "Bạn ôm trót lọt 12 đấu gạo trốn vào màn đêm, tạm thoát cảnh chết đói.",
+            "effects": {
+              "rice": 12,
+              "infamy": 8,
+              "happiness": 5
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Chó sủa vang trời! Gia đinh ập tới đánh bạn thập tử nhất sinh rồi giải lên nha môn.",
+            "effects": {
+              "health": -35,
+              "infamy": 15,
+              "fame": -10,
+              "happiness": -15
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_burnout_melancholy",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 360,
+    "title": "Lòng Ngổn Ngang Trăm Mối",
+    "conditions": {
+      "min_age": 14,
+      "max_happiness": 25
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": []
+    },
+    "description": "Chuỗi ngày vất vả triền miên không lối thoát khiến tinh thần bạn suy sụp nặng nề, đêm nằm trằn trọc không chợp mắt.",
+    "choices": [
+      {
+        "label": "Tự thưởng cho mình một ngày buông bỏ công việc, lên chùa vãn cảnh",
+        "conditions": {
+          "min_copper": 20
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tiếng chuông chùa thanh tịnh giúp tâm trí bạn lắng lại, tinh thần phấn chấn hơn hẳn.",
+            "effects": {
+              "copper": -20,
+              "happiness": 22,
+              "health": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cắn răng chịu đựng tiếp tục lao đầu vào việc",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giữ được tiến độ công việc nhưng sức khỏe và tinh thần đều hao mòn thêm.",
+            "effects": {
+              "health": -6,
+              "happiness": -5,
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_martial_bandit_ambush",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Thảo Khấu Chặn Đường",
+    "conditions": {
+      "min_age": 15,
+      "min_copper": 150
+    },
+    "weight": {
+      "base": 30,
+      "modifiers": [
+        {
+          "conditions": {
+            "world_state_in": [
+              "chien_tranh",
+              "mat_mua"
+            ]
+          },
+          "addWeight": 35
+        }
+      ]
+    },
+    "description": "Qua quãng đường vắng, ba tên cướp cầm mã tấu nhảy ra chặn lối đòi nộp tiền mãi lộ!",
+    "choices": [
+      {
+        "label": "Rút vũ khí / Vung quyền giao đấu với chúng",
+        "conditions": {
+          "min_martial": 10
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 25
+                  },
+                  "addWeight": 40
+                },
+                {
+                  "conditions": {
+                    "has_any_interest": [
+                      "vo_nghe"
+                    ]
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Nhờ võ nghệ cao cường, bạn đánh gục hai tên khiến tên còn lại bỏ chạy tán loạn, nhặt được ít bạc rơi!",
+            "effects": {
+              "copper": 120,
+              "fame": 8,
+              "martial": 2,
+              "happiness": 8
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Bạn chống trả quyết liệt nhưng bị chém sượt vai, đành mất tiền để thoát thân.",
+            "effects": {
+              "health": -18,
+              "copper": -150,
+              "happiness": -10
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nộp 120 đồng tiền mãi lộ để giữ mạng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Của đi thay người, bọn cướp lấy tiền rồi biến mất vào rừng.",
+            "effects": {
+              "copper": -120,
+              "happiness": -8
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_infamy_bounty",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Ác Danh Lan Truyền",
+    "conditions": {
+      "min_age": 16,
+      "min_infamy": 25
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_infamy": 50
+          },
+          "addWeight": 40
+        }
+      ]
+    },
+    "description": "Tiếng xấu về những việc làm bất nghĩa của bạn đã đến tai nha môn. Bọn sai dịch đang dò la tung tích để bắt giữ!",
+    "choices": [
+      {
+        "label": "Chi 400 đồng đút lót cho nha dịch ỉm đi",
+        "conditions": {
+          "min_copper": 400
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Có tiền mua tiên cũng được, hồ sơ của bạn tạm thời bị ém nhẹm.",
+            "effects": {
+              "copper": -400,
+              "infamy": -10
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cố thủ hoặc bỏ trốn vào chốn giang hồ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 20
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Bạn nhanh chân thoát khỏi vòng vây nhưng thanh danh càng thêm tồi tệ.",
+            "effects": {
+              "infamy": 10,
+              "happiness": -8
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Bị bắt giải lên công đường đánh 30 trượng rồi mới thả về.",
+            "effects": {
+              "health": -25,
+              "happiness": -18,
+              "infamy": -5
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

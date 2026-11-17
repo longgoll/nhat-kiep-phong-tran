@@ -1,0 +1,68 @@
+[
+  {
+    "id": "evt_infant_court_poison",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Án Ngữ Trong Chén Thuốc Bổ",
+    "conditions": {
+      "min_age": 2,
+      "max_age": 5,
+      "origin_in": [
+        "quan_lai",
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": []
+    },
+    "description": "Nhũ mẫu phát hiện chén cháo yến có mùi hạnh nhân đắng bất thường.",
+    "choices": [
+      {
+        "label": "Gia đình xử lý",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_tier_in": [
+                      "hoang_gia",
+                      "sung_tuc"
+                    ]
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Mẫu thân lập tức cho đổ bỏ, mời Thái y kiểm tra và âm thầm thanh trừng kẻ nội gián. Bạn bình an vô sự nhưng lớn lên trong cảnh đề phòng.",
+            "effects": {
+              "family_copper": -400,
+              "fame": 2,
+              "happiness": -4,
+              "add_traits": [
+                "da_nghi"
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Dù phát hiện kịp thời, hơi độc vẫn khiến tỳ vị non nớt của bạn bị ảnh hưởng nhẹ.",
+            "effects": {
+              "family_copper": -250,
+              "health": -10,
+              "happiness": -6
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,126 @@
+[
+  {
+    "id": "evt_debt_collection_01",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Đầu Gấu Nhà Địa Chủ Tới Xiết Nợ",
+    "conditions": {
+      "min_age": 13,
+      "has_flags": [
+        "dang_no_dia_chu"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Đúng hẹn 180 ngày, đám gia đinh lực lưỡng của lão địa chủ mang khế ước tới đòi đủ 800 đồng cả gốc lẫn lãi!",
+    "choices": [
+      {
+        "label": "Trả đủ 800 đồng để xóa sạch nợ nần",
+        "conditions": {
+          "min_copper": 800
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn đếm đủ 800 đồng giao tận tay chúng, xé bỏ tờ khế ước vay nợ trước mặt cả xóm.",
+            "effects": {
+              "copper": -800,
+              "remove_flags": [
+                "dang_no_dia_chu"
+              ],
+              "fame": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Không đủ tiền trả, xin khất nợ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": []
+            },
+            "resultText": "Đám gia đinh nổi giận đánh bạn một trận nhừ tử rồi lột sạch đồ đạc đáng giá trong nhà.",
+            "effects": {
+              "health": -30,
+              "happiness": -20,
+              "copper": -500,
+              "remove_flags": [
+                "dang_no_dia_chu"
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": []
+            },
+            "resultText": "Lão địa chủ bắt bạn ký giấy bán sức làm gia nô gán nợ trong vòng 1 năm trời!",
+            "effects": {
+              "happiness": -25,
+              "remove_flags": [
+                "dang_no_dia_chu"
+              ],
+              "add_flags": [
+                "bi_ep_lam_gia_no"
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_debt_servitude_end",
+                  "delay_days": 360
+                }
+              ],
+              "milestone_title": "Bị ép làm gia nô gán nợ"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_debt_servitude_end",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Hết Hạn Làm Gia Nô Gán Nợ",
+    "conditions": {
+      "min_age": 13,
+      "has_flags": [
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Sau một năm trời làm lụng khổ sai không công, cuối cùng lão địa chủ cũng ném trả tờ khế ước cho bạn.",
+    "choices": [
+      {
+        "label": "Rời khỏi phủ địa chủ, làm lại từ đầu",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn bước ra khỏi cổng nhà giàu với thân thể gầy rộc nhưng đã lấy lại được tự do.",
+            "effects": {
+              "remove_flags": [
+                "bi_ep_lam_gia_no"
+              ],
+              "happiness": 10
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

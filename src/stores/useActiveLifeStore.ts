@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { ActiveLifeState, FallbackRule, GiftEtiquetteTier, LifestyleTier, TimeSlot } from '../types/activeLife';
-import type { ActionDef, ChildhoodActivityDef, GameEventDef } from '../types/dsl';
+import type { ChildhoodActivityDef, GameEventDef } from '../types/dsl';
 import { createNewLife } from '../engine/lifeInitializer';
 import { advanceChildhoodMonth, advanceChildhoodYear, resolveEventChoice } from '../engine/childhoodEngine';
 import {
@@ -18,22 +18,16 @@ import {
   marrySpouse,
   sellGoldReserve,
 } from '../engine/adultLifeActions';
-import thoAuEvents from '../data/events_tho_au.json';
-import dongAuData from '../data/events_dong_au.json';
-import actionsData from '../data/actions.json';
-import adulthoodEvents from '../data/events_truong_thanh.json';
+import {
+  ALL_ACTIONS,
+  ALL_ADULTHOOD_EVENTS,
+  ALL_CHILDHOOD_EVENTS,
+  CHILDHOOD_ACTIVITIES,
+  CHILDHOOD_AMBIENT_DATA,
+} from '../data/registry';
 import type { WorkerResponse } from '../workers/simulation.worker';
 
-const ALL_CHILDHOOD_EVENTS: GameEventDef[] = [
-  ...(thoAuEvents as GameEventDef[]),
-  ...(dongAuData.events as GameEventDef[]),
-];
-
-export const CHILDHOOD_ACTIVITIES: ChildhoodActivityDef[] =
-  dongAuData.activities as ChildhoodActivityDef[];
-
-export const ALL_ACTIONS: ActionDef[] = actionsData as ActionDef[];
-const ALL_ADULTHOOD_EVENTS: GameEventDef[] = adulthoodEvents as GameEventDef[];
+export { ALL_ACTIONS, CHILDHOOD_ACTIVITIES };
 
 let simWorker: Worker | null = null;
 function getWorker(): Worker | null {
@@ -131,7 +125,7 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
         const { life, pendingEvent } = get();
         if (!life || !life.isAlive || pendingEvent) return;
 
-        const res = advanceChildhoodMonth(life, ALL_CHILDHOOD_EVENTS);
+        const res = advanceChildhoodMonth(life, ALL_CHILDHOOD_EVENTS, CHILDHOOD_AMBIENT_DATA);
         set({
           life: res.state,
           pendingEvent: res.pendingEvent,

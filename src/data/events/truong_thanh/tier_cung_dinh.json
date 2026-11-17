@@ -1,0 +1,82 @@
+[
+  {
+    "id": "evt_adult_court_faction_purge",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 720,
+    "title": "Sóng Gió Phe Cánh Triều Đình",
+    "conditions": {
+      "min_age": 18,
+      "origin_in": [
+        "quan_lai",
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 22,
+      "modifiers": []
+    },
+    "description": "Triều đình nổ ra cuộc thanh trừng giữa phe Thái sư và phe Ngự sử. Cả phủ đệ nhà bạn đang bị cuốn vào vòng xoáy nghi kỵ.",
+    "choices": [
+      {
+        "label": "Giữ thái độ trung lập, đóng cửa đọc sách",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Nhờ biết ẩn nhẫn đúng lúc, gia đình bạn bình an vượt qua cơn bão chính trị.",
+            "effects": {
+              "education": 3,
+              "happiness": -3
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Phe thắng thế vẫn nghi ngờ gia tộc bạn ngầm giúp đối thủ, phạt bổng lộc 2.000 đồng.",
+            "effects": {
+              "copper": -2000,
+              "fame": -5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ngả hẳn về phe có thế lực hơn (-1.500 đồng làm lễ)",
+        "conditions": {
+          "min_copper": 1500
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Chọn đúng minh chủ! Gia tộc bạn được trọng thưởng và danh vọng tăng vọt.",
+            "effects": {
+              "copper": -1500,
+              "fame": 12,
+              "relationships": 8
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Phe bạn chọn thất thế vào phút chót, bạn suýt mất mạng và bị tịch thu 4.000 đồng!",
+            "effects": {
+              "copper": -4000,
+              "health": -20,
+              "fame": -15
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

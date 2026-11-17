@@ -1,0 +1,419 @@
+[
+  {
+    "id": "chan_trau",
+    "name": "Chăn trâu, cắt cỏ, mót lúa phụ gia đình",
+    "category": "Gia đình",
+    "description": "Theo cha mẹ ra đồng từ sáng sớm. Rèn luyện sức khỏe dẻo dai và phụ thêm thóc gạo cho nhà.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 10,
+      "origin_in": [
+        "ban_nong"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "health": 3,
+      "relationships": 2,
+      "family_copper": 35,
+      "add_interests": [
+        "dien_vien"
+      ]
+    }
+  },
+  {
+    "id": "lam_ruong_lon",
+    "name": "Phụ cày cấy, tát nước ngoài đồng",
+    "category": "Gia đình",
+    "description": "Đã lớn hơn một chút, bạn đủ sức gánh vác việc nặng ngoài ruộng cùng cha mẹ.",
+    "conditions": {
+      "min_age": 10,
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "health": 4,
+      "martial": 2,
+      "family_copper": 75
+    }
+  },
+  {
+    "id": "o_do",
+    "name": "Đi ở đợ cho nhà địa chủ",
+    "category": "Mưu sinh",
+    "description": "Phụ giúp kinh tế cho gia đình đang túng thiếu, nhưng thường xuyên bị sai vặt và quát mắng.",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "family_copper": 180,
+      "happiness": -6,
+      "craft_trade": 2,
+      "add_traits": [
+        "kien_cuong"
+      ]
+    }
+  },
+  {
+    "id": "hoc_lom",
+    "name": "Trốn việc đứng ngoài cửa lớp thầy đồ \"học lỏm\"",
+    "category": "Học tập",
+    "description": "Lén nghe giảng Tam Tự Kinh và lấy que vạch chữ xuống đất. Học thức tăng chậm nhưng là tia hy vọng thoát nghèo.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "education": 4,
+      "happiness": 2,
+      "add_interests": [
+        "kinh_su"
+      ]
+    }
+  },
+  {
+    "id": "phu_thay_do",
+    "name": "Mài mực, quét sân đổi lấy chữ nhà thầy đồ",
+    "category": "Học tập",
+    "description": "Nhờ có căn bản và sự quý mến, bạn được thầy đồ cho phép vào lớp ngồi nghe giảng phụ.",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong"
+      ],
+      "min_education": 10
+    },
+    "costCopper": 0,
+    "effects": {
+      "education": 6,
+      "fame": 1,
+      "relationships": 2
+    }
+  },
+  {
+    "id": "phu_tho_ren",
+    "name": "Phụ cha thổi bễ rèn sắt trong lò",
+    "category": "Nghề nhà",
+    "description": "Hơi nóng lò rèn rèn giũa cánh tay rắn chắc và tay nghề rèn đúc gia truyền.",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "family_occupation_in": [
+        "tho_ren"
+      ],
+      "missing_flags": [
+        "mo_coi_cha"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "martial": 3,
+      "craft_trade": 5,
+      "family_copper": 120,
+      "add_interests": [
+        "thu_cong"
+      ]
+    }
+  },
+  {
+    "id": "phu_thay_lang",
+    "name": "Theo cha hái thuốc nam & nhận mặt dược liệu",
+    "category": "Nghề nhà",
+    "description": "Sớm thuộc tên hàng chục vị thuốc quý và cách bốc thuốc cứu người.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "family_occupation_in": [
+        "thay_lang",
+        "chu_duoc_phong"
+      ],
+      "missing_flags": [
+        "mo_coi_cha"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "education": 4,
+      "craft_trade": 4,
+      "health": 2,
+      "add_interests": [
+        "thu_cong"
+      ]
+    }
+  },
+  {
+    "id": "theo_cha_di_bien",
+    "name": "Theo cha thả lưới trên sông / vào rừng đặt bẫy",
+    "category": "Nghề nhà",
+    "description": "Học cách nhìn con nước, dấu chân thú và rèn sự nhanh nhẹn.",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "family_occupation_in": [
+        "ngu_dan",
+        "tho_san"
+      ],
+      "missing_flags": [
+        "mo_coi_cha"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "health": 4,
+      "martial": 3,
+      "craft_trade": 2,
+      "family_copper": 90
+    }
+  },
+  {
+    "id": "hoc_chu_cung_cha",
+    "name": "Ngồi nghe cha giảng Kinh Sử tại nhà",
+    "category": "Nghề nhà",
+    "description": "Dù nhà nghèo nhưng cha bạn là thầy đồ, tối nào cũng thắp đèn dầu dạy chữ.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "family_occupation_in": [
+        "thay_do_ngheo"
+      ],
+      "missing_flags": [
+        "mo_coi_cha"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "education": 6,
+      "npc_affinity": [
+        {
+          "relation": "parent",
+          "delta": 4
+        }
+      ]
+    }
+  },
+  {
+    "id": "phu_me_mo_coi",
+    "name": "Phụ mẹ gánh vác việc nhà & giữ nếp gia đình",
+    "category": "Gia đình",
+    "description": "Cha mất sớm, bạn sớm hiểu chuyện, phụ giúp mẫu thân đỡ đần mọi việc trong ngoài.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "has_flags": [
+        "mo_coi_cha"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "craft_trade": 3,
+      "relationships": 3,
+      "family_copper": 70,
+      "add_traits": [
+        "kien_cuong"
+      ],
+      "npc_affinity": [
+        {
+          "npc_id": "npc_mother",
+          "delta": 6
+        }
+      ]
+    }
+  },
+  {
+    "id": "phu_xuong",
+    "name": "Phụ việc trong xưởng / Gảy bàn tính",
+    "category": "Nghề nhà",
+    "description": "Sớm làm quen với sổ sách, cân đo đong đếm và tay nghề thủ công của gia đình.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "thu_cong",
+        "dia_chu"
+      ]
+    },
+    "costCopper": 0,
+    "effects": {
+      "craft_trade": 5,
+      "family_copper": 220,
+      "add_interests": [
+        "thuong_buon"
+      ]
+    }
+  },
+  {
+    "id": "xin_hoc_chu",
+    "name": "Xin cha mẹ cho đi học chữ trường làng",
+    "category": "Học tập",
+    "description": "Gia đình bỏ tiền đóng học phí để bạn theo học bài bản, tìm đường đổi đời qua khoa cử.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "thu_cong",
+        "dia_chu"
+      ]
+    },
+    "costCopper": 250,
+    "effects": {
+      "education": 7,
+      "fame": 1,
+      "add_interests": [
+        "kinh_su"
+      ]
+    }
+  },
+  {
+    "id": "hoc_truong",
+    "name": "Nhập học danh sư / Quốc Tử Giám",
+    "category": "Học tập",
+    "description": "Được thầy giỏi kèm cặp kinh sử từ nhỏ, tạo lợi thế cực lớn cho kỳ Thi Hương sau này.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "dia_chu",
+        "quan_lai",
+        "hoang_toc"
+      ]
+    },
+    "costCopper": 550,
+    "effects": {
+      "education": 10,
+      "fame": 3,
+      "add_interests": [
+        "kinh_su"
+      ]
+    }
+  },
+  {
+    "id": "luyen_vo",
+    "name": "Luyện võ nghệ / Cưỡi ngựa bắn cung",
+    "category": "Rèn luyện",
+    "description": "Rèn luyện gân cốt, học binh pháp căn bản cùng võ sư trong phủ.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "dia_chu",
+        "quan_lai",
+        "hoang_toc"
+      ]
+    },
+    "costCopper": 350,
+    "effects": {
+      "martial": 8,
+      "health": 4,
+      "add_interests": [
+        "vo_nghe"
+      ]
+    }
+  },
+  {
+    "id": "tap_vat_dau_dinh",
+    "name": "Tụ tập tập võ gậy, đấu vật ngoài bãi đình",
+    "category": "Rèn luyện",
+    "description": "Cùng lũ trẻ lớn trong làng rèn sức vóc và học vài thế võ phòng thân.",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "min_health": 55
+    },
+    "costCopper": 0,
+    "effects": {
+      "martial": 5,
+      "health": 3,
+      "happiness": 3,
+      "add_interests": [
+        "vo_nghe"
+      ]
+    }
+  },
+  {
+    "id": "nu_cong_gia_chanh",
+    "name": "Học thêu thùa, dệt vải & nữ công gia chánh",
+    "category": "Nghề nhà",
+    "description": "Rèn sự khéo léo, tỉ mỉ theo đúng khuôn phép nữ nhi thời xưa.",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "gender": "female"
+    },
+    "costCopper": 0,
+    "effects": {
+      "craft_trade": 4,
+      "happiness": 2,
+      "relationships": 3,
+      "add_traits": [
+        "kheo_tay"
+      ]
+    }
+  },
+  {
+    "id": "doi_chac_cho_phien",
+    "name": "Tập buôn bán vặt ngoài chợ phiên",
+    "category": "Mưu sinh",
+    "description": "Nhờ sớm nhanh nhạy tính toán, bạn tập gom rau rừng, đồ lặt vặt mang ra chợ đổi tiền.",
+    "conditions": {
+      "min_age": 9,
+      "max_age": 12,
+      "min_craft_trade": 8
+    },
+    "costCopper": 0,
+    "effects": {
+      "craft_trade": 6,
+      "copper": 25,
+      "relationships": 3,
+      "add_interests": [
+        "thuong_buon"
+      ]
+    }
+  },
+  {
+    "id": "ket_giao",
+    "name": "Kết giao bạn nối khố & dạo chơi",
+    "category": "Giao du",
+    "description": "Vui chơi cùng lũ trẻ đồng trang lứa, mở rộng quan hệ và giữ tinh thần sảng khoái.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12
+    },
+    "costCopper": 0,
+    "effects": {
+      "happiness": 8,
+      "relationships": 6,
+      "add_interests": [
+        "giao_du"
+      ]
+    }
+  },
+  {
+    "id": "duong_benh_nha",
+    "name": "Nghỉ ngơi dưỡng bệnh, bồi bổ thân thể",
+    "category": "Sức khỏe",
+    "description": "Thể trạng yếu ớt khiến cha mẹ giữ bạn ở nhà nghỉ ngơi, uống thuốc bổ.",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "max_health": 55
+    },
+    "costCopper": 0,
+    "effects": {
+      "health": 12,
+      "happiness": 4
+    }
+  }
+]

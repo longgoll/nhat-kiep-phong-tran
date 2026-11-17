@@ -9,12 +9,7 @@ import {
   toggleCrossDress,
 } from '../progressionModules';
 import { advanceDays } from '../daySimulator';
-import actionsData from '../../data/actions.json';
-import adulthoodEvents from '../../data/events_truong_thanh.json';
-import type { ActionDef, GameEventDef } from '../../types/dsl';
-
-const ACTIONS = actionsData as ActionDef[];
-const EVENTS = adulthoodEvents as GameEventDef[];
+import { ALL_ACTIONS as ACTIONS, ALL_ADULTHOOD_EVENTS as EVENTS } from '../../data/registry';
 
 describe('Progression Modules (MVP 3)', () => {
   it('supports female cross-dressing and Thi Huong exam in autumn every 3 years', () => {

@@ -1,0 +1,296 @@
+[
+  {
+    "id": "evt_milestone_thoi_noi",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Thôi Nôi Tròn Một Tuổi",
+    "conditions": {
+      "min_age": 1,
+      "max_age": 1
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Tròn một tuổi, cha mẹ bày một chiếc mâm trước mặt để xem thiên hướng tương lai của bạn. Đôi tay nhỏ xíu của bạn hướng về món đồ nào?",
+    "choices": [
+      {
+        "label": "Bốc cây bút lông",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nắm chặt cây bút lông không buông. Cả nhà trầm trồ khen sau này ắt có đường công danh chữ nghĩa.",
+            "effects": {
+              "education": 5,
+              "happiness": 5,
+              "add_flags": [
+                "thien_huong_but_long"
+              ],
+              "add_traits": [
+                "ham_hoc"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ],
+              "milestone_title": "Thôi nôi bốc bút lông"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chụp lấy thanh gươm gỗ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn vung vẩy thanh gươm gỗ cười khanh khách. Cha bạn gật gù khen đứa trẻ có khí phách võ biền.",
+            "effects": {
+              "martial": 5,
+              "health": 3,
+              "add_flags": [
+                "thien_huong_kiem_go"
+              ],
+              "add_traits": [
+                "hieu_dong"
+              ],
+              "add_interests": [
+                "vo_nghe"
+              ],
+              "milestone_title": "Thôi nôi bốc gươm gỗ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vớ lấy thỏi bạc / bàn tính nhỏ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Ánh mắt bạn sáng rực khi chạm vào thỏi bạc. Người lớn cười bảo số này khéo tay tính toán, không sợ chết đói.",
+            "effects": {
+              "craft_trade": 5,
+              "add_flags": [
+                "thien_huong_thoi_bac"
+              ],
+              "add_traits": [
+                "kheo_tay"
+              ],
+              "add_interests": [
+                "thuong_buon"
+              ],
+              "milestone_title": "Thôi nôi bốc thỏi bạc"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ôm chặt nắm xôi gấc",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn bốc ngay nắm xôi cho vào miệng nhai ngon lành. Ai nấy đều chúc bạn một đời no ấm bình an.",
+            "effects": {
+              "health": 6,
+              "happiness": 8,
+              "add_flags": [
+                "thien_huong_nam_xoi"
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "dien_vien"
+              ],
+              "milestone_title": "Thôi nôi bốc nắm xôi"
+            }
+          }
+        ]
+      }
+    ],
+    "isMilestone": true
+  },
+  {
+    "id": "evt_infant_toddler_curiosity",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Buổi Trưa Trong Sân Nhà",
+    "conditions": {
+      "min_age": 3,
+      "max_age": 4
+    },
+    "weight": {
+      "base": 70,
+      "modifiers": []
+    },
+    "description": "Nắng trưa rải vàng ngoài sân, người lớn đang bận việc. Đứa trẻ 3–4 tuổi như bạn tự tìm trò chơi gì cho mình?",
+    "choices": [
+      {
+        "label": "Chạy ùa ra góc vườn đuổi bướm, nghịch đất",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn lấm lem bùn đất nhưng cười vang cả xóm, chân tay ngày một cứng cáp.",
+            "effects": {
+              "health": 4,
+              "happiness": 6,
+              "add_traits": [
+                "hieu_dong"
+              ],
+              "add_interests": [
+                "dien_vien"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ngồi chăm chú nhìn cha mẹ làm việc rồi bắt chước theo",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Đôi tay nhỏ xíu của bạn loay hoay xếp đồ rất khéo, cha mẹ nhìn thấy chỉ biết phì cười.",
+            "effects": {
+              "craft_trade": 3,
+              "happiness": 4,
+              "add_traits": [
+                "kheo_tay"
+              ],
+              "add_interests": [
+                "thu_cong"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nép bên vạt áo mẹ, nghe kể chuyện cổ tích & ca dao",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Giọng mẹ trầm ấm đưa bạn vào những câu chuyện trạng nguyên, anh hùng thuở xưa.",
+            "effects": {
+              "education": 3,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 6
+                }
+              ],
+              "add_traits": [
+                "ham_hoc"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_share_cake",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Miếng Bánh Ngon Đầu Ngõ",
+    "conditions": {
+      "min_age": 4,
+      "max_age": 5
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": []
+    },
+    "description": "Hôm nay mẹ đi chợ về mua được một tấm bánh mật thơm lừng chia cho bạn. Đám trẻ bên cạnh (hoặc anh chị em trong nhà) đang nhìn đầy thèm thuồng.",
+    "choices": [
+      {
+        "label": "Bẻ đôi miếng bánh chia cho mọi người cùng ăn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Ai nấy đều xuýt xoa khen bạn nhỏ tuổi mà biết điều. Tình cảm trong nhà và hàng xóm thêm gắn bó.",
+            "effects": {
+              "relationships": 6,
+              "happiness": 5,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 10
+                }
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "giao_du"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ôm chặt miếng bánh chạy vào góc ăn một mình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn ăn no nê một bụng nhưng bị mẹ nhắc nhở nhẹ vì tính ích kỷ.",
+            "effects": {
+              "health": 3,
+              "happiness": 4,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": -6
+                }
+              ],
+              "add_traits": [
+                "tham_vong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

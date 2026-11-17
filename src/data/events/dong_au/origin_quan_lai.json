@@ -1,0 +1,127 @@
+[
+  {
+    "id": "evt_child_quan_lai_fall",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Biến Cố Quan Trường Của Phụ Thân",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "missing_flags": [
+        "mo_coi_cha",
+        "gia_toc_sa_sut"
+      ]
+    },
+    "weight": {
+      "base": 32,
+      "modifiers": []
+    },
+    "description": "Một buổi chiều u ám, tin dữ từ kinh thành đưa về: phụ thân bạn vướng vào vụ án phe phái trên triều, bị hặc tội nặng và lâm bệnh nguy kịch trong ngục.",
+    "choices": [
+      {
+        "label": "Theo mẹ thu dọn hành lý về quê, giữ gìn sách vở gia phong",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": []
+            },
+            "resultText": "Phụ thân qua đời nơi lao ngục, triều đình thu hồi phủ đệ. Hai mẹ con về quê sống trong nếp nhà gạch cũ, gia đạo sa sút nhưng bạn giữ trọn khí tiết.",
+            "effects": {
+              "kill_npc_id": "npc_father",
+              "scale_family_copper": 0.3,
+              "set_housing": "nha_gach",
+              "set_circumstance": {
+                "id": "cha_quan_mat",
+                "label": "Cha làm quan mất sớm, mất chỗ dựa triều đình, gia đạo sa sút"
+              },
+              "add_flags": [
+                "mo_coi_cha",
+                "gia_toc_sa_sut"
+              ],
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "fame": -8,
+              "happiness": -15,
+              "education": 3,
+              "milestone_title": "Gia đạo sa sút sau biến cố triều đình"
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Nhờ đồng liêu cũ hết lòng chạy chọt, phụ thân giữ được mạng sống nhưng bị biếm chức về quê làm dân thường. Gia sản tiêu tán quá nửa.",
+            "effects": {
+              "scale_family_copper": 0.35,
+              "set_housing": "nha_gach",
+              "set_circumstance": {
+                "id": "biem_chuc",
+                "label": "Cha bị biếm chức về quê, gia đạo sa sút"
+              },
+              "add_flags": [
+                "gia_toc_sa_sut"
+              ],
+              "fame": -6,
+              "happiness": -10,
+              "milestone_title": "Phụ thân bị biếm chức về quê"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cùng mẹ dốc sạch gia tài chạy án minh oan cho cha",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": []
+            },
+            "resultText": "Tốn kém gần hết bạc tích trữ, cuối cùng cha bạn cũng được minh oan và giữ lại chức vị, nhưng cả nhà phải thắt lưng buộc bụng một thời gian dài.",
+            "effects": {
+              "scale_family_copper": 0.4,
+              "fame": 2,
+              "happiness": -4,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 15
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": []
+            },
+            "resultText": "Tiền mất tật mang! Kẻ gian nuốt lời khiến phụ thân uất ức qua đời, gia tài khánh kiệt chỉ còn lại ít vốn liếng còm cõi.",
+            "effects": {
+              "kill_npc_id": "npc_father",
+              "scale_family_copper": 0.15,
+              "set_housing": "nha_gach",
+              "set_circumstance": {
+                "id": "cha_quan_mat",
+                "label": "Cha làm quan mất sớm, gia sản khánh kiệt"
+              },
+              "add_flags": [
+                "mo_coi_cha",
+                "gia_toc_sa_sut"
+              ],
+              "fame": -10,
+              "happiness": -18,
+              "milestone_title": "Mồ côi cha, gia đạo khánh kiệt"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

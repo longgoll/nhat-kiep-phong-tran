@@ -1,0 +1,300 @@
+[
+  {
+    "id": "evt_child_eavesdrop_01",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Nghe lỏm ngoài cửa lớp thầy đồ",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong"
+      ],
+      "childhood_focus": "hoc_lom"
+    },
+    "weight": {
+      "base": 60,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_trait": [
+              "ham_hoc"
+            ]
+          },
+          "addWeight": 30
+        },
+        {
+          "conditions": {
+            "has_flags": [
+              "thien_huong_but_long"
+            ]
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Trời mưa phùn, bạn trốn việc chăn trâu, nép bên hiên nhà thầy đồ nghe tiếng ê a đọc Tam Tự Kinh. Thầy đồ vô tình nhìn ra bắt gặp ánh mắt ham học của bạn.",
+    "choices": [
+      {
+        "label": "Mạnh dạn quỳ xuống xin thầy cho nghe ké",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 8
+                  },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": {
+                    "min_relationships": 60
+                  },
+                  "addWeight": 15
+                },
+                {
+                  "conditions": {
+                    "has_any_trait": [
+                      "ham_hoc"
+                    ]
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Thầy đồ cảm động trước tấm lòng hiếu học và trí thông minh của bạn, tặng một cây bút cùn và cho phép rảnh rỗi ghé lớp.",
+            "effects": {
+              "education": 7,
+              "happiness": 14,
+              "relationships": 5,
+              "add_flags": [
+                "duoc_thay_do_quy"
+              ],
+              "add_traits": [
+                "ham_hoc"
+              ],
+              "milestone_title": "Được thầy đồ nhận cảm tình"
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Thầy đồ sợ mang tiếng với nhà giàu nên xua đuổi bạn về. Về nhà bạn lại bị cha mắng vì bỏ bê đàn trâu.",
+            "effects": {
+              "happiness": -10,
+              "relationships": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Sợ hãi bỏ chạy về đồng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn vội vàng chạy biến về bãi cỏ, nhưng vẫn kịp nhớ mặt hai chữ thầy vừa giảng.",
+            "effects": {
+              "education": 2,
+              "happiness": -2,
+              "add_traits": [
+                "nhut_nhat"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_tax_collector",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lính Lệ Về Làng Thúc Thuế",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Tiếng mõ thúc sưu thuế vang rền đầu ngõ. Đám lính lệ mặt mày hung tợn xộc vào sân đòi thu thêm gạo phụ thu khi cha mẹ chưa kịp về.",
+    "choices": [
+      {
+        "label": "Nhanh trí giấu hũ gạo ra bụi tre sau nhà",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_craft_trade": 5
+                  },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": {
+                    "has_any_trait": [
+                      "hieu_dong",
+                      "kheo_tay"
+                    ]
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Bạn nhanh trí ôm hũ gạo trốn qua hàng rào dâm bụt, giữ lại được bát cơm cho cả nhà.",
+            "effects": {
+              "craft_trade": 3,
+              "happiness": 5,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Bị lính lệ phát hiện, cha bạn vừa về phải đứng ra hứng trọn mấy roi tre thay cho bạn.",
+            "effects": {
+              "happiness": -12,
+              "family_copper": -40,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 6
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cúi đầu van xin chúng chờ cha mẹ về nộp đủ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Đám lính chửi bới vài câu rồi lấy đi ít đồ dùng trong nhà trừ vào phần thuế.",
+            "effects": {
+              "family_copper": -50,
+              "happiness": -8
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_ban_nong_corvee",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Trát Bắt Phu Đắp Đê",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong"
+      ],
+      "missing_flags": [
+        "mo_coi_cha"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": []
+    },
+    "description": "Lính lệ làng mang trát quan xuống bắt đinh đi phu đắp đê ngoài sông cái giữa mùa mưa bão.",
+    "choices": [
+      {
+        "label": "Cha đành gạt nước mắt lên đường đi phu",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Ba tháng ròng dầm mưa dãi nắng, cha trở về gầy rộc nhưng vẫn bình an. Bạn sớm thấm thía nỗi cơ cực của kiếp dân đen.",
+            "effects": {
+              "family_copper": -20,
+              "happiness": -5,
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Đê vỡ giữa đêm mưa bão, cha bị nước cuốn không qua khỏi. Từ nay mẹ con bạn phải tự nương tựa vào nhau.",
+            "effects": {
+              "kill_npc_id": "npc_father",
+              "scale_family_copper": 0.6,
+              "set_circumstance": {
+                "id": "mo_coi_cha",
+                "label": "Cha đi phu mất sớm, mẹ tần tảo nuôi con"
+              },
+              "add_flags": [
+                "mo_coi_cha"
+              ],
+              "happiness": -15,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "milestone_title": "Cha mất khi đi phu đắp đê"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vét sạch tiền dành dụm đút lót lý trưởng xin miễn (-60 đồng)",
+        "conditions": {
+          "min_copper": 60
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Lý trưởng nhận tiền rồi gạch tên cha khỏi sổ đi phu. Cả nhà thở phào nhẹ nhõm.",
+            "effects": {
+              "family_copper": -60,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

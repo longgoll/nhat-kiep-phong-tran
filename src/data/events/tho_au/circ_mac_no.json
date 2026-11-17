@@ -1,0 +1,41 @@
+[
+  {
+    "id": "evt_infant_debt_pressure",
+    "stage": "infancy",
+    "severity": "minor",
+    "cooldownDays": 1080,
+    "title": "Tiếng Thở Dài Đêm Khuya",
+    "conditions": {
+      "min_age": 2,
+      "max_age": 5,
+      "family_circumstance_in": [
+        "mac_no"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Gia đình đang gánh món nợ cũ.",
+    "choices": [
+      {
+        "label": "Tiếp tục",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Đêm khuya bạn nghe tiếng cha mẹ bàn chuyện khất nợ địa chủ. Bữa cơm độn khoai khiến bạn sớm hiểu sự cơ cực.",
+            "effects": {
+              "happiness": -4,
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

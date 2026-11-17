@@ -1,0 +1,81 @@
+{
+  "infancyMilestones": [
+    {
+      "day": 240,
+      "text": "Bạn đã biết lẫy và ê a gọi tên cha mẹ.",
+      "tone": "positive"
+    },
+    {
+      "day": 420,
+      "text": "Bạn chập chững những bước đi đầu tiên. Cả nhà vỗ tay reo mừng.",
+      "tone": "milestone"
+    },
+    {
+      "day": 600,
+      "text": "Bạn nói được từ đầu tiên rõ ràng, đôi mắt sáng long lanh.",
+      "tone": "positive"
+    },
+    {
+      "day": 900,
+      "text": "Chỉ một nắm đất, vài hòn sỏi cũng đủ để bạn chơi đùa suốt buổi.",
+      "tone": "neutral"
+    },
+    {
+      "day": 1200,
+      "text": "Tối nào trước khi ngủ, mẹ cũng kể chuyện cổ tích cho bạn nghe.",
+      "tone": "positive"
+    },
+    {
+      "day": 1560,
+      "text": "Bạn bắt đầu tò mò với thế giới bên ngoài, hay chạy quanh sân hỏi đủ chuyện.",
+      "tone": "neutral"
+    },
+    {
+      "day": 1890,
+      "text": "Người lớn trong xóm khen bạn lanh lợi, ngoan ngoãn.",
+      "tone": "positive"
+    }
+  ],
+  "focusAmbientLogs": [
+    {
+      "focusId": "hoc_tap",
+      "text": "Bạn mượn sách cũ ngồi đọc dưới hiên nhà, thuộc thêm nhiều mặt chữ."
+    },
+    {
+      "focusId": "hoc_tap",
+      "text": "Buổi tối bên ánh đèn dầu, bạn chăm chỉ luyện viết từng nét chữ ngay ngắn."
+    },
+    {
+      "focusId": "ban_be",
+      "text": "Bạn cùng đám trẻ trong xóm thả diều, chơi ô ăn quan rộn rã cả buổi chiều."
+    },
+    {
+      "focusId": "ban_be",
+      "text": "Lũ bạn đồng niên kéo nhau ra bờ đê hóng gió và chia nhau trái ổi vườn nhà."
+    },
+    {
+      "focusId": "giup_nha",
+      "text": "Bạn phụ cha mẹ thu dọn đồ đạc, quét sân và làm những việc vừa sức."
+    },
+    {
+      "focusId": "giup_nha",
+      "text": "Thấy bạn chăm chỉ đỡ đần việc nhà, cha mẹ mỉm cười đầy tự hào."
+    },
+    {
+      "focusId": "ren_vo",
+      "text": "Sáng sớm bạn ra sân hít thở khí trời, tập vài đường quyền cơ bản cho dẻo dai."
+    },
+    {
+      "focusId": "ren_vo",
+      "text": "Bạn chạy quanh bờ ao rèn sức bền, mồ hôi ướt đẫm nhưng tinh thần rất sảng khoái."
+    },
+    {
+      "focusId": "so_thich",
+      "text": "Bạn say sưa với thú vui riêng, quên cả thời gian trôi qua."
+    },
+    {
+      "focusId": "so_thich",
+      "text": "Những giờ phút thư thái giúp tâm hồn bạn thêm nhẹ nhàng và sáng tạo."
+    }
+  ]
+}

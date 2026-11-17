@@ -1,12 +1,11 @@
-import actionsData from '../data/actions.json';
-import adulthoodEvents from '../data/events_truong_thanh.json';
+import { ALL_ACTIONS, ALL_ADULTHOOD_EVENTS } from '../data/registry';
 import type { ActiveLifeState } from '../types/activeLife';
-import type { ActionDef, GameEventDef } from '../types/dsl';
+import type { GameEventDef } from '../types/dsl';
 import { advanceDays, type AutoPauseConfig } from '../engine/daySimulator';
 import { resolveEventChoice } from '../engine/childhoodEngine';
 
-const ACTIONS = actionsData as ActionDef[];
-const EVENTS = adulthoodEvents as GameEventDef[];
+const ACTIONS = ALL_ACTIONS;
+const EVENTS = ALL_ADULTHOOD_EVENTS;
 
 export type WorkerRequest =
   | {
