@@ -167,6 +167,6 @@
     "description": "Lén lút nhận bạc đút lót từ thương nhân và địa chủ. Giàu lên nhanh chóng nhưng tăng Uy thế ngầm.",
     "conditions": { "min_age": 16, "has_flags": ["dang_lam_quan"] },
     "costs": { "stamina": 12 },
-    "rewards": { "copper": 450, "infamy": 1.2, "fame": -0.5 }
+    "rewards": { "copper": 280, "infamy": 1.5, "fame": -0.6 }
   }
 ]

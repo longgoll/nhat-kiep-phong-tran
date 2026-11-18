@@ -9,8 +9,15 @@
     "conditions": {
       "min_age": 16,
       "max_age": 28,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ],
+      "has_living_parent": true,
       "missing_flags": [
-        "da_ra_o_rieng"
+        "da_ra_o_rieng",
+        "da_hoi_ra_o_rieng"
       ]
     },
     "weight": {
@@ -113,7 +120,7 @@
               "relationships": 5,
               "happiness": 8,
               "add_flags": [
-                "da_ra_o_rieng"
+                "da_hoi_ra_o_rieng"
               ]
             }
           }
@@ -170,7 +177,11 @@
       {
         "label": "Mua tre nứa dựng nếp nhà tranh giản dị cho tiết kiệm (Cần 200 Đồng)",
         "conditions": {
-          "min_copper": 200
+          "min_copper": 200,
+          "housing_in": [
+            "gam_cau",
+            "nha_tranh"
+          ]
         },
         "outcomes": [
           {
@@ -197,7 +208,12 @@
       },
       {
         "label": "Tự tay vào bãi bồi chặt tre kết lá, dựng tạm mái tranh đơn sơ",
-        "conditions": {},
+        "conditions": {
+          "housing_in": [
+            "gam_cau",
+            "nha_tranh"
+          ]
+        },
         "outcomes": [
           {
             "weight": {
@@ -220,6 +236,35 @@
             }
           }
         ]
+      },
+      {
+        "label": "Chuyển sang cơ ngơi khang trang đã mua sắm sẵn từ trước",
+        "conditions": {
+          "housing_in": [
+            "nha_gach",
+            "phu_de"
+          ]
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ tích lũy vững vàng từ trước, bạn làm lễ nhập trạch dọn vào cơ ngơi khang trang riêng của mình trong sự ngưỡng mộ của bà con lối xóm.",
+            "effects": {
+              "fame": 5,
+              "happiness": 10,
+              "milestone_title": "Nhập trạch cơ ngơi riêng khang trang",
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_ra_o_rieng_3",
+                  "delay_days": 180
+                }
+              ]
+            }
+          }
+        ]
       }
     ]
   },
@@ -231,6 +276,11 @@
     "title": "Anh Chị Em Ghé Thăm Nhà Mới",
     "conditions": {
       "min_age": 16,
+      "birth_order_in": [
+        "con_truong",
+        "con_thu",
+        "con_ut"
+      ],
       "has_flags": [
         "da_ra_o_rieng"
       ]

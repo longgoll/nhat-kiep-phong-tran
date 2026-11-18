@@ -167,6 +167,7 @@ export interface ActiveLifeState {
   };
   delayedEvents: Array<{ eventId: string; triggerDay: number }>;
   eventCooldowns: Record<string, number>;
+  lastMajorEventDay?: number;
   milestones: MilestoneRecord[];
   yearlyHappiness?: Record<number, number>;
   logs: LogEntry[];

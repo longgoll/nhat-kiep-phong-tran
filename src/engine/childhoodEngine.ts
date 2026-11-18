@@ -402,6 +402,7 @@ export function advanceChildhoodMonth(
   if (milestoneEvent) {
     state = {
       ...state,
+      lastMajorEventDay: milestoneEvent.severity === 'major' ? state.profile.totalDays : state.lastMajorEventDay,
       eventCooldowns: {
         ...state.eventCooldowns,
         [milestoneEvent.id]: state.profile.totalDays,
@@ -410,10 +411,12 @@ export function advanceChildhoodMonth(
     return { state, pendingEvent: milestoneEvent };
   }
 
-  // Roll eligible events on birthday OR ~22% chance each month
+  // Roll eligible events: 45% on birthday OR ~10% each other month, with 180-day gap between non-milestone major events
   const rollEventGate = mulberry32Next(state.prngState);
   state = { ...state, prngState: rollEventGate.nextState };
-  const shouldRollEvent = isBirthday || rollEventGate.value < 0.22;
+  const shouldRollEvent =
+    (isBirthday && rollEventGate.value < 0.45) || (!isBirthday && rollEventGate.value < 0.1);
+  const canRollMajor = state.profile.totalDays - (state.lastMajorEventDay ?? -9999) >= 180;
 
   let eventTriggered = false;
   if (shouldRollEvent) {
@@ -421,6 +424,7 @@ export function advanceChildhoodMonth(
       if (evt.isMilestone) return false;
       if (evt.stage !== stage && evt.stage !== 'any') return false;
       if (evt.oncePerLife && state.eventCooldowns[evt.id] !== undefined) return false;
+      if (evt.severity === 'major' && !canRollMajor) return false;
       const lastDay = state.eventCooldowns[evt.id] ?? -99999;
       if (state.profile.totalDays - lastDay < evt.cooldownDays) return false;
       return evaluateConditions(state, evt.conditions);
@@ -443,6 +447,7 @@ export function advanceChildhoodMonth(
         };
 
         if (pickedEvent.severity === 'major') {
+          state = { ...state, lastMajorEventDay: state.profile.totalDays };
           return { state, pendingEvent: pickedEvent };
         }
 

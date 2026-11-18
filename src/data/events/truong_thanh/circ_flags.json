@@ -52,6 +52,7 @@
                 "nu_cai_nam_trang",
                 "dang_lam_quan"
               ],
+              "reset_official_rank": true,
               "fame": -20,
               "happiness": -20
             }

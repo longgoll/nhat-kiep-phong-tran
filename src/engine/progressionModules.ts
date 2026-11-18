@@ -1,4 +1,4 @@
-import { getAgeYears, type ActiveLifeState, type HousingTier } from '../types/activeLife';
+import { getAgeYears, type ActiveLifeState, type HousingTier, type WorldState } from '../types/activeLife';
 import { appendLog, applyEffects } from './effectApplier';
 import { mulberry32Next } from './prng';
 
@@ -84,6 +84,64 @@ export const HOUSING_UPGRADES: Array<{ tier: HousingTier; label: string; cost: n
   { tier: 'nha_gach', label: 'Nhà gạch khang trang', cost: 5000 },
   { tier: 'phu_de', label: 'Phủ đệ rộng lớn', cost: 25000 },
 ];
+
+export const HOUSING_ORDER: Record<HousingTier, number> = {
+  gam_cau: 0,
+  nha_tranh: 1,
+  nha_gach: 2,
+  phu_de: 3,
+};
+
+export function getPropertyMarketCost(prop: PropertySpec, worldState: WorldState): number {
+  const mult =
+    worldState === 'chien_tranh'
+      ? 0.75
+      : worldState === 'mat_mua'
+        ? 0.85
+        : worldState === 'dich_benh'
+          ? 0.9
+          : 1.0;
+  return Math.round(prop.costCopper * mult);
+}
+
+export function getHousingMarketCost(tier: HousingTier, worldState: WorldState): number {
+  const spec = HOUSING_UPGRADES.find((h) => h.tier === tier);
+  if (!spec) return 0;
+  const mult =
+    worldState === 'chien_tranh'
+      ? 0.8
+      : worldState === 'mat_mua' || worldState === 'dich_benh'
+        ? 0.9
+        : 1.0;
+  return Math.round(spec.cost * mult);
+}
+
+export function getPropertySeasonalIncome(
+  prop: PropertySpec,
+  worldState: WorldState,
+  craftTrade: number,
+): number {
+  let worldMult = 1.0;
+  if (worldState === 'mat_mua') {
+    if (prop.id === 'ruong_tu' || prop.id === 'trang_vien_cho_thue') worldMult = 0.55;
+    else if (prop.id === 'cua_hieu_gao') worldMult = 1.25;
+    else worldMult = 0.85;
+  } else if (worldState === 'dich_benh') {
+    if (prop.id === 'nha_tro_cho_thue' || prop.id === 'ki_ot_cho_thue' || prop.id === 'cua_hieu_gao') {
+      worldMult = 0.65;
+    } else {
+      worldMult = 0.8;
+    }
+  } else if (worldState === 'chien_tranh') {
+    if (prop.id === 'thuyen_buon' || prop.id === 'ki_ot_cho_thue' || prop.id === 'nha_tro_cho_thue') {
+      worldMult = 0.5;
+    } else {
+      worldMult = 0.7;
+    }
+  }
+  const tradeBonus = 1 + craftTrade * 0.01;
+  return Math.round(prop.seasonalIncomeCopper * worldMult * tradeBonus);
+}
 
 export function toggleCrossDress(state: ActiveLifeState): ActiveLifeState {
   if (state.profile.gender !== 'female' || state.stats.education < 15) return state;
@@ -309,33 +367,70 @@ export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
 
 export function buyProperty(state: ActiveLifeState, propertyId: string): ActiveLifeState {
   const spec = PROPERTY_CATALOG.find((p) => p.id === propertyId);
-  if (!spec || state.assets.properties.includes(propertyId)) return state;
-  if (state.assets.wealthCopper < spec.costCopper) return state;
+  if (!spec) return state;
+  const cost = getPropertyMarketCost(spec, state.world.worldState);
+  if (state.assets.wealthCopper < cost) return state;
 
   const next = applyEffects(state, {
-    copper: -spec.costCopper,
-    add_property: spec.id,
-    fame: 3,
-    milestone_title: `Mua ${spec.name}`,
+    copper: -cost,
+    fame: 2,
+    milestone_title: state.assets.properties.includes(spec.id) ? undefined : `Mua ${spec.name}`,
   });
   return {
     ...next,
-    logs: appendLog(next.logs, next.profile.totalDays, 'survival', `Bạn tậu thành công ${spec.name} với giá ${spec.costCopper} đồng.`),
+    assets: {
+      ...next.assets,
+      properties: [...next.assets.properties, spec.id],
+    },
+    logs: appendLog(
+      next.logs,
+      next.profile.totalDays,
+      'survival',
+      `Bạn tậu thêm ${spec.name} với giá ${cost} đồng.`,
+    ),
+  };
+}
+
+export function sellProperty(state: ActiveLifeState, propertyId: string): ActiveLifeState {
+  const spec = PROPERTY_CATALOG.find((p) => p.id === propertyId);
+  const idx = state.assets.properties.indexOf(propertyId);
+  if (!spec || idx === -1) return state;
+
+  const salePrice = Math.round(getPropertyMarketCost(spec, state.world.worldState) * 0.7);
+  const nextProps = [...state.assets.properties];
+  nextProps.splice(idx, 1);
+
+  const next = applyEffects(state, { copper: salePrice });
+  return {
+    ...next,
+    assets: {
+      ...next.assets,
+      properties: nextProps,
+    },
+    logs: appendLog(
+      next.logs,
+      next.profile.totalDays,
+      'survival',
+      `Bạn bán bớt 1 ${spec.name}, thu về ${salePrice} đồng.`,
+    ),
   };
 }
 
 export function upgradeHousing(state: ActiveLifeState, tier: HousingTier): ActiveLifeState {
   const spec = HOUSING_UPGRADES.find((h) => h.tier === tier);
-  if (!spec || state.assets.wealthCopper < spec.cost) return state;
+  if (!spec) return state;
+  if (HOUSING_ORDER[tier] <= HOUSING_ORDER[state.assets.housing]) return state;
+  const cost = getHousingMarketCost(tier, state.world.worldState);
+  if (state.assets.wealthCopper < cost) return state;
 
   const next = applyEffects(state, {
-    copper: -spec.cost,
+    copper: -cost,
     set_housing: tier,
     happiness: 10,
   });
   return {
     ...next,
-    logs: appendLog(next.logs, next.profile.totalDays, 'survival', `Bạn dọn sang nơi ở mới: ${spec.label}.`),
+    logs: appendLog(next.logs, next.profile.totalDays, 'survival', `Bạn dọn sang nơi ở mới: ${spec.label} (-${cost}đ).`),
   };
 }
 

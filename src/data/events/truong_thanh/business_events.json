@@ -1,0 +1,372 @@
+[
+  {
+    "id": "evt_biz_caravan_venture",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 480,
+    "title": "Cơ Hội Chung Vốn Buôn Chuyến Liên Trấn",
+    "conditions": {
+      "min_age": 16,
+      "min_copper": 400,
+      "min_craft_trade": 8,
+      "missing_flags": [
+        "dang_lam_quan"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_craft_trade": 20
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Một thương đoàn quen ngỏ lời rủ bạn góp vốn đánh chuyến hàng tơ lụa và gốm sứ sang phủ bên. Lợi nhuận hứa hẹn rất cao, nhưng đường sá xa xôi luôn tiềm ẩn rủi ro cướp bóc, bão lũ hoặc biến động thời cuộc.",
+    "choices": [
+      {
+        "label": "Dốc vốn lớn 800 đồng đánh trọn chuyến hàng (Lãi cao, rủi ro lớn)",
+        "conditions": {
+          "min_copper": 800
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 50,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_craft_trade": 25
+                  },
+                  "addWeight": 20
+                },
+                {
+                  "conditions": {
+                    "world_state_in": [
+                      "binh_on"
+                    ]
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Chuyến hàng cập bến an toàn đúng dịp chợ lớn mở phiên! Bạn thu về 1.100 đồng lãi ròng, uy tín trong giới thương buôn tăng vọt.",
+            "effects": {
+              "copper": 1100,
+              "craft_trade": 5,
+              "fame": 4,
+              "happiness": 10
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "world_state_in": [
+                      "chien_tranh",
+                      "dich_benh"
+                    ]
+                  },
+                  "addWeight": 35
+                }
+              ]
+            },
+            "resultText": "Gặp đoạn đường phong tỏa và lũ quét bất ngờ, nửa số hàng bị hư hỏng nặng! Bạn mất trắng 800 đồng tiền vốn.",
+            "effects": {
+              "copper": -800,
+              "craft_trade": 2,
+              "happiness": -12
+            }
+          }
+        ]
+      },
+      {
+        "label": "Góp 300 đồng đi ké vài kiện hàng cho an toàn",
+        "conditions": {
+          "min_copper": 300
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "world_state_in": [
+                      "binh_on"
+                    ]
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Số hàng nhỏ bán hết veo ngay ngày đầu, bạn thu về 320 đồng tiền lãi và học thêm nhiều kinh nghiệm giữ giá.",
+            "effects": {
+              "copper": 320,
+              "craft_trade": 3,
+              "happiness": 5
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "world_state_in": [
+                      "chien_tranh",
+                      "dich_benh"
+                    ]
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Chợ phiên vắng khách hơn dự tính, hàng bán chậm khiến bạn lỗ mất 180 đồng.",
+            "effects": {
+              "copper": -180,
+              "craft_trade": 1,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thấy thời thế bất ổn, từ chối góp vốn để giữ tiền mặt",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giữ chặt túi tiền chờ thời cơ chắc chắn hơn.",
+            "effects": {
+              "happiness": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_biz_property_tenant_crisis",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Khách Thuê & Tá Điền Khất Nợ Giữa Mùa Khó",
+    "conditions": {
+      "min_age": 18,
+      "has_any_property": true
+    },
+    "weight": {
+      "base": 26,
+      "modifiers": [
+        {
+          "conditions": {
+            "world_state_in": [
+              "mat_mua",
+              "dich_benh",
+              "chien_tranh"
+            ]
+          },
+          "addWeight": 22
+        }
+      ]
+    },
+    "description": "Việc buôn bán và canh tác dạo này gặp trắc trở, mấy hộ thuê sạp, thuê nhà và tá điền trên sản nghiệp của bạn đồng loạt kéo đến xin khất kỳ tiền thuê mùa này.",
+    "choices": [
+      {
+        "label": "Chiếu cố cho khất nợ nửa kỳ để giữ chân khách làm ăn lâu dài",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Người thuê cảm kích trước sự rộng lượng của bạn, hứa hẹn làm ăn ổn định sẽ trả đủ và giới thiệu thêm khách mới.",
+            "effects": {
+              "fame": 6,
+              "relationships": 8,
+              "happiness": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Kiên quyết đòi đủ tiền thuê đúng hạn, ai thiếu thì thu hồi chỗ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Bạn thu hồi được 350 đồng tiền nợ đọng, nhưng mang tiếng chủ đất khắt khe.",
+            "effects": {
+              "copper": 350,
+              "infamy": 6,
+              "relationships": -8,
+              "happiness": -2
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Người thuê bỏ đi giữa đêm, để lại cơ sở bừa bộn khiến bạn tốn tiền dọn dẹp sửa sang.",
+            "effects": {
+              "copper": -150,
+              "relationships": -6,
+              "happiness": -6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bỏ 250 đồng tu bổ lại cơ sở, thu hút khách thuê mới có tiềm lực hơn",
+        "conditions": {
+          "min_copper": 250
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cơ sở sạch đẹp khang trang hơn hẳn, nhanh chóng có thương hộ khấm khá tới ký khế ước thuê dài hạn.",
+            "effects": {
+              "copper": -250,
+              "craft_trade": 3,
+              "fame": 4,
+              "happiness": 5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_biz_supply_contract",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 600,
+    "title": "Thầu Cung Ứng Vật Phẩm Cho Phủ Nha",
+    "conditions": {
+      "min_age": 18,
+      "min_craft_trade": 18,
+      "min_fame": 15,
+      "min_copper": 600,
+      "missing_flags": [
+        "dang_lam_quan"
+      ]
+    },
+    "weight": {
+      "base": 22,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_property": true
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Phủ nha sắp tổ chức đại lễ và cần tìm thương hộ uy tín cung ứng lượng lớn lương thực cùng vật dụng. Món hời rất lớn, nhưng làm ăn với cửa quan luôn có rủi ro bị lính lệ hạch sách.",
+    "choices": [
+      {
+        "label": "Bỏ 1.000 đồng nhận trọn gói thầu lớn",
+        "conditions": {
+          "min_copper": 1000
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 50
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Hàng giao đúng chuẩn, quan phủ rất hài lòng và thanh toán sòng phẳng! Bạn lãi ròng 1.300 đồng và vang danh khắp vùng.",
+            "effects": {
+              "copper": 1300,
+              "fame": 10,
+              "craft_trade": 5,
+              "happiness": 10
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Viên lại mục cố tình chê hàng kém chất lượng để ép giá và phạt vạ! Bạn mất trắng 650 đồng vì chuyến thầu này.",
+            "effects": {
+              "copper": -650,
+              "happiness": -12,
+              "fame": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhận phần cung ứng nhỏ (-400 đồng) cho chắc ăn",
+        "conditions": {
+          "min_copper": 400
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 85,
+              "modifiers": []
+            },
+            "resultText": "Bạn giao phần hàng nhỏ gọn, không đụng chạm lợi ích phe nào nên thu lãi nhẹ 350 đồng.",
+            "effects": {
+              "copper": 350,
+              "craft_trade": 3,
+              "fame": 3
+            }
+          },
+          {
+            "weight": {
+              "base": 15,
+              "modifiers": []
+            },
+            "resultText": "Bị trễ kỳ thanh toán, tốn thêm chi phí đi lại khiến bạn lỗ nhẹ 100 đồng.",
+            "effects": {
+              "copper": -100,
+              "happiness": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Kính cẩn cáo từ, tránh dây dưa chuyện cửa quan",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn chọn đứng ngoài cuộc, giữ sự an toàn cho cơ nghiệp hiện có.",
+            "effects": {
+              "happiness": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -11,6 +11,11 @@
         "thu_cong",
         "dia_chu"
       ],
+      "has_any_property": true,
+      "max_official_rank": 0,
+      "missing_flags": [
+        "dang_lam_quan"
+      ],
       "min_copper": 1200
     },
     "weight": {

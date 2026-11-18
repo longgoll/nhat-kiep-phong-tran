@@ -38,6 +38,10 @@ export interface ConditionSpec {
   missing_flags?: string[];
   has_any_flag?: string[];
   has_property?: string;
+  has_any_property?: boolean;
+  has_living_parent?: boolean;
+  has_living_npc_id?: string;
+  max_official_rank?: number;
 
   has_traits?: string[];
   has_any_trait?: string[];
@@ -67,6 +71,7 @@ export interface EffectSpec {
 
   add_flags?: string[];
   remove_flags?: string[];
+  reset_official_rank?: boolean;
   add_traits?: string[];
   remove_traits?: string[];
   add_interests?: string[];

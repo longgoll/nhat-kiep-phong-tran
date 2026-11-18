@@ -1,4 +1,12 @@
-import { getAgeYears, type ActiveLifeState, type GiftEtiquetteTier, type LifeFocusId, type NPC } from '../types/activeLife';
+import {
+  getAgeYears,
+  type ActiveLifeState,
+  type GiftEtiquetteTier,
+  type HousingTier,
+  type LifeFocusId,
+  type NPC,
+  type OriginClass,
+} from '../types/activeLife';
 import type { EffectSpec } from '../types/dsl';
 import { appendLog, applyEffects } from './effectApplier';
 import { INTEREST_LABELS } from './lifeInitializer';
@@ -57,10 +65,47 @@ export interface InstantAdultActionDef {
   costCopper: number;
   cooldownDays: number;
   minAge?: number;
-  requiresNotHousing?: ActiveLifeState['assets']['housing'];
+  requiresNotHousing?: HousingTier;
+  requiresHousingIn?: HousingTier[];
+  requiresLivingFamily?: boolean;
+  requiresLivingParent?: boolean;
+  requiresFlag?: string;
+  requiresOfficialOrNoble?: boolean;
+  excludeOrigins?: OriginClass[];
   effects: EffectSpec;
   levelUpHobby?: boolean;
   logText: string;
+}
+
+export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdultActionDef): boolean {
+  if (def.excludeOrigins && def.excludeOrigins.includes(state.profile.originClass) && state.officialRank === 0) {
+    return false;
+  }
+  if (def.requiresOfficialOrNoble) {
+    const isNobleOrOfficial =
+      state.officialRank > 0 ||
+      state.profile.originClass === 'hoang_toc' ||
+      state.profile.originClass === 'quan_lai' ||
+      state.profile.originClass === 'dia_chu';
+    if (!isNobleOrOfficial) return false;
+  }
+  if (def.requiresFlag && !state.flags.includes(def.requiresFlag)) {
+    return false;
+  }
+  if (def.requiresHousingIn && !def.requiresHousingIn.includes(state.assets.housing)) {
+    return false;
+  }
+  if (def.requiresLivingParent) {
+    const hasParent = state.npcs.some((n) => n.relation === 'parent' && n.isAlive);
+    if (!hasParent) return false;
+  }
+  if (def.requiresLivingFamily) {
+    const hasFamily = state.npcs.some(
+      (n) => (n.relation === 'parent' || n.relation === 'sibling' || n.relation === 'spouse' || n.relation === 'child') && n.isAlive,
+    );
+    if (!hasFamily) return false;
+  }
+  return true;
 }
 
 export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
@@ -70,6 +115,8 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     subtitle: 'Quan hệ +4 · Hạnh phúc +3 · Thân thiết người nhà +6',
     costCopper: 60,
     cooldownDays: 90,
+    requiresLivingFamily: true,
+    excludeOrigins: ['hoang_toc'],
     effects: {
       relationships: 4,
       happiness: 3,
@@ -79,6 +126,76 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
       ],
     },
     logText: 'Bạn mua thêm thịt cá về làm mâm cơm sum vầy cùng gia đình, không khí trong nhà thêm đầm ấm.',
+  },
+  {
+    id: 'inst_tea_stall',
+    title: 'Uống chén trà xanh, tán gẫu đầu ngõ',
+    subtitle: 'Hạnh phúc +3 · Quan hệ +2 (Chi tiêu bình dân)',
+    costCopper: 15,
+    cooldownDays: 45,
+    excludeOrigins: ['hoang_toc', 'quan_lai'],
+    effects: {
+      happiness: 3,
+      relationships: 2,
+    },
+    logText: 'Bạn ghé quán nước đầu làng làm bát chè xanh, nghe chuyện thiên hạ thấy lòng nhẹ nhõm hẳn.',
+  },
+  {
+    id: 'inst_rent_room',
+    title: 'Thuê gian trọ bình dân tránh mưa nắng',
+    subtitle: 'Chỗ ở → Nhà tranh · Sức khỏe +5 · Hạnh phúc +8',
+    costCopper: 180,
+    cooldownDays: 90,
+    requiresHousingIn: ['gam_cau'],
+    effects: {
+      set_housing: 'nha_tranh',
+      health: 5,
+      happiness: 8,
+    },
+    logText: 'Bạn thuê được một gian trọ mái tranh khô ráo, từ nay không còn cảnh màn trời chiếu đất.',
+  },
+  {
+    id: 'inst_rent_land_season',
+    title: 'Thuê 2 sào ruộng công cày thêm vụ mùa',
+    subtitle: 'Nhận +7 đấu gạo · Hạnh phúc +2',
+    costCopper: 120,
+    cooldownDays: 90,
+    excludeOrigins: ['hoang_toc', 'quan_lai'],
+    effects: {
+      rice: 7,
+      happiness: 2,
+      stamina: -15,
+    },
+    logText: 'Bạn bỏ tiền thuê thêm hai sào ruộng công chăm bón, thu hoạch được kha khá thóc gạo dự trữ.',
+  },
+  {
+    id: 'inst_rent_market_stall',
+    title: 'Thuê sạp chợ buôn chuyến ngắn ngày',
+    subtitle: 'Thương tài +1.5 · Thu về 240đ (+60đ lãi)',
+    costCopper: 180,
+    cooldownDays: 90,
+    excludeOrigins: ['hoang_toc', 'quan_lai'],
+    effects: {
+      copper: 240,
+      craft_trade: 1.5,
+      stamina: -15,
+    },
+    logText: 'Bạn thuê tạm một góc sạp chợ phiên bán hàng khô và vải vóc, xoay vòng vốn thu được chút lãi.',
+  },
+  {
+    id: 'inst_send_parents_money',
+    title: 'Gửi tiền phụng dưỡng cha mẹ phương xa',
+    subtitle: 'Thân thiết cha mẹ +10 · Hạnh phúc +4 · Thanh danh +2',
+    costCopper: 100,
+    cooldownDays: 120,
+    requiresFlag: 'da_ra_o_rieng',
+    requiresLivingParent: true,
+    effects: {
+      happiness: 4,
+      fame: 2,
+      npc_affinity: [{ relation: 'parent', delta: 10 }],
+    },
+    logText: 'Bạn gửi người quen mang trăm đồng tiền kẽm cùng ít quà về biếu song thân.',
   },
   {
     id: 'inst_treat_friends',
@@ -124,6 +241,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     subtitle: 'Hạnh phúc +7 · Quan hệ +5 · Thân thiết người nhà +8',
     costCopper: 140,
     cooldownDays: 180,
+    requiresLivingFamily: true,
     effects: {
       happiness: 7,
       relationships: 5,
@@ -172,6 +290,61 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     },
     logText: 'Bạn thuê thợ lợp lại mái nhà và quét dọn sân vườn khang trang sạch đẹp hẳn lên.',
   },
+  {
+    id: 'inst_noble_banquet',
+    title: 'Mở tiệc chiêu đãi tân khách · đồng liêu',
+    subtitle: 'Quan hệ +8 · Thanh danh +6 · Hạnh phúc +5',
+    costCopper: 500,
+    cooldownDays: 120,
+    requiresOfficialOrNoble: true,
+    effects: {
+      relationships: 8,
+      fame: 6,
+      happiness: 5,
+    },
+    logText: 'Bạn bày yến tiệc trong phủ tiếp đãi bằng hữu và đồng liêu, thanh thế giao hảo tăng lên rõ rệt.',
+  },
+  {
+    id: 'inst_royal_physician',
+    title: 'Mời danh y · thái y điều dưỡng khí huyết',
+    subtitle: 'Sức khỏe +18 · Thể lực +25',
+    costCopper: 450,
+    cooldownDays: 180,
+    requiresOfficialOrNoble: true,
+    effects: {
+      health: 18,
+      stamina: 25,
+    },
+    logText: 'Bạn mời bậc danh y kê đơn sâm nhung điều dưỡng cơ thể, tinh thần phấn chấn hẳn lên.',
+  },
+  {
+    id: 'inst_temple_donation',
+    title: 'Quyên bạc tu sửa Văn Miếu · Từ đường',
+    subtitle: 'Thanh danh +10 · Hạnh phúc +8 · Quan hệ +6',
+    costCopper: 600,
+    cooldownDays: 180,
+    requiresOfficialOrNoble: true,
+    effects: {
+      fame: 10,
+      happiness: 8,
+      relationships: 6,
+    },
+    logText: 'Bạn xuất tiền công đức tu sửa Văn Miếu và từ đường dòng họ, được sĩ phu và thân hào hết mực khen ngợi.',
+  },
+  {
+    id: 'inst_reward_servants',
+    title: 'Ban thưởng gia nhân trong phủ đệ',
+    subtitle: 'Hạnh phúc +6 · Quan hệ +4 · Thanh danh +2',
+    costCopper: 250,
+    cooldownDays: 150,
+    requiresHousingIn: ['nha_gach', 'phu_de'],
+    effects: {
+      happiness: 6,
+      relationships: 4,
+      fame: 2,
+    },
+    logText: 'Bạn ban thưởng tiền lụa cho gia nhân trong nhà, trên dưới đều tận tụy đồng lòng.',
+  },
 ];
 
 export function getInstantActionCooldownRemaining(
@@ -189,8 +362,8 @@ export function executeInstantAdultAction(
   actionId: string,
 ): { ok: boolean; state: ActiveLifeState; message: string } {
   const def = INSTANT_ADULT_ACTIONS.find((a) => a.id === actionId);
-  if (!def) {
-    return { ok: false, state: inputState, message: 'Không tìm thấy hoạt động.' };
+  if (!def || !isInstantActionVisible(inputState, def)) {
+    return { ok: false, state: inputState, message: 'Hoạt động không phù hợp với hoàn cảnh hiện tại.' };
   }
 
   const age = getAgeYears(inputState.profile.totalDays);
@@ -209,9 +382,23 @@ export function executeInstantAdultAction(
     return { ok: false, state: inputState, message: 'Không đủ tiền đồng.' };
   }
 
+  const scaledEffects: EffectSpec = { ...def.effects };
+  if (def.id === 'inst_rent_land_season' && inputState.world.worldState === 'mat_mua') {
+    scaledEffects.rice = 3;
+  } else if (def.id === 'inst_rent_market_stall') {
+    const baseGain = scaledEffects.copper ?? 240;
+    const mult =
+      inputState.world.worldState === 'binh_on'
+        ? 1.15
+        : inputState.world.worldState === 'chien_tranh' || inputState.world.worldState === 'dich_benh'
+          ? 0.7
+          : 0.9;
+    scaledEffects.copper = Math.round(baseGain * mult + inputState.stats.craftTrade * 1.5);
+  }
+
   let state = applyEffects(inputState, {
-    ...def.effects,
-    copper: -def.costCopper + (def.effects.copper ?? 0),
+    ...scaledEffects,
+    copper: -def.costCopper + (scaledEffects.copper ?? 0),
   });
 
   const hobbyLevels = { ...(state.hobbyLevels ?? {}) };

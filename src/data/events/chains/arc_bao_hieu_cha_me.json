@@ -8,7 +8,9 @@
     "title": "Song Thân Lâm Trọng Bệnh",
     "conditions": {
       "min_age": 26,
-      "max_age": 48
+      "max_age": 48,
+      "has_living_parent": true,
+      "has_living_npc_id": "npc_father"
     },
     "weight": {
       "base": 60,
@@ -153,7 +155,8 @@
     "cooldownDays": 0,
     "title": "Bệnh Tình Trở Nặng Lúc Canh Khuya",
     "conditions": {
-      "min_age": 26
+      "min_age": 26,
+      "has_living_npc_id": "npc_father"
     },
     "weight": {
       "base": 100,

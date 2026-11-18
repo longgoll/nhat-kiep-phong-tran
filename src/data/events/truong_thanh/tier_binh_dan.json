@@ -8,6 +8,7 @@
     "conditions": {
       "min_age": 16,
       "max_age": 50,
+      "gender": "male",
       "origin_in": [
         "ban_nong",
         "thu_cong"
@@ -15,7 +16,8 @@
       "missing_flags": [
         "do_tu_tai",
         "do_cu_nhan",
-        "do_tien_si"
+        "do_tien_si",
+        "dang_lam_quan"
       ]
     },
     "weight": {

@@ -52,9 +52,10 @@
         ]
       },
       {
-        "label": "Bỏ vốn thu mua gạo ém hàng chờ giá lên cao rồi bán tháo (-300 đồng)",
+        "label": "Bỏ vốn thu mua gạo ém hàng chờ giá lên cao rồi bán tháo (Cần Thương tài >= 8, -300 đồng)",
         "conditions": {
-          "min_copper": 300
+          "min_copper": 300,
+          "min_craft_trade": 8
         },
         "outcomes": [
           {
@@ -62,9 +63,9 @@
               "base": 75,
               "modifiers": []
             },
-            "resultText": "Bạn gom hàng đúng lúc giá lên đỉnh, thu về món lợi khổng lồ trong cơn khốn khó của thiên hạ, dù tiếng xấu đầu cơ lan khắp chợ.",
+            "resultText": "Bạn gom hàng đúng lúc giá lên đỉnh, thu về món lợi khổng lồ (+450 đồng lãi ròng) trong cơn khốn khó của thiên hạ, dù tiếng xấu đầu cơ lan khắp chợ.",
             "effects": {
-              "copper": 750,
+              "copper": 450,
               "rice": 4,
               "infamy": 12,
               "fame": -8,
@@ -478,9 +479,10 @@
         ]
       },
       {
-        "label": "Thu mua gom hết lô thuốc hiếm từ lái buôn để bán lại giá cao (-250 đồng)",
+        "label": "Thu mua gom hết lô thuốc hiếm từ lái buôn để bán lại giá cao (Cần Thương tài >= 8, -250 đồng)",
         "conditions": {
-          "min_copper": 250
+          "min_copper": 250,
+          "min_craft_trade": 8
         },
         "outcomes": [
           {
@@ -488,9 +490,9 @@
               "base": 80,
               "modifiers": []
             },
-            "resultText": "Bạn kiếm bộn tiền từ sự hoảng loạn của người bệnh, nhưng bị hàng xóm khinh bỉ gọi là kẻ trục lợi trên xương máu đồng bào.",
+            "resultText": "Bạn kiếm bộn tiền (+400 đồng lãi ròng) từ sự hoảng loạn của người bệnh, nhưng bị hàng xóm khinh bỉ gọi là kẻ trục lợi trên xương máu đồng bào.",
             "effects": {
-              "copper": 650,
+              "copper": 400,
               "infamy": 14,
               "fame": -10,
               "relationships": -12,
@@ -527,6 +529,225 @@
               "relationships": 6,
               "fame": 4,
               "education": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_world_imperial_tax_levy",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Triều Đình Ban Lệnh Tăng Thuế Thời Loạn",
+    "conditions": {
+      "min_age": 16,
+      "world_state_in": [
+        "chien_tranh",
+        "mat_mua"
+      ]
+    },
+    "weight": {
+      "base": 30,
+      "modifiers": []
+    },
+    "description": "Ngân khố triều đình hao hụt giữa lúc đất nước gặp biến cố, Bộ Hộ truyền hịch tăng thêm thuế đinh và thuế điền trên toàn quốc. Tùy vào thân phận mà mỗi người có cách ứng phó khác nhau.",
+    "choices": [
+      {
+        "label": "Dâng sớ xin miễn giảm sưu thuế cho dân nghèo trong hạt (Dành cho Quan lại / Hoàng tộc)",
+        "conditions": {
+          "has_any_flag": [
+            "dang_lam_quan",
+            "da_khai_phu_hoang_toc",
+            "da_nhan_tuoc_vi"
+          ]
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_fame": 30
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Lời tấu thẳng thắn của bạn được chuẩn y một phần! Dân chúng trong vùng đội ơn, thanh danh của bạn vang khắp triều dã.",
+            "effects": {
+              "copper": -150,
+              "fame": 12,
+              "relationships": 10,
+              "happiness": 8
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Phe chủ chiến trên triều quở trách bạn không lo quốc kế dân sinh, buộc phải tự bỏ bổng lộc bù vào.",
+            "effects": {
+              "copper": -400,
+              "fame": 4,
+              "happiness": -6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nộp đủ 250 đồng tiền thuế cho yên thân",
+        "conditions": {
+          "min_copper": 250,
+          "max_official_rank": 0
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn bấm bụng nộp đủ tiền thuế cho nha môn, giữ được tờ biên lai an toàn.",
+            "effects": {
+              "copper": -250,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khai giảm sản lượng để né bớt phần thuế nặng",
+        "conditions": {
+          "max_official_rank": 0
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_craft_trade": 15
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Bạn khéo léo qua mặt được đám sai dịch, giữ lại được số tiền phòng thân.",
+            "effects": {
+              "infamy": 4,
+              "happiness": 3
+            }
+          },
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": []
+            },
+            "resultText": "Bị lý trưởng phát giác khai gian! Bạn bị phạt vạ 450 đồng và đánh đòn răn đe.",
+            "effects": {
+              "copper": -450,
+              "health": -12,
+              "infamy": 8,
+              "happiness": -10
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_world_bumper_harvest_edict",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 600,
+    "title": "Chiếu Khuyến Nông & Hội Chợ Thái Bình",
+    "conditions": {
+      "min_age": 15,
+      "world_state_in": [
+        "binh_on"
+      ],
+      "season_in": [
+        "spring",
+        "autumn"
+      ]
+    },
+    "weight": {
+      "base": 25,
+      "modifiers": []
+    },
+    "description": "Đất nước thái bình thịnh trị, mùa màng bội thu, triều đình mở hội chợ giao thương và hội bình văn lớn tại phủ thành. Người người nô nức trẩy hội.",
+    "choices": [
+      {
+        "label": "Bỏ 300 đồng đem hàng hóa ra hội chợ giao thương (Cần Thương tài >= 10)",
+        "conditions": {
+          "min_copper": 300,
+          "min_craft_trade": 10
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 85,
+              "modifiers": []
+            },
+            "resultText": "Hội chợ đông vui tấp nập, hàng hóa bán chạy như tôm tươi! Bạn lãi ròng 420 đồng.",
+            "effects": {
+              "copper": 420,
+              "craft_trade": 4,
+              "fame": 3,
+              "happiness": 8
+            }
+          },
+          {
+            "weight": {
+              "base": 15,
+              "modifiers": []
+            },
+            "resultText": "Cạnh tranh gắt gao khiến hàng bán chậm, bạn chỉ thu hồi đủ vốn và học thêm kinh nghiệm.",
+            "effects": {
+              "craft_trade": 2,
+              "happiness": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tham gia hội bình văn, xướng họa thơ phú cùng sĩ phu (Cần Học thức >= 15)",
+        "conditions": {
+          "min_education": 15
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bài phú của bạn được các bậc túc nho khen ngợi, danh tiếng và mối giao hảo mở rộng đáng kể.",
+            "effects": {
+              "education": 4,
+              "fame": 6,
+              "relationships": 6,
+              "happiness": 8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Dạo chơi hội chợ, thưởng thức không khí thái bình an lạc",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn hòa mình vào dòng người vui hội, lòng cảm thấy bình yên và phấn chấn.",
+            "effects": {
+              "happiness": 7,
+              "relationships": 3
             }
           }
         ]

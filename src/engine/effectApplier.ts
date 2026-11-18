@@ -63,6 +63,8 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
     properties: [...state.assets.properties],
   };
   let flags = [...state.flags];
+  let officialRank = state.officialRank;
+  let currentRole = state.profile.currentRole;
   let traits = [...(state.traits ?? [])];
   let interests = [...(state.interests ?? [])];
   let family = state.family ? { ...state.family } : undefined;
@@ -78,7 +80,7 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
   if (effects.education !== undefined) stats.education = applyStatDelta(stats.education, effects.education);
   if (effects.stamina !== undefined) stats.stamina = clamp(stats.stamina + effects.stamina, 0, stats.maxStamina);
   if (effects.martial !== undefined) stats.martial = Math.max(0, stats.martial + effects.martial);
-  if (effects.craft_trade !== undefined) stats.craftTrade = Math.max(0, stats.craftTrade + effects.craft_trade);
+  if (effects.craft_trade !== undefined) stats.craftTrade = applyStatDelta(stats.craftTrade, effects.craft_trade);
   if (effects.fame !== undefined) stats.fame = Math.max(0, stats.fame + effects.fame);
   if (effects.infamy !== undefined) stats.infamy = Math.max(0, stats.infamy + effects.infamy);
 
@@ -96,6 +98,10 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
   }
   if (effects.remove_flags) {
     flags = flags.filter((f) => !effects.remove_flags!.includes(f));
+  }
+  if (effects.reset_official_rank) {
+    officialRank = 0;
+    currentRole = 'Dân thường';
   }
 
   if (effects.add_traits) {
@@ -188,6 +194,11 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
 
   return {
     ...state,
+    profile: {
+      ...state.profile,
+      currentRole,
+    },
+    officialRank,
     isAlive,
     deathReason,
     stats,

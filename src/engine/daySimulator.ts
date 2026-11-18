@@ -17,7 +17,7 @@ import { calculateRicePrice, formatCopper } from './economy';
 import { appendLog, applyEffects } from './effectApplier';
 import { pickWeightedIndex } from './prng';
 import { resolveEventChoice } from './childhoodEngine';
-import { PROPERTY_CATALOG } from './progressionModules';
+import { getPropertySeasonalIncome, PROPERTY_CATALOG } from './progressionModules';
 import {
   applyAnnualGiftEtiquette,
   applySeasonalGoldAndInflation,
@@ -142,7 +142,11 @@ export function canExecuteAction(state: ActiveLifeState, action: ActionDef): boo
   return true;
 }
 
-function scaleActionRewards(state: ActiveLifeState, rewards: EffectSpec): EffectSpec {
+function scaleActionRewards(
+  state: ActiveLifeState,
+  rewards: EffectSpec,
+  category?: ActionDef['category'],
+): EffectSpec {
   const age = getAgeYears(state.profile.totalDays);
   const { learningFactor } = getAgingProfile(age);
 
@@ -150,7 +154,20 @@ function scaleActionRewards(state: ActiveLifeState, rewards: EffectSpec): Effect
   if (state.stats.happiness < 20) workEfficiency *= 0.7; // -30% despair penalty
   if (state.stats.health < 20) workEfficiency *= 0.75; // -25% illness penalty
 
-  const tradeMult = 1 + state.stats.craftTrade * 0.015;
+  // craftTrade (0-100) boosts trade actions up to 2.0x; worldState dampens trade in war/plague
+  let tradeMult = 1.0;
+  if (category === 'trade') {
+    const worldTradeMult =
+      state.world.worldState === 'chien_tranh'
+        ? 0.75
+        : state.world.worldState === 'dich_benh'
+          ? 0.85
+          : 1.0;
+    tradeMult = (1 + Math.min(100, state.stats.craftTrade) * 0.01) * worldTradeMult;
+  } else if (category === 'official') {
+    tradeMult = 1 + Math.max(0, state.officialRank - 1) * 0.25;
+  }
+
   const focusMod = getDailyFocusModifiers(state.schedule.lifeFocus);
   const scaled: EffectSpec = { ...rewards };
 
@@ -365,7 +382,6 @@ export function advanceDays(
   const actionsMap = new Map(actionsList.map((a) => [a.id, a]));
   let state = inputState;
   let daysSimulated = 0;
-  let lastMajorRollDay = -999;
 
   // Track initial warning states so auto-pause only fires on newly entering a critical state
   // (prevents trapping the player in a 1-day infinite pause loop when they click Continue).
@@ -414,25 +430,25 @@ export function advanceDays(
       if (aging.seasonalHealthDecay > 0) {
         state = applyEffects(state, { health: -aging.seasonalHealthDecay });
       }
-      // Passive income from owned properties
+      // Passive income from owned properties (fluctuates with world state & craftTrade)
       if (state.assets.properties.length > 0) {
         let seasonalGain = 0;
         for (const propId of state.assets.properties) {
           const spec = PROPERTY_CATALOG.find((p) => p.id === propId);
-          if (spec) seasonalGain += spec.seasonalIncomeCopper;
+          if (spec) {
+            seasonalGain += getPropertySeasonalIncome(spec, state.world.worldState, state.stats.craftTrade);
+          }
         }
         if (seasonalGain > 0) {
-          const tradeBonus = 1 + state.stats.craftTrade * 0.01;
-          const finalGain = Math.round(seasonalGain * tradeBonus);
-          state = applyEffects(state, { copper: finalGain });
-          state = addLedger(state, { propertyIncomeCopper: finalGain });
+          state = applyEffects(state, { copper: seasonalGain });
+          state = addLedger(state, { propertyIncomeCopper: seasonalGain });
           state = {
             ...state,
             logs: appendLog(
               state.logs,
               nextTotalDays,
               'survival',
-              `Thu hoạch điền sản & cửa hiệu đầu mùa: +${finalGain} đồng.`,
+              `Thu hoạch điền sản & cửa hiệu đầu mùa (${getWorldStateLabel(state.world.worldState)}): +${seasonalGain} đồng.`,
             ),
           };
         }
@@ -450,21 +466,25 @@ export function advanceDays(
         const expEvent = eventsPool.find((e) => e.id === 'evt_nu_cai_nam_trang_exposed');
         if (expEvent) {
           daysSimulated += 1;
+          state = { ...state, lastMajorEventDay: nextTotalDays };
           return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: expEvent };
         }
       }
     }
 
-    // 1. Check delayed events due today
-    const dueEvents = state.delayedEvents.filter((item) => item.triggerDay <= nextTotalDays);
-    if (dueEvents.length > 0) {
-      const remaining = state.delayedEvents.filter((item) => item.triggerDay > nextTotalDays);
+    // 1. Check delayed events due today (pop one at a time so concurrent delayed events are not dropped)
+    while (true) {
+      const dueIdx = state.delayedEvents.findIndex((item) => item.triggerDay <= nextTotalDays);
+      if (dueIdx === -1) break;
+      const dueItem = state.delayedEvents[dueIdx];
+      const remaining = state.delayedEvents.filter((_, idx) => idx !== dueIdx);
       state = { ...state, delayedEvents: remaining };
 
-      const target = eventsPool.find((e) => e.id === dueEvents[0].eventId);
-      if (target) {
-        daysSimulated += 1;
+      const target = eventsPool.find((e) => e.id === dueItem.eventId);
+      if (target && evaluateConditions(state, target.conditions)) {
         if (target.severity === 'major') {
+          daysSimulated += 1;
+          state = { ...state, lastMajorEventDay: nextTotalDays };
           return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: target };
         }
         state = resolveEventChoice(state, target, 0).state;
@@ -489,7 +509,7 @@ export function advanceDays(
           state = applyEffects(state, negCosts);
         }
 
-        const scaledRewards = scaleActionRewards(state, action.rewards);
+        const scaledRewards = scaleActionRewards(state, action.rewards, action.category);
         state = applyEffects(state, scaledRewards);
         if (scaledRewards.copper && scaledRewards.copper > 0) {
           state = addLedger(state, { workIncomeCopper: scaledRewards.copper });
@@ -540,8 +560,9 @@ export function advanceDays(
       return { state, daysSimulated, pausedReason: 'dead' };
     }
 
-    // 4. Roll random adulthood event (pacing cap: major event at most once per 7 days)
-    const canRollMajor = nextTotalDays - lastMajorRollDay >= 7;
+    // 4. Roll random adulthood event (pacing cap: major event at most once per 25 days)
+    const MAJOR_EVENT_COOLDOWN_DAYS = 25;
+    const canRollMajor = nextTotalDays - (state.lastMajorEventDay ?? -9999) >= MAJOR_EVENT_COOLDOWN_DAYS;
     const eligibleEvents = eventsPool.filter((evt) => {
       if (evt.stage !== 'adulthood' && evt.stage !== 'any') return false;
       if (evt.cooldownDays === 0) return false; // delayed-only events
@@ -553,8 +574,8 @@ export function advanceDays(
     });
 
     if (eligibleEvents.length > 0) {
-      // ~7% chance per day to trigger an eligible event when pool is non-empty
-      const triggerRoll = pickWeightedIndex(state.prngState, [7, 93]);
+      // ~3% chance per day (~1 event per month on average) to avoid overwhelming modals
+      const triggerRoll = pickWeightedIndex(state.prngState, [3, 97]);
       state = { ...state, prngState: triggerRoll.nextState };
 
       if (triggerRoll.index === 0) {
@@ -571,7 +592,7 @@ export function advanceDays(
           };
 
           if (picked.severity === 'major') {
-            lastMajorRollDay = nextTotalDays;
+            state = { ...state, lastMajorEventDay: nextTotalDays };
             return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: picked };
           }
           state = resolveEventChoice(state, picked, 0).state;

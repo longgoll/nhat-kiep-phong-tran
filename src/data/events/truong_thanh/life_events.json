@@ -1,0 +1,313 @@
+[
+  {
+    "id": "evt_life_corrupt_audit",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Ngự Sử Đài Về Địa Phương Thanh Tra",
+    "conditions": {
+      "min_age": 20,
+      "has_flags": [
+        "dang_lam_quan"
+      ],
+      "min_infamy": 20
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_infamy": 45
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Ác danh tham nhũng và vòi vĩnh của bạn đã lọt tới tai Ngự Sử Đài. Một đoàn thanh tra bất ngờ tới phủ nha kiểm tra sổ sách thu chi và lắng nghe đơn khiếu kiện của dân chúng!",
+    "choices": [
+      {
+        "label": "Bỏ 1.200 đồng chạy chọt, lo lót che giấu sổ sách",
+        "conditions": {
+          "min_copper": 1200
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Tiền bạc mở đường giúp bạn qua ải thanh tra trót lọt, nhưng túi tiền vơi đi đáng kể và lời đàm tiếu vẫn âm ỉ.",
+            "effects": {
+              "copper": -1200,
+              "infamy": 4,
+              "fame": -4,
+              "happiness": -4
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Viên ngự sử thanh liêm từ chối hối lộ! Bạn bị tước chức quan, tịch thu 1.500 đồng xung công.",
+            "effects": {
+              "copper": -1500,
+              "remove_flags": [
+                "dang_lam_quan"
+              ],
+              "reset_official_rank": true,
+              "fame": -18,
+              "infamy": 8,
+              "happiness": -18
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cúi đầu nhận lỗi, nộp lại tiền tham ô để giữ mạng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn bị cách chức về làm dân thường và nộp phạt 800 đồng, nhưng giữ được tính mạng khỏi án chém.",
+            "effects": {
+              "copper": -800,
+              "remove_flags": [
+                "dang_lam_quan"
+              ],
+              "reset_official_rank": true,
+              "fame": -15,
+              "infamy": -5,
+              "happiness": -12
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_life_midlife_illness",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 720,
+    "title": "Chứng Bệnh Tuổi Trung Niên",
+    "conditions": {
+      "min_age": 40,
+      "max_age": 65
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": [
+        {
+          "conditions": {
+            "max_health": 55
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Bước sang tuổi xế bóng, những năm tháng lao lực khiến khớp xương đau nhức, đêm thường ho khan mất ngủ. Người nhà khuyên bạn nên sớm điều dưỡng kẻo sinh trọng bệnh.",
+    "choices": [
+      {
+        "label": "Bỏ 250 đồng cắt thuốc bắc thượng hạng điều dưỡng (-250 đồng)",
+        "conditions": {
+          "min_copper": 250
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Uống trọn mười thang thuốc bổ, khí huyết lưu thông, thân thể bạn khỏe khoắn hẳn lên.",
+            "effects": {
+              "copper": -250,
+              "health": 8,
+              "happiness": 5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tự sắc lá nam và nghỉ ngơi ít ngày (-60 đồng)",
+        "conditions": {
+          "min_copper": 60
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bệnh tình thuyên giảm phần nào, dù trái gió trở trời vẫn còn hơi nhức mỏi.",
+            "effects": {
+              "copper": -60,
+              "health": 2,
+              "stamina": 10
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cố chịu đựng, tiếp tục làm việc bình thường",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cố quá thành quá cố, cơn ho kéo dài khiến thể trạng bạn suy giảm rõ rệt.",
+            "effects": {
+              "health": -8,
+              "stamina": -15,
+              "happiness": -5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_life_marriage_harmony",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 720,
+    "title": "Chuyện Trong Nhà Ngoài Ngõ",
+    "conditions": {
+      "min_age": 22,
+      "has_flags": [
+        "da_ket_hon"
+      ]
+    },
+    "weight": {
+      "base": 22,
+      "modifiers": []
+    },
+    "description": "Cuộc sống vợ chồng qua ngày không tránh khỏi lúc cơm không lành canh không ngọt, lại thêm chuyện họ hàng hai bên có chút hiểu lầm nhỏ cần bạn đứng ra thu xếp.",
+    "choices": [
+      {
+        "label": "Mua ít quà biếu hai bên và dịu dàng trò chuyện cùng bạn đời (-120 đồng)",
+        "conditions": {
+          "min_copper": 120
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Sự khéo léo và chân thành của bạn giúp không khí gia đình ấm áp trở lại, tình cảm vợ chồng thêm gắn bó.",
+            "effects": {
+              "copper": -120,
+              "npc_affinity": [
+                {
+                  "relation": "spouse",
+                  "delta": 12
+                }
+              ],
+              "relationships": 6,
+              "happiness": 8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ngồi lại thẳng thắn phân tích đúng sai, giữ nếp nhà nghiêm minh",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Dù ban đầu hơi căng thẳng, nhưng nói rõ ràng giúp đôi bên hiểu nhau hơn.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "relation": "spouse",
+                  "delta": 4
+                }
+              ],
+              "happiness": 2
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Lời qua tiếng lại khiến bầu không khí trong nhà nặng nề mất mấy hôm.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "relation": "spouse",
+                  "delta": -8
+                }
+              ],
+              "happiness": -6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_life_elderly_reflection",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Tuổi Xế Chiều Nhìn Lại Một Đời",
+    "conditions": {
+      "min_age": 60
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Mái đầu nay đã điểm sương, ngồi bên chén trà ấm nhìn nắng chiều buông xuống hiên nhà, bạn chợt ngẫm lại quãng đời phong trần đã qua với bao thăng trầm được mất.",
+    "choices": [
+      {
+        "label": "Ghi chép lại kinh nghiệm sống thành gia huấn truyền cho đời sau",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cuốn gia huấn giản dị mà thấm thía được con cháu trân trọng giữ gìn như báu vật gia truyền.",
+            "effects": {
+              "education": 4,
+              "fame": 8,
+              "happiness": 12,
+              "milestone_title": "Lập gia huấn truyền đời cho con cháu"
+            }
+          }
+        ]
+      },
+      {
+        "label": "An nhiên buông bỏ mọi muộn phiền, tận hưởng tuổi già thanh thản",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Lòng nhẹ tựa mây bay, tinh thần sảng khoái giúp sức khỏe tuổi già thêm phần dẻo dai.",
+            "effects": {
+              "health": 6,
+              "happiness": 15,
+              "milestone_title": "An hưởng tuổi già thanh thản"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

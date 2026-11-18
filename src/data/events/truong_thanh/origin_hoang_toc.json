@@ -61,6 +61,7 @@
             "resultText": "Hoàng thượng khen bạn hiếu thuận, ban tước hiệu tôn quý cùng 3.500 đồng bổng lộc và một khoảnh ruộng tư làm hoa lợi.",
             "effects": {
               "copper": 3500,
+              "add_property": "ruong_tu",
               "fame": 12,
               "relationships": 8,
               "happiness": 10,

@@ -4,10 +4,16 @@ import {
   buyOfficialTitle,
   buyProperty,
   getExamEligibility,
+  getPropertyMarketCost,
+  getPropertySeasonalIncome,
   getRebellionSuccessChance,
+  PROPERTY_CATALOG,
+  sellProperty,
   takeExam,
   toggleCrossDress,
+  upgradeHousing,
 } from '../progressionModules';
+import { INSTANT_ADULT_ACTIONS, isInstantActionVisible } from '../adultLifeActions';
 import { advanceDays } from '../daySimulator';
 import { ALL_ACTIONS as ACTIONS, ALL_ADULTHOOD_EVENTS as EVENTS } from '../../data/registry';
 
@@ -67,5 +73,59 @@ describe('Progression Modules (MVP 3)', () => {
     };
     const chance = getRebellionSuccessChance(life);
     expect(chance).toBe(0.95);
+  });
+
+  it('allows buying multiple properties, selling properties, fluctuating by worldState, and prevents housing downgrade', () => {
+    let life = createNewLife(999);
+    life = {
+      ...life,
+      world: { ...life.world, worldState: 'binh_on' },
+      assets: { ...life.assets, wealthCopper: 20000, housing: 'phu_de' },
+    };
+
+    life = buyProperty(life, 'ruong_tu');
+    life = buyProperty(life, 'ruong_tu');
+    expect(life.assets.properties.filter((p) => p === 'ruong_tu').length).toBe(2);
+
+    life = sellProperty(life, 'ruong_tu');
+    expect(life.assets.properties.filter((p) => p === 'ruong_tu').length).toBe(1);
+
+    const ruongSpec = PROPERTY_CATALOG.find((p) => p.id === 'ruong_tu')!;
+    expect(getPropertyMarketCost(ruongSpec, 'chien_tranh')).toBeLessThan(getPropertyMarketCost(ruongSpec, 'binh_on'));
+    expect(getPropertySeasonalIncome(ruongSpec, 'mat_mua', 0)).toBeLessThan(
+      getPropertySeasonalIncome(ruongSpec, 'binh_on', 0),
+    );
+
+    // Prevent downgrading from phu_de to nha_tranh
+    const beforeCopper = life.assets.wealthCopper;
+    life = upgradeHousing(life, 'nha_tranh');
+    expect(life.assets.housing).toBe('phu_de');
+    expect(life.assets.wealthCopper).toBe(beforeCopper);
+  });
+
+  it('filters instant adult actions by origin and circumstance', () => {
+    let peasant = createNewLife(111);
+    peasant = {
+      ...peasant,
+      profile: { ...peasant.profile, originClass: 'ban_nong' },
+      officialRank: 0,
+      assets: { ...peasant.assets, housing: 'gam_cau' },
+    };
+
+    const rentRoom = INSTANT_ADULT_ACTIONS.find((a) => a.id === 'inst_rent_room')!;
+    const nobleBanquet = INSTANT_ADULT_ACTIONS.find((a) => a.id === 'inst_noble_banquet')!;
+    expect(isInstantActionVisible(peasant, rentRoom)).toBe(true);
+    expect(isInstantActionVisible(peasant, nobleBanquet)).toBe(false);
+
+    let royal = createNewLife(222);
+    royal = {
+      ...royal,
+      profile: { ...royal.profile, originClass: 'hoang_toc' },
+      assets: { ...royal.assets, housing: 'phu_de' },
+    };
+    const rentStall = INSTANT_ADULT_ACTIONS.find((a) => a.id === 'inst_rent_market_stall')!;
+    expect(isInstantActionVisible(royal, nobleBanquet)).toBe(true);
+    expect(isInstantActionVisible(royal, rentStall)).toBe(false);
+    expect(isInstantActionVisible(royal, rentRoom)).toBe(false);
   });
 });

@@ -208,4 +208,94 @@ describe('Day Simulator (MVP 2)', () => {
     expect(res.daysSimulated).toBe(30);
     expect(res.pausedReason).toBeUndefined();
   });
+
+  it('enforces 25-day major event cooldown across separate advanceDays calls', () => {
+    let life = createNewLife(707);
+    life = {
+      ...life,
+      profile: { ...life.profile, totalDays: 20 * 360 },
+      lastMajorEventDay: 20 * 360,
+    };
+
+    const majorEvt = {
+      id: 'evt_test_major_pacing',
+      stage: 'adulthood' as const,
+      severity: 'major' as const,
+      cooldownDays: 1,
+      title: 'Test Major',
+      description: 'Test',
+      conditions: {},
+      weight: { base: 100 },
+      choices: [
+        {
+          label: 'OK',
+          outcomes: [{ weight: { base: 100 }, resultText: 'Done', effects: {} }],
+        },
+      ],
+    };
+
+    // Advance 20 days: within 25-day cooldown, major event must NOT trigger
+    const res = advanceDays(life, 20, ACTIONS, [majorEvt], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: false,
+    });
+    expect(res.pendingEvent).toBeUndefined();
+    expect(res.daysSimulated).toBe(20);
+  });
+
+  it('preserves concurrent delayedEvents on the same triggerDay instead of dropping them', () => {
+    let life = createNewLife(808);
+    const startDay = 20 * 360;
+    life = {
+      ...life,
+      profile: { ...life.profile, totalDays: startDay },
+      delayedEvents: [
+        { eventId: 'evt_delay_a', triggerDay: startDay + 1 },
+        { eventId: 'evt_delay_b', triggerDay: startDay + 1 },
+      ],
+    };
+
+    const evtA = {
+      id: 'evt_delay_a',
+      stage: 'adulthood' as const,
+      severity: 'major' as const,
+      cooldownDays: 0,
+      title: 'Delay A',
+      description: 'A',
+      conditions: {},
+      weight: { base: 100 },
+      choices: [{ label: 'OK', outcomes: [{ weight: { base: 100 }, resultText: 'A', effects: {} }] }],
+    };
+    const evtB = {
+      id: 'evt_delay_b',
+      stage: 'adulthood' as const,
+      severity: 'major' as const,
+      cooldownDays: 0,
+      title: 'Delay B',
+      description: 'B',
+      conditions: {},
+      weight: { base: 100 },
+      choices: [{ label: 'OK', outcomes: [{ weight: { base: 100 }, resultText: 'B', effects: {} }] }],
+    };
+
+    const res1 = advanceDays(life, 5, ACTIONS, [evtA, evtB], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: false,
+    });
+    expect(res1.pendingEvent?.id).toBe('evt_delay_a');
+    expect(res1.state.delayedEvents.some((d) => d.eventId === 'evt_delay_b')).toBe(true);
+
+    const res2 = advanceDays(res1.state, 5, ACTIONS, [evtA, evtB], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: false,
+    });
+    expect(res2.pendingEvent?.id).toBe('evt_delay_b');
+    expect(res2.state.delayedEvents.length).toBe(0);
+  });
 });

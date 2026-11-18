@@ -35,10 +35,11 @@ import {
   getInstantActionCooldownRemaining,
   GIFT_ETIQUETTE_OPTIONS,
   INSTANT_ADULT_ACTIONS,
+  isInstantActionVisible,
   LIFE_FOCUS_OPTIONS,
 } from '../engine/adultLifeActions';
 import { ALL_ACTIONS, useActiveLifeStore } from '../stores/useActiveLifeStore';
-import { OFFICIAL_RANKS, PROPERTY_CATALOG } from '../engine/progressionModules';
+import { getPropertySeasonalIncome, OFFICIAL_RANKS, PROPERTY_CATALOG } from '../engine/progressionModules';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
 import { ProgressionModules } from './ProgressionModules';
 import { LegacyArchiveModal } from './LegacyArchiveModal';
@@ -201,8 +202,16 @@ export function AdultDashboard() {
   const ledger = life.finance?.lastYear ?? life.finance?.currentYear;
   const annualIncomeCopper =
     (ledger?.workIncomeCopper ?? 0) + (ledger?.propertyIncomeCopper ?? 0);
-  const ownedProperties = life.assets.properties
-    .map((id) => PROPERTY_CATALOG.find((p) => p.id === id))
+  const ownedProperties = Array.from(
+    life.assets.properties.reduce((map, id) => {
+      map.set(id, (map.get(id) ?? 0) + 1);
+      return map;
+    }, new Map<string, number>()),
+  )
+    .map(([id, count]) => {
+      const spec = PROPERTY_CATALOG.find((p) => p.id === id);
+      return spec ? { ...spec, count } : null;
+    })
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
   const morningAct = ALL_ACTIONS.find((a) => a.id === life.schedule.morning);
@@ -564,9 +573,11 @@ export function AdultDashboard() {
                           key={prop.id}
                           className="flex items-center justify-between gap-2 text-[11px] bg-stone-950/60 px-2 py-1 rounded border border-stone-800/70"
                         >
-                          <span className="text-stone-200 font-medium truncate">{prop.name}</span>
+                          <span className="text-stone-200 font-medium truncate">
+                            {prop.name} {prop.count > 1 ? `×${prop.count}` : ''}
+                          </span>
                           <span className="font-mono text-emerald-400 shrink-0">
-                            +{formatCopper(prop.seasonalIncomeCopper)}/mùa
+                            +{formatCopper(getPropertySeasonalIncome(prop, life.world.worldState, life.stats.craftTrade) * prop.count)}/mùa
                           </span>
                         </div>
                       ))}
@@ -823,7 +834,7 @@ export function AdultDashboard() {
                   <span className="text-[10px] text-stone-400">Thực hiện ngay</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {INSTANT_ADULT_ACTIONS.map((act) => {
+                  {INSTANT_ADULT_ACTIONS.filter((act) => isInstantActionVisible(life, act)).map((act) => {
                     const cd = getInstantActionCooldownRemaining(life, act.id, act.cooldownDays);
                     const ageBlocked = act.minAge !== undefined && age < act.minAge;
                     const houseBlocked = act.requiresNotHousing !== undefined && life.assets.housing === act.requiresNotHousing;

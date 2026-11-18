@@ -136,6 +136,10 @@
     "title": "Thương Nhân Phương Xa Đặt Lô Hàng Lớn",
     "conditions": {
       "min_age": 15,
+      "min_craft_trade": 10,
+      "missing_flags": [
+        "dang_lam_quan"
+      ],
       "origin_in": [
         "thu_cong"
       ]
@@ -265,6 +269,10 @@
     "title": "Hỏa Hoạn Tại Xưởng Nghề",
     "conditions": {
       "min_age": 15,
+      "min_craft_trade": 10,
+      "missing_flags": [
+        "dang_lam_quan"
+      ],
       "origin_in": [
         "thu_cong"
       ]

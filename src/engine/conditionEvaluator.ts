@@ -59,6 +59,21 @@ export function evaluateConditions(state: ActiveLifeState, cond?: ConditionSpec)
   if (cond.has_property !== undefined && !state.assets.properties.includes(cond.has_property)) {
     return false;
   }
+  if (cond.has_any_property !== undefined) {
+    const hasProp = state.assets.properties.length > 0;
+    if (hasProp !== cond.has_any_property) return false;
+  }
+  if (cond.has_living_parent !== undefined) {
+    const hasParent = state.npcs.some((n) => n.relation === 'parent' && n.isAlive);
+    if (hasParent !== cond.has_living_parent) return false;
+  }
+  if (cond.has_living_npc_id !== undefined) {
+    const isNpcAlive = state.npcs.some((n) => n.id === cond.has_living_npc_id && n.isAlive);
+    if (!isNpcAlive) return false;
+  }
+  if (cond.max_official_rank !== undefined && state.officialRank > cond.max_official_rank) {
+    return false;
+  }
 
   const traits = state.traits ?? [];
   const interests = state.interests ?? [];
