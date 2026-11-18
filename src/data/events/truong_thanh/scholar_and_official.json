@@ -15,7 +15,10 @@
         "do_cu_nhan",
         "do_tien_si",
         "thai_giam",
-        "trong_hau_cung"
+        "trong_hau_cung",
+        "trong_quan_ngu",
+        "dang_lam_quan",
+        "bi_ep_lam_gia_no"
       ]
     },
     "weight": {
@@ -90,7 +93,8 @@
       "origin_in": [
         "ban_nong",
         "thu_cong",
-        "dia_chu"
+        "dia_chu",
+        "quan_lai"
       ],
       "has_flags": [
         "do_cu_nhan"
@@ -98,11 +102,14 @@
       "missing_flags": [
         "do_tien_si",
         "thai_giam",
-        "trong_hau_cung"
+        "trong_hau_cung",
+        "trong_quan_ngu",
+        "dang_lam_quan",
+        "bi_ep_lam_gia_no"
       ]
     },
     "weight": {
-      "base": 40,
+      "base": 110,
       "modifiers": []
     },
     "description": "Đỗ Cử nhân rồi, bạn chuẩn bị hành trang lên Kinh đô chuẩn bị cho kỳ Thi Hội. Đường sá xa xôi, việc ăn ở và ôn luyện nơi Kinh kỳ cần tính toán kỹ lưỡng.",
@@ -187,6 +194,11 @@
         "trang_nguyen",
         "bang_nhan",
         "tham_hoa"
+      ],
+      "missing_flags": [
+        "trong_hau_cung",
+        "thai_giam",
+        "trong_quan_ngu"
       ]
     },
     "weight": {

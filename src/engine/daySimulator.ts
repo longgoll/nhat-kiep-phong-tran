@@ -294,6 +294,8 @@ export function getFamilyCoveredLifestyleTier(state: ActiveLifeState): Lifestyle
 
 function applyMonthlyFamilyAllowance(state: ActiveLifeState, ageYears: number): ActiveLifeState {
   if (ageYears < 13 || ageYears > 20) return state;
+  // Chỉ chu cấp tiền tiêu vặt khi đang thực sự đi học; người không danh phận/chức vụ/việc làm chỉ được bao cơm áo tại nhà.
+  if (!state.isStudent) return state;
   if (!canReceiveFamilySupport(state) || !state.family) return state;
 
   const { originClass } = state.profile;
@@ -301,23 +303,28 @@ function applyMonthlyFamilyAllowance(state: ActiveLifeState, ageYears: number): 
   let baseAllowance = 0;
 
   if (originClass === 'thu_cong') {
-    baseAllowance = Math.min(60, Math.round(familyWealth * 0.015));
+    baseAllowance = Math.min(40, Math.round(familyWealth * 0.01));
   } else if (originClass === 'dia_chu') {
-    baseAllowance = Math.min(300, Math.round(familyWealth * 0.015));
+    baseAllowance = Math.min(120, Math.round(familyWealth * 0.01));
   } else if (originClass === 'quan_lai') {
-    baseAllowance = Math.min(600, Math.round(familyWealth * 0.015));
+    baseAllowance = Math.min(200, Math.round(familyWealth * 0.01));
   } else if (originClass === 'hoang_toc') {
-    baseAllowance = Math.min(1500, Math.round(familyWealth * 0.012));
+    baseAllowance = Math.min(300, Math.round(familyWealth * 0.008));
   }
 
   if (baseAllowance <= 0) return state;
-  // Half allowance from age 18-20 to encourage eventual independence
   const ageScale = ageYears <= 17 ? 1 : 0.5;
   const allowance = Math.round(baseAllowance * ageScale);
   if (allowance <= 0 || familyWealth < allowance * 2) return state;
 
   const nextState = applyEffects(state, { copper: allowance });
-  return addLedger(nextState, { propertyIncomeCopper: allowance });
+  return {
+    ...addLedger(nextState, { propertyIncomeCopper: allowance }),
+    family: {
+      ...nextState.family!,
+      familyWealthCopper: Math.max(0, familyWealth - allowance),
+    },
+  };
 }
 
 export function getDailyFixedExpenseSummary(state: ActiveLifeState): {

@@ -127,14 +127,18 @@
     "id": "evt_adult_major_noble_patron",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 540,
+    "cooldownDays": 1800,
     "title": "Gặp Quý Nhân Giữa Chợ Phiên",
     "conditions": {
       "min_age": 15,
-      "min_education": 15
+      "min_education": 15,
+      "missing_flags": [
+        "trong_hau_cung",
+        "thai_giam"
+      ]
     },
     "weight": {
-      "base": 20,
+      "base": 14,
       "modifiers": []
     },
     "description": "Một vị nho sĩ cao niên ghé hàng nước nghe bạn bàn luận thế sự, tỏ ý rất lấy làm tâm đắc.",
@@ -175,15 +179,18 @@
     "id": "evt_adult_major_desperate_theft",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 180,
+    "cooldownDays": 720,
     "title": "Cơn Quẫn Bách Đêm Khuya",
     "conditions": {
       "min_age": 14,
-      "max_happiness": 19,
-      "max_copper": 30
+      "max_happiness": 45,
+      "max_copper": 150,
+      "missing_flags": [
+        "trong_hau_cung"
+      ]
     },
     "weight": {
-      "base": 35,
+      "base": 75,
       "modifiers": []
     },
     "description": "Bụng đói cồn cào, tinh thần tuyệt vọng, bạn đi ngang qua kho thóc sơ hở của gã phú hộ keo kiệt.",
@@ -240,14 +247,14 @@
     "id": "evt_adult_burnout_melancholy",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 360,
+    "cooldownDays": 720,
     "title": "Lòng Ngổn Ngang Trăm Mối",
     "conditions": {
       "min_age": 14,
-      "max_happiness": 25
+      "max_happiness": 45
     },
     "weight": {
-      "base": 65,
+      "base": 80,
       "modifiers": []
     },
     "description": "Chuỗi ngày vất vả triền miên không lối thoát khiến tinh thần bạn suy sụp nặng nề, đêm nằm trằn trọc không chợp mắt.",
@@ -298,7 +305,7 @@
     "id": "evt_adult_martial_bandit_ambush",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 1440,
+    "cooldownDays": 2880,
     "title": "Thảo Khấu Chặn Đường",
     "conditions": {
       "min_age": 15,
@@ -308,7 +315,7 @@
       ]
     },
     "weight": {
-      "base": 14,
+      "base": 10,
       "modifiers": [
         {
           "conditions": {
@@ -394,14 +401,14 @@
     "id": "evt_adult_infamy_bounty",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 540,
+    "cooldownDays": 1800,
     "title": "Ác Danh Lan Truyền",
     "conditions": {
       "min_age": 16,
       "min_infamy": 25
     },
     "weight": {
-      "base": 50,
+      "base": 30,
       "modifiers": [
         {
           "conditions": {

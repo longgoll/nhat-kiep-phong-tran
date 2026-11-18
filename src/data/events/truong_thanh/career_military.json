@@ -14,7 +14,11 @@
         "dang_lam_quan",
         "trong_quan_ngu",
         "thai_giam",
-        "bi_ep_lam_gia_no"
+        "trong_hau_cung",
+        "bi_ep_lam_gia_no",
+        "do_tu_tai",
+        "do_cu_nhan",
+        "do_tien_si"
       ]
     },
     "weight": {

@@ -7,10 +7,14 @@
     "title": "Thân Phận Gia Nô Trong Phủ Địa Chủ",
     "conditions": {
       "min_age": 13,
-      "has_flags": ["bi_ep_lam_gia_no"]
+      "max_copper": 200,
+      "has_any_flag": [
+        "bi_ep_lam_gia_no",
+        "xuat_than_o_do"
+      ]
     },
     "weight": {
-      "base": 65,
+      "base": 85,
       "modifiers": []
     },
     "description": "Những ngày làm gia nô gán nợ cơ cực nhưng cũng cho bạn dịp quan sát cách quản lý điền trang và sổ sách trong phủ lớn.",
@@ -20,17 +24,25 @@
         "conditions": {},
         "outcomes": [
           {
-            "weight": { "base": 55, "modifiers": [] },
+            "weight": {
+              "base": 55,
+              "modifiers": []
+            },
             "resultText": "Thấy bạn thật thà chịu khó, lão địa chủ gật đầu xóa phần nợ còn lại, trả lại tự do cho bạn sớm hơn dự định.",
             "effects": {
-              "remove_flags": ["bi_ep_lam_gia_no"],
+              "remove_flags": [
+                "bi_ep_lam_gia_no"
+              ],
               "happiness": 12,
               "fame": 2,
               "milestone_title": "Chuộc được tự do sau thời gian làm gia nô"
             }
           },
           {
-            "weight": { "base": 45, "modifiers": [] },
+            "weight": {
+              "base": 45,
+              "modifiers": []
+            },
             "resultText": "Chủ nhà chưa chịu tha ngay nhưng nể tình siêng năng, thưởng cho bạn ít bạc lẻ và đỡ quát mắng hơn.",
             "effects": {
               "copper": 80,
@@ -45,7 +57,10 @@
         "conditions": {},
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Dưới ánh đèn dầu leo lét sau giờ dọn dẹp, bạn tự rèn được thêm chữ nghĩa và cách tính toán.",
             "effects": {
               "education": 3,
@@ -60,17 +75,25 @@
         "conditions": {},
         "outcomes": [
           {
-            "weight": { "base": 70, "modifiers": [] },
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
             "resultText": "Bạn trốn thoát khỏi cổng sau trong đêm mưa, lấy lại tự do nhưng mang tiếng bội ước.",
             "effects": {
-              "remove_flags": ["bi_ep_lam_gia_no"],
+              "remove_flags": [
+                "bi_ep_lam_gia_no"
+              ],
               "infamy": 6,
               "fame": -4,
               "happiness": 6
             }
           },
           {
-            "weight": { "base": 30, "modifiers": [] },
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
             "resultText": "Gia đinh tuần đêm phát hiện và bắt lại, bạn bị đánh đòn một trận nhớ đời.",
             "effects": {
               "health": -18,
@@ -107,7 +130,10 @@
         "conditions": {},
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Chủ hiệu rất hài lòng với sự liêm chính của bạn, thưởng thêm tiền công và tin tưởng giao nhiều việc hơn.",
             "effects": {
               "copper": 120,
@@ -122,7 +148,10 @@
         "conditions": {},
         "outcomes": [
           {
-            "weight": { "base": 70, "modifiers": [] },
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
             "resultText": "Bạn sửa sổ trót lọt, bỏ túi riêng một khoản bạc kha khá nhưng lòng không khỏi thấp thỏm.",
             "effects": {
               "copper": 260,
@@ -131,7 +160,10 @@
             }
           },
           {
-            "weight": { "base": 30, "modifiers": [] },
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
             "resultText": "Chủ hiệu đối chiếu sổ gốc và phát hiện! Bạn bị khiển trách nặng nề và mất uy tín trong giới buôn bán.",
             "effects": {
               "fame": -6,
@@ -151,7 +183,10 @@
     "title": "Hương Thân Quý Mến Tài Học",
     "conditions": {
       "min_age": 14,
-      "has_any_flag": ["career_thay_do", "career_thay_lang"]
+      "has_any_flag": [
+        "career_thay_do",
+        "career_thay_lang"
+      ]
     },
     "weight": {
       "base": 45,
@@ -164,7 +199,10 @@
         "conditions": {},
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Cuộc trò chuyện tâm đầu ý hợp giúp tiếng tăm của bạn lan xa khắp huyện, lại có thêm khoản bạc trang trải.",
             "effects": {
               "copper": 180,
@@ -206,7 +244,10 @@
         },
         "outcomes": [
           {
-            "weight": { "base": 80, "modifiers": [] },
+            "weight": {
+              "base": 80,
+              "modifiers": []
+            },
             "resultText": "Bạn ra tay dứt khoát đánh đuổi đám côn đồ, được chủ thưởng hậu và anh em trong nghề nể phục.",
             "effects": {
               "copper": 160,
@@ -215,7 +256,10 @@
             }
           },
           {
-            "weight": { "base": 20, "modifiers": [] },
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
             "resultText": "Đám côn đồ đông người khiến bạn bị thương nhẹ trước khi chúng bỏ chạy.",
             "effects": {
               "health": -10,
@@ -230,7 +274,10 @@
         "conditions": {},
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Bạn khéo léo nói lời mềm mỏng để tránh đổ máu, giữ được an toàn nhưng lòng hơi ấm ức.",
             "effects": {
               "happiness": -3,
@@ -249,7 +296,11 @@
     "title": "Thời Cuộc Khó Khăn, Công Việc Bấp Bênh",
     "conditions": {
       "min_age": 15,
-      "world_state_in": ["mat_mua", "chien_tranh", "dich_benh"],
+      "world_state_in": [
+        "mat_mua",
+        "chien_tranh",
+        "dich_benh"
+      ],
       "has_any_flag": [
         "career_phu_ban_hang",
         "career_chao_hang",
@@ -268,7 +319,10 @@
         "conditions": {},
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Bạn cắn răng chịu thiệt một chút để giữ công việc qua mùa khó khăn.",
             "effects": {
               "copper": -60,
@@ -282,7 +336,10 @@
         "conditions": {},
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Bạn xoay xở làm thêm việc vặt lúc tối muộn, kiếm thêm được ít gạo nhưng người mệt rã rời.",
             "effects": {
               "rice": 4,

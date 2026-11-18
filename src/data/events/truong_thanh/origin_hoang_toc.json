@@ -476,7 +476,7 @@
       "has_living_npc_id": "npc_mother"
     },
     "weight": {
-      "base": 40,
+      "base": 110,
       "modifiers": [
         {
           "conditions": {
@@ -649,7 +649,7 @@
     "title": "Mối Giao Hảo Bí Mật Nơi Lãnh Cung",
     "conditions": {
       "min_age": 13,
-      "max_age": 15,
+      "max_age": 20,
       "origin_in": [
         "hoang_toc"
       ],
@@ -658,7 +658,7 @@
       ]
     },
     "weight": {
-      "base": 80,
+      "base": 130,
       "modifiers": []
     },
     "description": "Đêm khuya thanh vắng, một lão nội thị từng chịu ân đức của ngoại tổ phụ bạn lén lút mang theo một túi bạc nhỏ cùng ít tin tức mật về tình hình triều chính tới tẩm cung.",

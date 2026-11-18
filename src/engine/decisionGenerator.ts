@@ -77,6 +77,9 @@ function generateDynamicDecisionInternal(
     age <= 20 &&
     !state.flags.includes('dec_college_done') &&
     !state.flags.includes('trong_hau_cung') &&
+    !state.flags.includes('thai_giam') &&
+    !state.flags.includes('trong_quan_ngu') &&
+    !state.flags.includes('bi_ep_lam_gia_no') &&
     (state.eduLevel ?? 0) < 4 &&
     state.livelihoodStatus !== 'prison'
   ) {

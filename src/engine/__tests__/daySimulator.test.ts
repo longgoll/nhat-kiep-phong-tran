@@ -138,10 +138,11 @@ describe('Day Simulator (MVP 2)', () => {
     expect(sim.state.actionCooldowns?.inst_see_physician).toBe(20 * 360);
   });
 
-  it('covers household meals and monthly allowance while living at home for wealthier origins', () => {
+  it('covers household meals while living at home, and only grants study allowance when isStudent is true', () => {
     let life = createNewLife(505);
     life = {
       ...life,
+      isStudent: false,
       profile: { ...life.profile, originClass: 'dia_chu', totalDays: 13 * 360 },
       family: {
         ...life.family!,
@@ -160,17 +161,26 @@ describe('Day Simulator (MVP 2)', () => {
       },
     };
 
-    const res = advanceDays(life, 30, ACTIONS, [], {
+    const resIdle = advanceDays(life, 30, ACTIONS, [], {
       pauseOnBirthday: false,
       pauseOnLowHealth: false,
       pauseOnLowHappiness: false,
       pauseOnNoFood: true,
     });
 
-    // Family covers thit_ca meals (rice & personal copper not drained) and grants monthly allowance
-    expect(res.state.assets.rice).toBe(10);
-    expect(res.state.finance?.currentYear.livingExpenseCopper).toBe(0);
-    expect(res.state.assets.wealthCopper).toBeGreaterThan(500);
+    // Family covers thit_ca meals (rice & personal copper not drained), but no cash allowance without student/job/title
+    expect(resIdle.state.assets.rice).toBe(10);
+    expect(resIdle.state.finance?.currentYear.livingExpenseCopper ?? 0).toBe(0);
+    expect(resIdle.state.assets.wealthCopper).toBe(500);
+
+    const resStudent = advanceDays({ ...life, isStudent: true }, 30, ACTIONS, [], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: true,
+    });
+    expect(resStudent.state.assets.wealthCopper).toBeGreaterThan(500);
+    expect(resStudent.state.family!.familyWealthCopper).toBeLessThan(10000);
   });
 
   it('does not trap player in a 2-day no_food pause loop when foraging fallback runs', () => {

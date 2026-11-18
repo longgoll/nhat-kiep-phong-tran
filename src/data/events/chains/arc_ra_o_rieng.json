@@ -17,7 +17,10 @@
       "has_living_parent": true,
       "missing_flags": [
         "da_ra_o_rieng",
-        "da_hoi_ra_o_rieng"
+        "da_hoi_ra_o_rieng",
+        "trong_hau_cung",
+        "thai_giam",
+        "bi_ep_lam_gia_no"
       ]
     },
     "weight": {

@@ -742,14 +742,24 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
     keepRatio = Math.max(0.1, keepRatio * 0.6);
   }
 
-  const familyGrantCopper = Math.max(15, Math.round(familyWealth * keepRatio));
+  const maxGrantByOrigin: Record<ActiveLifeState['profile']['originClass'], number> = {
+    ban_nong: 40,
+    thu_cong: 80,
+    dia_chu: 150,
+    quan_lai: 250,
+    hoang_toc: 300,
+  };
+  const rawGrant = Math.round(familyWealth * keepRatio);
+  const cappedGrant = Math.min(maxGrantByOrigin[originClass], rawGrant);
+  const familyGrantCopper = Math.max(15, Math.min(familyWealth, cappedGrant));
+  const nextFamilyWealth = Math.max(0, familyWealth - familyGrantCopper);
   const personalCopper = inputState.assets.wealthCopper + familyGrantCopper;
   const baseRiceByOrigin: Record<ActiveLifeState['profile']['originClass'], number> = {
-    ban_nong: 12,
-    thu_cong: 18,
-    dia_chu: 35,
-    quan_lai: 60,
-    hoang_toc: 150,
+    ban_nong: 10,
+    thu_cong: 12,
+    dia_chu: 18,
+    quan_lai: 24,
+    hoang_toc: 30,
   };
   const riceMult = isDeclined ? 0.6 : 1.0;
   const personalRice = Math.max(5, Math.round(inputState.assets.rice + baseRiceByOrigin[originClass] * riceMult));
@@ -805,6 +815,12 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
       wealthCopper: personalCopper,
       rice: personalRice,
     },
+    family: inputState.family
+      ? {
+          ...inputState.family,
+          familyWealthCopper: nextFamilyWealth,
+        }
+      : inputState.family,
     schedule: {
       ...inputState.schedule,
       morning: starterMorning,
@@ -846,8 +862,8 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
       ? `Tuổi 13 giữa lúc gia đạo sa sút, nhà chỉ còn gom được ${familyGrantCopper} đồng và ${personalRice} đấu gạo cho bạn tự lập.`
       : `Tuổi 13 trưởng thành trong phủ quan! Gia đình cấp ${familyGrantCopper} đồng bạc cùng ${personalRice} đấu gạo để bạn dùi mài công danh.`,
     hoang_toc: isDeclined
-      ? `Tuổi 13 nơi cung hẻo lánh, bạn chỉ nhận được ${familyGrantCopper} đồng bổng lộc ít ỏi cùng ${personalRice} đấu gạo để tự xoay xở.`
-      : `Tuổi 13 vào Thượng Thư Phòng theo học lễ nghi và kinh sử! Triều đình cấp ${familyGrantCopper} đồng tiền tiêu cùng ${personalRice} đấu gạo theo lệ ${gender === 'male' ? 'Hoàng tử' : 'Công chúa'}.`,
+      ? `Tuổi 13 nơi cung hẻo lánh, người nhà chỉ gom được ${familyGrantCopper} đồng tiền tiêu cùng ${personalRice} đấu gạo để bạn tự xoay xở.`
+      : `Tuổi 13 vào Thượng Thư Phòng theo học lễ nghi và kinh sử! Khi chưa có tước vị chính thức, gia đình chỉ cấp ${familyGrantCopper} đồng tiền tiêu vặt cùng ${personalRice} đấu gạo.`,
   };
 
   const transitionLogText = wasIndentured

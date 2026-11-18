@@ -3,7 +3,7 @@
     "id": "evt_biz_caravan_venture",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 1080,
+    "cooldownDays": 2160,
     "title": "Cơ Hội Chung Vốn Buôn Chuyến Liên Trấn",
     "conditions": {
       "min_age": 16,
@@ -157,7 +157,7 @@
     "id": "evt_biz_property_tenant_crisis",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 540,
+    "cooldownDays": 1800,
     "title": "Khách Thuê & Tá Điền Khất Nợ Giữa Mùa Khó",
     "conditions": {
       "min_age": 18,
@@ -256,7 +256,7 @@
     "id": "evt_biz_supply_contract",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 1080,
+    "cooldownDays": 2160,
     "title": "Thầu Cung Ứng Vật Phẩm Cho Phủ Nha",
     "conditions": {
       "min_age": 18,
@@ -373,7 +373,7 @@
     "id": "evt_biz_tea_cart_rumor",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 1080,
+    "cooldownDays": 2160,
     "title": "Khách Quán Nước Đồn Chuyện Lạ",
     "conditions": {
       "min_age": 14,
@@ -453,7 +453,7 @@
     "id": "evt_biz_scribe_secret_letter",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 1080,
+    "cooldownDays": 2160,
     "title": "Lá Thư Nhờ Viết Hộ Đầy Bí Ẩn",
     "conditions": {
       "min_age": 15,
@@ -512,7 +512,7 @@
     "id": "evt_biz_apothecary_rare_herb",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 1080,
+    "cooldownDays": 2160,
     "title": "Khách Quý Tìm Mua Vị Thuốc Hiếm",
     "conditions": {
       "min_age": 16,
@@ -589,7 +589,7 @@
     "id": "evt_biz_craft_guild_order",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 1080,
+    "cooldownDays": 2160,
     "title": "Đơn Hàng Lớn Từ Thương Đoàn Kinh Kỳ",
     "conditions": {
       "min_age": 18,
