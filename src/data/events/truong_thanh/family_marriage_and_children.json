@@ -1,0 +1,401 @@
+[
+  {
+    "id": "evt_adult_family_pay_old_debt",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Món Nợ Cũ Của Song Thân Đến Hạn",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 38,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ],
+      "has_flags": [
+        "gia_dinh_mac_no"
+      ],
+      "has_living_parent": true
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": []
+    },
+    "description": "Món nợ cũ mà gia đình gánh từ thuở bạn còn thơ ấu nay lại bị chủ nợ kéo người tới giục trả. Cha mẹ tuổi đã lớn, nhìn tờ khế ước cũ mà thở dài lo âu.",
+    "choices": [
+      {
+        "label": "Xuất tiền tích góp đứng ra trả dứt món nợ thay cha mẹ (-250 đồng)",
+        "conditions": {
+          "min_copper": 250
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn đếm đủ 250 đồng đặt lên bàn rồi tự tay xé tờ khế ước cũ trước mặt chủ nợ. Cha mẹ rưng rưng nước mắt nhẹ nhõm, cả nhà từ nay sạch bóng nợ nần!",
+            "effects": {
+              "copper": -250,
+              "remove_flags": [
+                "gia_dinh_mac_no"
+              ],
+              "happiness": 14,
+              "fame": 8,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 24
+                }
+              ],
+              "milestone_title": "Trả sạch nợ cũ báo hiếu cha mẹ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đứng ra khất hẹn thêm kỳ hạn mới và cam kết trả góp dần",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Chủ nợ thấy bạn ăn nói đàng hoàng, có trách nhiệm nên tạm chấp nhận giãn nợ thêm một thời gian.",
+            "effects": {
+              "relationships": 2,
+              "happiness": -4,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_family_sibling_wedding",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Hỷ Sự Của Anh Chị Em Trong Nhà",
+    "conditions": {
+      "min_age": 20,
+      "max_age": 38,
+      "birth_order_in": [
+        "con_truong",
+        "con_thu",
+        "con_ut"
+      ]
+    },
+    "weight": {
+      "base": 36,
+      "modifiers": []
+    },
+    "description": "Một người anh chị em ruột thịt của bạn sắp đến ngày thành gia lập thất. Cả nhà tất bật chuẩn bị lễ vật, thiệp hồng báo hỷ gửi tới tay bạn.",
+    "choices": [
+      {
+        "label": "Mừng lễ vật hậu hĩnh góp phần lo cho ngày vui trọn vẹn (-300 đồng)",
+        "conditions": {
+          "min_copper": 300
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Món quà mừng chu đáo của bạn khiến lễ cưới thêm phần rạng rỡ, họ hàng hai bên đều tấm tắc khen ngợi tình nghĩa anh em.",
+            "effects": {
+              "copper": -300,
+              "happiness": 10,
+              "fame": 5,
+              "relationships": 6,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 22
+                },
+                {
+                  "relation": "parent",
+                  "delta": 10
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Gửi chút quà mọn cùng lời chúc phúc chân thành, chung tay dọn dẹp đón khách",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Dù lễ vật giản dị, sự nhiệt tình xắn tay phụ việc từ sáng sớm của bạn khiến cả nhà rộn ràng tiếng cười vui.",
+            "effects": {
+              "stamina": -10,
+              "happiness": 8,
+              "relationships": 4,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 14
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_family_spouse_hardship",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 720,
+    "title": "Vợ Chồng Đồng Cam Cộng Khổ",
+    "conditions": {
+      "min_age": 20,
+      "max_age": 55,
+      "has_flags": [
+        "da_ket_hon"
+      ]
+    },
+    "weight": {
+      "base": 30,
+      "modifiers": []
+    },
+    "description": "Trái gió trở trời, bạn đời của bạn bị cảm mạo nặng phải nghỉ ngơi nhiều ngày, mọi việc trong ngoài gia đình bỗng dồn cả lên vai bạn.",
+    "choices": [
+      {
+        "label": "Mua thuốc bổ tẩm bổ và gánh vác hết việc nhà để bạn đời an tâm dưỡng bệnh (-160 đồng)",
+        "conditions": {
+          "min_copper": 160
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ được chăm sóc chu đáo bằng thuốc hay và sự ân cần của bạn, bạn đời mau chóng hồi phục. Nghĩa phu thê càng thêm sâu nặng.",
+            "effects": {
+              "copper": -160,
+              "stamina": -10,
+              "happiness": 6,
+              "npc_affinity": [
+                {
+                  "relation": "spouse",
+                  "delta": 18
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tự tay nấu cháo thuốc và thức đêm chăm nom săn sóc",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tuy hơi vất vả nhưng nhìn bạn đời khỏe lại sau vài ngày nghỉ ngơi, bạn thấy mọi mệt nhọc đều xứng đáng.",
+            "effects": {
+              "stamina": -16,
+              "happiness": 3,
+              "npc_affinity": [
+                {
+                  "relation": "spouse",
+                  "delta": 12
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_family_child_education",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 900,
+    "title": "Chuyện Học Hành Của Con Cái",
+    "conditions": {
+      "min_age": 24,
+      "max_age": 55,
+      "has_flags": [
+        "da_co_con"
+      ]
+    },
+    "weight": {
+      "base": 34,
+      "modifiers": []
+    },
+    "description": "Con của bạn đã bắt đầu khôn lớn, ánh mắt sáng ngời ham học hỏi. Đã đến lúc tính chuyện mời thầy dạy chữ hay truyền thụ nghề nghiệp cho con.",
+    "choices": [
+      {
+        "label": "Mời thầy đồ danh tiếng về dạy chữ nghĩa lễ nghi cho con (-220 đồng)",
+        "conditions": {
+          "min_copper": 220
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Con bạn tiếp thu rất nhanh, nét chữ ngay ngắn, được thầy đồ hết lời khen ngợi có tương lai xán lạn.",
+            "effects": {
+              "copper": -220,
+              "fame": 4,
+              "happiness": 10,
+              "npc_affinity": [
+                {
+                  "relation": "child",
+                  "delta": 15
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tự mình cầm tay chỉ chữ, truyền dạy kinh nghiệm sống cho con (Cần Học vấn >= 25)",
+        "conditions": {
+          "min_education": 25
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Mỗi tối bên ánh đèn dầu, hai cha/mẹ con cùng đọc sách luận bàn. Con bạn ngày một chững chạc và kính trọng bạn vô cùng.",
+            "effects": {
+              "stamina": -8,
+              "education": 2,
+              "happiness": 10,
+              "npc_affinity": [
+                {
+                  "relation": "child",
+                  "delta": 18
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cho con theo học nghề thực tế hoặc rèn luyện thân thể cho cứng cáp",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Con bạn khỏe mạnh nhanh nhẹn, sớm biết tự lập và đỡ đần việc nhà.",
+            "effects": {
+              "happiness": 6,
+              "npc_affinity": [
+                {
+                  "relation": "child",
+                  "delta": 10
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_family_child_illness",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 720,
+    "title": "Con Nhỏ Lên Cơn Sốt Cao Ban Đêm",
+    "conditions": {
+      "min_age": 22,
+      "max_age": 50,
+      "has_flags": [
+        "da_co_con"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": []
+    },
+    "description": "Nửa đêm, đứa con của bạn bỗng nóng ran cả người, quấy khóc không ngừng khiến cả nhà mất ăn mất ngủ.",
+    "choices": [
+      {
+        "label": "Không tiếc bạc mời ngay thầy thuốc giỏi tới cắt thuốc hạ sốt (-180 đồng)",
+        "conditions": {
+          "min_copper": 180
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Uống xong chén thuốc mát của thầy lang, con bạn hạ sốt và ngủ ngon lành. Bạn thở phào nhẹ nhõm.",
+            "effects": {
+              "copper": -180,
+              "happiness": 4,
+              "npc_affinity": [
+                {
+                  "relation": "child",
+                  "delta": 16
+                },
+                {
+                  "relation": "spouse",
+                  "delta": 8
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thức trắng đêm chườm khăn ấm và sắc lá thuốc dân gian cho con",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Suốt đêm không chợp mắt bế ẵm dỗ dành, đến gần sáng con bạn cuối cùng cũng cắt cơn sốt.",
+            "effects": {
+              "stamina": -18,
+              "health": -3,
+              "happiness": 2,
+              "npc_affinity": [
+                {
+                  "relation": "child",
+                  "delta": 14
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

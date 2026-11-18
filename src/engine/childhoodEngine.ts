@@ -361,7 +361,7 @@ export function advanceChildhoodMonth(
       state = applyEffects(state, { add_interests: [focusOpt.interestOnBirthday] });
     }
   } else {
-    const healthGain = tier === 'tung_thieu' ? 0.02 : tier === 'du_an' ? 0.04 : 0.06;
+    const healthGain = tier === 'tung_thieu' ? 0.05 : tier === 'du_an' ? 0.06 : 0.07;
     const happyDrift =
       state.stats.happiness < happyBaseline ? 0.08 : state.stats.happiness > happyBaseline + 12 ? -0.1 : 0.02;
     state = applyEffects(state, {

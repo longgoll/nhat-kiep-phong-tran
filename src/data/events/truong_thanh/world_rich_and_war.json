@@ -1,0 +1,329 @@
+[
+  {
+    "id": "evt_world_rich_forced_donation",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Quan Phủ \"Kêu Gọi\" Phú Hộ Quyên Góp",
+    "conditions": {
+      "min_age": 18,
+      "min_copper": 1200,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ],
+      "missing_flags": [
+        "dang_lam_quan"
+      ],
+      "world_state_in": [
+        "mat_mua",
+        "chien_tranh"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_copper": 3000
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Khắp vùng đang lâm cảnh đói kém loạn lạc, nhà nào cũng xơ xác, riêng cơ ngơi của bạn lại nổi tiếng rủng rỉnh bạc tiền. Sáng nay lý trưởng dẫn sai nha tới cửa, ngỏ ý \"vận động\" bạn xuất bạc cứu tế và góp quân lương.",
+    "choices": [
+      {
+        "label": "Hào phóng xuất 600 đồng quyên góp cứu trợ, giữ trọn tiếng thơm",
+        "conditions": {
+          "min_copper": 600
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Quan phủ hài lòng gật gù, còn dân làng thì hết lời ca ngợi tấm lòng đại thiện nhân của bạn giữa buổi hoạn nạn.",
+            "effects": {
+              "copper": -600,
+              "fame": 16,
+              "relationships": 10,
+              "happiness": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Than nghèo kể khổ rồi đóng góp tượng trưng cho yên chuyện (-200 đồng)",
+        "conditions": {
+          "min_copper": 200
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Lý trưởng tuy hơi bĩu môi nhưng vẫn nhận bạc rồi rút lui, giúp bạn giữ được phần lớn gia sản.",
+            "effects": {
+              "copper": -200,
+              "fame": 2,
+              "happiness": -2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cứng rắn từ chối, đóng cổng không tiếp",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": []
+            },
+            "resultText": "Lời đồn bạn \"giàu mà keo kiệt bất nhân\" lan khắp xóm, lý trưởng cũng ngấm ngầm ghi thù.",
+            "effects": {
+              "fame": -8,
+              "relationships": -8,
+              "infamy": 4
+            }
+          },
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": []
+            },
+            "resultText": "Quan huyện nổi giận ghép tội bạn chống lệnh công vụ, sai lính tới cưỡng thu 500 đồng tiền phạt!",
+            "effects": {
+              "copper": -500,
+              "fame": -10,
+              "happiness": -12
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_world_rich_bandit_target",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 600,
+    "title": "Giặc Cướp Dòm Ngó Phủ Giàu Giữa Thời Loạn",
+    "conditions": {
+      "min_age": 18,
+      "min_copper": 1500,
+      "world_state_in": [
+        "mat_mua",
+        "chien_tranh"
+      ]
+    },
+    "weight": {
+      "base": 36,
+      "modifiers": [
+        {
+          "conditions": {
+            "housing_in": [
+              "nha_gach",
+              "phu_de"
+            ]
+          },
+          "addWeight": 18
+        }
+      ]
+    },
+    "description": "Đêm khuya thanh vắng, một toán cướp hung hãn thấy nhà bạn giàu có nhất vùng liền kéo tới vây kín cổng, vung dao dọa phá cửa nếu không nộp bạc!",
+    "choices": [
+      {
+        "label": "Cầm binh khí dẫn đầu gia nhân đánh đuổi toán cướp (Cần Võ nghệ >= 16)",
+        "conditions": {
+          "min_martial": 16
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 30
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Trước đường đao sắc bén của bạn, đám cướp vỡ trận bỏ chạy tán loạn, để lại cả ít bạc cướp được từ nơi khác.",
+            "effects": {
+              "martial": 4,
+              "fame": 12,
+              "copper": 200,
+              "stamina": -15
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Bạn chém gục được hai tên nhưng bị thương ở vai, may mà đẩy lui được chúng khỏi cổng.",
+            "effects": {
+              "health": -18,
+              "fame": 8,
+              "happiness": -6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thuê cao thủ bảo tiêu trấn giữ phủ đệ từ sớm (-450 đồng)",
+        "conditions": {
+          "min_copper": 450
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thấy đội bảo tiêu võ nghệ cao cường đứng gác kín cổng, toán cướp đành chùn bước rút lui trong đêm.",
+            "effects": {
+              "copper": -450,
+              "happiness": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Mở kho phát gạo và bạc lẻ cứu đói dân làng từ trước để kết ân nghĩa (-300 đồng)",
+        "conditions": {
+          "min_copper": 300
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nghe tiếng trống báo động, hàng chục trai tráng trong làng vốn mang ơn cứu đói của bạn lập tức vác gậy gộc chạy tới tiếp ứng, khiến lũ cướp phải tháo chạy!",
+            "effects": {
+              "copper": -300,
+              "fame": 15,
+              "relationships": 12,
+              "happiness": 8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thế cô lực mỏng, đành ném bạc ra ngoài mua đường bình an (-550 đồng)",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Đám cướp vơ vét một mớ bạc rồi cười khẩy bỏ đi, để lại nỗi uất ức và bất an khôn nguôi.",
+            "effects": {
+              "copper": -550,
+              "happiness": -14
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_world_war_zone_evacuation",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Chiến Họa Tràn Qua Vùng",
+    "conditions": {
+      "min_age": 16,
+      "world_state_in": [
+        "chien_tranh"
+      ]
+    },
+    "weight": {
+      "base": 32,
+      "modifiers": []
+    },
+    "description": "Khói lửa chiến tranh lan sát tới phủ huyện nơi bạn sinh sống. Tiếng vó ngựa và trống trận vang rền ngoài bìa rừng, dân chúng nhốn nháo tìm đường thoát thân.",
+    "choices": [
+      {
+        "label": "Thuê xe ngựa và hộ vệ đưa gia quyến lánh nạn lên Kinh thành (-700 đồng)",
+        "conditions": {
+          "min_copper": 700
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ có bạc tiền lo liệu chu đáo, bạn và gia quyến di tản an toàn về vùng hậu phương vững chắc.",
+            "effects": {
+              "copper": -700,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cầm binh khí cùng dân binh lập rào cố thủ bảo vệ làng xã (Cần Võ nghệ >= 14)",
+        "conditions": {
+          "min_martial": 14
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Nhờ địa hình hiểm trở và sự gan dạ của bạn, toán quân tiên phong của địch bị đánh bật ra ngoài. Tên tuổi bạn vang danh khắp vùng!",
+            "effects": {
+              "martial": 4,
+              "fame": 15,
+              "stamina": -20
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Trận giao tranh ác liệt khiến bạn bị thương, nhưng xóm làng vẫn giữ được phần lớn bình yên.",
+            "effects": {
+              "health": -22,
+              "fame": 8,
+              "happiness": -8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Gói ghém ít lương khô, cùng dòng người chạy giặc vào rừng sâu ẩn náu",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Màn trời chiếu đất suốt nhiều ngày trong rừng sâu khiến bạn tiều tụy hẳn, nhưng may mắn giữ được tính mạng chờ ngày yên ổn.",
+            "effects": {
+              "health": -8,
+              "stamina": -25,
+              "copper": -80,
+              "happiness": -10
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

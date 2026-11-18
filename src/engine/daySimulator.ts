@@ -59,8 +59,8 @@ const LIFESTYLE_TABLE: Record<
   LifestyleTier,
   { rice: number; copper: number; stamina: number; health: number; happiness: number }
 > = {
-  nhin_doi: { rice: 0, copper: 0, stamina: 0, health: -3.0, happiness: -2.0 },
-  chao_loang: { rice: 0.5, copper: 0, stamina: 5, health: -0.5, happiness: -0.5 },
+  nhin_doi: { rice: 0, copper: 0, stamina: 0, health: -1.8, happiness: -1.2 },
+  chao_loang: { rice: 0.5, copper: 0, stamina: 5, health: -0.04, happiness: -0.1 },
   com_rau: { rice: 1.0, copper: 5, stamina: 15, health: 0.2, happiness: 0 },
   thit_ca: { rice: 1.5, copper: 30, stamina: 30, health: 1.0, happiness: 1.5 },
 };
@@ -69,7 +69,7 @@ const HOUSING_SLEEP_RECOVERY: Record<
   HousingTier,
   { stamina: number; health: number; happiness: number }
 > = {
-  gam_cau: { stamina: 35, health: -0.5, happiness: 0 },
+  gam_cau: { stamina: 35, health: -0.12, happiness: 0 },
   nha_tranh: { stamina: 50, health: 0, happiness: 0 },
   nha_gach: { stamina: 65, health: 0.5, happiness: 0 },
   phu_de: { stamina: 80, health: 1.0, happiness: 0.5 },
@@ -535,7 +535,7 @@ export function advanceDays(
     // 3. Daily lifestyle consumption & LifeFocus passive tick
     state = applyDailyLifestyle(state);
     if (newAge >= 45 && state.isAlive) {
-      const ageDecay = newAge >= 75 ? -0.05 : newAge >= 60 ? -0.03 : -0.015;
+      const ageDecay = newAge >= 75 ? -0.035 : newAge >= 60 ? -0.018 : -0.008;
       state = applyEffects(state, { health: ageDecay });
     }
     if (nextTotalDays % 30 === 0) {

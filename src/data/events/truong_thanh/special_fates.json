@@ -1,0 +1,599 @@
+[
+  {
+    "id": "evt_fate_tuyen_tu_palace",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Chiếu Chỉ Tuyển Tú Nữ Vào Hậu Cung",
+    "conditions": {
+      "min_age": 15,
+      "max_age": 22,
+      "gender": "female",
+      "origin_in": [
+        "dia_chu",
+        "quan_lai"
+      ],
+      "missing_flags": [
+        "da_ket_hon",
+        "trong_hau_cung",
+        "da_co_con"
+      ]
+    },
+    "weight": {
+      "base": 38,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_education": 20
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Triều đình ban chiếu tuyển tú nữ xuất thân danh gia vọng tộc vào hầu hạ nơi hậu cung. Quan phủ mang danh sách tới tận cửa, gia đình bạn hồi hộp chờ quyết định của bạn.",
+    "choices": [
+      {
+        "label": "Tuân chỉ nhập cung dự tuyển, bước chân vào chốn thâm cung quyền quý",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 25
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Với dung mạo đoan trang và lễ nghi chuẩn mực, bạn được sắc phong làm Tài nhân nơi hậu cung, hưởng bổng lộc hậu hĩnh nhưng từ nay phải sống giữa vòng xoáy cung đấu.",
+            "effects": {
+              "add_flags": [
+                "trong_hau_cung"
+              ],
+              "copper": 800,
+              "fame": 14,
+              "happiness": 4,
+              "milestone_title": "Trúng tuyển tú nữ, nhập cung làm Tài nhân"
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Bạn không lọt vào mắt xanh của bậc quân vương trong kỳ tuyển chọn, được ban ít lụa là rồi cho hồi hương.",
+            "effects": {
+              "copper": 150,
+              "happiness": -2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo cáo bệnh từ chối để giữ cuộc sống tự do ngoài dân gian",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Gia đình bỏ chút bạc lo lót cho quan khám tuyển, giúp bạn giữ được tự do khỏi cảnh lồng son chốn thâm cung.",
+            "effects": {
+              "copper": -120,
+              "happiness": 6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_fate_eunuch_or_palace_maid",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Bước Đường Cùng: Tiến Cung Làm Thái Giám / Cung Nữ",
+    "conditions": {
+      "min_age": 13,
+      "max_age": 22,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong"
+      ],
+      "max_copper": 120,
+      "missing_flags": [
+        "da_ket_hon",
+        "da_co_con",
+        "thai_giam",
+        "trong_hau_cung",
+        "dang_lam_quan",
+        "trong_quan_ngu"
+      ]
+    },
+    "weight": {
+      "base": 32,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_flags": [
+              "gia_dinh_mac_no"
+            ]
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Cảnh nhà túng thiếu cùng cực, cái đói bủa vây. Người môi giới trong kinh thành tới làng tìm tuyển thiếu niên nghèo tiến cung làm nô tỳ hầu hạ Hoàng thất, hứa trả ngay một khoản bạc lớn cứu nhà.",
+    "choices": [
+      {
+        "label": "Cắn răng tịnh thân tiến cung làm Thái giám để lấy bạc cứu gia đình (+350 đồng)",
+        "conditions": {
+          "gender": "male"
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nỗi đau thể xác qua đi, bạn gửi 350 đồng về cho gia đình rồi khoác áo nội thị bước qua cửa Tử Cấm Thành. Từ nay đoạn tuyệt hồng trần, mở ra con đường mới nơi nội đình.",
+            "effects": {
+              "add_flags": [
+                "thai_giam"
+              ],
+              "copper": 350,
+              "health": -12,
+              "happiness": -15,
+              "milestone_title": "Tịnh thân tiến cung làm Thái giám"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chấp nhận vào cung làm Cung nữ hầu hạ, đổi lấy cơm no áo ấm (+250 đồng)",
+        "conditions": {
+          "gender": "female"
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn tạm biệt quê hương bước vào hậu cung làm cung nữ sai vặt. Tuy mất tự do nhưng có lương tháng ổn định và cơ hội lọt vào mắt xanh của các bậc chủ tử.",
+            "effects": {
+              "add_flags": [
+                "trong_hau_cung"
+              ],
+              "copper": 250,
+              "happiness": -8,
+              "milestone_title": "Nhập cung làm Cung nữ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thà chịu khổ ngoài dân gian chứ nhất quyết không bán thân vào cửa cung",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn lắc đầu từ chối người môi giới, quyết tự mình bươn chải giữ trọn thân phận tự do.",
+            "effects": {
+              "happiness": 4,
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_fate_eunuch_promotion",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Quyền Khuynh Nội Đình: Tổng Quản Thái Giám",
+    "conditions": {
+      "min_age": 24,
+      "has_flags": [
+        "thai_giam"
+      ],
+      "min_education": 18
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_relationships": 60
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Nhờ khéo léo ứng xử, chữ nghĩa thông thạo và tận tụy bên ngự tiền nhiều năm, bạn được Hoàng thượng tin cẩn cất nhắc vào vị trí Tổng quản Ty Lễ Giám.",
+    "choices": [
+      {
+        "label": "Cẩn trọng tiếp nhận ấn tín Tổng quản Thái giám",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Từ thân phận tiểu thái giám hèn mọn, nay bạn đứng đầu nội đình, đến các đại thần triều đình cũng phải kiêng nể vài phần!",
+            "effects": {
+              "copper": 1500,
+              "fame": 18,
+              "happiness": 12,
+              "milestone_title": "Thăng chức Tổng quản Thái giám"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_fate_brothel_or_bodyguard",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Ánh Đèn Thanh Lâu & Bến Bãi Giang Hồ",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 32,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong"
+      ],
+      "missing_flags": [
+        "dang_lam_quan",
+        "thai_giam",
+        "trong_hau_cung",
+        "trong_quan_ngu",
+        "nghe_ky_thanh_lau",
+        "bao_ke_giang_ho"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": [
+        {
+          "conditions": {
+            "max_copper": 200
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Phố thị về đêm rực rỡ ánh đèn lồng đỏ của các tửu lầu, thanh lâu và sòng bạc. Tú bà và đầu gấu bến bãi đang tìm người có tài nghệ hoặc võ công tới làm việc với mức thù lao cao ngất.",
+    "choices": [
+      {
+        "label": "Nhận làm Ca kỹ / Nghệ nhân đàn hát tiếp khách văn nhân nơi Thanh lâu (Cần Tay nghề >= 12 hoặc Học vấn >= 15)",
+        "conditions": {
+          "min_craft_trade": 12
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tiếng đàn giọng hát của bạn nhanh chóng nổi danh chốn phồn hoa, bạc tiền rủng rỉnh nhưng cũng không tránh khỏi lời đàm tiếu thế gian.",
+            "effects": {
+              "add_flags": [
+                "nghe_ky_thanh_lau"
+              ],
+              "copper": 350,
+              "craft_trade": 4,
+              "infamy": 5,
+              "milestone_title": "Nổi danh nghệ nhân nơi Thanh lâu"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhận chân Bảo kê cho sòng bạc và thanh lâu, trấn áp kẻ quấy phá (Cần Võ nghệ >= 16)",
+        "conditions": {
+          "min_martial": 16
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Vung nắm đấm dẹp loạn vài đám say xỉn, bạn chính thức trở thành tay bảo kê có số má nơi phố thị, thu nhập cao nhưng dính dáng sâu vào hắc đạo.",
+            "effects": {
+              "add_flags": [
+                "bao_ke_giang_ho"
+              ],
+              "copper": 450,
+              "martial": 4,
+              "infamy": 8,
+              "milestone_title": "Làm tay bảo kê có tiếng chốn phố thị"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ mình ngoài vòng thị phi, quay lưng bước tiếp con đường lương thiện",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn dứt khoát từ chối ánh hào quang phù phiếm đầy cạm bẫy ấy.",
+            "effects": {
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_fate_palace_promotion",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Sóng Gió Hậu Cung: Thăng Vị Hay Xuất Cung",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 40,
+      "has_flags": [
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 42,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_relationships": 60
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Sau nhiều năm cẩn trọng nơi thâm cung, bạn đứng trước bước ngoặt lớn: một vị đại phi bị phế truất để lại chỗ trống, đồng thời triều đình cũng chuẩn bị đợt ân xá cho cung nhân mãn hạn xuất cung.",
+    "choices": [
+      {
+        "label": "Vận dụng tài trí và lễ nghi tranh thủ ân sủng, tiến thân lên bậc Quý phi (Cần Học vấn >= 25)",
+        "conditions": {
+          "min_education": 25
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 65
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Với phong thái điềm tĩnh và đối đáp thông tuệ, bạn được tấn phong bậc Quý nhân nơi hậu cung, bổng lộc và uy thế tăng vọt!",
+            "effects": {
+              "copper": 1800,
+              "fame": 20,
+              "happiness": 10,
+              "milestone_title": "Được tấn phong Quý nhân nơi hậu cung"
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Phe đối địch ngấm ngầm gièm pha khiến bạn lỡ dịp thăng vị lần này, lòng thêm ngán ngẩm cảnh cung đấu.",
+            "effects": {
+              "happiness": -10,
+              "fame": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khấu đầu xin theo diện ân xá xuất cung, trở về dân gian tìm cuộc sống tự do",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hoàng ân ban xuống! Bạn được cấp 400 đồng lộ phí rời khỏi Tử Cấm Thành, từ nay tự do sống cuộc đời mình mong muốn.",
+            "effects": {
+              "remove_flags": [
+                "trong_hau_cung"
+              ],
+              "copper": 400,
+              "happiness": 14,
+              "milestone_title": "Ân xá xuất cung, tìm lại tự do"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_fate_brothel_redemption",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Tri Kỷ Chuộc Thân Hoàn Lương",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 40,
+      "has_flags": [
+        "nghe_ky_thanh_lau"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_relationships": 55
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Một vị khách tri kỷ mến tài nghệ và nhân phẩm của bạn đã lâu, nay ngỏ ý giúp bạn chuộc lại khế ước từ tay tú bà để rời khỏi chốn thanh lâu.",
+    "choices": [
+      {
+        "label": "Tự xuất tiền tích góp chuộc thân, ngẩng cao đầu hoàn lương (-700 đồng)",
+        "conditions": {
+          "min_copper": 700
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn trả sòng phẳng 700 đồng hủy bỏ khế ước, bước ra khỏi thanh lâu với tư cách một người tự do và thanh bạch hơn trước.",
+            "effects": {
+              "remove_flags": [
+                "nghe_ky_thanh_lau"
+              ],
+              "copper": -700,
+              "infamy": -5,
+              "fame": 6,
+              "happiness": 14,
+              "milestone_title": "Tự chuộc thân rời chốn thanh lâu"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhận ân tình của tri kỷ, rời thanh lâu bắt đầu cuộc sống mới",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tri kỷ bỏ bạc chuộc khế ước cho bạn rồi tiễn bạn về quê làm ăn lương thiện.",
+            "effects": {
+              "remove_flags": [
+                "nghe_ky_thanh_lau"
+              ],
+              "infamy": -3,
+              "happiness": 10,
+              "milestone_title": "Được tri kỷ chuộc thân hoàn lương"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_fate_bodyguard_crossroads",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Quan Phủ Truy Quét — Rửa Tay Gác Kiếm?",
+    "conditions": {
+      "min_age": 20,
+      "max_age": 48,
+      "has_flags": [
+        "bao_ke_giang_ho"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Quan phủ bất ngờ mở đợt truy quét các sòng bạc và băng nhóm bảo kê bến thuyền. Anh em giang hồ nhốn nháo, bạn phải quyết định dứt khoát con đường phía trước.",
+    "choices": [
+      {
+        "label": "Nộp phạt 400 đồng và rửa tay gác kiếm, quay về làm ăn lương thiện",
+        "conditions": {
+          "min_copper": 400
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giao nộp tiền phạt rồi giải tán đàn em, từ nay đoạn tuyệt với chốn giang hồ đao búa.",
+            "effects": {
+              "remove_flags": [
+                "bao_ke_giang_ho"
+              ],
+              "copper": -400,
+              "infamy": -6,
+              "happiness": 8,
+              "milestone_title": "Rửa tay gác kiếm rời giới giang hồ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Liều mình thu phục băng đối thủ giữa lúc hỗn loạn để độc chiếm bến bãi (Cần Võ nghệ >= 28)",
+        "conditions": {
+          "min_martial": 28
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Bạn đánh gục tên đầu sỏ đối địch, thâu tóm toàn bộ nguồn thu bến thuyền, trở thành đại ca khét tiếng nhất vùng!",
+            "effects": {
+              "copper": 1400,
+              "martial": 4,
+              "infamy": 12,
+              "fame": 6,
+              "milestone_title": "Thống lĩnh giang hồ bến bãi"
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Bị quan binh và đối thủ vây đánh, bạn trọng thương trốn thoát nhưng mất sạch địa bàn.",
+            "effects": {
+              "remove_flags": [
+                "bao_ke_giang_ho"
+              ],
+              "health": -24,
+              "copper": -300,
+              "happiness": -12
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

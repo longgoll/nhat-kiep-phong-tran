@@ -128,7 +128,8 @@
       "max_age": 12,
       "origin_in": [
         "ban_nong"
-      ]
+      ],
+      "has_living_npc_id": "npc_father"
     },
     "weight": {
       "base": 40,
@@ -277,20 +278,37 @@
         ]
       },
       {
-        "label": "Vét sạch tiền dành dụm đút lót lý trưởng xin miễn (-60 đồng)",
-        "conditions": {
-          "min_copper": 60
-        },
+        "label": "Chạy đi nhờ bà con lối xóm góp lời xin lý trưởng hoãn cho cha",
+        "conditions": {},
         "outcomes": [
           {
             "weight": {
-              "base": 100,
+              "base": 55,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 60
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Nhờ bà con hàng xóm thương tình nói đỡ và nhà bạn đóng góp chút gạo lễ, lý trưởng bằng lòng gạch tên cha khỏi sổ đi phu kỳ này.",
+            "effects": {
+              "family_copper": -30,
+              "happiness": 3,
+              "relationships": 4
+            }
+          },
+          {
+            "weight": {
+              "base": 45,
               "modifiers": []
             },
-            "resultText": "Lý trưởng nhận tiền rồi gạch tên cha khỏi sổ đi phu. Cả nhà thở phào nhẹ nhõm.",
+            "resultText": "Lý trưởng lạnh lùng lắc đầu vì không đủ bạc lót tay. Cha vẫn phải ngậm ngùi khăn gói lên đê giữa trời mưa gió.",
             "effects": {
-              "family_copper": -60,
-              "happiness": 2
+              "family_copper": -15,
+              "happiness": -6
             }
           }
         ]

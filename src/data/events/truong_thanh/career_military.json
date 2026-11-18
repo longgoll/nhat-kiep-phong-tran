@@ -1,0 +1,329 @@
+[
+  {
+    "id": "evt_military_enlist",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Đầu Quân Nhập Ngũ Lập Công Danh",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 35,
+      "gender": "male",
+      "missing_flags": [
+        "dang_lam_quan",
+        "trong_quan_ngu",
+        "thai_giam",
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_martial": 12
+          },
+          "addWeight": 20
+        },
+        {
+          "conditions": {
+            "world_state_in": [
+              "chien_tranh"
+            ]
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Doanh trại quân triều đình mở đợt tuyển mộ binh sĩ và võ quan trẻ tuổi. Tiếng trống chiêu binh vang rền thôi thúc chí nam nhi ngang dọc.",
+    "choices": [
+      {
+        "label": "Ghi danh tòng quân từ hàng ngũ Binh sĩ, rèn giũa nơi thao trường",
+        "conditions": {
+          "origin_in": [
+            "ban_nong",
+            "thu_cong",
+            "dia_chu"
+          ]
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn khoác lên mình bộ chiến bào binh sĩ, bắt đầu những ngày tháng thao luyện nghiêm khắc để tìm cơ hội lập công tiến thân.",
+            "effects": {
+              "add_flags": [
+                "trong_quan_ngu",
+                "quan_ham_binh_si"
+              ],
+              "martial": 5,
+              "copper": 80,
+              "fame": 4,
+              "milestone_title": "Đầu quân nhập ngũ làm Binh sĩ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhờ gia thế và võ nghệ xin tiến cử thẳng vào ngạch Hiệu úy / Cấm quân",
+        "conditions": {
+          "origin_in": [
+            "quan_lai",
+            "hoang_toc"
+          ],
+          "min_martial": 12
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Với xuất thân danh giá và bản lĩnh sẵn có, bạn được bổ nhiệm ngay chức Hiệu úy chỉ huy một đội quân tinh nhuệ.",
+            "effects": {
+              "add_flags": [
+                "trong_quan_ngu",
+                "quan_ham_hieu_uy"
+              ],
+              "martial": 6,
+              "copper": 300,
+              "fame": 10,
+              "milestone_title": "Nhậm chức Hiệu úy trong quân ngũ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chưa muốn dấn thân vào chốn đao kiếm, tiếp tục cuộc sống hiện tại",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn đứng nhìn đoàn quân rầm rập kéo qua rồi quay về với công việc thường nhật.",
+            "effects": {}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_military_promotion_1",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lập Công Trận Tiền, Thăng Chức Hiệu Úy",
+    "conditions": {
+      "min_age": 18,
+      "has_flags": [
+        "trong_quan_ngu",
+        "quan_ham_binh_si"
+      ],
+      "min_martial": 20
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": [
+        {
+          "conditions": {
+            "world_state_in": [
+              "chien_tranh"
+            ]
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Trong trận phục kích toán cướp lớn ngoài ải, chủ tướng bất ngờ bị bao vây hiểm nghèo. Thời cơ lập đại công đã tới trước mắt!",
+    "choices": [
+      {
+        "label": "Xông pha mở đường máu giải cứu chủ tướng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 28
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Bạn tả xung hữu đột phá vây thành công! Chủ tướng vô cùng tán thưởng, lập tức tấu xin triều đình phong bạn lên chức Hiệu úy.",
+            "effects": {
+              "remove_flags": [
+                "quan_ham_binh_si"
+              ],
+              "add_flags": [
+                "quan_ham_hieu_uy"
+              ],
+              "copper": 650,
+              "fame": 15,
+              "martial": 4,
+              "health": -8,
+              "milestone_title": "Lập chiến công thăng chức Hiệu úy"
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Bạn bị thương nặng khi mở đường máu, tuy cứu được chủ tướng nhưng phải dưỡng thương dài ngày trước khi xét thưởng.",
+            "effects": {
+              "health": -22,
+              "copper": 250,
+              "fame": 8
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_military_promotion_2",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Đại Phá Địch Quân, Phong Tước Tướng Quân",
+    "conditions": {
+      "min_age": 24,
+      "has_flags": [
+        "trong_quan_ngu",
+        "quan_ham_hieu_uy"
+      ],
+      "min_martial": 38,
+      "min_fame": 25
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": []
+    },
+    "description": "Nhờ dày dạn trận mạc và uy tín vang dội trong ba quân, bạn được giao quyền chỉ huy cánh quân tiên phong đánh thẳng vào sào huyệt địch.",
+    "choices": [
+      {
+        "label": "Vận dụng binh pháp và võ nghệ thống lĩnh ba quân quyết chiến",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 85,
+              "modifiers": []
+            },
+            "resultText": "Chiến thắng vang dội! Triều đình sắc phong bạn làm Tướng quân trấn giữ biên cương, ban thưởng vàng bạc và bổng lộc hậu hĩnh.",
+            "effects": {
+              "remove_flags": [
+                "quan_ham_hieu_uy"
+              ],
+              "add_flags": [
+                "quan_ham_tuong_quan"
+              ],
+              "copper": 2200,
+              "fame": 28,
+              "martial": 6,
+              "happiness": 15,
+              "milestone_title": "Được sắc phong Tướng quân trấn giữ biên cương"
+            }
+          },
+          {
+            "weight": {
+              "base": 15,
+              "modifiers": []
+            },
+            "resultText": "Trận đánh giằng co khốc liệt khiến quân ta tổn thất không nhỏ, bạn giữ vững được trận địa nhưng lỡ mất cơ hội thăng tước lần này.",
+            "effects": {
+              "health": -18,
+              "stamina": -25,
+              "fame": 6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_military_retire",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Giải Giáp Quy Điền — Vinh Quy Hồi Hương",
+    "conditions": {
+      "min_age": 38,
+      "max_age": 60,
+      "has_flags": [
+        "trong_quan_ngu"
+      ],
+      "world_state_in": [
+        "binh_on"
+      ]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_age": 48
+          },
+          "addWeight": 30
+        }
+      ]
+    },
+    "description": "Thiên hạ thái bình, mái đầu bạn cũng đã điểm sương sau nhiều năm chinh chiến. Bộ Binh truyền chỉ cho phép các lão tướng và binh sĩ mãn hạn xin giải giáp về quê an hưởng tuổi già.",
+    "choices": [
+      {
+        "label": "Xin giải ngũ hồi hương, nhận bổng lộc dưỡng lão và ruộng thưởng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Triều đình ban thưởng 900 đồng tiền dưỡng lão cùng giấy khen công trạng. Bạn cởi bỏ chiến bào, trở về quê hương sống đời tự tại.",
+            "effects": {
+              "remove_flags": [
+                "trong_quan_ngu",
+                "quan_ham_binh_si",
+                "quan_ham_hieu_uy",
+                "quan_ham_tuong_quan"
+              ],
+              "copper": 900,
+              "happiness": 12,
+              "fame": 8,
+              "milestone_title": "Giải giáp quy điền sau nhiều năm tòng quân"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Xin tiếp tục lưu lại quân doanh huấn luyện lớp tân binh trẻ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Ý chí sắt đá của bạn khiến toàn quân kính phục, bạn ở lại làm bậc lão tướng truyền kinh nghiệm trận mạc.",
+            "effects": {
+              "fame": 10,
+              "martial": 2,
+              "happiness": 4
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

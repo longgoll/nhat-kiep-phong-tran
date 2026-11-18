@@ -173,6 +173,9 @@ export function getExamEligibility(
   if (state.flags.includes('bi_truy_na')) {
     return { ok: false, reason: 'Đang bị triều đình truy nã', cost: 0 };
   }
+  if (state.flags.includes('thai_giam') || state.flags.includes('trong_hau_cung')) {
+    return { ok: false, reason: 'Thân phận nội đình không thể dự khoa cử ngoại triều', cost: 0 };
+  }
   const canAttendAsFemale =
     state.profile.gender === 'male' ||
     state.flags.includes('nu_cai_nam_trang') ||
@@ -208,8 +211,8 @@ export function getExamEligibility(
     if (state.world.season !== 'spring') {
       return { ok: false, reason: 'Thi Hội mở vào Mùa Xuân', cost: 1000 };
     }
-    if (state.stats.education < 55) {
-      return { ok: false, reason: 'Cần Học thức >= 55', cost: 1000 };
+    if (state.stats.education < 55 && state.stats.martial < 60) {
+      return { ok: false, reason: 'Cần Học thức >= 55 (hoặc Võ nghệ >= 60)', cost: 1000 };
     }
     if (state.assets.wealthCopper < 1000) {
       return { ok: false, reason: 'Cần 1.000 đồng lộ phí lên kinh', cost: 1000 };
@@ -224,8 +227,8 @@ export function getExamEligibility(
   if (state.flags.includes('do_tien_si')) {
     return { ok: false, reason: 'Đã đỗ Tiến sĩ', cost: 0 };
   }
-  if (state.stats.education < 75) {
-    return { ok: false, reason: 'Cần Học thức >= 75', cost: 0 };
+  if (state.stats.education < 75 && state.stats.martial < 80) {
+    return { ok: false, reason: 'Cần Học thức >= 75 (hoặc Võ nghệ >= 80)', cost: 0 };
   }
   return { ok: true, cost: 0 };
 }
@@ -239,23 +242,25 @@ export function takeExam(state: ActiveLifeState, level: ExamLevel): ActiveLifeSt
   next = { ...next, prngState: roll.nextState };
 
   const skill = Math.max(next.stats.education, next.stats.martial);
+  const scholarBonus = next.flags.includes('gia_phong_thu_huong') ? 0.05 : 0;
   const exposureBump = next.flags.includes('nu_cai_nam_trang') ? 2 : 0;
 
   if (level === 'huong') {
-    const passChance = Math.min(0.95, 0.35 + (skill - 25) * 0.02);
+    const passChance = Math.min(0.95, 0.35 + (skill - 25) * 0.02 + scholarBonus);
     if (roll.value > passChance) {
       return {
         ...next,
         logs: appendLog(next.logs, next.profile.totalDays, 'study', 'Kỳ Thi Hương năm nay bạn bị trượt bảng vàng, đành đợi 3 năm sau.'),
       };
     }
-    const isCuNhan = skill >= 45 || roll.value < 0.25;
+    const isGiaiNguyen = skill >= 65 && next.stats.fame >= 20 && roll.value < 0.2;
+    const isCuNhan = isGiaiNguyen || skill >= 45 || roll.value < 0.25;
     const flag = isCuNhan ? 'do_cu_nhan' : 'do_tu_tai';
-    const title = isCuNhan ? 'Cử nhân' : 'Tú tài';
+    const title = isGiaiNguyen ? 'Giải nguyên' : isCuNhan ? 'Cử nhân' : 'Tú tài';
     next = applyEffects(next, {
-      add_flags: [flag],
-      fame: isCuNhan ? 15 : 8,
-      happiness: 15,
+      add_flags: isGiaiNguyen ? [flag, 'giai_nguyen'] : [flag],
+      fame: isGiaiNguyen ? 20 : isCuNhan ? 15 : 8,
+      happiness: isGiaiNguyen ? 18 : 15,
       milestone_title: `Đỗ ${title} kỳ Thi Hương`,
     });
     return {
@@ -267,35 +272,61 @@ export function takeExam(state: ActiveLifeState, level: ExamLevel): ActiveLifeSt
   }
 
   if (level === 'hoi') {
-    const passChance = Math.min(0.9, 0.3 + (skill - 55) * 0.025);
+    const passChance = Math.min(0.9, 0.3 + (skill - 55) * 0.025 + scholarBonus);
     if (roll.value > passChance) {
       return {
         ...next,
         logs: appendLog(next.logs, next.profile.totalDays, 'study', 'Thi Hội trường văn cạnh tranh khốc liệt, bạn lỡ hẹn bảng Cống sĩ.'),
       };
     }
+    const isHoiNguyen = skill >= 80 && next.stats.fame >= 30 && roll.value < 0.25;
+    const hoiTitle = isHoiNguyen ? 'Hội nguyên' : 'Cống sĩ';
     next = applyEffects(next, {
-      add_flags: ['do_cong_si'],
-      fame: 20,
-      happiness: 15,
-      milestone_title: 'Đỗ Cống sĩ kỳ Thi Hội',
+      add_flags: isHoiNguyen ? ['do_cong_si', 'hoi_nguyen'] : ['do_cong_si'],
+      fame: isHoiNguyen ? 28 : 20,
+      happiness: isHoiNguyen ? 18 : 15,
+      milestone_title: `Đỗ ${hoiTitle} kỳ Thi Hội`,
     });
     return {
       ...next,
       exposureRisk: Math.min(100, next.exposureRisk + exposureBump),
-      profile: { ...next.profile, currentRole: 'Cống sĩ' },
-      logs: appendLog(next.logs, next.profile.totalDays, 'study', 'Bạn xuất sắc đỗ Cống sĩ kỳ Thi Hội, được triệu vào Điện thí!'),
+      profile: { ...next.profile, currentRole: hoiTitle },
+      logs: appendLog(next.logs, next.profile.totalDays, 'study', `Bạn xuất sắc đỗ ${hoiTitle} kỳ Thi Hội, được triệu vào Điện thí!`),
     };
   }
 
-  // Thi Đình
+  // Thi Đình: Tam khôi (Trạng nguyên - Bảng nhãn - Thám hoa), Hoàng giáp, Đồng Tiến sĩ
   const isTrangNguyen = skill >= 90 && next.stats.fame >= 40 && roll.value < 0.35;
-  const title = isTrangNguyen ? 'Trạng nguyên' : 'Tiến sĩ';
-  const flagsToAdd = isTrangNguyen ? ['do_tien_si', 'trang_nguyen'] : ['do_tien_si'];
+  const isBangNhan = !isTrangNguyen && skill >= 85 && next.stats.fame >= 30 && roll.value < 0.55;
+  const isThamHoa = !isTrangNguyen && !isBangNhan && skill >= 80 && next.stats.fame >= 20 && roll.value < 0.7;
+  const isHoangGiap = !isTrangNguyen && !isBangNhan && !isThamHoa && skill >= 78;
+
+  const title = isTrangNguyen
+    ? 'Trạng nguyên'
+    : isBangNhan
+      ? 'Bảng nhãn'
+      : isThamHoa
+        ? 'Thám hoa'
+        : isHoangGiap
+          ? 'Hoàng giáp'
+          : 'Tiến sĩ';
+
+  const flagsToAdd = isTrangNguyen
+    ? ['do_tien_si', 'trang_nguyen']
+    : isBangNhan
+      ? ['do_tien_si', 'bang_nhan']
+      : isThamHoa
+        ? ['do_tien_si', 'tham_hoa']
+        : isHoangGiap
+          ? ['do_tien_si', 'hoang_giap']
+          : ['do_tien_si'];
+
+  const fameGain = isTrangNguyen ? 42 : isBangNhan ? 35 : isThamHoa ? 30 : isHoangGiap ? 27 : 25;
+
   next = applyEffects(next, {
     add_flags: flagsToAdd,
-    fame: isTrangNguyen ? 40 : 25,
-    happiness: 25,
+    fame: fameGain,
+    happiness: isTrangNguyen ? 28 : 25,
     milestone_title: `Đỗ ${title} kỳ Thi Đình`,
   });
   return {
@@ -349,6 +380,7 @@ export function appointOrPromoteOfficial(state: ActiveLifeState): ActiveLifeStat
 
 export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
   const COST = 50000;
+  if (state.flags.includes('thai_giam') || state.flags.includes('trong_hau_cung')) return state;
   if (state.officialRank > 0 || state.assets.wealthCopper < COST) return state;
 
   const next = applyEffects(state, {

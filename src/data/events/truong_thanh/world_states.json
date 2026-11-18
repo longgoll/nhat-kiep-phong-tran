@@ -117,6 +117,17 @@
     "conditions": {
       "min_age": 16,
       "max_age": 50,
+      "gender": "male",
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ],
+      "missing_flags": [
+        "dang_lam_quan",
+        "do_cu_nhan",
+        "do_tien_si"
+      ],
       "world_state_in": [
         "chien_tranh"
       ]
@@ -213,6 +224,113 @@
               "rice": 3,
               "copper": 100,
               "fame": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_world_war_noble_duty",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 420,
+    "title": "Chiếu Chỉ Quyên Lương & Hộ Quốc Thời Chiến",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 55,
+      "origin_in": [
+        "hoang_toc",
+        "quan_lai"
+      ],
+      "world_state_in": [
+        "chien_tranh"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Biên cương báo nguy, triều đình truyền chiếu xuống các phủ đệ Tôn thất và quan lại kêu gọi góp quân lương, chiêu mộ tráng sĩ tiếp ứng tiền tuyến.",
+    "choices": [
+      {
+        "label": "Xuất bạc từ phủ đệ quyên góp quân lương cho triều đình (-1.000 đồng)",
+        "conditions": {
+          "min_copper": 1000
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bệ hạ truyền lời khen ngợi tấm lòng trung nghĩa và trách nhiệm hộ quốc của gia tộc bạn trước bá quan văn võ.",
+            "effects": {
+              "copper": -1000,
+              "fame": 16,
+              "relationships": 8,
+              "happiness": 5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thỉnh mệnh đốc suất quân vụ hoặc tự mình ra trận lập công (Cần Võ nghệ >= 15)",
+        "conditions": {
+          "min_martial": 15
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_martial": 30
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Bạn chỉ huy đội thân binh đánh tan một cánh quân tập kích của địch, uy danh lừng lẫy khắp triều đình.",
+            "effects": {
+              "martial": 5,
+              "fame": 22,
+              "copper": 800,
+              "health": -10,
+              "stamina": -25,
+              "milestone_title": "Thống lĩnh quân vụ lập công thời chiến"
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Trận tiền khốc liệt khiến bạn bị thương nhẹ nơi cánh tay, nhưng vẫn giữ vững phòng tuyến chờ viện binh.",
+            "effects": {
+              "health": -20,
+              "martial": 3,
+              "fame": 10,
+              "happiness": -6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ở lại hậu phương lo liệu quân nhu, ổn định trật tự phủ đệ và gia quyến",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giữ vững hậu phương, thu xếp kho lương và bảo toàn bình an cho gia quyến giữa thời buổi binh đao.",
+            "effects": {
+              "education": 2,
+              "relationships": 4,
+              "fame": 2
             }
           }
         ]

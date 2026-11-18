@@ -1,0 +1,555 @@
+[
+  {
+    "id": "evt_scholar_local_exam_temptation",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Cám Dỗ Mua Đề Trước Trường Thi",
+    "conditions": {
+      "min_age": 15,
+      "max_age": 36,
+      "min_education": 15,
+      "missing_flags": [
+        "do_cu_nhan",
+        "do_tien_si",
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 34,
+      "modifiers": []
+    },
+    "description": "Kỳ thi Hương sắp mở, một kẻ tự xưng là người nhà quan trường giám lén tìm gặp bạn trong quán trọ, rỉ tai chào bán bài văn mẫu sát đề thi với giá 350 đồng.",
+    "choices": [
+      {
+        "label": "Thẳng thừng từ chối, giữ vững khí tiết kẻ sĩ dùi mài thực học",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn khước từ lời mời gọi gian lận, chuyên tâm ôn luyện kinh sử đến khuya. Đức hạnh sĩ tử của bạn được bạn đồng môn kính nể.",
+            "effects": {
+              "education": 4,
+              "fame": 5,
+              "happiness": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lén bỏ 350 đồng mua bài văn mẫu để tăng cơ hội đỗ đạt",
+        "conditions": {
+          "min_copper": 350
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": []
+            },
+            "resultText": "Bài văn mẫu trúng tủ thật! Bạn học thuộc vanh vách nhưng lương tâm vẫn có chút cắn rứt.",
+            "effects": {
+              "copper": -350,
+              "education": 8,
+              "infamy": 10
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Đường dây mua đề bị Ngự sử đài phanh phui! Bạn mất trắng 350 đồng và mang tiếng xấu khắp trường thi.",
+            "effects": {
+              "copper": -350,
+              "fame": -12,
+              "infamy": 12,
+              "happiness": -12
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_road_to_capital",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Sĩ Tử Lều Chõng Lên Kinh Ứng Thí",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 42,
+      "has_flags": [
+        "do_cu_nhan"
+      ],
+      "missing_flags": [
+        "do_tien_si",
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Đỗ Cử nhân rồi, bạn chuẩn bị hành trang lên Kinh đô chuẩn bị cho kỳ Thi Hội. Đường sá xa xôi, việc ăn ở và ôn luyện nơi Kinh kỳ cần tính toán kỹ lưỡng.",
+    "choices": [
+      {
+        "label": "Thuê phòng trọ yên tĩnh gần Quốc Tử Giám để chuyên tâm dùi mài (-300 đồng)",
+        "conditions": {
+          "min_copper": 300
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Không gian thanh tĩnh giúp bạn thông suốt nhiều điển tích khó, tự tin hẳn trước kỳ Thi Hội.",
+            "effects": {
+              "copper": -300,
+              "education": 5,
+              "happiness": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chép sách thuê cho hiệu sách lớn để vừa kiếm lộ phí vừa đọc ké tàng thư (Cần Học vấn >= 35)",
+        "conditions": {
+          "min_education": 35
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Chữ viết đẹp giúp bạn nhận được nhiều đơn chép sách, vừa có tiền trang trải vừa mở mang thêm kiến thức.",
+            "effects": {
+              "copper": 140,
+              "education": 4,
+              "stamina": -10
+            }
+          }
+        ]
+      },
+      {
+        "label": "Xin tá túc tại ngôi chùa cổ ngoài thành, chịu khó đèn sách qua ngày",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cơm chay muối vừng đạm bạc nhưng tiếng chuông chùa tĩnh mịch giúp tâm trí bạn sáng suốt lạ thường.",
+            "effects": {
+              "education": 3,
+              "fame": 3,
+              "health": -3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_vinh_quy_bai_to",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Vinh Quy Bái Tổ Rạng Danh Gia Tộc",
+    "conditions": {
+      "min_age": 18,
+      "has_any_flag": [
+        "do_tien_si",
+        "trang_nguyen",
+        "bang_nhan",
+        "tham_hoa"
+      ]
+    },
+    "weight": {
+      "base": 80,
+      "modifiers": []
+    },
+    "description": "Bảng vàng đã đề tên! Hoàng thượng ban mũ áo, ngựa xe và cờ lọng cho bạn rước lễ Vinh quy bái tổ về quê nhà. Cả tổng cả huyện nô nức đứng hai bên đường đón rước tân khoa!",
+    "choices": [
+      {
+        "label": "Mở tiệc khao vọng bà con làng xóm và dựng bia đá tạ ơn tiên tổ (-500 đồng)",
+        "conditions": {
+          "min_copper": 500
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tiếng trống chiêng vang rền khắp phủ huyện. Tên tuổi bạn và dòng họ được khắc ghi muôn đời, gia đình tự hào khôn xiết!",
+            "effects": {
+              "copper": -500,
+              "fame": 22,
+              "relationships": 12,
+              "happiness": 15,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 20
+                }
+              ],
+              "milestone_title": "Vinh quy bái tổ rạng danh dòng họ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Làm lễ gia tiên trang nghiêm và lập quỹ khuyến học cho trẻ nghèo trong làng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Không phô trương xa hoa, tấm lòng hướng về cội nguồn và khuyến học của bạn khiến sĩ phu cả vùng hết lời ca ngợi.",
+            "effects": {
+              "fame": 18,
+              "happiness": 12,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 16
+                }
+              ],
+              "milestone_title": "Vinh quy bái tổ lập quỹ khuyến học"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_bribe_or_justice",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 600,
+    "title": "Án Oan Nơi Công Đường & Bạc Đút Lót",
+    "conditions": {
+      "min_age": 18,
+      "has_flags": [
+        "dang_lam_quan"
+      ]
+    },
+    "weight": {
+      "base": 36,
+      "modifiers": []
+    },
+    "description": "Một tên công tử con nhà hào cường đánh người trọng thương ngoài chợ. Trước ngày xét xử, người nhà hắn lén mang 800 đồng tới hậu đường xin bạn xử trắng án.",
+    "choices": [
+      {
+        "label": "Thẳng tay bác bỏ bạc hối lộ, giữ nghiêm phép nước xử đúng tội",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 40
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Bản án công minh khiến bách tính vỗ tay reo hò trước công đường. Tiếng thơm thanh liêm của bạn lan truyền khắp nơi.",
+            "effects": {
+              "fame": 14,
+              "happiness": 8,
+              "relationships": 4
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Bạn xử đúng luật nhưng thế lực nhà hào cường liên kết đe dọa, khiến công việc nha môn gặp nhiều trắc trở.",
+            "effects": {
+              "fame": 10,
+              "happiness": -5,
+              "stamina": -12
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhận 800 đồng rồi xử phạt qua loa cho êm chuyện",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Túi tiền của bạn nặng thêm 800 đồng, nhưng tiếng oán thán của dân lành âm ỉ ngoài cổng phủ.",
+            "effects": {
+              "copper": 800,
+              "infamy": 14,
+              "fame": -10,
+              "happiness": -4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_famine_granary",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Dân Đói Vây Nha Môn — Mở Kho Hay Chờ Lệnh?",
+    "conditions": {
+      "min_age": 18,
+      "has_flags": [
+        "dang_lam_quan"
+      ],
+      "world_state_in": [
+        "mat_mua",
+        "chien_tranh"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Nạn đói hoành hành dữ dội, hàng trăm người dân gầy gò kéo tới trước nha môn khẩn cầu mở kho thóc công cứu tế, nhưng chiếu chỉ từ triều đình vẫn chưa kịp gửi về.",
+    "choices": [
+      {
+        "label": "Liều mình mở kho thóc công phát cháo cứu dân trước, tâu trình tạ tội sau",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_fame": 40
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Nhờ quyết đoán kịp thời, hàng trăm mạng người được cứu sống. Hoàng thượng nghe tấu chẳng những không phạt mà còn khen bạn là bậc phụ mẫu chi dân!",
+            "effects": {
+              "fame": 22,
+              "relationships": 12,
+              "happiness": 12
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Bạn cứu được dân nhưng bị triều đình quở trách tội tự tiện mở kho, phải nộp 300 đồng bồi hoàn sổ sách.",
+            "effects": {
+              "copper": -300,
+              "fame": 14,
+              "happiness": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tự xuất tiền riêng mua gạo nấu cháo cầm hơi cho dân chờ lệnh (-400 đồng)",
+        "conditions": {
+          "min_copper": 400
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Vừa giữ đúng phép tắc triều đình vừa cứu được dân đói bằng tiền túi, đức độ của bạn khiến ai nấy đều cảm phục.",
+            "effects": {
+              "copper": -400,
+              "fame": 16,
+              "happiness": 10
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đóng chặt cổng nha môn, kiên quyết chờ chiếu chỉ của cấp trên",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giữ an toàn được chiếc ghế quan trường, nhưng tiếng khóc than ngoài cổng nha môn ám ảnh suốt nhiều ngày.",
+            "effects": {
+              "fame": -14,
+              "infamy": 8,
+              "happiness": -10
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_remonstrate_emperor",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Dâng Sớ Can Gián Trước Ngai Vàng",
+    "conditions": {
+      "min_age": 26,
+      "has_flags": [
+        "dang_lam_quan"
+      ],
+      "min_fame": 40
+    },
+    "weight": {
+      "base": 32,
+      "modifiers": []
+    },
+    "description": "Triều đình định tăng sưu thuế để xây cung điện mới giữa lúc dân tình còn chưa thật sự sung túc. Bá quan văn võ đều e sợ uy quyền mà im lặng.",
+    "choices": [
+      {
+        "label": "Dâng sớ can gián thẳng thắn vì kế sinh nhai của trăm họ (Cần Học vấn >= 55)",
+        "conditions": {
+          "min_education": 55
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Lời tấu thẳng thắn mà thấu tình đạt lý của bạn khiến Hoàng thượng tỉnh ngộ, bãi bỏ lệnh tăng thuế và ban thưởng trọng hậu!",
+            "effects": {
+              "copper": 1000,
+              "fame": 20,
+              "happiness": 12
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Bệ hạ nổi giận phạt trừ nửa năm bổng lộc, nhưng khí tiết trung thần của bạn được sử sách lưu danh.",
+            "effects": {
+              "copper": -400,
+              "fame": 12,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ im lặng thuận theo số đông để bảo toàn quan lộ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn cúi đầu im lặng trong buổi đại triều, giữ được an thân nhưng lòng không khỏi hổ thẹn.",
+            "effects": {
+              "fame": -5,
+              "happiness": -4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_retire_gracefully",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Cáo Lão Hồi Hương Giữ Trọn Thanh Danh",
+    "conditions": {
+      "min_age": 55,
+      "max_age": 75,
+      "has_flags": [
+        "dang_lam_quan"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_age": 62
+          },
+          "addWeight": 30
+        }
+      ]
+    },
+    "description": "Tuổi cao sức yếu sau nhiều năm lăn lộn chốn quan trường, đã đến lúc bạn cân nhắc dâng sớ xin cáo lão hồi hương để an hưởng tuổi già bên con cháu.",
+    "choices": [
+      {
+        "label": "Dâng sớ cáo lão hồi hương, nhận ân thưởng dưỡng lão của triều đình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hoàng thượng chuẩn tấu, ban 1.500 đồng hưu bổng cùng lời khen ngợi công lao. Bạn thanh thản rời chốn quan trường trở về quê cũ.",
+            "effects": {
+              "remove_flags": [
+                "dang_lam_quan"
+              ],
+              "reset_official_rank": true,
+              "copper": 1500,
+              "fame": 12,
+              "happiness": 14,
+              "milestone_title": "Cáo lão hồi hương giữ trọn thanh danh"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tiếp tục cống hiến nơi triều đình đến hơi thở cuối cùng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tấm lòng tận tụy vì nước vì dân của bậc lão thần khiến cả triều đình kính trọng.",
+            "effects": {
+              "fame": 10,
+              "stamina": -10
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

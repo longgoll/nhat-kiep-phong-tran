@@ -1,0 +1,471 @@
+[
+  {
+    "id": "evt_youth_family_father_injury_common",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Phụ Thân Gặp Nạn Khi Mưu Sinh",
+    "conditions": {
+      "min_age": 14,
+      "max_age": 24,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong"
+      ],
+      "has_living_npc_id": "npc_father"
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Trong lúc làm việc nặng ngoài đồng xưởng, cha bạn không may trượt chân ngã gãy xương sườn, phải nằm dưỡng thương ít nhất một tháng. Nguồn thu chính của cả nhà bỗng chốc đứt đoạn.",
+    "choices": [
+      {
+        "label": "Tạm gác việc riêng, thay cha ra đồng hoặc đứng xưởng gánh vác gia đình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_health": 60
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Bạn cắn răng gánh vác phần việc nặng nhọc thay cha suốt một tháng trời. Dù vai rã rời nhưng nhà vẫn đủ cơm ăn áo mặc, cha nhìn bạn đầy tin cậy.",
+            "effects": {
+              "stamina": -22,
+              "health": -4,
+              "craft_trade": 5,
+              "family_copper": 60,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 18
+                },
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 10
+                }
+              ],
+              "milestone_title": "Thay cha gánh vác gia đình khi cha gặp nạn"
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Công việc quá nặng khiến bạn kiệt sức mấy ngày liền, nhưng rốt cuộc cũng giữ được nếp nhà qua cơn hoạn nạn.",
+            "effects": {
+              "stamina": -28,
+              "health": -8,
+              "craft_trade": 3,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 14
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bỏ tiền tích góp cá nhân mua thuốc bó xương và thuê người phụ giúp (-120 đồng)",
+        "conditions": {
+          "min_copper": 120
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ thuốc hay của thầy lang và có người đỡ đần việc nặng, vết thương của cha bạn liền rất nhanh. Cả nhà cảm động trước tấm lòng và bản lĩnh tự lập của bạn.",
+            "effects": {
+              "copper": -120,
+              "happiness": 5,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 20
+                },
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 12
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_youth_family_sibling_crisis_common",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Anh Chị Em Gặp Khó Nơi Xứ Người",
+    "conditions": {
+      "min_age": 15,
+      "max_age": 30,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong"
+      ],
+      "birth_order_in": [
+        "con_truong",
+        "con_thu",
+        "con_ut"
+      ]
+    },
+    "weight": {
+      "base": 38,
+      "modifiers": []
+    },
+    "description": "Một người anh chị em của bạn đi làm thuê trên phố huyện chẳng may làm vỡ lô hàng quý của chủ, bị giữ lại đòi bồi thường 180 đồng mới cho về nhà.",
+    "choices": [
+      {
+        "label": "Rút tiền túi mang lên phố chuộc người thân về (Cần 180 Đồng)",
+        "conditions": {
+          "min_copper": 180
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn đếm đủ bạc trả cho chủ tiệm rồi dắt người thân về nhà. Nghĩa tình ruột thịt khiến cả gia đình càng thêm khăng khít.",
+            "effects": {
+              "copper": -180,
+              "happiness": 4,
+              "relationships": 6,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 24
+                },
+                {
+                  "relation": "parent",
+                  "delta": 10
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lên phố thương lượng với chủ tiệm, xin làm công trừ nợ thay một phần",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 60
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Thấy bạn ăn nói có tình có lý lại chịu khó làm bù, chủ tiệm giảm cho quá nửa tiền đền bù rồi cho anh em bạn về.",
+            "effects": {
+              "stamina": -18,
+              "copper": -40,
+              "relationships": 5,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 18
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Chủ tiệm hạch sách đủ điều, bạn phải làm cật lực suốt nửa tháng mới gỡ được nợ cho người thân.",
+            "effects": {
+              "stamina": -25,
+              "health": -5,
+              "happiness": -6,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 15
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_youth_family_sibling_court_rivalry",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Sóng Gió Huynh Đệ Nơi Phủ Đệ",
+    "conditions": {
+      "min_age": 15,
+      "max_age": 30,
+      "origin_in": [
+        "quan_lai",
+        "hoang_toc"
+      ],
+      "birth_order_in": [
+        "con_truong",
+        "con_thu",
+        "con_ut"
+      ]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": []
+    },
+    "description": "Một vị huynh đệ tỷ muội của bạn vô tình đắc tội với phe cánh đối lập trong buổi yến tiệc, bị kẻ xấu dâng sớ vu khống trước bề trên.",
+    "choices": [
+      {
+        "label": "Dùng học vấn và uy tín đứng ra đối chất minh oan giúp người thân (Cần Học vấn >= 25)",
+        "conditions": {
+          "min_education": 25
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": []
+            },
+            "resultText": "Lời lẽ sắc bén cùng chứng cứ rành mạch của bạn khiến kẻ tiểu nhân cứng họng. Huynh đệ tỷ muội thoát nạn, hết lòng cảm kích ân tình này.",
+            "effects": {
+              "fame": 8,
+              "relationships": 6,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 22
+                },
+                {
+                  "relation": "parent",
+                  "delta": 10
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Vụ việc tạm lắng xuống nhưng bạn cũng bị phe kia để mắt dè chừng.",
+            "effects": {
+              "fame": 2,
+              "happiness": -4,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 14
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Âm thầm gửi thư khuyên nhủ người thân nhẫn nhịn chờ sóng gió qua đi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Người thân nghe lời bạn lùi một bước tránh họa, tuy chịu chút ấm ức nhưng giữ được bình an.",
+            "effects": {
+              "happiness": -2,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 8
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_family_father_old_age_passing",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Phụ Thân Tuổi Cao Quy Tiên",
+    "conditions": {
+      "min_age": 46,
+      "max_age": 72,
+      "has_living_npc_id": "npc_father"
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_age": 56
+          },
+          "addWeight": 45
+        }
+      ]
+    },
+    "description": "Cha bạn tuổi đã xế chiều, sức khỏe suy kiệt dần theo năm tháng. Sáng nay ông gọi con cháu quây quần bên giường, dặn dò giữ vững gia phong rồi thanh thản trút hơi thở cuối cùng.",
+    "choices": [
+      {
+        "label": "Tổ chức tang lễ chu toàn, kính cẩn tiễn biệt phụ thân (Cần 350 Đồng)",
+        "conditions": {
+          "min_copper": 350
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Lễ tang được cử hành trang nghiêm đúng lễ nghi. Họ hàng làng xóm đều cảm kích trước tấm lòng hiếu kính trọn vẹn của bạn dành cho cha.",
+            "effects": {
+              "copper": -350,
+              "kill_npc_id": "npc_father",
+              "fame": 8,
+              "happiness": -24,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 8
+                },
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 10
+                }
+              ],
+              "milestone_title": "Chịu tang phụ thân quy tiên"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lo liệu tang ma giản dị mà ấm cúng theo đúng di nguyện của cha",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Không phô trương linh đình, bạn tự tay thắp hương canh linh cữu cha suốt ba ngày đêm, tiễn người về nơi an nghỉ cuối cùng.",
+            "effects": {
+              "kill_npc_id": "npc_father",
+              "happiness": -26,
+              "stamina": -12,
+              "milestone_title": "Tiễn biệt phụ thân về nơi an nghỉ"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_family_mother_old_age_passing",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Mẫu Thân Tuổi Già Nhắm Mắt Xuôi Tay",
+    "conditions": {
+      "min_age": 48,
+      "max_age": 75,
+      "has_living_npc_id": "npc_mother"
+    },
+    "weight": {
+      "base": 32,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_age": 58
+          },
+          "addWeight": 48
+        }
+      ]
+    },
+    "description": "Cả một đời vất vả vì con cháu, nay mẹ bạn đã đến lúc sức cùng lực kiệt. Trong vòng tay của người thân, bà mỉm cười hiền hậu rồi lặng lẽ đi vào giấc ngủ ngàn thu.",
+    "choices": [
+      {
+        "label": "Chuẩn bị tang lễ trang trọng báo hiếu công ơn sinh thành (Cần 350 Đồng)",
+        "conditions": {
+          "min_copper": 350
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Khói hương nghi ngút tiễn đưa người mẹ hiền. Bạn giữ trọn đạo hiếu đến giây phút sau cuối.",
+            "effects": {
+              "copper": -350,
+              "kill_npc_id": "npc_mother",
+              "add_flags": [
+                "mo_coi_me"
+              ],
+              "fame": 8,
+              "happiness": -24,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 8
+                }
+              ],
+              "milestone_title": "Chịu tang mẫu thân quy tiên"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thành kính túc trực bên linh cữu, tiễn mẹ bằng lễ tang giản dị",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn lặng lẽ gạt nước mắt lo liệu hậu sự cho mẹ chu đáo, khắc ghi lời mẹ dặn suốt quãng đời còn lại.",
+            "effects": {
+              "kill_npc_id": "npc_mother",
+              "add_flags": [
+                "mo_coi_me"
+              ],
+              "happiness": -26,
+              "stamina": -12,
+              "milestone_title": "Tiễn biệt mẫu thân về nơi an nghỉ"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

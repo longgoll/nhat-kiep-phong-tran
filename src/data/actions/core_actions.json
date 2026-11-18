@@ -26,7 +26,7 @@
     "allowedSlots": ["night"],
     "description": "Đốt đèn dầu thức thâu đêm đọc sách hoặc tính toán làm ăn. Tăng học thức nhanh nhưng hao tổn sức khỏe.",
     "conditions": { "min_age": 13, "min_copper": 8, "min_health": 15 },
-    "costs": { "copper": 8, "health": 3, "happiness": 3 },
+    "costs": { "copper": 8, "health": 1.2, "happiness": 1 },
     "rewards": { "education": 1.2, "craft_trade": 0.5 }
   },
   {
@@ -35,7 +35,7 @@
     "category": "survival",
     "allowedSlots": ["morning", "afternoon"],
     "description": "Lục lọi đồng ruộng sau gặt hoặc vào rừng đào củ mài. Thu nhập bèo bọt nhưng giúp không chết đói.",
-    "conditions": { "min_age": 13 },
+    "conditions": { "min_age": 13, "missing_flags": ["thai_giam", "trong_hau_cung"] },
     "costs": { "stamina": 15 },
     "rewards": { "rice": 1.5, "health": -0.5, "fame": -0.1 }
   },
@@ -45,7 +45,7 @@
     "category": "survival",
     "allowedSlots": ["morning", "afternoon"],
     "description": "Xếp hàng nhận bát cháo loãng bố thí. Đỡ đói qua ngày nhưng tổn hại thể diện.",
-    "conditions": { "min_age": 13 },
+    "conditions": { "min_age": 13, "missing_flags": ["thai_giam", "trong_hau_cung"] },
     "costs": { "stamina": 5 },
     "rewards": { "rice": 1.0, "stamina": 10, "fame": -1.0, "happiness": -1.0 }
   },
@@ -55,9 +55,9 @@
     "category": "labor",
     "allowedSlots": ["morning", "afternoon"],
     "description": "Bán sức lao động ngoài đồng ruộng để đổi lấy tiền đồng và gạo ăn.",
-    "conditions": { "min_age": 13, "min_health": 15, "missing_flags": ["bi_ep_lam_gia_no"] },
+    "conditions": { "min_age": 13, "min_health": 15, "missing_flags": ["bi_ep_lam_gia_no", "thai_giam", "trong_hau_cung"] },
     "costs": { "stamina": 25 },
-    "rewards": { "copper": 35, "rice": 1.0, "happiness": -0.5 }
+    "rewards": { "copper": 35, "rice": 1.0, "happiness": -0.15 }
   },
   {
     "id": "act_khuan_vac_ben_thuyen",
@@ -65,9 +65,9 @@
     "category": "labor",
     "allowedSlots": ["morning", "afternoon"],
     "description": "Công việc nặng nhọc nhưng tiền công khá hơn làm ruộng, giúp rèn gân cốt.",
-    "conditions": { "min_age": 15, "min_health": 25, "missing_flags": ["bi_ep_lam_gia_no"] },
+    "conditions": { "min_age": 15, "min_health": 25, "missing_flags": ["bi_ep_lam_gia_no", "thai_giam", "trong_hau_cung"] },
     "costs": { "stamina": 35 },
-    "rewards": { "copper": 60, "martial": 0.2, "health": -0.4, "happiness": -0.5 }
+    "rewards": { "copper": 60, "martial": 0.2, "health": -0.12, "happiness": -0.15 }
   },
   {
     "id": "act_phu_ban_hang",
@@ -75,7 +75,7 @@
     "category": "trade",
     "allowedSlots": ["morning", "afternoon", "evening"],
     "description": "Làm thuê ở quán xá hoặc cửa hiệu, vừa có tiền công vừa học lỏm cách buôn bán.",
-    "conditions": { "min_age": 13, "missing_flags": ["bi_ep_lam_gia_no"] },
+    "conditions": { "min_age": 13, "missing_flags": ["bi_ep_lam_gia_no", "thai_giam", "trong_hau_cung"] },
     "costs": { "stamina": 20 },
     "rewards": { "copper": 42, "craft_trade": 0.4 }
   },
@@ -168,5 +168,45 @@
     "conditions": { "min_age": 16, "has_flags": ["dang_lam_quan"] },
     "costs": { "stamina": 12 },
     "rewards": { "copper": 280, "infamy": 1.5, "fame": -0.6 }
+  },
+  {
+    "id": "act_tuan_tra_quan_ngu",
+    "name": "Thao luyện & Tuần tra quân ngũ",
+    "category": "martial",
+    "allowedSlots": ["morning", "afternoon"],
+    "description": "Điểm binh, tuần tra doanh trại và rèn luyện binh pháp. Nhận quân lương ổn định.",
+    "conditions": { "min_age": 16, "has_flags": ["trong_quan_ngu"] },
+    "costs": { "stamina": 24 },
+    "rewards": { "copper": 95, "martial": 1.0, "fame": 0.4 }
+  },
+  {
+    "id": "act_hau_can_noi_dinh",
+    "name": "Hầu cận & Xử lý công vụ Nội đình",
+    "category": "official",
+    "allowedSlots": ["morning", "afternoon", "evening"],
+    "description": "Phục vụ nơi thâm cung nội đình, giữ lễ nghi và nhận bổng lộc cung cấm.",
+    "conditions": { "min_age": 13, "has_any_flag": ["thai_giam", "trong_hau_cung"] },
+    "costs": { "stamina": 18 },
+    "rewards": { "copper": 85, "relationships": 0.6, "education": 0.4 }
+  },
+  {
+    "id": "act_dien_xuat_thanh_lau",
+    "name": "Đàn hát tiếp khách nơi Thanh lâu",
+    "category": "trade",
+    "allowedSlots": ["evening", "night"],
+    "description": "Biểu diễn cầm kỳ thi họa cho khách văn nhân thưởng thức. Thu nhập cao nhưng dễ mang tiếng.",
+    "conditions": { "min_age": 16, "has_flags": ["nghe_ky_thanh_lau"] },
+    "costs": { "stamina": 20 },
+    "rewards": { "copper": 85, "craft_trade": 0.7, "infamy": 0.3 }
+  },
+  {
+    "id": "act_thu_tien_bao_ke",
+    "name": "Trấn áp quấy phá & Bảo kê phố thị",
+    "category": "martial",
+    "allowedSlots": ["evening", "night"],
+    "description": "Giữ trật tự cho sòng bạc và bến thuyền, thu tiền bảo kê hậu hĩnh nhưng tăng Tai tiếng.",
+    "conditions": { "min_age": 16, "has_flags": ["bao_ke_giang_ho"] },
+    "costs": { "stamina": 22 },
+    "rewards": { "copper": 95, "martial": 0.6, "infamy": 0.8 }
   }
 ]

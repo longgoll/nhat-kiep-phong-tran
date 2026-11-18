@@ -444,7 +444,7 @@ export function getDailyFocusModifiers(focusId: string): {
       return {
         copperMult: 1.2,
         studyMartialMult: 1.0,
-        dailyEffects: { health: -0.06, relationships: -0.04 },
+        dailyEffects: { health: -0.02, relationships: -0.015 },
         dailyCopperCost: 0,
       };
     case 'gia_dinh':
@@ -459,7 +459,7 @@ export function getDailyFocusModifiers(focusId: string): {
         copperMult: 0.95,
         studyMartialMult: 1.0,
         dailyEffects: { health: 0.12, stamina: 4 },
-        dailyCopperCost: 2,
+        dailyCopperCost: 1,
       };
     case 'tu_than':
       return {
@@ -705,6 +705,8 @@ export function runAnnualAutoActions(inputState: ActiveLifeState): ActiveLifeSta
 }
 
 export function canMarrySpouse(state: ActiveLifeState): { ok: boolean; reason?: string } {
+  if (state.flags.includes('thai_giam')) return { ok: false, reason: 'Thân phận thái giám không thể thành hôn' };
+  if (state.flags.includes('trong_hau_cung')) return { ok: false, reason: 'Đang mang thân phận hậu cung' };
   const age = getAgeYears(state.profile.totalDays);
   if (age < 18) return { ok: false, reason: 'Cần đủ 18 tuổi' };
   const hasSpouse = state.npcs.some((n) => n.relation === 'spouse' && n.isAlive);
@@ -753,6 +755,7 @@ export function marrySpouse(inputState: ActiveLifeState): ActiveLifeState {
 }
 
 export function canHaveChild(state: ActiveLifeState): { ok: boolean; reason?: string } {
+  if (state.flags.includes('thai_giam')) return { ok: false, reason: 'Thân phận thái giám không thể sinh con' };
   const age = getAgeYears(state.profile.totalDays);
   const hasSpouse = state.npcs.some((n) => n.relation === 'spouse' && n.isAlive);
   if (!hasSpouse) return { ok: false, reason: 'Cần thành hôn trước' };
@@ -793,6 +796,7 @@ export function haveChild(inputState: ActiveLifeState): ActiveLifeState {
       copper: -150,
       happiness: 15,
       relationships: 5,
+      add_flags: ['da_co_con'],
       milestone_title: isFirst ? `Đón con đầu lòng (${childName})` : undefined,
     },
   );
