@@ -26,14 +26,35 @@ export const PROPERTY_CATALOG: PropertySpec[] = [
     name: 'Ruộng tư (5 mẫu)',
     costCopper: 3000,
     seasonalIncomeCopper: 420,
-    description: 'Thu tô mỗi mùa 420 đồng, ổn định ít rủi ro.',
+    description: 'Phát canh thu tô mỗi mùa 420 đồng, ổn định ít rủi ro.',
+  },
+  {
+    id: 'nha_tro_cho_thue',
+    name: 'Dãy nhà trọ cho thuê',
+    costCopper: 4500,
+    seasonalIncomeCopper: 650,
+    description: 'Cho khách bộ hành, sĩ tử thuê trọ, thu tiền thuê 650 đồng mỗi mùa.',
+  },
+  {
+    id: 'ki_ot_cho_thue',
+    name: 'Ki-ốt sạp chợ cho thuê',
+    costCopper: 6000,
+    seasonalIncomeCopper: 920,
+    description: 'Cho tiểu thương thuê sạp buôn bán ngoài chợ phiên, thu 920 đồng/mùa.',
   },
   {
     id: 'cua_hieu_gao',
     name: 'Cửa hiệu lương thực',
     costCopper: 8000,
     seasonalIncomeCopper: 1300,
-    description: 'Sinh lời 1.300 đồng mỗi mùa (tăng thêm theo Thương tài).',
+    description: 'Kinh doanh thóc gạo, sinh lời 1.300 đồng mỗi mùa (tăng thêm theo Thương tài).',
+  },
+  {
+    id: 'phu_cho_thue',
+    name: 'Nhà gạch cho thương nhân thuê',
+    costCopper: 12000,
+    seasonalIncomeCopper: 1950,
+    description: 'Mua nhà phố khang trang cho thương hộ thuê dài hạn, thu 1.950 đồng/mùa.',
   },
   {
     id: 'xuong_gom',
@@ -41,6 +62,20 @@ export const PROPERTY_CATALOG: PropertySpec[] = [
     costCopper: 15000,
     seasonalIncomeCopper: 2600,
     description: 'Xưởng sản xuất quy mô lớn, thu 2.600 đồng mỗi mùa.',
+  },
+  {
+    id: 'thuyen_buon',
+    name: 'Thuyền buôn đường sông',
+    costCopper: 22000,
+    seasonalIncomeCopper: 3800,
+    description: 'Vận chuyển hàng hóa liên tỉnh, thu lợi nhuận 3.800 đồng mỗi mùa.',
+  },
+  {
+    id: 'trang_vien_cho_thue',
+    name: 'Trang viên & Điền trang phát canh',
+    costCopper: 45000,
+    seasonalIncomeCopper: 7800,
+    description: 'Điền trang rộng lớn cho tá điền thuê canh tác, thu 7.800 đồng mỗi mùa.',
   },
 ];
 

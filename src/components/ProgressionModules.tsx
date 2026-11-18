@@ -22,12 +22,12 @@ import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 export function ProgressionModules() {
   const life = useActiveLifeStore((s) => s.life);
   const applyLifeMutation = useActiveLifeStore((s) => s.applyLifeMutation);
-  const [activeTab, setActiveTab] = useState<'exam' | 'trade' | 'court' | 'rebel' | null>(null);
+  const [activeTab, setActiveTab] = useState<'exam' | 'trade' | 'court' | 'rebel' | null>('trade');
 
   if (!life) return null;
 
   const canExam = life.stats.education >= 10 || life.flags.includes('duoc_thay_do_quy');
-  const canTrade = life.stats.craftTrade >= 10 || life.assets.wealthCopper >= 1000;
+  const canTrade = true;
   const canCourt =
     life.officialRank > 0 ||
     life.flags.includes('do_cu_nhan') ||
@@ -74,7 +74,7 @@ export function ProgressionModules() {
                 : 'bg-stone-950 border-stone-700 text-stone-300 hover:border-stone-500'
             }`}
           >
-            <Store className="w-3.5 h-3.5" /> Thương hội & Điền sản
+            <Store className="w-3.5 h-3.5" /> Đầu tư &amp; Cho thuê
           </button>
         )}
         {canCourt && (

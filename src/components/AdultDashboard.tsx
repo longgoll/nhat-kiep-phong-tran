@@ -38,7 +38,7 @@ import {
   LIFE_FOCUS_OPTIONS,
 } from '../engine/adultLifeActions';
 import { ALL_ACTIONS, useActiveLifeStore } from '../stores/useActiveLifeStore';
-import { PROPERTY_CATALOG } from '../engine/progressionModules';
+import { OFFICIAL_RANKS, PROPERTY_CATALOG } from '../engine/progressionModules';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
 import { ProgressionModules } from './ProgressionModules';
 import { LegacyArchiveModal } from './LegacyArchiveModal';
@@ -201,9 +201,41 @@ export function AdultDashboard() {
   const ledger = life.finance?.lastYear ?? life.finance?.currentYear;
   const annualIncomeCopper =
     (ledger?.workIncomeCopper ?? 0) + (ledger?.propertyIncomeCopper ?? 0);
-  const ownedPropertyNames = life.assets.properties
-    .map((id) => PROPERTY_CATALOG.find((p) => p.id === id)?.name ?? id)
-    .filter(Boolean);
+  const ownedProperties = life.assets.properties
+    .map((id) => PROPERTY_CATALOG.find((p) => p.id === id))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+  const morningAct = ALL_ACTIONS.find((a) => a.id === life.schedule.morning);
+  const afternoonAct = ALL_ACTIONS.find((a) => a.id === life.schedule.afternoon);
+  const jobNames = Array.from(
+    new Set(
+      [morningAct, afternoonAct]
+        .filter((a) => a && a.id !== 'act_nghi_ngoi')
+        .map((a) => a!.name),
+    ),
+  );
+  const currentJobLabel =
+    life.officialRank > 0
+      ? `${OFFICIAL_RANKS[life.officialRank]} (Triều đình)`
+      : jobNames.length > 0
+        ? jobNames.join(' · ')
+        : 'Chưa làm việc';
+
+  const educationLabel = life.flags.includes('do_trang_nguyen')
+    ? 'Trạng nguyên'
+    : life.flags.includes('do_tien_si')
+      ? 'Tiến sĩ'
+      : life.flags.includes('do_cong_si')
+        ? 'Cống sĩ'
+        : life.flags.includes('do_cu_nhan')
+          ? 'Cử nhân'
+          : life.flags.includes('do_tu_tai')
+            ? 'Tú tài'
+            : life.stats.education >= 30
+              ? 'Thông hiểu kinh sử'
+              : life.stats.education >= 10
+                ? 'Đang học chữ'
+                : 'Chưa biết chữ nhiều';
 
   const openActionModal = () => {
     setAutoPlaySpeed(0);
@@ -317,20 +349,36 @@ export function AdultDashboard() {
                   </div>
                 </div>
 
-                {life.family && (
-                  <div className="pt-2 border-t border-stone-800 space-y-1 text-[11px]">
-                    {life.family.birthPlace && (
-                      <div className="flex justify-between gap-2">
-                        <span className="text-stone-500 shrink-0">Quê quán</span>
-                        <span className="text-stone-200 text-right">{life.family.birthPlace}</span>
-                      </div>
-                    )}
+                <div className="pt-2 border-t border-stone-800 space-y-1.5 text-[11px]">
+                  {life.family?.birthPlace && (
+                    <div className="flex justify-between gap-2">
+                      <span className="text-stone-500 shrink-0">Quê quán</span>
+                      <span className="text-stone-200 text-right">{life.family.birthPlace}</span>
+                    </div>
+                  )}
+                  {life.family && (
                     <div className="flex justify-between gap-2">
                       <span className="text-stone-500 shrink-0">Thứ bậc</span>
                       <span className="text-stone-200 text-right">{life.family.birthOrderLabel}</span>
                     </div>
+                  )}
+                  <div className="flex justify-between gap-2">
+                    <span className="text-stone-500 shrink-0">Học vấn</span>
+                    <span className="text-emerald-300 font-medium text-right">{educationLabel}</span>
                   </div>
-                )}
+                  <div className="flex justify-between gap-2">
+                    <span className="text-stone-500 shrink-0">Sinh kế</span>
+                    <span className="text-amber-200 text-right leading-snug">{currentJobLabel}</span>
+                  </div>
+                  {ownedProperties.length > 0 && (
+                    <div className="flex justify-between gap-2">
+                      <span className="text-stone-500 shrink-0">Sản nghiệp</span>
+                      <span className="text-sky-300 text-right leading-snug">
+                        {ownedProperties.length} cơ sở sinh lời
+                      </span>
+                    </div>
+                  )}
+                </div>
 
                 {((life.traits && life.traits.length > 0) || (life.interests && life.interests.length > 0)) && (
                   <div className="pt-2 border-t border-stone-800 space-y-1.5">
@@ -508,12 +556,24 @@ export function AdultDashboard() {
               {/* Những thứ bạn có & Nơi ở */}
               <div className="pt-2.5 border-t border-stone-800/80 space-y-2 text-xs">
                 <div>
-                  <div className="text-[11px] text-stone-400">Những thứ bạn có</div>
-                  <div className="text-stone-200 font-medium mt-0.5">
-                    {ownedPropertyNames.length > 0
-                      ? ownedPropertyNames.join(', ')
-                      : 'Chưa có điền sản đáng kể'}
-                  </div>
+                  <div className="text-[11px] text-stone-400">Kinh doanh &amp; Cho thuê</div>
+                  {ownedProperties.length > 0 ? (
+                    <div className="space-y-1 mt-1">
+                      {ownedProperties.map((prop) => (
+                        <div
+                          key={prop.id}
+                          className="flex items-center justify-between gap-2 text-[11px] bg-stone-950/60 px-2 py-1 rounded border border-stone-800/70"
+                        >
+                          <span className="text-stone-200 font-medium truncate">{prop.name}</span>
+                          <span className="font-mono text-emerald-400 shrink-0">
+                            +{formatCopper(prop.seasonalIncomeCopper)}/mùa
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-stone-500 mt-0.5">Chưa có điền sản hay nhà cho thuê</div>
+                  )}
                 </div>
                 <div>
                   <div className="text-[11px] text-stone-400">Nơi ở &amp; Nếp sống</div>

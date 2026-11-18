@@ -13,10 +13,14 @@ function getShortRelationLabel(npc: NPC): string {
     if (roleLower.includes('phụ hoàng')) return 'Phụ hoàng';
     if (roleLower.includes('mẫu hậu')) return 'Mẫu hậu';
     if (roleLower.includes('phi tần')) return 'Phi tần';
-    if (roleLower.includes('thứ mẫu') || roleLower.includes('vợ lẽ')) return 'Thứ mẫu';
-    if (roleLower.includes('cha')) return 'Cha';
-    if (roleLower.includes('mẹ')) return 'Mẹ';
-    return npc.gender === 'male' ? 'Cha' : 'Mẹ';
+    if (
+      npc.gender === 'female' &&
+      (roleLower.includes('thứ mẫu') || roleLower.includes('vợ lẽ') || roleLower.includes('chính thất'))
+    ) {
+      return roleLower.includes('chính thất') ? 'Kế mẫu' : 'Thứ mẫu';
+    }
+    if (npc.gender === 'female' || roleLower.includes('mẹ ruột')) return 'Mẹ';
+    return 'Cha';
   }
   if (npc.relation === 'spouse') return npc.gender === 'male' ? 'Phu quân' : 'Thê tử';
   if (npc.relation === 'child') return npc.gender === 'male' ? 'Con trai' : 'Con gái';
