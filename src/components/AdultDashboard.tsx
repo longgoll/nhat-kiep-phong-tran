@@ -44,6 +44,8 @@ import { ProgressionModules } from './ProgressionModules';
 import { LegacyArchiveModal } from './LegacyArchiveModal';
 import { FeudalPortrait } from './FeudalPortrait';
 import { FeudalSceneBanner } from './FeudalSceneBanner';
+import { FamilyLifeCard } from './FamilyLifeCard';
+import { HOUSING_NAMES } from './FamilyWealthCard';
 import { LifeGrid } from './LifeGrid';
 import { LifeTimeline } from './LifeTimeline';
 import { LifeTopBar } from './LifeTopBar';
@@ -61,13 +63,6 @@ const LIFESTYLE_OPTIONS: Array<{ value: LifestyleTier; label: string; desc: stri
   { value: 'com_rau', label: 'Cơm rau đạm bạc', desc: '1 đấu gạo + 5đ/ngày' },
   { value: 'thit_ca', label: 'Thịt cá đủ đầy', desc: '1.5 đấu gạo + 30đ/ngày' },
 ];
-
-const HOUSING_NAMES: Record<string, string> = {
-  gam_cau: 'Gầm cầu / Mái hiên tạm',
-  nha_tranh: 'Nhà tranh vách đất',
-  nha_gach: 'Nhà gạch khang trang',
-  phu_de: 'Phủ đệ son thiếp',
-};
 
 const PAUSE_MESSAGES: Record<string, string> = {
   birthday: 'Đã bước sang tuổi mới!',
@@ -523,6 +518,28 @@ export function AdultDashboard() {
                     {HOUSING_NAMES[life.assets.housing] ?? life.assets.housing} • {activeLifestyleLabel}
                   </div>
                 </div>
+                {life.family && (
+                  <div className="pt-2 border-t border-stone-800/70 space-y-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-stone-400">Gia sản gia đình gốc</span>
+                      <span className="font-mono font-semibold text-amber-200">
+                        {formatCopper(life.family.familyWealthCopper)}
+                      </span>
+                    </div>
+                    {life.family.familyAssetsSummary && life.family.familyAssetsSummary.length > 0 && (
+                      <div className="flex flex-wrap gap-1 pt-0.5">
+                        {life.family.familyAssetsSummary.map((item, idx) => (
+                          <span
+                            key={idx}
+                            className="px-1.5 py-0.5 rounded bg-stone-950 border border-stone-800 text-[10px] text-stone-300"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <button
@@ -542,6 +559,10 @@ export function AdultDashboard() {
               season={life.world.season}
               worldState={life.world.worldState}
               ageYears={age}
+              gender={life.profile.gender}
+              originClass={life.profile.originClass}
+              birthPlace={life.family?.birthPlace}
+              npcs={life.npcs}
             />
 
             {/* Trọng tâm hiện tại (Life Focus) */}
@@ -610,112 +631,39 @@ export function AdultDashboard() {
             />
 
             {/* Gia đình & Cuộc đời (liền mạch từ lúc nhỏ) */}
-            <div className="bg-stone-900/75 border border-stone-800 rounded-xl p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-400">
-                  Gia Đình &amp; Cuộc Đời
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setShowNpcModal(true)}
-                  className="text-[11px] font-medium text-sky-400 hover:text-sky-300 cursor-pointer"
-                >
-                  Chi tiết ({life.npcs.length})
-                </button>
-              </div>
+            <FamilyLifeCard
+              npcs={life.npcs}
+              ageYears={age}
+              onOpenDetails={() => setShowNpcModal(true)}
+              maxHeightClass="max-h-60"
+            />
 
-              {life.family && (
-                <div className="text-[11px] space-y-1 pb-2 border-b border-stone-800/80 text-stone-400">
-                  {life.family.birthPlace && (
-                    <div className="flex justify-between gap-2">
-                      <span className="text-stone-500">Quê quán</span>
-                      <span className="text-stone-200 text-right">{life.family.birthPlace}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between gap-2">
-                    <span className="text-stone-500">Thứ bậc</span>
-                    <span className="text-stone-200 text-right">{life.family.birthOrderLabel}</span>
-                  </div>
-                  {life.family.familyAssetsSummary && life.family.familyAssetsSummary.length > 0 && (
-                    <div className="pt-1 border-t border-stone-800/70">
-                      <div className="text-stone-500 mb-1">Gia sản gốc</div>
-                      <div className="flex flex-wrap gap-1">
-                        {life.family.familyAssetsSummary.map((item, idx) => (
-                          <span
-                            key={idx}
-                            className="px-1.5 py-0.5 rounded bg-stone-950 border border-stone-800 text-[10px] text-stone-300"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+            {life.cohortPeers && life.cohortPeers.length > 0 && (
+              <div className="bg-stone-900/75 border border-stone-800 rounded-xl p-3.5 space-y-1.5">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="font-semibold uppercase tracking-wider text-stone-400">
+                    Người Đồng Niên
+                  </span>
+                  <span className="text-[10px] text-stone-500">Cùng {age} tuổi</span>
                 </div>
-              )}
-
-              <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
-                {life.npcs
-                  .filter((npc) => npc.age === undefined || npc.age + age >= 0)
-                  .map((npc) => (
-                  <div
-                    key={npc.id}
-                    className="flex items-center justify-between text-xs p-2 rounded-lg bg-stone-950/60 border border-stone-800/70"
-                  >
-                    <div className="min-w-0">
-                      <div className="font-medium text-stone-200 truncate">
-                        {npc.name}
-                        {npc.isAlive && npc.age !== undefined && (
-                          <span className="text-[11px] font-normal text-stone-400 ml-1.5">
-                            • {npc.age + age} tuổi
-                          </span>
-                        )}
-                        {!npc.isAlive && (
-                          <span className="text-[10px] font-normal text-rose-400 ml-1.5">
-                            (Đã mất)
-                          </span>
-                        )}
+                <div className="space-y-1">
+                  {life.cohortPeers.slice(0, 4).map((peer) => {
+                    const peerDead = peer.deathAge !== undefined && age >= peer.deathAge;
+                    return (
+                      <div
+                        key={peer.id}
+                        className="flex items-center justify-between gap-2 text-[11px]"
+                      >
+                        <span className="text-stone-300 truncate">{peer.name}</span>
+                        <span className={peerDead ? 'text-rose-400 shrink-0' : 'text-stone-500 shrink-0'}>
+                          {peerDead ? `Mất năm ${peer.deathAge}t` : peer.originLabel}
+                        </span>
                       </div>
-                      <div className="text-[11px] text-stone-500 truncate">{npc.role}</div>
-                    </div>
-                    <span
-                      className={`font-mono shrink-0 ml-2 ${
-                        npc.affinity >= 0 ? 'text-emerald-400' : 'text-rose-400'
-                      }`}
-                    >
-                      {npc.affinity >= 0 ? `+${npc.affinity}` : npc.affinity}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {life.cohortPeers && life.cohortPeers.length > 0 && (
-                <div className="pt-2 border-t border-stone-800/80 space-y-1.5">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="font-semibold uppercase tracking-wider text-stone-400">
-                      Người Đồng Niên
-                    </span>
-                    <span className="text-[10px] text-stone-500">Cùng {age} tuổi</span>
-                  </div>
-                  <div className="space-y-1">
-                    {life.cohortPeers.slice(0, 4).map((peer) => {
-                      const peerDead = peer.deathAge !== undefined && age >= peer.deathAge;
-                      return (
-                        <div
-                          key={peer.id}
-                          className="flex items-center justify-between gap-2 text-[11px]"
-                        >
-                          <span className="text-stone-300 truncate">{peer.name}</span>
-                          <span className={peerDead ? 'text-rose-400 shrink-0' : 'text-stone-500 shrink-0'}>
-                            {peerDead ? `Mất năm ${peer.deathAge}t` : peer.originLabel}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                    );
+                  })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
             <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-3.5 space-y-2 text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-stone-400">Niên hiệu</span>

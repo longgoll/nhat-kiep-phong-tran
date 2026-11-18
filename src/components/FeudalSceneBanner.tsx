@@ -1,4 +1,4 @@
-import type { HousingTier, Season, WorldState } from '../types/activeLife';
+import type { Gender, HousingTier, NPC, OriginClass, Season, WorldState } from '../types/activeLife';
 import { getSeasonLabel, getWorldStateLabel } from '../engine/daySimulator';
 
 interface FeudalSceneBannerProps {
@@ -6,6 +6,10 @@ interface FeudalSceneBannerProps {
   season: Season;
   worldState: WorldState;
   ageYears: number;
+  gender?: Gender;
+  originClass?: OriginClass;
+  birthPlace?: string;
+  npcs?: NPC[];
 }
 
 const HOUSING_LABELS: Record<HousingTier, string> = {
@@ -22,13 +26,331 @@ const SKY_BY_SEASON: Record<Season, { from: string; to: string; accent: string }
   winter: { from: '#0f172a', to: '#1e293b', accent: '#cbd5e1' },
 };
 
+interface SceneMember {
+  id: string;
+  label: string;
+  age: number;
+  gender: Gender;
+  robeColor: string;
+  trimColor: string;
+  isPlayer?: boolean;
+}
+
+function PixelSprite({ member, x }: { member: SceneMember; x: number }) {
+  const { age, gender, robeColor, trimColor, label, isPlayer } = member;
+
+  // Baby / Toddler (0-2 tuổi) - swaddled pixel bundle standing/sitting at y=92
+  if (age < 3) {
+    return (
+      <g transform={`translate(${x}, 80)`} shapeRendering="crispEdges">
+        <title>{`${label} (${age} tuổi)`}</title>
+        {/* Hair tuft */}
+        <rect x="3" y="0" width="4" height="2" fill="#1c1917" />
+        {/* Head */}
+        <rect x="2" y="2" width="6" height="4" fill="#fde68a" />
+        <rect x="3" y="3" width="1" height="1" fill="#1c1917" />
+        <rect x="6" y="3" width="1" height="1" fill="#1c1917" />
+        {/* Swaddle / Robe */}
+        <rect x="1" y="6" width="8" height="5" fill={robeColor} />
+        <rect x="2" y="7" width="6" height="1" fill={trimColor} />
+        {/* Feet */}
+        <rect x="2" y="11" width="2" height="1" fill="#292524" />
+        <rect x="6" y="11" width="2" height="1" fill="#292524" />
+      </g>
+    );
+  }
+
+  // Child (3-12 tuổi) - height 16px, bottom at y=92 (92 - 16 = 76)
+  if (age < 13) {
+    return (
+      <g transform={`translate(${x}, 76)`} shapeRendering="crispEdges">
+        <title>{`${label} (${age} tuổi)`}</title>
+        {/* Hair */}
+        <rect x="2" y="0" width="6" height="2" fill="#1c1917" />
+        {gender === 'female' && <rect x="1" y="1" width="1" height="3" fill="#1c1917" />}
+        {gender === 'female' && <rect x="8" y="1" width="1" height="3" fill="#1c1917" />}
+        {/* Face */}
+        <rect x="2" y="2" width="6" height="4" fill="#fde68a" />
+        <rect x="3" y="3" width="1" height="1" fill="#1c1917" />
+        <rect x="6" y="3" width="1" height="1" fill="#1c1917" />
+        {/* Tunic */}
+        <rect x="1" y="6" width="8" height="6" fill={robeColor} />
+        <rect x="3" y="6" width="4" height="1" fill={trimColor} />
+        <rect x="1" y="10" width="8" height="1" fill={trimColor} />
+        {/* Hands */}
+        <rect x="0" y="7" width="1" height="3" fill="#fde68a" />
+        <rect x="9" y="7" width="1" height="3" fill="#fde68a" />
+        {/* Legs & shoes */}
+        <rect x="2" y="12" width="2" height="4" fill="#292524" />
+        <rect x="6" y="12" width="2" height="4" fill="#292524" />
+        {isPlayer && <rect x="4" y="-3" width="2" height="2" fill="#fbbf24" />}
+      </g>
+    );
+  }
+
+  // Adult (13+ tuổi) - height 22px, bottom at y=92 (92 - 22 = 70)
+  return (
+    <g transform={`translate(${x}, 70)`} shapeRendering="crispEdges">
+      <title>{`${label} (${age} tuổi)`}</title>
+      {/* Topknot / Hair bun */}
+      {gender === 'male' ? (
+        <>
+          <rect x="4" y="0" width="4" height="2" fill="#1c1917" />
+          <rect x="2" y="2" width="8" height="2" fill="#1c1917" />
+        </>
+      ) : (
+        <>
+          <rect x="3" y="0" width="6" height="2" fill="#1c1917" />
+          <rect x="2" y="2" width="8" height="2" fill="#1c1917" />
+          <rect x="1" y="3" width="1" height="4" fill="#1c1917" />
+          <rect x="10" y="3" width="1" height="4" fill="#1c1917" />
+        </>
+      )}
+      {/* Face */}
+      <rect x="3" y="4" width="6" height="4" fill="#fde68a" />
+      <rect x="4" y="5" width="1" height="1" fill="#1c1917" />
+      <rect x="7" y="5" width="1" height="1" fill="#1c1917" />
+      {/* Traditional Robe */}
+      <rect x="2" y="8" width="8" height="10" fill={robeColor} />
+      {/* Collar & Sash */}
+      <rect x="4" y="8" width="4" height="1" fill={trimColor} />
+      <rect x="2" y="13" width="8" height="1" fill={trimColor} />
+      {/* Sleeves & Hands */}
+      <rect x="1" y="9" width="1" height="5" fill={robeColor} />
+      <rect x="10" y="9" width="1" height="5" fill={robeColor} />
+      <rect x="1" y="14" width="1" height="2" fill="#fde68a" />
+      <rect x="10" y="14" width="1" height="2" fill="#fde68a" />
+      {/* Boots */}
+      <rect x="3" y="18" width="2" height="4" fill="#1c1917" />
+      <rect x="7" y="18" width="2" height="4" fill="#1c1917" />
+      {isPlayer && <rect x="5" y="-3" width="2" height="2" fill="#fbbf24" />}
+    </g>
+  );
+}
+
+function buildHouseholdDisplay(
+  ageYears: number,
+  gender: Gender,
+  originClass: OriginClass,
+  npcs: NPC[],
+  housing: HousingTier,
+  birthPlace?: string
+): {
+  members: SceneMember[];
+  primaryLine: string;
+  secondaryLine: string;
+} {
+  const livingNpcs = npcs.filter(
+    (npc) => npc.isAlive && (npc.age === undefined || npc.age + ageYears >= 0)
+  );
+
+  const parents = livingNpcs.filter((n) => n.relation === 'parent');
+  const siblings = livingNpcs.filter((n) => n.relation === 'sibling');
+  const spouses = livingNpcs.filter((n) => n.relation === 'spouse');
+  const children = livingNpcs.filter((n) => n.relation === 'child');
+
+  const isChildhood = ageYears < 13;
+  const members: SceneMember[] = [];
+
+  const playerRobeByOrigin: Record<OriginClass, { robe: string; trim: string }> = {
+    ban_nong: { robe: '#d97706', trim: '#fef3c7' },
+    thu_cong: { robe: '#0284c7', trim: '#bae6fd' },
+    dia_chu: { robe: '#059669', trim: '#fde68a' },
+    quan_lai: { robe: '#1d4ed8', trim: '#fbbf24' },
+    hoang_toc: { robe: '#b91c1c', trim: '#fbbf24' },
+  };
+  const pStyle = playerRobeByOrigin[originClass];
+
+  // Decide who stands in the family portrait
+  if (isChildhood) {
+    // Parents first
+    parents.slice(0, 3).forEach((p) => {
+      const pAge = p.age !== undefined ? p.age + ageYears : 35;
+      members.push({
+        id: p.id,
+        label: p.name,
+        age: pAge,
+        gender: p.gender,
+        robeColor: p.gender === 'male' ? '#475569' : '#be123c',
+        trimColor: '#e2e8f0',
+      });
+    });
+    // Player
+    members.push({
+      id: 'player',
+      label: 'Bạn',
+      age: ageYears,
+      gender,
+      robeColor: pStyle.robe,
+      trimColor: pStyle.trim,
+      isPlayer: true,
+    });
+    // Siblings
+    siblings.slice(0, 4).forEach((s) => {
+      const sAge = s.age !== undefined ? s.age + ageYears : ageYears;
+      members.push({
+        id: s.id,
+        label: s.name,
+        age: sAge,
+        gender: s.gender,
+        robeColor: s.gender === 'male' ? '#0f766e' : '#9333ea',
+        trimColor: '#fde68a',
+      });
+    });
+  } else {
+    // Adulthood: Player + Spouse + Children (or Parents if unmarried & young)
+    members.push({
+      id: 'player',
+      label: 'Bạn',
+      age: ageYears,
+      gender,
+      robeColor: pStyle.robe,
+      trimColor: pStyle.trim,
+      isPlayer: true,
+    });
+    spouses.slice(0, 1).forEach((sp) => {
+      const spAge = sp.age !== undefined ? sp.age + ageYears : ageYears;
+      members.push({
+        id: sp.id,
+        label: sp.name,
+        age: spAge,
+        gender: sp.gender,
+        robeColor: sp.gender === 'male' ? '#334155' : '#be123c',
+        trimColor: '#fde68a',
+      });
+    });
+    children.slice(0, 4).forEach((ch) => {
+      const chAge = ch.age !== undefined ? ch.age + ageYears : 1;
+      members.push({
+        id: ch.id,
+        label: ch.name,
+        age: chAge,
+        gender: ch.gender,
+        robeColor: ch.gender === 'male' ? '#0f766e' : '#db2777',
+        trimColor: '#fef3c7',
+      });
+    });
+    if (spouses.length === 0 && children.length === 0 && ageYears < 22) {
+      parents.slice(0, 2).forEach((p) => {
+        const pAge = p.age !== undefined ? p.age + ageYears : 45;
+        members.push({
+          id: p.id,
+          label: p.name,
+          age: pAge,
+          gender: p.gender,
+          robeColor: p.gender === 'male' ? '#475569' : '#be123c',
+          trimColor: '#e2e8f0',
+        });
+      });
+    }
+  }
+
+  // Primary info line (1in8b style): Địa điểm · Nhà ở · Sống cùng...
+  const livingParts: string[] = [];
+  if (isChildhood) {
+    const hasFather = parents.some((p) => p.gender === 'male');
+    const hasMother = parents.some((p) => p.gender === 'female');
+    if (hasFather && hasMother) livingParts.push('cha mẹ');
+    else if (hasFather) livingParts.push('cha');
+    else if (hasMother) livingParts.push('mẹ');
+    if (siblings.length > 0) livingParts.push(`${siblings.length} anh chị em`);
+  } else {
+    if (spouses.length > 0) {
+      livingParts.push(spouses[0].gender === 'male' ? 'phu quân' : 'thê tử');
+    }
+    if (children.length > 0) {
+      livingParts.push(`${children.length} con`);
+    }
+    if (livingParts.length === 0 && ageYears < 22 && parents.length > 0) {
+      livingParts.push('cha mẹ');
+    }
+  }
+
+  const livingText =
+    livingParts.length > 0
+      ? `sống cùng ${livingParts.join(' và ')}`
+      : isChildhood
+        ? 'tự lập sớm'
+        : 'sống tự lập';
+
+  const primaryParts = [birthPlace, HOUSING_LABELS[housing], livingText].filter(Boolean);
+  const primaryLine = primaryParts.join(' · ');
+
+  // Secondary info line (1in8b style): Bạn, X tuổi · Mẹ, Y tuổi · Cha, Z tuổi · ...
+  const ageSummary: string[] = [`Bạn, ${ageYears} tuổi`];
+  if (isChildhood || (spouses.length === 0 && children.length === 0 && ageYears < 22)) {
+    const mother = parents.find(
+      (p) => p.gender === 'female' && !p.role.toLowerCase().includes('thứ mẫu') && !p.role.toLowerCase().includes('phi tần')
+    ) ?? parents.find((p) => p.gender === 'female');
+    const father = parents.find((p) => p.gender === 'male');
+    if (mother && mother.age !== undefined) {
+      ageSummary.push(`Mẹ, ${mother.age + ageYears} tuổi`);
+    }
+    if (father && father.age !== undefined) {
+      ageSummary.push(`Cha, ${father.age + ageYears} tuổi`);
+    }
+    if (siblings.length > 0) {
+      const sibAges = siblings
+        .map((s) => (s.age !== undefined ? s.age + ageYears : undefined))
+        .filter((a): a is number => a !== undefined);
+      if (sibAges.length === 1) {
+        ageSummary.push(`Anh chị em, ${sibAges[0]} tuổi`);
+      } else if (sibAges.length > 1) {
+        const minA = Math.min(...sibAges);
+        const maxA = Math.max(...sibAges);
+        ageSummary.push(
+          minA === maxA ? `Anh chị em, ${minA} tuổi` : `Anh chị em, ${minA}–${maxA} tuổi`
+        );
+      }
+    }
+  } else {
+    if (spouses.length > 0 && spouses[0].age !== undefined) {
+      const spLabel = spouses[0].gender === 'male' ? 'Phu quân' : 'Thê tử';
+      ageSummary.push(`${spLabel}, ${spouses[0].age + ageYears} tuổi`);
+    }
+    if (children.length > 0) {
+      const chAges = children
+        .map((c) => (c.age !== undefined ? c.age + ageYears : undefined))
+        .filter((a): a is number => a !== undefined);
+      if (chAges.length === 1) {
+        ageSummary.push(`Con, ${chAges[0]} tuổi`);
+      } else if (chAges.length > 1) {
+        const minC = Math.min(...chAges);
+        const maxC = Math.max(...chAges);
+        ageSummary.push(minC === maxC ? `${children.length} con, ${minC} tuổi` : `${children.length} con, ${minC}–${maxC} tuổi`);
+      }
+    }
+  }
+
+  return {
+    members: members.slice(0, 7),
+    primaryLine,
+    secondaryLine: ageSummary.join(' · '),
+  };
+}
+
 export function FeudalSceneBanner({
   housing,
   season,
   worldState,
   ageYears,
+  gender = 'male',
+  originClass = 'ban_nong',
+  birthPlace,
+  npcs = [],
 }: FeudalSceneBannerProps) {
   const sky = SKY_BY_SEASON[season];
+  const { members, primaryLine, secondaryLine } = buildHouseholdDisplay(
+    ageYears,
+    gender,
+    originClass,
+    npcs,
+    housing,
+    birthPlace
+  );
+
+  const startX = 188;
+  const stepX = members.length > 5 ? 20 : 24;
 
   return (
     <div className="relative rounded-xl overflow-hidden border border-stone-800 bg-stone-950">
@@ -51,6 +373,7 @@ export function FeudalSceneBanner({
 
         {/* Ground */}
         <rect x="0" y="92" width="400" height="28" fill="#1c1917" />
+        <rect x="0" y="92" width="400" height="2" fill="#292524" />
 
         {/* Housing silhouette */}
         {housing === 'nha_tranh' && (
@@ -103,26 +426,21 @@ export function FeudalSceneBanner({
           </g>
         )}
 
-        {/* Character silhouette walking */}
-        <g transform="translate(225, 72)">
-          <circle cx="8" cy={ageYears < 6 ? 9 : 5} r={ageYears < 6 ? 3.5 : 4} fill="#fde68a" />
-          <rect
-            x="4"
-            y={ageYears < 6 ? 12 : 9}
-            width="8"
-            height={ageYears < 6 ? 8 : 12}
-            rx="2"
-            fill="#d97706"
-          />
-        </g>
+        {/* Pixel-art family lineup */}
+        {members.map((member, idx) => (
+          <PixelSprite key={member.id} member={member} x={startX + idx * stepX} />
+        ))}
       </svg>
 
-      {/* Overlay caption */}
-      <div className="px-3.5 py-2 bg-stone-900/90 border-t border-stone-800 flex items-center justify-between text-[11px]">
-        <span className="text-stone-300 font-medium">{HOUSING_LABELS[housing]}</span>
-        <span className="text-amber-300">
-          {getSeasonLabel(season)} • {getWorldStateLabel(worldState)}
-        </span>
+      {/* 1in8b-style caption: Line 1 (Location · Housing · Living with) + Season/World; Line 2 (Member ages) */}
+      <div className="px-3.5 py-2 bg-stone-900/90 border-t border-stone-800 space-y-0.5">
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-[11px]">
+          <span className="text-stone-200 font-medium">{primaryLine}</span>
+          <span className="text-amber-300 shrink-0">
+            {getSeasonLabel(season)} • {getWorldStateLabel(worldState)}
+          </span>
+        </div>
+        <div className="text-[11px] text-stone-400 leading-snug">{secondaryLine}</div>
       </div>
     </div>
   );
