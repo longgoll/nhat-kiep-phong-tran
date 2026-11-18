@@ -621,15 +621,8 @@ export function AdultDashboard() {
             />
           </div>
 
-          {/* RIGHT COLUMN: World & Life Feed */}
+          {/* RIGHT COLUMN: Gia Đình + Đồng Niên + Bản Đồ (1in8b order) */}
           <div className={`lg:col-span-4 space-y-4 ${mobileTab === 'logs' ? 'block' : 'hidden lg:block'}`}>
-            <LifeGrid
-              ageYears={age}
-              milestones={life.milestones}
-              yearlyHappiness={life.yearlyHappiness}
-              expectedLifespan={originMeta.expectedLifespan}
-            />
-
             {/* Gia đình & Cuộc đời (liền mạch từ lúc nhỏ) */}
             <FamilyLifeCard
               npcs={life.npcs}
@@ -664,6 +657,14 @@ export function AdultDashboard() {
                 </div>
               </div>
             )}
+
+            <LifeGrid
+              ageYears={age}
+              milestones={life.milestones}
+              yearlyHappiness={life.yearlyHappiness}
+              expectedLifespan={originMeta.expectedLifespan}
+              logs={life.logs}
+            />
             <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-3.5 space-y-2 text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-stone-400">Niên hiệu</span>

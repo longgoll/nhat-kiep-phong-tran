@@ -432,15 +432,17 @@ export function FeudalSceneBanner({
         ))}
       </svg>
 
-      {/* 1in8b-style caption: Line 1 (Location · Housing · Living with) + Season/World; Line 2 (Member ages) */}
+      {/* 1in8b-style caption: Line 1 (Location · Housing · Living with); Line 2 (Member ages + Season/World) */}
       <div className="px-3.5 py-2 bg-stone-900/90 border-t border-stone-800 space-y-0.5">
+        <div className="text-[11px] text-stone-200 font-medium leading-snug">
+          {primaryLine}
+        </div>
         <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-[11px]">
-          <span className="text-stone-200 font-medium">{primaryLine}</span>
-          <span className="text-amber-300 shrink-0">
+          <span className="text-stone-400 leading-snug">{secondaryLine}</span>
+          <span className="text-amber-300 shrink-0 text-[10px]">
             {getSeasonLabel(season)} • {getWorldStateLabel(worldState)}
           </span>
         </div>
-        <div className="text-[11px] text-stone-400 leading-snug">{secondaryLine}</div>
       </div>
     </div>
   );

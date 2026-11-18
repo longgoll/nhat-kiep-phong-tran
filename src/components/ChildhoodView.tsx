@@ -432,16 +432,8 @@ export function ChildhoodView() {
             />
           </div>
 
-          {/* RIGHT COLUMN: Bản Đồ + Gia Đình + Đồng Niên */}
+          {/* RIGHT COLUMN: Gia Đình + Đồng Niên + Bản Đồ (1in8b order) */}
           <div className="lg:col-span-4 space-y-4">
-            {/* Bản Đồ Cuộc Đời */}
-            <LifeGrid
-              ageYears={age}
-              milestones={life.milestones}
-              yearlyHappiness={life.yearlyHappiness}
-              expectedLifespan={originMeta.expectedLifespan}
-            />
-
             {/* Gia đình & Cuộc đời */}
             <FamilyLifeCard npcs={life.npcs} ageYears={age} />
 
@@ -486,6 +478,15 @@ export function ChildhoodView() {
                 </div>
               </div>
             )}
+
+            {/* Bản Đồ Cuộc Đời */}
+            <LifeGrid
+              ageYears={age}
+              milestones={life.milestones}
+              yearlyHappiness={life.yearlyHappiness}
+              expectedLifespan={originMeta.expectedLifespan}
+              logs={life.logs}
+            />
 
             {/* Thông tin triều đại */}
             <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-3.5 space-y-1.5 text-xs">
