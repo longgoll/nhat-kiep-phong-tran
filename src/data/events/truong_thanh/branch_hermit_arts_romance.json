@@ -1,0 +1,296 @@
+[
+  {
+    "id": "evt_arts_poetry_tea_gathering",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1080,
+    "title": "Hội Tao Đàn: Thưởng Trà Bình Thơ Cầm Kỳ Thi Họa",
+    "conditions": {
+      "min_age": 20,
+      "min_education": 25,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 25,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_happiness": 50
+          },
+          "addWeight": 40
+        }
+      ]
+    },
+    "description": "Đêm trăng thanh gió mát, vài văn nhân và ẩn sĩ trong vùng mở tiệc trà bên hồ sen, mời bạn cùng đối thơ và gảy khúc cổ cầm.",
+    "choices": [
+      {
+        "label": "Cao hứng ngâm một bài thơ tự tác và đánh cờ đàm đạo",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Tâm hồn khoáng đạt giữa tiếng đàn và hương trà sen, bạn kết thêm được nhiều bạn văn chương tri kỷ.",
+            "effects": {
+              "happiness": 10,
+              "relationships": 8,
+              "fame": 6,
+              "education": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lặng lẽ thưởng trà nghe đàn, giữ lòng thanh tịnh",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Mọi muộn phiền thường nhật tan biến, tinh thần sảng khoái hẳn lên.",
+            "effects": {
+              "happiness": 8,
+              "health": 3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_hermit_mountain_retreat",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Lên Am Vắng Trên Núi Tĩnh Tâm Dưỡng Tính",
+    "conditions": {
+      "min_age": 28,
+      "min_health": 30,
+      "missing_flags": [
+        "trong_hau_cung",
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 22,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_fame": 20
+          },
+          "addWeight": 35
+        }
+      ]
+    },
+    "description": "Chán ngán cảnh bon chen phố thị, bạn muốn dành một tuần lên am cổ trên núi tùng nghe chuông chùa và tập hít thở dưỡng sinh.",
+    "choices": [
+      {
+        "label": "Theo lão thiền sư tập tĩnh tọa, hái lá thuốc nấu trà (-60 đồng cúng dường)",
+        "conditions": {
+          "min_copper": 60
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Thân tâm nhẹ nhõm như trút bỏ ngàn cân gánh nặng, khí huyết lưu thông điều hòa.",
+            "effects": {
+              "copper": -60,
+              "health": 8,
+              "happiness": 12,
+              "stamina": 15
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ dạo bước ngắm cảnh thông reo rồi xuống núi",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Chuyến dạo núi ngắn giúp bạn lấy lại cân bằng tinh thần.",
+            "effects": {
+              "happiness": 6,
+              "health": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_romance_lantern_festival",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Đêm Hội Hoa Đăng Gặp Người Tri Kỷ",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 42,
+      "missing_flags": [
+        "da_ket_hon",
+        "thai_giam",
+        "trong_hau_cung",
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 45
+    },
+    "description": "Giữa dòng người tấp nập đêm Rằm tháng Tám bên bến sông, bạn vô tình nhặt được chiếc đèn lồng thêu chữ của một người trẻ tuổi tao nhã.",
+    "choices": [
+      {
+        "label": "Trò chuyện tâm đầu ý hợp, hẹn ngày tái ngộ dưới trăng",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Ánh mắt trao nhau giữa muôn vàn hoa đăng để lại mối duyên lành sâu đậm trong lòng bạn.",
+            "effects": {
+              "happiness": 14,
+              "relationships": 12,
+              "fame": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Mỉm cười trao lại đèn rồi lặng lẽ hòa vào dòng người",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Một kỷ niệm đẹp thoảng qua như gió thu bên sông.",
+            "effects": {
+              "happiness": 5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_romance_matchmaker_visit",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1800,
+    "title": "Bà Mối Trong Vùng Ghé Cửa Dạm Duyên",
+    "conditions": {
+      "min_age": 21,
+      "max_age": 45,
+      "missing_flags": [
+        "da_ket_hon",
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 35
+    },
+    "description": "Bà mối nổi tiếng khéo miệng trong phủ mang theo hộp trầu cau ghé thăm, khen bạn nết na đứng đắn và muốn giới thiệu một mối lương duyên môn đăng hộ đối.",
+    "choices": [
+      {
+        "label": "Tiếp đón niềm nở, đồng ý gặp mặt xem duyên phận (-40 đồng trà nước)",
+        "conditions": {
+          "min_copper": 40
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Buổi gặp mặt diễn ra vui vẻ tự nhiên, mở ra cơ hội kết bạn trăm năm.",
+            "effects": {
+              "copper": -40,
+              "relationships": 10,
+              "happiness": 8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo cáo từ, muốn tự do theo đuổi chí hướng riêng",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn giữ được sự tự tại cho riêng mình, không vướng bận chuyện gia thất.",
+            "effects": {
+              "happiness": 3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_arts_masterpiece_scroll",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Hoàn Thành Bức Họa & Tập Phú Lưu Danh",
+    "conditions": {
+      "min_age": 32,
+      "min_education": 40,
+      "min_happiness": 45,
+      "missing_flags": [
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 45
+    },
+    "description": "Sau nhiều năm chiêm nghiệm thế thái nhân tình, cảm hứng dạt dào thôi thúc bạn cầm bút vẽ nên bức tranh sơn thủy kết hợp bài phú tâm huyết nhất đời.",
+    "choices": [
+      {
+        "label": "Đóng khung lụa quý, tặng lại cho văn miếu địa phương (-120 đồng)",
+        "conditions": {
+          "min_copper": 120
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Giới văn nhân truyền tay nhau chiêm ngưỡng tác phẩm, khen ngợi khí vận thanh cao hiếm thấy.",
+            "effects": {
+              "copper": -120,
+              "fame": 20,
+              "happiness": 15,
+              "education": 4,
+              "milestone_title": "Sáng tác kiệt tác sơn thủy lưu danh"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Treo trong nhà tự thưởng thức cùng bạn tri kỷ",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Mỗi lần ngắm bức họa lòng lại thấy bình yên sâu lắng.",
+            "effects": {
+              "happiness": 12,
+              "fame": 8,
+              "milestone_title": "Hoàn thành tập phú tâm huyết"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

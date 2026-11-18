@@ -23,6 +23,7 @@ import {
   marrySpouse,
 } from '../adultLifeActions';
 import { advanceChildhoodMonth, resolveEventChoice } from '../childhoodEngine';
+import { CAREER_CATALOG } from '../careerSystem';
 import { advanceDays, type AutoPauseConfig } from '../daySimulator';
 import { applyDynamicDecisionSideEffects } from '../decisionGenerator';
 import { createNewLife } from '../lifeInitializer';
@@ -407,13 +408,19 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
     if (seasonKey !== lastBotSeasonKey) {
       lastBotSeasonKey = seasonKey;
       state = applyAnnualBotSpendAndInvest(state, arch);
-      if (state.livelihoodStatus !== 'prison' && !state.flags.includes('trong_hau_cung')) {
-        if (state.assets.wealthCopper < 40 && state.assets.rice < 5) {
+      if (
+        state.livelihoodStatus !== 'prison' &&
+        !state.flags.includes('trong_hau_cung') &&
+        state.officialRank === 0 &&
+        !state.activeCareer &&
+        !state.activeVenture
+      ) {
+        if (state.assets.wealthCopper < 120 && state.assets.rice < 15) {
           state = {
             ...state,
             schedule: { ...state.schedule, afternoon: 'act_lam_thue_nong_vu' },
           };
-        } else if (state.assets.wealthCopper >= 120 && state.schedule.afternoon !== arch.afternoon) {
+        } else if (state.assets.wealthCopper >= 220 && state.schedule.afternoon !== arch.afternoon) {
           state = {
             ...state,
             schedule: { ...state.schedule, afternoon: arch.afternoon },
@@ -434,6 +441,26 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
     ) {
       anomalies.push(`NaN_DETECTED_AT_AGE_${getAgeYears(state.profile.totalDays)}`);
       break;
+    }
+
+    const stepAge = getAgeYears(state.profile.totalDays);
+    if (!state.isStudent && state.livelihoodStatus === 'student') {
+      anomalies.push(`GRADUATED_STUCK_AS_STUDENT_AGE_${stepAge}`);
+    }
+    if (stepAge >= 23 && state.isStudent) {
+      anomalies.push(`STUDENT_TOO_OLD_AGE_${stepAge}`);
+    }
+    if (state.isStudent && state.activeCareer) {
+      const activeJob = CAREER_CATALOG.find((j) => j.id === state.activeCareer!.jobId);
+      if (activeJob && activeJob.slots.some((s) => s === 'morning' || s === 'afternoon')) {
+        anomalies.push(`STUDENT_HOLDING_DAYTIME_JOB_${activeJob.id}_AGE_${stepAge}`);
+      }
+    }
+    if (state.livelihoodStatus === 'prison' && (state.isStudent || state.officialRank > 0)) {
+      anomalies.push(`PRISON_ROLE_CONFLICT_AGE_${stepAge}`);
+    }
+    if (state.assets.rice < 0 || state.stats.health < 0) {
+      anomalies.push(`NEGATIVE_RICE_OR_HEALTH_AGE_${stepAge}`);
     }
 
     if (res.pendingEvent) {

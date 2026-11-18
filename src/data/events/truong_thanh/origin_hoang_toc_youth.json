@@ -1,0 +1,331 @@
+[
+  {
+    "id": "evt_adult_hoang_toc_teen_palace_library",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Đọc Mật Sử Nơi Tàng Kinh Các",
+    "conditions": {
+      "min_age": 13,
+      "max_age": 15,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": []
+    },
+    "description": "Nhân lúc vắng người trong Tàng Kinh Các Hoàng gia, bạn tìm thấy một góc giá sách cổ lưu giữ các bộ binh thư, sử ký tiền triều và bí lục trị quốc ít người được chạm tới.",
+    "choices": [
+      {
+        "label": "Chuyên tâm nghiền ngẫm sách trị quốc và lễ pháp tiền triều",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Những bài học xương máu về hưng phế triều đại giúp tầm nhìn của bạn sâu sắc vượt bậc so với bạn đồng trang lứa.",
+            "effects": {
+              "education": 6,
+              "fame": 4,
+              "happiness": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Sao chép lại các trận đồ cổ và binh pháp hành quân",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn thuộc làu nhiều thế trận kỳ ảo, tư duy võ lược và khả năng cầm quân tiến bộ rõ rệt.",
+            "effects": {
+              "martial": 5,
+              "education": 2,
+              "happiness": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_hoang_toc_teen_cold_palace_ally",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Mối Giao Hảo Bí Mật Nơi Lãnh Cung",
+    "conditions": {
+      "min_age": 13,
+      "max_age": 24,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_flags": [
+        "that_sung_cung_dinh"
+      ]
+    },
+    "weight": {
+      "base": 280,
+      "modifiers": []
+    },
+    "description": "Đêm khuya thanh vắng, một lão nội thị từng chịu ân đức của ngoại tổ phụ bạn lén lút mang theo một túi bạc nhỏ cùng ít tin tức mật về tình hình triều chính tới tẩm cung.",
+    "choices": [
+      {
+        "label": "Nhận lấy ngân lượng và nhờ lão tiếp tục dò la tin tức triều đình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Số bạc tuy không quá lớn nhưng đủ giúp hai mẹ con trang trải thuốc men, lại có thêm tai mắt nắm bắt thời cuộc.",
+            "effects": {
+              "copper": 450,
+              "relationships": 6,
+              "happiness": 6,
+              "add_flags": [
+                "co_tai_mat_noi_dinh"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ nhận tin tức thời cuộc, gửi lại bạc để tránh mang họa tham tài",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Lão nội thị cảm động trước khí tiết thanh cao của bạn, thề sẽ âm thầm phò tá chờ ngày bạn xoay chuyển thế cục.",
+            "effects": {
+              "fame": 6,
+              "relationships": 8,
+              "education": 3,
+              "add_flags": [
+                "co_tai_mat_noi_dinh"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_hoang_toc_teen_royal_hunt",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Cuộc Săn Mùa Thu Tại Lâm Uyển Hoàng Gia",
+    "conditions": {
+      "min_age": 13,
+      "max_age": 22,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "missing_flags": [
+        "that_sung_cung_dinh"
+      ]
+    },
+    "weight": {
+      "base": 280,
+      "modifiers": []
+    },
+    "description": "Mùa thu khí trời mát mẻ, Phụ hoàng tổ chức cuộc đi săn lớn tại Lâm Uyển Hoàng gia. Các hoàng thân và đại thần đều cưỡi tuấn mã trổ tài cung tiễn.",
+    "choices": [
+      {
+        "label": "Giương cung nhắm thẳng con hươu trắng lập công đầu trước Phụ hoàng (Cần Võ nghệ >= 20)",
+        "conditions": {
+          "min_martial": 20
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Mũi tên xé gió trúng đích khiến Phụ hoàng vỗ tay tán thưởng, ban thưởng vàng bạc và lời khen trước bá quan!",
+            "effects": {
+              "copper": 600,
+              "fame": 10,
+              "martial": 4,
+              "happiness": 8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo nhường con mồi cho hoàng huynh để giữ hòa khí Tôn thất",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Các bậc trưởng bối khen ngợi sự khiêm nhường, còn hoàng huynh tỏ ra thân thiện với bạn hơn hẳn.",
+            "effects": {
+              "relationships": 8,
+              "fame": 4,
+              "happiness": 5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_hoang_toc_teen_empress_dowager",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Thỉnh An Thái Hậu Nơi Cung Từ Ninh",
+    "conditions": {
+      "min_age": 13,
+      "max_age": 16,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 70,
+      "modifiers": []
+    },
+    "description": "Đầu xuân, bạn vào cung Từ Ninh vấn an Hoàng Thái Hậu. Giữa hương trầm ấm áp, Thái Hậu hiền từ nắm tay hỏi thăm chí hướng tương lai của bạn.",
+    "choices": [
+      {
+        "label": "Thưa rằng nguyện dùi mài kinh sử, sau này phò tá xã tắc",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thái Hậu mỉm cười hài lòng, sai cung nữ ban cho bạn bộ bút ngọc và 500 đồng tiền thưởng.",
+            "effects": {
+              "copper": 500,
+              "education": 4,
+              "fame": 6,
+              "happiness": 8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thưa rằng muốn rèn luyện võ nghệ, giữ yên biên cương",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thái Hậu khen bạn có khí phách anh hùng của bậc tiền nhân, ban thưởng tiểu bảo kiếm và ngân lượng.",
+            "effects": {
+              "copper": 500,
+              "martial": 4,
+              "fame": 6,
+              "happiness": 8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ cầu hai chữ bình an, không màng tranh đoạt thị phi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thái Hậu khẽ thở dài rồi gật đầu cảm thông, ban cho túi ngọc bội cầu phúc và ít bạc dằn túi.",
+            "effects": {
+              "copper": 650,
+              "happiness": 10,
+              "relationships": 5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_hoang_toc_patron_arts",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Mở Hội Bình Thơ & Bảo Trợ Tao Nhân",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 60,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "min_copper": 500
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": []
+    },
+    "description": "Phủ đệ của bạn mở tiệc trà mời các bậc danh sĩ, cử nhân và tao nhân mặc khách trong Kinh kỳ tới bình văn xướng họa, nhằm chiêu hiền đãi sĩ.",
+    "choices": [
+      {
+        "label": "Chi 500 đồng đãi tiệc trà bánh, ban thưởng cho bài thơ xuất sắc nhất",
+        "conditions": {
+          "min_copper": 500
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tiếng tăm phủ đệ hiền minh vang khắp Kinh thành, nhiều văn nhân sĩ tử tìm tới xin làm môn khách.",
+            "effects": {
+              "copper": -500,
+              "fame": 10,
+              "relationships": 8,
+              "education": 3,
+              "happiness": 6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ dùng trà thanh đạm đàm đạo kinh sử với vài vị tri kỷ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Buổi đàm đạo tuy giản dị nhưng sâu sắc, giúp bạn kết thêm được vài người bạn tâm giao.",
+            "effects": {
+              "relationships": 5,
+              "education": 2,
+              "happiness": 4
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

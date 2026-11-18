@@ -88,19 +88,22 @@
     "oncePerLife": true,
     "title": "Sĩ Tử Lều Chõng Lên Kinh Ứng Thí",
     "conditions": {
-      "min_age": 18,
+      "min_age": 15,
       "max_age": 42,
       "origin_in": [
         "ban_nong",
         "thu_cong",
         "dia_chu",
-        "quan_lai"
+        "quan_lai",
+        "hoang_toc"
       ],
-      "has_flags": [
+      "has_any_flag": [
+        "do_tu_tai",
         "do_cu_nhan"
       ],
       "missing_flags": [
         "do_tien_si",
+        "dang_lam_quan",
         "thai_giam",
         "trong_hau_cung",
         "trong_quan_ngu",
@@ -108,7 +111,7 @@
       ]
     },
     "weight": {
-      "base": 110,
+      "base": 280,
       "modifiers": []
     },
     "description": "Đỗ Cử nhân rồi, bạn chuẩn bị hành trang lên Kinh đô chuẩn bị cho kỳ Thi Hội. Đường sá xa xôi, việc ăn ở và ôn luyện nơi Kinh kỳ cần tính toán kỹ lưỡng.",

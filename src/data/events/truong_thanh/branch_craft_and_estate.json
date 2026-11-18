@@ -1,0 +1,341 @@
+[
+  {
+    "id": "evt_craft_imperial_commission",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Xưởng Nghề Nhận Đơn Chế Tác Đồ Ngự Dụng",
+    "conditions": {
+      "min_age": 20,
+      "min_craft_trade": 22,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung",
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 18,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_tho_phu",
+              "career_tho_ca",
+              "venture_xuong_nho"
+            ]
+          },
+          "addWeight": 150
+        }
+      ]
+    },
+    "description": "Phường hội thủ công nhận trát của Công bộ đặt làm lô đồ sứ và chạm khắc tinh xảo để tiến cung dịp đại lễ.",
+    "choices": [
+      {
+        "label": "Dốc toàn bộ tâm sức tự tay chạm khắc món chủ lực",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80
+            },
+            "resultText": "Tác phẩm tinh xảo khiến quan Công bộ tấm tắc khen ngợi, ban thưởng hậu hĩnh và đặt làm thợ chính.",
+            "effects": {
+              "copper": 480,
+              "craft_trade": 6,
+              "fame": 14,
+              "stamina": -12,
+              "milestone_title": "Thợ khéo chế tác đồ tiến cung"
+            }
+          },
+          {
+            "weight": {
+              "base": 20
+            },
+            "resultText": "Công việc gấp gáp khiến bạn hao tổn sức lực, tuy đạt chuẩn nhưng tiền thưởng chỉ vừa đủ công thợ.",
+            "effects": {
+              "copper": 180,
+              "craft_trade": 3,
+              "health": -4,
+              "milestone_title": "Hoàn thành đơn hàng Công bộ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chia việc cho thợ phụ làm đều tay, giữ an toàn tiến độ",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Lô hàng giao đúng hẹn không sai sót, uy tín xưởng nghề tăng lên rõ rệt.",
+            "effects": {
+              "copper": 260,
+              "relationships": 6,
+              "fame": 6,
+              "milestone_title": "Giữ vững uy tín phường thợ"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_craft_apprentice_rivalry",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1440,
+    "title": "Đệ Tử Trong Xưởng Đòi Tách Nghề Riêng",
+    "conditions": {
+      "min_age": 24,
+      "min_craft_trade": 20,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 15,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_tho_phu",
+              "career_tho_ca",
+              "venture_xuong_nho"
+            ]
+          },
+          "addWeight": 130
+        }
+      ]
+    },
+    "description": "Một người thợ trẻ tay nghề khá trong phường hội ngỏ ý muốn tách ra mở sạp riêng, cạnh tranh trực tiếp ở chợ huyện.",
+    "choices": [
+      {
+        "label": "Rộng lượng truyền nốt bí quyết và chúc phúc cho cậu ta",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Người thợ trẻ cảm kích ân tình, sau này thường xuyên chia sẻ nguồn nguyên liệu giá rẻ cho bạn.",
+            "effects": {
+              "relationships": 10,
+              "fame": 8,
+              "happiness": 6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ kín bí quyết nghề gia truyền, chia tay trong êm đẹp",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn bảo toàn được lợi thế độc quyền của xưởng mà không gây hiềm khích lớn.",
+            "effects": {
+              "craft_trade": 2,
+              "copper": 80
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_estate_tenant_revolt_mediation",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Tá Điền Kéo Đến Trang Trại Xin Giảm Tô Mùa Hạn",
+    "conditions": {
+      "min_age": 20,
+      "min_relationships": 25,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung",
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 16,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_quan_trang",
+              "venture_thue_ruong"
+            ]
+          },
+          "addWeight": 150
+        },
+        {
+          "conditions": {
+            "has_property": "ruong_tu"
+          },
+          "addWeight": 70
+        }
+      ]
+    },
+    "description": "Nắng hạn kéo dài làm ruộng đồng nứt nẻ, hàng chục tá điền kéo đến trước cổng trang trại xin khất nửa phần tô thóc năm nay.",
+    "choices": [
+      {
+        "label": "Chấp thuận giảm ba phần tô và mở kho ứng thóc giống",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Tá điền cảm ơn rối rít, ra sức đào mương dẫn nước cứu lúa, vụ sau bội thu bù lại gấp bội.",
+            "effects": {
+              "copper": -100,
+              "relationships": 12,
+              "fame": 10,
+              "happiness": 8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thu đúng lệ cũ nhưng cho khất sang vụ chiêm năm tới",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Sổ sách trang trại giữ được cân bằng mà dân làng cũng không đến nỗi oán thán.",
+            "effects": {
+              "copper": 140,
+              "relationships": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_estate_land_survey_dispute",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1440,
+    "title": "Tranh Chấp Bờ Thửa Khi Quan Huyện Đo Đạc Điền Địa",
+    "conditions": {
+      "min_age": 22,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 16,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_quan_trang",
+              "venture_thue_ruong"
+            ]
+          },
+          "addWeight": 140
+        },
+        {
+          "conditions": {
+            "has_any_property": true
+          },
+          "addWeight": 60
+        }
+      ]
+    },
+    "description": "Lại mục huyện về đo đạc lại địa bạ phát hiện mấy sào ruộng giáp ranh bị lấn bờ từ nhiều năm trước.",
+    "choices": [
+      {
+        "label": "Đem khế ước cũ ra đối chiếu minh bạch trước lý trưởng",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Giấy trắng mực đen rõ ràng, phần đất được giữ nguyên vẹn và tiếng tăm ngay thẳng lan truyền trong vùng.",
+            "effects": {
+              "fame": 6,
+              "relationships": 4,
+              "rice": 15
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhường lại một phần bờ thửa lấy hòa khí xóm giềng",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Hàng xóm nể phục tấm lòng rộng lượng, từ đó thường xuyên qua lại giúp đỡ việc đồng áng.",
+            "effects": {
+              "relationships": 10,
+              "happiness": 5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_village_academy_legacy",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Học Trò Cũ Thành Tài Về Tạ Ơn Thầy",
+    "conditions": {
+      "min_age": 30,
+      "min_education": 40,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 18,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_thay_do",
+              "career_thu_lai",
+              "venture_thu_quan"
+            ]
+          },
+          "addWeight": 150
+        }
+      ]
+    },
+    "description": "Một cậu học trò nghèo bạn từng dạy chữ năm xưa nay đỗ đạt cao, mang lễ vật và hoành phi về tận thư quán bái tạ ân sư.",
+    "choices": [
+      {
+        "label": "Nhận tấm lòng thơm thảo và khuyên trò giữ vững đạo làm người",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Khắp làng trên xóm dưới đều ca ngợi công đức trồng người của bạn.",
+            "effects": {
+              "copper": 350,
+              "fame": 18,
+              "relationships": 12,
+              "happiness": 15,
+              "milestone_title": "Đào lý mãn môn, học trò thành tài"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -2,6 +2,7 @@ import { getAgeYears, type ActiveLifeState } from '../types/activeLife';
 import type { GameEventDef } from '../types/dsl';
 import { formatCopper } from './economy';
 import {
+  CAREER_CATALOG,
   applyForCareer,
   canPromoteCareer,
   getAvailableVentures,
@@ -576,34 +577,42 @@ export function applyDynamicDecisionSideEffects(
   const totalDays = state.profile.totalDays;
 
   if (eventId === 'dec_college_18') {
+    const activeJob = state.activeCareer
+      ? CAREER_CATALOG.find((j) => j.id === state.activeCareer!.jobId)
+      : undefined;
+    const baseState =
+      choiceIndex <= 2 && activeJob && activeJob.slots.some((s) => s === 'morning' || s === 'afternoon')
+        ? resignCareer(state)
+        : state;
+
     if (choiceIndex === 0) {
       return {
-        ...state,
+        ...baseState,
         eduLevel: 4,
         isStudent: true,
         major: 'Kinh sử · Chính trị',
         livelihoodStatus: 'student',
-        profile: { ...state.profile, currentRole: 'Giám sinh Quốc Tử Giám' },
+        profile: { ...baseState.profile, currentRole: 'Giám sinh Quốc Tử Giám' },
       };
     }
     if (choiceIndex === 1) {
       return {
-        ...state,
+        ...baseState,
         eduLevel: 4,
         isStudent: true,
         major: 'Y dược · Thương toán',
         livelihoodStatus: 'student',
-        profile: { ...state.profile, currentRole: 'Học trò Thư viện lớn' },
+        profile: { ...baseState.profile, currentRole: 'Học trò Thư viện lớn' },
       };
     }
     if (choiceIndex === 2) {
       return {
-        ...state,
+        ...baseState,
         eduLevel: 4,
         isStudent: true,
         major: 'Binh pháp',
         livelihoodStatus: 'student',
-        profile: { ...state.profile, currentRole: 'Võ sinh Võ học đường' },
+        profile: { ...baseState.profile, currentRole: 'Võ sinh Võ học đường' },
       };
     }
     return {

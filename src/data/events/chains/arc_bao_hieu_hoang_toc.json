@@ -1,0 +1,478 @@
+[
+  {
+    "id": "evt_chain_bao_hieu_hoang_toc_1",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Mẫu Thân Lâm Trọng Bệnh Nơi Cung Cấm",
+    "conditions": {
+      "min_age": 20,
+      "max_age": 50,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_living_npc_id": "npc_mother"
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_flags": [
+              "that_sung_cung_dinh"
+            ]
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Khí lạnh cuối thu thấm qua bức rèm gấm, mẫu thân bạn bỗng lâm trọng bệnh triền miên, long thể suy nhược chẳng thiết ngự thiện. Nội thị trong cung đều lo lắng đứng ngồi không yên.",
+    "choices": [
+      {
+        "label": "Dốc bạc thỉnh Viện Phán Thái Y Viện và dâng sâm nhung thượng hạng điều trị (Cần 1.500 Đồng)",
+        "conditions": {
+          "min_copper": 1500
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Viện Phán Thái Y Viện đích thân bắt mạch bốc toàn dược liệu quý hiếm trong ngự dược phòng, từng bước điều hòa khí huyết cho mẫu thân bạn.",
+            "effects": {
+              "copper": -1500,
+              "happiness": -4,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 15
+                }
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_bao_hieu_hoang_toc_2_tot",
+                  "delay_days": 30
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đích thân vào Thái Miếu ăn chay cầu phúc, đêm ngày túc trực hầu thuốc bên cung",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn bỏ hết tiệc tùng triều đình, ngày lễ bái nơi Thái Miếu, đêm về tự tay thử thuốc trước khi dâng mẫu thân, tấm lòng chí hiếu cảm động cả cung đình.",
+            "effects": {
+              "stamina": -15,
+              "health": -4,
+              "fame": 6,
+              "happiness": -6,
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_bao_hieu_hoang_toc_2_nguy",
+                  "delay_days": 30
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_bao_hieu_hoang_toc_2_tot",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Thái Y Diệu Thủ, Cung Đình An Thái",
+    "conditions": {
+      "min_age": 20,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_living_npc_id": "npc_mother"
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Sau một tháng tĩnh dưỡng bằng sâm nhung và ngự dược, sắc mặt mẫu thân bạn đã hồng hào trở lại, tinh thần minh mẫn.",
+    "choices": [
+      {
+        "label": "Tạ ơn Thái y, cùng mẫu thân dùng bữa trà thanh đạm mừng bình phục",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Mẫu thân mỉm cười hiền từ trước tấm lòng chí hiếu của bạn. Tiếng thơm hiếu thuận lan truyền khắp Hoàng tộc.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 20
+                }
+              ],
+              "fame": 10,
+              "happiness": 10,
+              "milestone_title": "Tận hiếu phụng dưỡng mẫu thân nơi cung đình"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_bao_hieu_hoang_toc_2_nguy",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Đèn Lồng Trắng Trước Cửa Cung",
+    "conditions": {
+      "min_age": 20,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_living_npc_id": "npc_mother"
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Đêm nay cơn bệnh của mẫu thân đột ngột chuyển biến xấu, hơi thở yếu ớt giữa tiếng chuông canh khuya vang vọng khắp Tử Cấm Thành.",
+    "choices": [
+      {
+        "label": "Xuất kho riêng ban thưởng trọng hậu tìm kỳ nhân dị sĩ dâng linh dược cứu nguy (Cần 2.000 Đồng)",
+        "conditions": {
+          "min_copper": 2000
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Viên đan dược quý hiếm kịp thời cứu mẫu thân bạn khỏi quỷ môn quan. Cả cung vui mừng khôn xiết!",
+            "effects": {
+              "copper": -2000,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 25
+                }
+              ],
+              "fame": 8,
+              "happiness": 12,
+              "milestone_title": "Cứu mẫu thân qua cơn nguy biến nơi hoàng cung"
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Số mệnh đã định, linh dược cũng khó giữ người ở lại. Mẫu thân dặn dò bạn giữ vững gia phong Hoàng thất rồi nhẹ nhàng quy tiên.",
+            "effects": {
+              "copper": -2000,
+              "kill_npc_id": "npc_mother",
+              "add_flags": [
+                "mo_coi_me"
+              ],
+              "happiness": -28,
+              "fame": 6,
+              "milestone_title": "Cung đình để tang mẫu thân"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Túc trực bên long sàng nắm tay mẫu thân, giữ trọn lễ nghi hiếu đạo",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Ý chí kiên cường cùng lòng hiếu thảo của bạn giúp mẫu thân vượt qua đêm định mệnh, đến sáng thì dần hồi tỉnh!",
+            "effects": {
+              "stamina": -20,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 20
+                }
+              ],
+              "happiness": 10,
+              "milestone_title": "Mẫu thân bình an qua cơn nguy kịch"
+            }
+          },
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": []
+            },
+            "resultText": "Cung nữ đồng loạt quỳ khóc khi mẫu thân bạn trút hơi thở cuối cùng. Bạn khoác áo tang trắng, lòng nặng trĩu nỗi mất mát.",
+            "effects": {
+              "kill_npc_id": "npc_mother",
+              "add_flags": [
+                "mo_coi_me"
+              ],
+              "happiness": -32,
+              "health": -6,
+              "milestone_title": "Chịu tang mẫu thân nơi cung đình"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_bao_hieu_phu_hoang_1",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Long Thể Bệ Hạ Khiếm An",
+    "conditions": {
+      "min_age": 22,
+      "max_age": 52,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_living_npc_id": "npc_father",
+      "missing_flags": [
+        "mo_coi_cha"
+      ]
+    },
+    "weight": {
+      "base": 50,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_age": 34
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Gần đây long thể phụ thân bạn suy nhược hẳn, triều hội thường phải bãi sớm vì cơn ho kéo dài. Các vị thân vương và Thái Y Viện đều túc trực ngoài điện Càn Thanh.",
+    "choices": [
+      {
+        "label": "Dốc bạc dâng nghìn năm nhân sâm và trọng thưởng Thái Y Viện dốc sức điều trị (-1.600 đồng)",
+        "conditions": {
+          "min_copper": 1600
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ linh dược quý hiếm và sự tận tâm của các ngự y đầu ngành, long thể phụ thân bạn dần ổn định trở lại.",
+            "effects": {
+              "copper": -1600,
+              "fame": 8,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 18
+                }
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_bao_hieu_phu_hoang_2_tot",
+                  "delay_days": 30
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đích thân vào tẩm điện túc trực hầu thuốc, chẳng màng nghi kỵ triều đình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn ngày đêm canh chừng bên ngự sàng, tự tay nếm thuốc trước khi dâng lên phụ thân.",
+            "effects": {
+              "stamina": -16,
+              "fame": 6,
+              "happiness": -6,
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_chain_bao_hieu_phu_hoang_2_nguy",
+                  "delay_days": 30
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_bao_hieu_phu_hoang_2_tot",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Thánh Thể Khang An, Triều Đình Khánh Hạ",
+    "conditions": {
+      "min_age": 22,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_living_npc_id": "npc_father"
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Sau một tháng tĩnh dưỡng, phụ thân bạn đã bình phục hoàn toàn, tinh thần minh mẫn lâm triều trở lại.",
+    "choices": [
+      {
+        "label": "Khấu đầu chúc mừng phụ thân thánh thể khang an",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Phụ thân khen ngợi tấm lòng hiếu thuận của bạn trước bá quan văn võ, uy tín của bạn trong Hoàng thất tăng cao.",
+            "effects": {
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 22
+                }
+              ],
+              "fame": 12,
+              "happiness": 10,
+              "milestone_title": "Tận hiếu phò trợ phụ thân qua cơn bạo bệnh"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_chain_bao_hieu_phu_hoang_2_nguy",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 0,
+    "title": "Chuông Đêm Vang Vọng Điện Càn Thanh",
+    "conditions": {
+      "min_age": 22,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_living_npc_id": "npc_father"
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Đêm nay cơn bệnh của phụ thân đột ngột trở nặng, không khí trong cung điện căng như dây đàn trước giờ phút sinh tử.",
+    "choices": [
+      {
+        "label": "Truyền lệnh tìm kỳ dược trấn cung cứu nguy phút chót (Cần 2.200 Đồng)",
+        "conditions": {
+          "min_copper": 2200
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": []
+            },
+            "resultText": "Kỳ dược phát huy công hiệu, phụ thân bạn qua khỏi cơn thập tử nhất sinh khiến cả triều đình vỡ òa nhẹ nhõm!",
+            "effects": {
+              "copper": -2200,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 25
+                }
+              ],
+              "fame": 12,
+              "happiness": 12,
+              "milestone_title": "Kỳ tích cứu phụ thân nơi cung đình"
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Thiên mệnh khó cưỡng, phụ thân bạn mỉm cười dặn dò giữ vững cơ nghiệp Hoàng thất rồi băng hà.",
+            "effects": {
+              "copper": -2200,
+              "kill_npc_id": "npc_father",
+              "add_flags": [
+                "mo_coi_cha"
+              ],
+              "happiness": -28,
+              "fame": 8,
+              "milestone_title": "Cung đình để tang phụ thân"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Quỳ bên ngự sàng giữ trọn lễ hiếu đạo tiễn đưa người",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Ý chí mạnh mẽ giúp phụ thân bạn gượng qua đêm định mệnh và dần hồi tỉnh vào sáng hôm sau!",
+            "effects": {
+              "stamina": -20,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 20
+                }
+              ],
+              "happiness": 10,
+              "milestone_title": "Phụ thân bình an qua cơn nguy kịch"
+            }
+          },
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Tiếng chuông tang vang khắp kinh thành khi phụ thân bạn trút hơi thở cuối cùng. Bạn khoác áo tang trắng, lòng nặng trĩu nỗi mất mát.",
+            "effects": {
+              "kill_npc_id": "npc_father",
+              "add_flags": [
+                "mo_coi_cha"
+              ],
+              "happiness": -32,
+              "health": -6,
+              "milestone_title": "Chịu tang phụ thân nơi cung đình"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -15,6 +15,7 @@ import {
   upgradeVenture,
 } from '../careerSystem';
 import { advanceDays, DEFAULT_AUTO_PAUSE_CONFIG } from '../daySimulator';
+import { applyDynamicDecisionSideEffects } from '../decisionGenerator';
 import { createNewLife } from '../lifeInitializer';
 import { appointOrPromoteOfficial } from '../progressionModules';
 
@@ -142,5 +143,40 @@ describe('Career & Venture System', () => {
       expect(upskilled.activeCareer?.daysWorked).toBe(45);
       expect(upskilled.stats.education).toBeGreaterThan(appRes.state.stats.education);
     }
+  });
+
+  it('blocks daytime jobs for students, resigns daytime jobs on college entry, and clears student status on graduation', () => {
+    let life = createTeenLife('ban_nong');
+    life = { ...life, profile: { ...life.profile, totalDays: 18 * 360 - 1 } };
+    life = applyForCareer(life, 'job_nong_vu');
+    expect(life.activeCareer?.jobId).toBe('job_nong_vu');
+
+    // Entering college resigns previous daytime job
+    let student = applyDynamicDecisionSideEffects(life, 'dec_college_18', 2);
+    expect(student.isStudent).toBe(true);
+    expect(student.livelihoodStatus).toBe('student');
+    expect(student.activeCareer).toBeNull();
+
+    // Students cannot take daytime jobs, but can take evening jobs
+    const options = getAvailableCareers(student);
+    const daytimeOpt = options.find((o) => o.job.id === 'job_nong_vu')!;
+    const eveningOpt = options.find((o) => o.job.id === 'job_tuan_dem')!;
+    expect(daytimeOpt.eligible).toBe(false);
+    expect(eveningOpt.eligible).toBe(true);
+
+    student = applyForCareer(student, 'job_tuan_dem');
+    expect(student.livelihoodStatus).toBe('student');
+
+    // Graduating at age 22 must transition livelihoodStatus out of 'student'
+    const preGrad = { ...student, profile: { ...student.profile, totalDays: 22 * 360 - 1 } };
+    const gradRes = advanceDays(
+      preGrad,
+      1,
+      ALL_ACTIONS,
+      ALL_ADULTHOOD_EVENTS,
+      { ...DEFAULT_AUTO_PAUSE_CONFIG, pauseOnBirthday: false },
+    );
+    expect(gradRes.state.isStudent).toBe(false);
+    expect(gradRes.state.livelihoodStatus).toBe('employed');
   });
 });

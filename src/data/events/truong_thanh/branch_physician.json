@@ -1,0 +1,388 @@
+[
+  {
+    "id": "evt_physician_plague_outbreak",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1800,
+    "title": "Dịch Khí Hoành Hành, Mở Quán Phát Thuốc",
+    "conditions": {
+      "min_age": 18,
+      "min_education": 35,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung",
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 18,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_thay_lang",
+              "career_phu_thuoc"
+            ]
+          },
+          "addWeight": 160
+        },
+        {
+          "conditions": {
+            "world_state_in": [
+              "dich_benh"
+            ]
+          },
+          "addWeight": 100
+        }
+      ]
+    },
+    "description": "Khí trời oi bức khiến dịch tả lan rộng khắp xóm giềng. Người dân kéo nhau đi cầu thầy bốc thuốc, nhiều nhà không có tiền mua thang dược.",
+    "choices": [
+      {
+        "label": "Bỏ tiền mua dược liệu, lập đàn phát thuốc cứu dân (-120 đồng)",
+        "conditions": {
+          "min_copper": 120
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80
+            },
+            "resultText": "Nhờ bài thuốc thanh nhiệt giải độc kịp thời, hàng chục hộ dân qua cơn nguy kịch. Tiếng lành đồn xa khắp hạt.",
+            "effects": {
+              "copper": -120,
+              "stamina": -12,
+              "fame": 14,
+              "relationships": 8,
+              "happiness": 10,
+              "add_flags": [
+                "danh_y_cuu_dan"
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_physician_imperial_summons",
+                  "delay_days": 60
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 20
+            },
+            "resultText": "Bạn cứu được nhiều người nhưng bản thân cũng nhiễm khí lạnh, phải tĩnh dưỡng vài ngày mới lại sức.",
+            "effects": {
+              "copper": -120,
+              "health": -6,
+              "fame": 10,
+              "add_flags": [
+                "danh_y_cuu_dan"
+              ],
+              "schedule_delayed": [
+                {
+                  "event_id": "evt_physician_imperial_summons",
+                  "delay_days": 90
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bắt mạch kê đơn đúng giá, giữ sức phòng thân",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn thu tiền công vừa phải, cứu được người có điều kiện mà vẫn giữ được vốn liếng cho bản thân.",
+            "effects": {
+              "copper": 180,
+              "craft_trade": 3,
+              "fame": 3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_physician_imperial_summons",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "cooldownDays": 0,
+    "oncePerLife": true,
+    "title": "Phủ Đệ & Thái Y Viện Triệu Kiến Trọng Dụng",
+    "conditions": {
+      "min_age": 18,
+      "has_flags": [
+        "danh_y_cuu_dan"
+      ],
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 150
+    },
+    "description": "Tiếng tăm dập dịch cứu dân của bạn đến tai quan phủ và Thái Y Viện. Một viên thư lại mang thiếp mời tới tận cửa, ngỏ ý tiến cử bạn làm Lương y.",
+    "choices": [
+      {
+        "label": "Nhận lời làm Lương y chuyên trách cho phủ đệ lớn",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn được trọng vọng như thượng khách trong phủ, bổng lộc hậu hĩnh và quan hệ với giới quyền quý mở rộng nhanh chóng.",
+            "effects": {
+              "copper": 600,
+              "fame": 15,
+              "relationships": 12,
+              "happiness": 10,
+              "milestone_title": "Danh y được phủ đệ trọng dụng"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo từ chối, xin triều đình ban biển hiệu mở Y quán dân gian",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Quan phủ cảm phục tấm lòng nhân ái, ban cho tấm biển 'Tế Thế Lương Y' giúp y quán của bạn nườm nượp bệnh nhân.",
+            "effects": {
+              "copper": 350,
+              "fame": 20,
+              "relationships": 8,
+              "happiness": 12,
+              "milestone_title": "Được ban biển Tế Thế Lương Y"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_physician_noble_poison",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Án Mạng Ngầm: Quý Nhân Trúng Độc Lạ",
+    "conditions": {
+      "min_age": 20,
+      "min_education": 30,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung",
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 15,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_thay_lang",
+              "danh_y_cuu_dan"
+            ]
+          },
+          "addWeight": 120
+        }
+      ]
+    },
+    "description": "Nửa đêm có gia nhân phủ quan gõ cửa cầu cứu: lão gia trong phủ đột nhiên mê man, môi thâm tím nghi do trúng cổ độc trong bữa tiệc.",
+    "choices": [
+      {
+        "label": "Dốc hết y thuật châm cứu và dùng thuốc giải độc",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75
+            },
+            "resultText": "Sau ba canh giờ căng thẳng, độc tố được đẩy ra ngoài. Phủ quan cảm kích vô cùng, trọng thưởng hậu hĩnh.",
+            "effects": {
+              "copper": 500,
+              "fame": 12,
+              "relationships": 10,
+              "stamina": -10
+            }
+          },
+          {
+            "weight": {
+              "base": 25
+            },
+            "resultText": "Bạn giữ được mạng cho lão gia nhưng kẻ hạ độc ngầm oán hận, khiến bạn phải đề phòng suốt nhiều tháng.",
+            "effects": {
+              "copper": 250,
+              "happiness": -6,
+              "infamy": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Kê đơn an thần rồi cáo lui, tránh dính vào tranh đấu nội phủ",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn nhận chút lễ tạ rồi rút lui êm thấm, giữ được bình yên cho bản thân.",
+            "effects": {
+              "copper": 80,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_physician_rare_herb_expedition",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1080,
+    "title": "Vào Rừng Sâu Hái Dược Liệu Quý",
+    "conditions": {
+      "min_age": 18,
+      "min_health": 35,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_thay_lang",
+              "career_phu_thuoc",
+              "danh_y_cuu_dan"
+            ]
+          },
+          "addWeight": 110
+        }
+      ]
+    },
+    "description": "Nghe tin vùng núi phía Bắc xuất hiện rễ sâm rừng và linh chi lâu năm, bạn cân nhắc mang gùi lên núi tìm thuốc.",
+    "choices": [
+      {
+        "label": "Thuê thợ săn dẫn đường vào khe núi sâu (-60 đồng)",
+        "conditions": {
+          "min_copper": 60
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80
+            },
+            "resultText": "Chuyến đi thuận lợi, bạn thu được nhiều vị thuốc quý, bán lại hoặc bào chế đều sinh lời lớn.",
+            "effects": {
+              "copper": 260,
+              "education": 2,
+              "stamina": -10
+            }
+          },
+          {
+            "weight": {
+              "base": 20
+            },
+            "resultText": "Trời đổ mưa rừng trơn trượt khiến bạn trẹo chân, chỉ hái được ít thảo dược thường.",
+            "effects": {
+              "copper": -40,
+              "health": -4,
+              "stamina": -12
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ thu mua lại từ người đi rừng với giá phải chăng",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn mua được mẻ thảo dược tốt mà không phải mạo hiểm.",
+            "effects": {
+              "copper": 90,
+              "craft_trade": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_physician_medical_treatise",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Biên Soạn Bộ 'Nam Dược Y Án' Truyền Đời",
+    "conditions": {
+      "min_age": 35,
+      "min_education": 45,
+      "has_any_flag": [
+        "career_thay_lang",
+        "danh_y_cuu_dan"
+      ],
+      "missing_flags": [
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 120
+    },
+    "description": "Sau nhiều năm bốc thuốc cứu người, bạn tích lũy được hàng trăm phương thuốc dân gian hiệu nghiệm và muốn khắc bản in truyền lại cho hậu thế.",
+    "choices": [
+      {
+        "label": "Xuất tiền khắc mộc bản, phát tặng cho các y quán (-300 đồng)",
+        "conditions": {
+          "min_copper": 300
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bộ 'Nam Dược Y Án' được giới sĩ phu và thầy thuốc khắp nơi truyền tụng, danh tiếng bạn lưu truyền hậu thế.",
+            "effects": {
+              "copper": -300,
+              "fame": 25,
+              "education": 4,
+              "happiness": 15,
+              "milestone_title": "Trước tác bộ Nam Dược Y Án"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chép tay vài bản gửi tặng học trò thân tín",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Các môn sinh nâng niu từng trang y án, coi đó là bảo vật truyền nghề.",
+            "effects": {
+              "fame": 10,
+              "relationships": 8,
+              "happiness": 8,
+              "milestone_title": "Truyền lại y án cho môn sinh"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

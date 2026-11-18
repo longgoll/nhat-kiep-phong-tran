@@ -1,0 +1,246 @@
+[
+  {
+    "id": "evt_elder_descendants_success",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Tin Vui Tuổi Già: Con Cháu Thành Đạt Báo Hỷ",
+    "conditions": {
+      "min_age": 60,
+      "has_flags": [
+        "da_co_con"
+      ]
+    },
+    "weight": {
+      "base": 130
+    },
+    "description": "Ở tuổi xế chiều, tin vui từ phương xa bay về: con cái trong nhà đã dựng được cơ nghiệp vững vàng hoặc đỗ đạt làm rạng danh gia phong.",
+    "choices": [
+      {
+        "label": "Mở tiệc gia đình đón con cháu về sum vầy",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Con cháu quây quần dưới mái nhà, biếu lễ vật dưỡng lão đầy đủ khiến lòng bạn ấm áp khôn xiết.",
+            "effects": {
+              "copper": 750,
+              "happiness": 18,
+              "fame": 14,
+              "relationships": 10,
+              "milestone_title": "Tuổi già sum vầy, con cháu thành đạt"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_divide_estate",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lập Di Chúc & Phân Chia Gia Sản",
+    "conditions": {
+      "min_age": 62,
+      "has_flags": [
+        "da_co_con"
+      ],
+      "min_copper": 500
+    },
+    "weight": {
+      "base": 115
+    },
+    "description": "Nhận thấy tuổi tác đã cao, bạn triệu tập các con lại trước bàn thờ gia tiên để bàn chuyện phân chia ruộng đất, tiền bạc cho minh bạch.",
+    "choices": [
+      {
+        "label": "Chia đều công bằng cho mọi con cái để giữ hòa khí",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Các con đồng lòng thuận thảo, hứa sẽ thay phiên phụng dưỡng bạn chu đáo những năm cuối đời.",
+            "effects": {
+              "copper": -300,
+              "happiness": 14,
+              "relationships": 12,
+              "fame": 6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ phần lớn giao con trưởng lo hương hỏa tổ tiên",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Gia sản tập trung vào một mối hương hỏa, tuy có chút lời ra tiếng vào nhưng giữ được nề nếp tông môn.",
+            "effects": {
+              "copper": -200,
+              "fame": 10,
+              "relationships": 4,
+              "happiness": 6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_hometown_retirement",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Hồi Hương Dưỡng Lão Nơi Cố Hương",
+    "conditions": {
+      "min_age": 60,
+      "missing_flags": [
+        "trong_hau_cung",
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 110
+    },
+    "description": "Sau bao năm bôn ba ngoài đời, bạn nhớ khôn nguôi con đường làng, bến nước quê nhà và muốn thu xếp về an dưỡng tuổi già.",
+    "choices": [
+      {
+        "label": "Về quê tu sửa từ đường, trồng vườn cây thuốc sống thanh nhàn (-250 đồng)",
+        "conditions": {
+          "min_copper": 250
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Không khí trong lành nơi quê cũ và nếp sống điền viên giúp tinh thần thư thái, sức khỏe hồi phục đáng kể.",
+            "effects": {
+              "copper": -250,
+              "health": 8,
+              "happiness": 14,
+              "fame": 8
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ở lại nơi đang sống, thỉnh thoảng về thăm họ hàng dịp giỗ Tết",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn giữ nếp sinh hoạt quen thuộc, an ổn qua từng mùa xuân thu.",
+            "effects": {
+              "happiness": 6,
+              "relationships": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_clan_patriarch_feast",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Mừng Thọ Lục Tuần · Thất Tuần",
+    "conditions": {
+      "min_age": 68,
+      "has_any_flag": [
+        "da_co_con",
+        "da_ket_hon"
+      ]
+    },
+    "weight": {
+      "base": 120
+    },
+    "description": "Bước vào tuổi thượng thọ, bà con lối xóm và con cháu ngỏ ý tổ chức lễ mừng thọ trang trọng để chúc phúc.",
+    "choices": [
+      {
+        "label": "Làm lễ gọn nhẹ, trích tiền phát gạo cho người nghèo trong làng (-200 đồng)",
+        "conditions": {
+          "min_copper": 200
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Cả làng kéo đến chúc thọ trong tiếng cười nói rộn rã, phúc đức để lại cho con cháu muôn đời.",
+            "effects": {
+              "copper": -200,
+              "fame": 18,
+              "happiness": 16,
+              "relationships": 10,
+              "milestone_title": "Lễ thượng thọ & Tích phúc cho đời"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Sum họp ấm cúng cùng người thân trong nhà",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bữa cơm gia đình giản dị mà tràn đầy tiếng cười của con cháu.",
+            "effects": {
+              "happiness": 12,
+              "relationships": 6,
+              "milestone_title": "Đón tuổi thượng thọ bên gia đình"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_teach_grandchildren",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1440,
+    "title": "Kể Chuyện Phong Trần Cho Cháu Nhỏ",
+    "conditions": {
+      "min_age": 63,
+      "has_flags": [
+        "da_co_con"
+      ]
+    },
+    "weight": {
+      "base": 90
+    },
+    "description": "Buổi chiều nắng ấm ngoài hiên, lũ cháu nhỏ quây quần bên ghế tre đòi nghe ông bà kể chuyện thời trẻ bôn ba lập nghiệp.",
+    "choices": [
+      {
+        "label": "Kể lại những bài học đắc ý nhất và dạy cháu cách đối nhân xử thế",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Ánh mắt sáng ngời của lũ trẻ khiến bạn thấy cả cuộc đời phong trần thật xứng đáng.",
+            "effects": {
+              "happiness": 10,
+              "relationships": 8,
+              "fame": 4
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

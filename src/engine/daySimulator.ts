@@ -719,10 +719,22 @@ export function advanceDays(
     if (isBirthday) {
       // Graduate from Quốc Tử Giám at age 22
       if (newAge >= 22 && state.isStudent) {
+        const graduatedHasLivelihood = hasActiveLivelihood(state);
+        const isStudentRole =
+          state.profile.currentRole === 'Giám sinh Quốc Tử Giám' ||
+          state.profile.currentRole === 'Học trò Thư viện lớn' ||
+          state.profile.currentRole === 'Võ sinh Võ học đường';
         state = {
           ...state,
           isStudent: false,
-          livelihoodStatus: hasActiveLivelihood(state) ? state.livelihoodStatus : 'seeking',
+          livelihoodStatus: graduatedHasLivelihood ? 'employed' : 'seeking',
+          profile: {
+            ...state.profile,
+            currentRole:
+              !graduatedHasLivelihood && state.officialRank === 0 && isStudentRole
+                ? 'Đã tốt nghiệp'
+                : state.profile.currentRole,
+          },
           logs: appendLog(
             state.logs,
             nextTotalDays,
@@ -738,6 +750,20 @@ export function advanceDays(
         const pension = state.officialRank > 0 ? 600 : 300;
         state = applyEffects(state, { copper: pension });
         state = addLedger(state, { propertyIncomeCopper: pension });
+      }
+
+      // Annual land tax & maintenance for owned properties (~2.5% of property value)
+      if (state.assets.properties.length > 0) {
+        let totalPropValue = 0;
+        for (const propId of state.assets.properties) {
+          const spec = PROPERTY_CATALOG.find((p) => p.id === propId);
+          if (spec) totalPropValue += spec.costCopper;
+        }
+        const upkeepTax = Math.round(totalPropValue * 0.025);
+        if (upkeepTax > 0) {
+          state = applyEffects(state, { copper: -upkeepTax });
+          state = addLedger(state, { otherExpenseCopper: upkeepTax });
+        }
       }
 
       // Annual idle-cash investment return (1in8b INV_KS)

@@ -1,0 +1,375 @@
+[
+  {
+    "id": "evt_jianghu_escort_ambush",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Áp Tiêu Qua Đèo Gặp Lục Lâm Chặn Đường",
+    "conditions": {
+      "min_age": 18,
+      "min_martial": 25,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung",
+        "bi_ep_lam_gia_no"
+      ]
+    },
+    "weight": {
+      "base": 18,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_bao_tieu",
+              "career_vo_su",
+              "bao_ke_giang_ho"
+            ]
+          },
+          "addWeight": 160
+        }
+      ]
+    },
+    "description": "Đoàn xe hàng đi qua hẻm núi sương mù thì một toán sơn tặc cầm đao bước ra chặn lối, đòi để lại một nửa số bạc áp tiêu.",
+    "choices": [
+      {
+        "label": "Rút binh khí xông lên bảo vệ tiêu hàng",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75
+            },
+            "resultText": "Bạn đánh lui đầu lĩnh sơn tặc, bảo toàn nguyên vẹn chuyến hàng. Chủ tiêu cục trọng thưởng hậu hĩnh.",
+            "effects": {
+              "copper": 350,
+              "martial": 3,
+              "fame": 10,
+              "stamina": -14
+            }
+          },
+          {
+            "weight": {
+              "base": 25
+            },
+            "resultText": "Trận hỗn chiến khiến bạn bị thương nhẹ ở vai, nhưng vẫn giữ được xe hàng chính.",
+            "effects": {
+              "copper": 150,
+              "health": -8,
+              "martial": 2,
+              "fame": 5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ném chút bạc lẻ mua đường theo luật giang hồ (-100 đồng)",
+        "conditions": {
+          "min_copper": 100
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bọn sơn tặc nhận tiền rồi tránh đường, đoàn hàng đi qua an toàn không đổ máu.",
+            "effects": {
+              "copper": -100,
+              "relationships": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_jianghu_black_market_raid",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Quan Sai Vây Bắt Phiên Chợ Đen Nửa Đêm",
+    "conditions": {
+      "min_age": 18,
+      "min_infamy": 8,
+      "missing_flags": [
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 15,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_dau_nau",
+              "bao_ke_giang_ho"
+            ]
+          },
+          "addWeight": 170
+        }
+      ]
+    },
+    "description": "Tiếng còi báo động vang lên giữa bến sông: tuần đinh nha môn bất ngờ ập vào vây bắt các sạp buôn hàng lậu ban đêm.",
+    "choices": [
+      {
+        "label": "Dùng tiền lót tay cho đầu mục tuần đinh (-220 đồng)",
+        "conditions": {
+          "min_copper": 220
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 85
+            },
+            "resultText": "Túi bạc khiến viên tuần đinh làm ngơ cho bạn rút êm qua cửa hậu cùng toàn bộ lô hàng.",
+            "effects": {
+              "copper": -220,
+              "infamy": 4,
+              "craft_trade": 2
+            }
+          },
+          {
+            "weight": {
+              "base": 15
+            },
+            "resultText": "Tiền đã mất mà vẫn phải bỏ lại một phần hàng để chạy thoát thân.",
+            "effects": {
+              "copper": -320,
+              "happiness": -6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Bỏ lại hàng hóa, nhảy xuống thuyền nhỏ tẩu thoát trong đêm",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn thoát khỏi vòng vây an toàn nhưng tổn thất một phần vốn liếng.",
+            "effects": {
+              "copper": -150,
+              "stamina": -10,
+              "infamy": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_jianghu_river_convoy_storm",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Thuyền Buôn Gặp Giông Lớn Trên Sông Cái",
+    "conditions": {
+      "min_age": 20,
+      "min_craft_trade": 20,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 18,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_chuong_quy",
+              "career_chao_hang",
+              "venture_sap_cho",
+              "venture_ganh_hang"
+            ]
+          },
+          "addWeight": 130
+        },
+        {
+          "conditions": {
+            "has_property": "thuyen_buon"
+          },
+          "addWeight": 150
+        }
+      ]
+    },
+    "description": "Đoàn thuyền chở tơ lụa và gốm sứ đang xuôi dòng thì gặp cơn giông trái mùa, sóng đánh tràn khoang giữa khúc sông vắng.",
+    "choices": [
+      {
+        "label": "Chỉ huy thủy thủ buộc chặt khoang hàng, chèo vượt bão",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70
+            },
+            "resultText": "Nhờ bình tĩnh điều phối, thuyền cập bến an toàn và lô hàng bán được giá cao vì nguồn cung khan hiếm.",
+            "effects": {
+              "copper": 420,
+              "craft_trade": 3,
+              "fame": 6,
+              "stamina": -12
+            }
+          },
+          {
+            "weight": {
+              "base": 30
+            },
+            "resultText": "Nước tràn làm hỏng một phần tơ lụa, tuy người bình an nhưng chuyến hàng bị lỗ nhẹ.",
+            "effects": {
+              "copper": -160,
+              "happiness": -5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chủ động vứt bớt hàng nặng để cứu thuyền và thủy thủ",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Thủy thủ đoàn cảm kích vì bạn coi trọng tính mạng anh em hơn tiền bạc, danh tiếng thương đoàn càng thêm vững.",
+            "effects": {
+              "copper": -100,
+              "relationships": 10,
+              "fame": 8
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_jianghu_sworn_brother_debt",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1440,
+    "title": "Huynh Đệ Giang Hồ Cũ Tìm Đến Cầu Cứu",
+    "conditions": {
+      "min_age": 22,
+      "min_relationships": 25,
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 15,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "career_bao_tieu",
+              "career_dau_nau",
+              "career_tuan_dem",
+              "bao_ke_giang_ho"
+            ]
+          },
+          "addWeight": 130
+        }
+      ]
+    },
+    "description": "Một người bạn kết nghĩa năm xưa ghé qua lúc sẩm tối, mặt mày hốc hác xin vay ít bạc để chuộc gia đình khỏi tay bọn cho vay nặng lãi.",
+    "choices": [
+      {
+        "label": "Rút bạc giúp bạn không cần giấy nợ (-150 đồng)",
+        "conditions": {
+          "min_copper": 150
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Người bạn rưng rưng cảm tạ, thề sau này có biến cố sẽ hết lòng báo đáp.",
+            "effects": {
+              "copper": -150,
+              "relationships": 12,
+              "fame": 6,
+              "happiness": 6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Từ chối khéo, chỉ mời bữa cơm rồi tiễn đi",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn giữ được tiền bạc nhưng tình nghĩa cũ cũng phai nhạt đôi phần.",
+            "effects": {
+              "relationships": -4,
+              "happiness": -2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_jianghu_guild_alliance",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Kết Nghĩa Thương Hội & Tiêu Cục Liên Tỉnh",
+    "conditions": {
+      "min_age": 25,
+      "min_relationships": 45,
+      "has_any_flag": [
+        "career_bao_tieu",
+        "career_dau_nau",
+        "career_chuong_quy",
+        "bao_ke_giang_ho"
+      ],
+      "missing_flags": [
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 120
+    },
+    "description": "Uy tín trên đường thương và giang hồ của bạn đã đủ lớn để các chủ tiêu cục và thương nhân ba phủ mời họp bàn lập minh ước bảo vệ tuyến buôn chung.",
+    "choices": [
+      {
+        "label": "Đứng ra làm minh chủ, nhận hoa hồng bảo kê tuyến đường",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Minh ước thành lập suôn sẻ, các thương đoàn đều nể mặt bạn mỗi khi qua lại bến sông, cửa ải.",
+            "effects": {
+              "copper": 650,
+              "fame": 15,
+              "relationships": 12,
+              "happiness": 10,
+              "milestone_title": "Lập minh ước Thương hội & Tiêu cục"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ tham gia góp vốn cổ phần, đứng sau điều phối",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100
+            },
+            "resultText": "Bạn thu lợi nhuận ổn định mà không phải lộ mặt quá nhiều trước nha môn.",
+            "effects": {
+              "copper": 400,
+              "craft_trade": 4,
+              "relationships": 8,
+              "milestone_title": "Cổ đông lớn Thương hội liên tỉnh"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
