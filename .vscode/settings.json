@@ -1,0 +1,13 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "src/data/events/tho_au/*.json",
+        "src/data/events/dong_au/*.json",
+        "src/data/events/truong_thanh/*.json",
+        "src/data/events/chains/*.json"
+      ],
+      "url": "./src/data/events/event.schema.json"
+    }
+  ]
+}

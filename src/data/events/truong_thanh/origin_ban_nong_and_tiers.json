@@ -1,0 +1,205 @@
+[
+  {
+    "id": "evt_ban_nong_land_reclaim",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Khai Khẩn Đất Hoang Ven Bãi Bồi",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 48,
+      "origin_in": ["ban_nong"],
+      "missing_flags": ["trong_hau_cung", "thai_giam", "dang_lam_quan", "bi_ep_lam_gia_no"]
+    },
+    "weight": { "base": 36 },
+    "description": "Ngoài bãi bồi ven sông có khoảnh đất hoang màu mỡ nhưng lắm lau sậy và thú dữ. Dân làng rủ nhau góp sức khai khẩn chia phần.",
+    "choices": [
+      {
+        "label": "Bỏ công cuốc bẫm cày sâu suốt ba tháng mùa khô",
+        "hint": "Tiền +240đ · Sức khỏe -5 · Thương tài +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Mồ hôi đổ xuống đổi lại hai sào ruộng bãi tươi tốt, vụ đầu thu hoạch khấm khá hơn hẳn.",
+            "effects": { "copper": 240, "health": -5, "craft_trade": 2, "happiness": 4 }
+          }
+        ]
+      },
+      {
+        "label": "Đứng ra tổ chức bà con đắp bờ giữ nước cùng chia hoa lợi",
+        "hint": "Thanh danh +6 · Quan hệ +8 · Tiền +150đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Cách chia công bằng giúp cả xóm đồng lòng, tiếng tăm tháo vát của bạn vang khắp vùng.",
+            "effects": { "copper": 150, "fame": 6, "relationships": 8 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_ban_nong_village_elder_council",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1800,
+    "title": "Đình Làng Bàn Cử Chức Sắc Hương Lý",
+    "conditions": {
+      "min_age": 28,
+      "max_age": 62,
+      "min_fame": 12,
+      "origin_in": ["ban_nong", "thu_cong"],
+      "missing_flags": ["trong_hau_cung", "thai_giam", "dang_lam_quan", "bi_ep_lam_gia_no"]
+    },
+    "weight": { "base": 32 },
+    "description": "Các bô lão trong làng họp tại đình, thấy bạn ăn ở có trước có sau nên ngỏ ý tiến cử làm Lý trưởng hoặc Trương tuần coi giữ việc chung.",
+    "choices": [
+      {
+        "label": "Nhận chức việc làng, lo đê điều và giữ bình yên xóm ngõ",
+        "hint": "Thanh danh +10 · Quan hệ +6 · Tiền +200đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn xử lý thấu tình đạt lý nhiều vụ xích mích ruộng đất, được dân làng kính trọng.",
+            "effects": { "copper": 200, "fame": 10, "relationships": 6, "milestone_title": "Chức sắc hương lý được dân làng kính trọng" }
+          }
+        ]
+      },
+      {
+        "label": "Khiêm nhường từ chối để chuyên tâm chăm lo gia đình",
+        "hint": "Hạnh phúc +5 · Thanh danh +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Các cụ càng nể cái đức không ham danh lợi của bạn.",
+            "effects": { "happiness": 5, "fame": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_tier_binh_dan_seasonal_fair",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Hội Vật & Phiên Chợ Đầu Xuân",
+    "conditions": {
+      "min_age": 14,
+      "max_age": 50,
+      "origin_in": ["ban_nong", "thu_cong"],
+      "missing_flags": ["trong_hau_cung", "thai_giam", "bi_ep_lam_gia_no"]
+    },
+    "weight": { "base": 30 },
+    "description": "Đầu xuân làng mở hội vật cầu may và chợ phiên tấp nập. Bạn có dịp thử sức hoặc đem ít hàng quê ra bán.",
+    "choices": [
+      {
+        "label": "Ghi danh lên sới vật tranh giải thưởng đầu năm",
+        "hint": "Võ nghệ +3 · Thanh danh +5 · Tiền +120đ",
+        "outcomes": [
+          {
+            "weight": { "base": 65 },
+            "resultText": "Nhờ thân thủ nhanh nhẹn, bạn giành giải nhì sới vật trong tiếng reo hò vang dội.",
+            "effects": { "martial": 3, "fame": 5, "copper": 120, "happiness": 6 }
+          },
+          {
+            "weight": { "base": 35 },
+            "resultText": "Dù bị đối thủ quật ngã, bạn vẫn học được vài thế đánh hay và kết thêm bạn mới.",
+            "effects": { "martial": 2, "relationships": 4, "health": -3 }
+          }
+        ]
+      },
+      {
+        "label": "Dựng sạp nhỏ bán nông sản và đồ vặt ngày hội",
+        "hint": "Tiền +180đ · Thương tài +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Khách trẩy hội đông đúc giúp sạp hàng của bạn bán hết veo trước giờ ngọ.",
+            "effects": { "copper": 180, "craft_trade": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_tier_trung_luu_guild_banquet",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Tiệc Trà Hội Thương & Giới Sĩ Phu",
+    "conditions": {
+      "min_age": 20,
+      "max_age": 60,
+      "min_copper": 500,
+      "origin_in": ["thu_cong", "dia_chu"],
+      "missing_flags": ["trong_hau_cung", "thai_giam"]
+    },
+    "weight": { "base": 28 },
+    "description": "Các chủ hiệu buôn và điền chủ có tiếng trong phủ mở tiệc trà bàn chuyện giá cả mùa vụ và giao lưu cùng giới nho sĩ.",
+    "choices": [
+      {
+        "label": "Góp vốn kết giao, mở rộng mối hàng liên phủ (-300 đồng)",
+        "conditions": { "min_copper": 300 },
+        "hint": "Quan hệ +10 · Thương tài +3 · Thanh danh +5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Những cái bắt tay trên bàn tiệc mở ra nhiều đầu mối buôn bán sinh lời lâu dài.",
+            "effects": { "copper": -300, "relationships": 10, "craft_trade": 3, "fame": 5 }
+          }
+        ]
+      },
+      {
+        "label": "Giữ lễ vừa phải, lắng nghe thời cuộc rồi cáo lui sớm",
+        "hint": "Học thức +2 · Quan hệ +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn nắm bắt được nhiều tin tức quan trọng về thuế khóa và giá gạo sắp tới.",
+            "effects": { "education": 2, "relationships": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_tier_cung_dinh_autumn_poetry",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Thưởng Nguyệt Bình Thơ Nơi Phủ Đệ",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 65,
+      "origin_in": ["quan_lai", "hoang_toc"],
+      "missing_flags": ["gia_toc_sa_sut", "bi_ep_lam_gia_no"]
+    },
+    "weight": { "base": 28 },
+    "description": "Đêm thu trăng sáng, các bậc vương tôn và danh sĩ tụ họp bên hồ sen ngâm vịnh, luận bàn văn chương và thế sự.",
+    "choices": [
+      {
+        "label": "Ứng khẩu thành thơ, đối đáp sắc sảo trước quần hiền",
+        "hint": "Học thức +3 · Thanh danh +8 · Quan hệ +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bài thơ tứ tuyệt của bạn được truyền tụng khắp kinh thành, khiến nhiều bậc đại thần để mắt.",
+            "effects": { "education": 3, "fame": 8, "relationships": 6, "happiness": 4 }
+          }
+        ]
+      },
+      {
+        "label": "Nhã nhặn nâng chén, kết thân với các danh sĩ kín tiếng",
+        "hint": "Quan hệ +9 · Hạnh phúc +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Sự khiêm tốn giúp bạn có thêm nhiều tri kỷ đáng tin cậy chốn quan trường.",
+            "effects": { "relationships": 9, "happiness": 4 }
+          }
+        ]
+      }
+    ]
+  }
+]

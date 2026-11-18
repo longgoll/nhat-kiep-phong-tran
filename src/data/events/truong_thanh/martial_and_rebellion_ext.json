@@ -1,0 +1,198 @@
+[
+  {
+    "id": "evt_martial_vanguard_duel",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Đơn Thương Độc Mã Đấu Tướng Tiền Phong",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 55,
+      "has_any_flag": ["trong_quan_ngu", "quan_ham_hieu_uy", "quan_ham_tuong_quan"]
+    },
+    "weight": { "base": 38 },
+    "description": "Hai quân đối trận ngoài ải Bắc, mãnh tướng bên địch cưỡi ngựa ra khiêu chiến trước ba quân làm sĩ khí quân ta dao động.",
+    "choices": [
+      {
+        "label": "Thúc ngựa xông ra giao đấu trực diện giữ nhuệ khí ba quân",
+        "hint": "Võ nghệ +4 · Thanh danh +14 · Nguy cơ thương tích",
+        "outcomes": [
+          {
+            "weight": { "base": 70 },
+            "resultText": "Sau hơn hai mươi hiệp kịch chiến, bạn chém rụng cờ hiệu địch tướng, ba quân reo hò vang dậy.",
+            "effects": { "martial": 4, "fame": 14, "copper": 350, "milestone_title": "Đấu tướng tiền phong lập chiến công" }
+          },
+          {
+            "weight": { "base": 30 },
+            "resultText": "Trận đấu bất phân thắng bại, bạn trúng một vết thương nhẹ ở vai nhưng vẫn giữ được thể diện quân ta.",
+            "effects": { "martial": 3, "fame": 6, "health": -6 }
+          }
+        ]
+      },
+      {
+        "label": "Giữ vững đội hình cung nỏ, chờ thời cơ phản công toàn tuyến",
+        "hint": "Học thức +2 · Quan hệ +5 · Sức khỏe an toàn",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Chủ tướng khen bạn biết giữ đại cục, không mắc mưu khiêu khích của địch.",
+            "effects": { "education": 2, "relationships": 5, "fame": 5 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_martial_supply_sabotage",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Đêm Tập Kích Kho Lương Quân Địch",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 55,
+      "has_any_flag": ["trong_quan_ngu", "quan_ham_hieu_uy", "quan_ham_tuong_quan"]
+    },
+    "weight": { "base": 34 },
+    "description": "Thám mã báo tin kho lương của quân giặc đóng ở thung lũng phía sau sơ hở phòng bị trong đêm sương dày.",
+    "choices": [
+      {
+        "label": "Dẫn toán cảm tử luồn rừng phóng hỏa đốt kho lương",
+        "hint": "Thanh danh +12 · Võ nghệ +3 · Thưởng quân công +400đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Ngọn lửa bùng lên giữa đêm khiến quân địch rối loạn rút lui, triều đình ban thưởng hậu hĩnh.",
+            "effects": { "fame": 12, "martial": 3, "copper": 400, "stamina": -12 }
+          }
+        ]
+      },
+      {
+        "label": "Báo cáo chủ tướng để điều đại quân vây bắt gọn",
+        "hint": "Thanh danh +6 · Quan hệ +7",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Kế hoạch hiệp đồng chặt chẽ giúp quân ta thu được toàn bộ lương thảo địch mà ít hao tổn.",
+            "effects": { "fame": 6, "relationships": 7, "education": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_martial_war_veteran_pension",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Tình Nghĩa Đồng Đội Chốn Sa Trường",
+    "conditions": {
+      "min_age": 25,
+      "max_age": 65,
+      "min_martial": 20,
+      "missing_flags": ["trong_hau_cung", "thai_giam"]
+    },
+    "weight": { "base": 28 },
+    "description": "Một cựu chiến hữu năm xưa cùng bạn vào sinh ra tử nay tuổi cao sức yếu, gia cảnh túng thiếu tìm đến thăm.",
+    "choices": [
+      {
+        "label": "Biếu bạn trăm đồng bạc cùng ít thuốc bổ dưỡng thân (-200 đồng)",
+        "conditions": { "min_copper": 200 },
+        "hint": "Quan hệ +12 · Thanh danh +6 · Hạnh phúc +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Người chiến hữu rưng rưng cảm động. Tình nghĩa huynh đệ đồng cam cộng khổ khiến lòng bạn ấm áp.",
+            "effects": { "copper": -200, "relationships": 12, "fame": 6, "happiness": 6 }
+          }
+        ]
+      },
+      {
+        "label": "Mời bạn ở lại uống chén rượu nhạt ôn chuyện chiến trường xưa",
+        "hint": "Quan hệ +6 · Hạnh phúc +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Hai người kể cho nhau nghe bao kỷ niệm sinh tử nơi biên ải suốt cả buổi chiều.",
+            "effects": { "relationships": 6, "happiness": 4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_rebellion_people_support",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Dân Làng Đêm Khuya Tiếp Tế Lương Thảo",
+    "conditions": {
+      "min_age": 18,
+      "has_flags": ["da_khoi_nghia"]
+    },
+    "weight": { "base": 45 },
+    "description": "Dân nghèo các xã lân cận lén gánh gạo và muối vượt trạm gác đem vào tiếp tế cho nghĩa quân giữa lúc vòng vây thắt chặt.",
+    "choices": [
+      {
+        "label": "Trân trọng tiếp nhận, lập sổ ghi ơn và bảo vệ dân làng chu đáo",
+        "hint": "Thanh danh +10 · Quan hệ +10 · Tiền +300đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Lòng dân quy thuận giúp nghĩa quân trụ vững qua mùa đông khắc nghiệt.",
+            "effects": { "fame": 10, "relationships": 10, "copper": 300, "happiness": 5 }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ nhận một phần nhỏ, trả lại lương thực để dân khỏi đói",
+        "hint": "Thanh danh +15 · Hạnh phúc +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Tiếng thơm nghĩa quân không động tới cái kim sợi chỉ của dân lan đi khắp vùng.",
+            "effects": { "fame": 15, "happiness": 6 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_rebellion_amnesty_offer",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Chiếu Chiêu An Của Triều Đình",
+    "conditions": {
+      "min_age": 22,
+      "has_flags": ["da_khoi_nghia"]
+    },
+    "weight": { "base": 40 },
+    "description": "Triều đình cử sứ giả mang chiếu thư chiêu an: nếu giải tán binh mã sẽ xá tội tạo phản, thậm chí phong cho chức tước nơi biên trấn.",
+    "choices": [
+      {
+        "label": "Chấp nhận chiêu an, thu quân giữ bình yên cho bách tính",
+        "hint": "Gỡ cờ khởi nghĩa · Quan hệ +8 · Tiền +500đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn hạ vũ khí theo lệnh chiêu an, tránh cho vùng đất này một cuộc binh đao tàn khốc.",
+            "effects": { "remove_flags": ["da_khoi_nghia", "bi_truy_na"], "relationships": 8, "copper": 500, "milestone_title": "Chấp nhận chiếu chiêu an" }
+          }
+        ]
+      },
+      {
+        "label": "Xé chiếu từ chối, giữ vững cờ nghĩa đến cùng",
+        "hint": "Thanh danh +12 · Võ nghệ +4 · Tai tiếng +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Ý chí sắt đá của bạn khiến toàn quân phấn chấn, thề sống chết theo đại nghĩa.",
+            "effects": { "fame": 12, "martial": 4, "infamy": 8 }
+          }
+        ]
+      }
+    ]
+  }
+]

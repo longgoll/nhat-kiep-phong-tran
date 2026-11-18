@@ -58,8 +58,10 @@ interface ActiveLifeStore {
   autoPauseConfig: AutoPauseConfig;
   lastPauseReason: AutoPauseReason | null;
   autoDecide: boolean;
+  autoPlaySpeed: 0 | 1 | 2 | 4 | 8 | 12 | 16;
 
   startNewLife: (customSeed?: number) => void;
+  setAutoPlaySpeed: (speed: 0 | 1 | 2 | 4 | 8 | 12 | 16) => void;
   confirmBirthCertificate: () => void;
   stepChildhoodMonth: () => void;
   advanceToNextDecision: () => void;
@@ -144,6 +146,9 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
       autoPauseConfig: DEFAULT_AUTO_PAUSE_CONFIG,
       lastPauseReason: null,
       autoDecide: false,
+      autoPlaySpeed: 0,
+
+      setAutoPlaySpeed: (speed) => set({ autoPlaySpeed: speed }),
 
       startNewLife: (customSeed?: number) => {
         const life = createNewLife(customSeed);
@@ -154,6 +159,7 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
           isSimulating: false,
           hasConfirmedBirthCertificate: false,
           lastPauseReason: null,
+          autoPlaySpeed: 0,
         });
       },
 
@@ -638,6 +644,7 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
           lastEventResult: null,
           isSimulating: false,
           lastPauseReason: null,
+          autoPlaySpeed: 0,
         }),
     }),
     {

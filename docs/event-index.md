@@ -2,14 +2,15 @@
 
 > File tự động sinh bởi `npm run gen:index` (`scripts/gen-event-index.mjs`). AI đọc file này để tra cứu toàn bộ ID, file, cờ (`flags`) và tránh đọc hàng chục file JSON lớn.
 
-- **Tổng số file:** 53 | **Tổng số sự kiện:** 268 | **Tổng số flags:** 81
+- **Tổng số file:** 58 | **Tổng số sự kiện:** 293 | **Tổng số flags:** 82
 
 ## 1. Từ Điển Flags Đang Hoạt Động
 | Flag | Được gắn/gỡ bởi | Được kiểm tra bởi (samples) |
 | :--- | :--- | :--- |
 | `bang_nhan` | *(engine/init)* | evt_scholar_vinh_quy_bai_to(has_any_flag) |
 | `bao_ke_giang_ho` | evt_fate_brothel_or_bodyguard, evt_fate_bodyguard_crossroads(-remove) | evt_fate_brothel_or_bodyguard(missing_flags), evt_fate_bodyguard_crossroads(has_flags) |
-| `bi_ep_lam_gia_no` | evt_servitude_opportunity(-remove), evt_debt_collection_01, evt_debt_servitude_end(-remove) | evt_chain_len_kinh_1(missing_flags), evt_chain_ra_o_rieng_1(missing_flags), evt_servitude_opportunity(has_any_flag), evt_military_enlist(missing_flags) |
+| `bi_ep_lam_gia_no` | evt_servitude_opportunity(-remove), evt_debt_collection_01, evt_debt_servitude_end(-remove), evt_debt_desperate_indenture | evt_chain_len_kinh_1(missing_flags), evt_chain_ra_o_rieng_1(missing_flags), evt_servitude_opportunity(has_any_flag), evt_military_enlist(missing_flags) |
+| `bi_truy_na` | evt_rebellion_amnesty_offer(-remove) | — |
 | `bo_tron_o_do` | evt_child_odo_run_away | — |
 | `career_bao_tieu` | *(engine/init)* | evt_career_martial_incident(has_any_flag) |
 | `career_chao_hang` | *(engine/init)* | evt_career_trade_temptation(has_any_flag), evt_career_crisis_hardship(has_any_flag) |
@@ -28,11 +29,11 @@
 | `co_ban_tri_ky` | evt_child_quan_lai_academy_peer | — |
 | `co_luc_luong_rieng` | evt_martial_train_disciples | evt_rebellion_spark(has_any_flag) |
 | `co_tai_mat_noi_dinh` | evt_adult_hoang_toc_teen_cold_palace_ally | — |
-| `da_co_con` | *(engine/init)* | evt_adult_family_child_education(has_flags), evt_adult_family_child_illness(has_flags), evt_fate_tuyen_tu_palace(missing_flags), evt_fate_eunuch_or_palace_maid(missing_flags) |
+| `da_co_con` | *(engine/init)* | evt_family_child_coming_of_age(has_flags), evt_elder_grandchild_blessing(has_flags), evt_adult_family_child_education(has_flags), evt_adult_family_child_illness(has_flags) |
 | `da_hoi_ra_o_rieng` | evt_chain_ra_o_rieng_1 | evt_chain_ra_o_rieng_1(missing_flags) |
 | `da_ket_hon` | *(engine/init)* | evt_adult_family_spouse_hardship(has_flags), evt_life_marriage_harmony(has_flags), evt_adult_quan_lai_marriage_alliance(missing_flags), evt_scholar_poor_matchmaker(missing_flags) |
 | `da_khai_phu_hoang_toc` | evt_adult_exp_hoang_toc_title_estate | evt_world_imperial_tax_levy(has_any_flag) |
-| `da_khoi_nghia` | evt_rebellion_spark | evt_rebellion_spark(missing_flags), evt_rebellion_recruit_bandits(has_flags), evt_rebellion_decisive_battle(has_flags) |
+| `da_khoi_nghia` | evt_rebellion_amnesty_offer(-remove), evt_rebellion_spark | evt_rebellion_people_support(has_flags), evt_rebellion_amnesty_offer(has_flags), evt_rebellion_spark(missing_flags), evt_rebellion_recruit_bandits(has_flags) |
 | `da_len_kinh_thanh` | evt_chain_len_kinh_1 | evt_chain_len_kinh_1(missing_flags), evt_chain_len_kinh_2(has_flags), evt_chain_len_kinh_3(has_flags) |
 | `da_nhan_tuoc_vi` | evt_adult_exp_hoang_toc_title_estate | evt_court_succession_crisis(has_any_flag), evt_world_imperial_tax_levy(has_any_flag) |
 | `da_ra_o_rieng` | evt_chain_ra_o_rieng_1 | evt_chain_ra_o_rieng_1(missing_flags), evt_chain_ra_o_rieng_2(has_flags), evt_chain_ra_o_rieng_3(has_flags) |
@@ -68,8 +69,8 @@
 | `phe_thai_tu_thang_the` | evt_court_succession_crisis | evt_court_succession_victory(has_any_flag) |
 | `phe_thanh_luu` | evt_official_faction_choice | evt_official_faction_choice(missing_flags), evt_official_faction_scholar_support(has_flags) |
 | `quan_ham_binh_si` | evt_military_enlist, evt_military_promotion_1(-remove), evt_military_retire(-remove) | evt_military_promotion_1(has_flags) |
-| `quan_ham_hieu_uy` | evt_military_enlist, evt_military_promotion_1, evt_military_promotion_2(-remove), evt_military_retire(-remove) | evt_military_promotion_2(has_flags), evt_martial_border_campaign(has_any_flag), evt_martial_court_rivalry(has_any_flag) |
-| `quan_ham_tuong_quan` | evt_military_promotion_2, evt_military_retire(-remove) | evt_martial_border_campaign(has_any_flag), evt_martial_court_rivalry(has_any_flag) |
+| `quan_ham_hieu_uy` | evt_military_enlist, evt_military_promotion_1, evt_military_promotion_2(-remove), evt_military_retire(-remove) | evt_military_promotion_2(has_flags), evt_martial_vanguard_duel(has_any_flag), evt_martial_supply_sabotage(has_any_flag), evt_martial_border_campaign(has_any_flag) |
+| `quan_ham_tuong_quan` | evt_military_promotion_2, evt_military_retire(-remove) | evt_martial_vanguard_duel(has_any_flag), evt_martial_supply_sabotage(has_any_flag), evt_martial_border_campaign(has_any_flag), evt_martial_court_rivalry(has_any_flag) |
 | `thai_giam` | evt_fate_eunuch_or_palace_maid | evt_chain_len_kinh_1(missing_flags), evt_chain_ra_o_rieng_1(missing_flags), evt_military_enlist(missing_flags), evt_adult_major_noble_patron(missing_flags) |
 | `tham_hoa` | *(engine/init)* | evt_scholar_vinh_quy_bai_to(has_any_flag) |
 | `thanh_vien_phuong_tho` | evt_adult_exp_thu_cong_guild | evt_adult_exp_thu_cong_merchant_order(has_any_flag) |
@@ -87,7 +88,7 @@
 | `tung_bi_giang_chuc` | evt_official_faction_patron_fall, evt_official_faction_rehabilitate(-remove), evt_official_intrigue_slander | evt_official_faction_rehabilitate(has_flags), evt_rebellion_spark(has_any_flag) |
 | `tung_di_an_xin` | evt_child_poor_begging | — |
 | `tung_o_do` | evt_child_poor_sell_indenture, evt_child_odo_redeem_freedom(-remove), evt_child_odo_run_away(-remove) | evt_child_exp_circ_youngest_pampered(missing_flags), evt_child_poor_begging(missing_flags), evt_child_poor_sell_indenture(missing_flags), evt_child_village_festival(missing_flags) |
-| `xuat_than_o_do` | evt_child_odo_redeem_freedom, evt_child_odo_run_away | evt_servitude_opportunity(has_any_flag) |
+| `xuat_than_o_do` | evt_child_odo_redeem_freedom, evt_child_odo_run_away | evt_servitude_opportunity(has_any_flag), evt_servitude_secret_ledger(has_any_flag) |
 
 ## 2. Danh Sách Sự Kiện Theo Thư Mục
 | ID | Tiêu đề | Stage | Severity | Cooldown | Origin | File |
@@ -235,6 +236,11 @@
 | `evt_elder_village_scholarship` | Lập quỹ đèn sách giúp sĩ tử nghèo | adulthood | major (1x) | 1800 | all | `truong_thanh/elder_life.json` |
 | `evt_elder_pass_craft` | Truyền lại sở học cho hậu thế | adulthood | major (1x) | 1440 | all | `truong_thanh/elder_life.json` |
 | `evt_elder_atone_past` | Hàn gắn hiềm khích năm xưa | adulthood | major (1x) | 1800 | all | `truong_thanh/elder_life.json` |
+| `evt_family_child_coming_of_age` | Con Cái Trưởng Thành — Dựng Vợ Gả Chồng | adulthood | major | 1800 | all | `truong_thanh/family_and_elder_ext.json` |
+| `evt_family_clan_dispute` | Tranh Chấp Đất Hương Hỏa Trong Họ Tộc | adulthood | major | 1800 | all | `truong_thanh/family_and_elder_ext.json` |
+| `evt_elder_grandchild_blessing` | Sum Vầy Con Cháu Mừng Tuổi Thất Tuần | adulthood | major | 2160 | all | `truong_thanh/family_and_elder_ext.json` |
+| `evt_elder_memoir_writing` | Soạn Gia Phả & Hồi Ký Lưu Truyền Hậu Thế | adulthood | major (1x) | 99999 | all | `truong_thanh/family_and_elder_ext.json` |
+| `evt_elder_old_rival_reconcile` | Gặp Lại Cố Nhân Xưa Lúc Tuổi Xế Chiều | adulthood | major (1x) | 99999 | all | `truong_thanh/family_and_elder_ext.json` |
 | `evt_adult_family_pay_old_debt` | Món Nợ Cũ Của Song Thân Đến Hạn | adulthood | major (1x) | 99999 | ban_nong, thu_cong, dia_chu | `truong_thanh/family_marriage_and_children.json` |
 | `evt_adult_family_sibling_wedding` | Hỷ Sự Của Anh Chị Em Trong Nhà | adulthood | major (1x) | 99999 | all | `truong_thanh/family_marriage_and_children.json` |
 | `evt_adult_family_spouse_hardship` | Vợ Chồng Đồng Cam Cộng Khổ | adulthood | major | 720 | all | `truong_thanh/family_marriage_and_children.json` |
@@ -245,10 +251,20 @@
 | `evt_youth_family_sibling_court_rivalry` | Sóng Gió Huynh Đệ Nơi Phủ Đệ | adulthood | major (1x) | 99999 | quan_lai, hoang_toc | `truong_thanh/family_youth_and_siblings.json` |
 | `evt_family_father_old_age_passing` | Phụ Thân Tuổi Cao Quy Tiên | adulthood | major (1x) | 99999 | all | `truong_thanh/family_youth_and_siblings.json` |
 | `evt_family_mother_old_age_passing` | Mẫu Thân Tuổi Già Nhắm Mắt Xuôi Tay | adulthood | major (1x) | 99999 | all | `truong_thanh/family_youth_and_siblings.json` |
+| `evt_wealth_build_ancestral_hall` | Hưng Công Xây Dựng Từ Đường Dòng Họ | adulthood | major (1x) | 99999 | all | `truong_thanh/late_game_wealth_sinks.json` |
+| `evt_wealth_sponsor_academy` | Lập Nghĩa Thục Miễn Học Phí Cho Trẻ Nghèo | adulthood | major | 2160 | all | `truong_thanh/late_game_wealth_sinks.json` |
+| `evt_wealth_imperial_relief_fund` | Xuất Kho Tư Gia Cứu Tế Nạn Dân Liên Tỉnh | adulthood | major | 2160 | all | `truong_thanh/late_game_wealth_sinks.json` |
+| `evt_wealth_merchant_fleet_loss` | Biến Cố Mùa Vụ & Hàng Hóa Thất Thoát | adulthood | major | 1800 | all | `truong_thanh/late_game_wealth_sinks.json` |
+| `evt_wealth_royal_contribution_title` | Quyên Nạp Quân Lương Bảo Vệ Biên Cương | adulthood | major | 2520 | all | `truong_thanh/late_game_wealth_sinks.json` |
 | `evt_life_corrupt_audit` | Ngự Sử Đài Về Địa Phương Thanh Tra | adulthood | major | 540 | all | `truong_thanh/life_events.json` |
 | `evt_life_midlife_illness` | Chứng Bệnh Tuổi Trung Niên | adulthood | major | 720 | all | `truong_thanh/life_events.json` |
 | `evt_life_marriage_harmony` | Chuyện Trong Nhà Ngoài Ngõ | adulthood | major | 720 | all | `truong_thanh/life_events.json` |
 | `evt_life_elderly_reflection` | Tuổi Xế Chiều Nhìn Lại Một Đời | adulthood | major (1x) | 99999 | all | `truong_thanh/life_events.json` |
+| `evt_martial_vanguard_duel` | Đơn Thương Độc Mã Đấu Tướng Tiền Phong | adulthood | major | 1080 | all | `truong_thanh/martial_and_rebellion_ext.json` |
+| `evt_martial_supply_sabotage` | Đêm Tập Kích Kho Lương Quân Địch | adulthood | major | 1440 | all | `truong_thanh/martial_and_rebellion_ext.json` |
+| `evt_martial_war_veteran_pension` | Tình Nghĩa Đồng Đội Chốn Sa Trường | adulthood | major | 1440 | all | `truong_thanh/martial_and_rebellion_ext.json` |
+| `evt_rebellion_people_support` | Dân Làng Đêm Khuya Tiếp Tế Lương Thảo | adulthood | major | 1080 | all | `truong_thanh/martial_and_rebellion_ext.json` |
+| `evt_rebellion_amnesty_offer` | Chiếu Chiêu An Của Triều Đình | adulthood | major (1x) | 99999 | all | `truong_thanh/martial_and_rebellion_ext.json` |
 | `evt_martial_border_campaign` | Xuất Chinh Bình Định Giặc Biên Ải | adulthood | major | 1080 | all | `truong_thanh/martial_general.json` |
 | `evt_martial_siege_defense` | Tử Thủ Thành Trì Trước Vòng Vây Địch | adulthood | major | 1440 | all | `truong_thanh/martial_general.json` |
 | `evt_martial_court_rivalry` | Văn Quan Dèm Pha Công Trận Của Võ Tướng | adulthood | major | 1440 | all | `truong_thanh/martial_general.json` |
@@ -288,6 +304,11 @@
 | `evt_official_intrigue_strike_rival` | Nắm Thóp Đối Thủ Tranh Chức | adulthood | major | 1440 | all | `truong_thanh/official_intrigue.json` |
 | `evt_official_intrigue_border_exile` | Bị Điều Đi Trấn Nhậm Vùng Biên Viễn | adulthood | major | 1800 | all | `truong_thanh/official_intrigue.json` |
 | `evt_official_intrigue_tax_audit` | Phụng Chỉ Tra Xét Tham Nhũng Địa Phương | adulthood | major | 1440 | all | `truong_thanh/official_intrigue.json` |
+| `evt_ban_nong_land_reclaim` | Khai Khẩn Đất Hoang Ven Bãi Bồi | adulthood | major | 1440 | ban_nong | `truong_thanh/origin_ban_nong_and_tiers.json` |
+| `evt_ban_nong_village_elder_council` | Đình Làng Bàn Cử Chức Sắc Hương Lý | adulthood | major | 1800 | ban_nong, thu_cong | `truong_thanh/origin_ban_nong_and_tiers.json` |
+| `evt_tier_binh_dan_seasonal_fair` | Hội Vật & Phiên Chợ Đầu Xuân | adulthood | major | 1080 | ban_nong, thu_cong | `truong_thanh/origin_ban_nong_and_tiers.json` |
+| `evt_tier_trung_luu_guild_banquet` | Tiệc Trà Hội Thương & Giới Sĩ Phu | adulthood | major | 1440 | thu_cong, dia_chu | `truong_thanh/origin_ban_nong_and_tiers.json` |
+| `evt_tier_cung_dinh_autumn_poetry` | Thưởng Nguyệt Bình Thơ Nơi Phủ Đệ | adulthood | major | 1440 | quan_lai, hoang_toc | `truong_thanh/origin_ban_nong_and_tiers.json` |
 | `evt_adult_exp_dia_chu_tenant_rent` | Tá Điền Kéo Đến Xin Khất Tô | adulthood | major | 480 | dia_chu | `truong_thanh/origin_dia_chu.json` |
 | `evt_adult_exp_dia_chu_buy_land` | Cơ Hội Mua Ruộng Tốt Giá Hời | adulthood | major | 540 | dia_chu | `truong_thanh/origin_dia_chu.json` |
 | `evt_adult_exp_dia_chu_bandit_raid` | Thảo Khấu Đe Dọa Cướp Điền Trang | adulthood | major | 540 | dia_chu | `truong_thanh/origin_dia_chu.json` |
@@ -339,6 +360,11 @@
 | `evt_scholar_rich_backdoor` | Lời Mời Chạy Cửa Sau Mua Danh | adulthood | major (1x) | 99999 | dia_chu, quan_lai, hoang_toc | `truong_thanh/scholar_rich.json` |
 | `evt_scholar_rich_family_pressure` | Áp Lực Gia Phong & Kỳ Vọng Của Tộc Trưởng | adulthood | major (1x) | 99999 | dia_chu, quan_lai, hoang_toc | `truong_thanh/scholar_rich.json` |
 | `evt_scholar_rich_patron_poor` | Gặp Sĩ Tử Nghèo Hết Tiền Lộ Phí | adulthood | major | 1440 | dia_chu, quan_lai, hoang_toc | `truong_thanh/scholar_rich.json` |
+| `evt_harem_moonlight_pavilion` | Đêm Trung Thu Nơi Ngự Hoa Viên | adulthood | major | 1080 | all | `truong_thanh/servitude_and_harem_ext.json` |
+| `evt_harem_secret_medicine` | Nghi Án Chén Thuốc Bổ Nơi Tây Cung | adulthood | major | 1440 | all | `truong_thanh/servitude_and_harem_ext.json` |
+| `evt_harem_elder_eunuch_alliance` | Lão Nội Thị Truyền Thụ Quyền Mưu | adulthood | major | 1440 | all | `truong_thanh/servitude_and_harem_ext.json` |
+| `evt_debt_desperate_indenture` | Chủ Nợ Xiết Nhà — Cầm Thân Hay Bỏ Xứ | adulthood | major | 1800 | all | `truong_thanh/servitude_and_harem_ext.json` |
+| `evt_servitude_secret_ledger` | Phát Hiện Sổ Sách Gian Lận Trong Phủ Chủ | adulthood | major | 1440 | all | `truong_thanh/servitude_and_harem_ext.json` |
 | `evt_fate_tuyen_tu_palace` | Chiếu Chỉ Tuyển Tú Nữ Vào Hậu Cung | adulthood | major (1x) | 99999 | dia_chu, quan_lai | `truong_thanh/special_fates.json` |
 | `evt_fate_eunuch_or_palace_maid` | Bước Đường Cùng: Tiến Cung Làm Thái Giám / Cung Nữ | adulthood | major (1x) | 99999 | ban_nong, thu_cong | `truong_thanh/special_fates.json` |
 | `evt_fate_eunuch_promotion` | Quyền Khuynh Nội Đình: Tổng Quản Thái Giám | adulthood | major (1x) | 99999 | all | `truong_thanh/special_fates.json` |

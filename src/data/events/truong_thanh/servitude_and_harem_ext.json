@@ -1,0 +1,189 @@
+[
+  {
+    "id": "evt_harem_moonlight_pavilion",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Đêm Trung Thu Nơi Ngự Hoa Viên",
+    "conditions": {
+      "min_age": 15,
+      "has_any_flag": ["trong_hau_cung", "thai_giam"]
+    },
+    "weight": { "base": 45 },
+    "description": "Đêm rằm tháng Tám, đèn hoa rực rỡ khắp Ngự hoa viên. Các phi tần và nội thị tấp nập chuẩn bị yến tiệc cho Hoàng thượng.",
+    "choices": [
+      {
+        "label": "Khéo léo chu toàn lễ nghi, ghi điểm trước bậc tôn quý",
+        "hint": "Thanh danh +8 · Quan hệ +8 · Tiền +220đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Sự chu đáo và mực thước giúp bạn được ban thưởng ngân lượng và lời khen ngợi.",
+            "effects": { "fame": 8, "relationships": 8, "copper": 220, "happiness": 4 }
+          }
+        ]
+      },
+      {
+        "label": "Lặng lẽ đứng góc hành lang ngắm trăng, nhớ về quê cũ",
+        "hint": "Hạnh phúc +3 · Học thức +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Khoảnh khắc tĩnh lặng hiếm hoi giữa chốn thâm cung giúp tâm trí bạn nhẹ nhõm hơn.",
+            "effects": { "happiness": 3, "education": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_harem_secret_medicine",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Nghi Án Chén Thuốc Bổ Nơi Tây Cung",
+    "conditions": {
+      "min_age": 16,
+      "has_any_flag": ["trong_hau_cung", "thai_giam"]
+    },
+    "weight": { "base": 40 },
+    "description": "Một cung nữ hớt hải tìm bạn vì phát hiện thang thuốc bổ đưa lên Tây cung có mùi lạ khác thường.",
+    "choices": [
+      {
+        "label": "Bí mật giữ lại tang vật và báo lên Thái hậu xử lý",
+        "hint": "Thanh danh +12 · Quan hệ +10 · Thưởng +350đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Vụ việc được dập tắt êm thấm, Thái hậu ghi nhận công lao cẩn trọng của bạn.",
+            "effects": { "fame": 12, "relationships": 10, "copper": 350 }
+          }
+        ]
+      },
+      {
+        "label": "Âm thầm đổ bỏ thang thuốc, tránh rước họa vào thân",
+        "hint": "An toàn · Sức khỏe +2 · Quan hệ -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giữ được mạng sống bình yên giữa chốn hậu cung đầy cạm bẫy.",
+            "effects": { "health": 2, "relationships": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_harem_elder_eunuch_alliance",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Lão Nội Thị Truyền Thụ Quyền Mưu",
+    "conditions": {
+      "min_age": 16,
+      "has_flags": ["thai_giam"]
+    },
+    "weight": { "base": 48 },
+    "description": "Một lão nội thị sắp về hưu nhìn thấy ở bạn sự lanh lợi, liền gọi vào phòng kín chỉ dạy cách đối nhân xử thế nơi Nội đình.",
+    "choices": [
+      {
+        "label": "Cúi đầu bái sư, ghi nhớ từng lời căn dặn",
+        "hint": "Quan hệ +12 · Học thức +4 · Tiền +250đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nhờ lão nội thị nâng đỡ, bạn nắm được nhiều đầu mối quan trọng trong cung cấm.",
+            "effects": { "relationships": 12, "education": 4, "copper": 250 }
+          }
+        ]
+      },
+      {
+        "label": "Cảm tạ nhưng giữ khoảng cách để khỏi vướng phe cánh",
+        "hint": "Thanh danh +5 · Hạnh phúc +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn chọn sống thanh bạch, không tranh quyền đoạt lợi trong cung.",
+            "effects": { "fame": 5, "happiness": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_debt_desperate_indenture",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1800,
+    "title": "Chủ Nợ Xiết Nhà — Cầm Thân Hay Bỏ Xứ",
+    "conditions": {
+      "min_age": 15,
+      "max_age": 45,
+      "max_copper": 50,
+      "missing_flags": ["trong_hau_cung", "thai_giam", "dang_lam_quan", "bi_ep_lam_gia_no"]
+    },
+    "weight": { "base": 35 },
+    "description": "Túng quẫn đến đường cùng, đám gia đinh của lão phú hộ kéo tới gõ cửa đòi nợ, ép bạn phải ký giấy vào phủ làm gia nô trừ nợ.",
+    "choices": [
+      {
+        "label": "Cắn răng ký khế ước vào phủ làm gia nô để yên thân (+120 đồng)",
+        "hint": "Gắn cờ bi_ep_lam_gia_no · Tiền +120đ · Hạnh phúc -8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn đành gạt nước mắt bước vào phủ lớn làm thuê gán nợ, chờ ngày chuộc lại tự do.",
+            "effects": { "copper": 120, "happiness": -8, "add_flags": ["bi_ep_lam_gia_no"] }
+          }
+        ]
+      },
+      {
+        "label": "Bán hết đồ đạc còn lại, quyết không bán thân làm nô",
+        "hint": "Thanh danh +4 · Sức khỏe -4 · Tiền +40đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giữ được thân phận tự do dù phải chịu cảnh cơm cháo qua ngày.",
+            "effects": { "copper": 40, "fame": 4, "health": -4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_servitude_secret_ledger",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Phát Hiện Sổ Sách Gian Lận Trong Phủ Chủ",
+    "conditions": {
+      "min_age": 15,
+      "has_any_flag": ["bi_ep_lam_gia_no", "xuat_than_o_do"]
+    },
+    "weight": { "base": 65 },
+    "description": "Khi dọn dẹp thư phòng, bạn tình cờ thấy cuốn sổ ghi chép việc chủ phủ trốn thuế ruộng và cho vay nặng lãi trái phép.",
+    "choices": [
+      {
+        "label": "Âm thầm giao dịch, buộc chủ phủ xóa nợ trả tự do",
+        "hint": "Gỡ cờ gia nô · Tiền +250đ · Thanh danh +5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Lo sợ lộ bí mật, lão địa chủ vội vã trả lại khế ước tự do và dúi thêm cho bạn ít bạc lộ phí.",
+            "effects": { "remove_flags": ["bi_ep_lam_gia_no"], "copper": 250, "fame": 5, "happiness": 10 }
+          }
+        ]
+      },
+      {
+        "label": "Giữ kín miệng để tránh tai họa sát thân",
+        "hint": "Quan hệ +4 · Tiền +80đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn làm như không biết gì, tiếp tục nhẫn nhịn chờ thời cơ khác.",
+            "effects": { "relationships": 4, "copper": 80 }
+          }
+        ]
+      }
+    ]
+  }
+]

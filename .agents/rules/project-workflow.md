@@ -23,7 +23,7 @@ trigger: always_on
 4. **Quy trình kiểm chứng bắt buộc sau khi sửa:**
    - Nếu có thêm/sửa event JSON: chạy `npm run gen:index` để cập nhật `docs/event-index.md`.
    - Luôn chạy `npm run build` (`tsc -b && vite build`) và `npm test` (`vitest run`).
-   - Nếu thêm nhánh truyện mới hoặc sửa cân bằng: chạy `npm run audit:1000` (mặc định 200 kiếp, ~2 phút) và đọc `docs/audit-report-1000.md` để đảm bảo nhánh mới không bị `0%` Dead Event và không phá cân bằng tuổi thọ/tài sản.
+   - Nếu thêm nhánh truyện mới hoặc sửa cân bằng: chạy `npm run audit:1000` (chạy song song 5 xuất thân, mặc định 200 kiếp ~35s; lúc đang dev có thể lọc nhanh bằng `AUDIT_ORIGINS=...` / `AUDIT_ARCHS=...` / `AUDIT_SEEDS=1`). Sau khi chạy, đọc `docs/audit-summary.json` (gọn token cho AI) hoặc `docs/audit-report-1000.md` để đảm bảo nhánh mới không bị `0%` Dead Event và không phá cân bằng tuổi thọ/tài sản.
 
 5. **Nguyên tắc Kinh tế, Quyền Tự Quyết & Thừa kế (`src/engine/familyEconomy.ts`):**
    - **Không tự động định hướng thay người chơi:** Lịch mặc định khi sang tuổi 13 (`teenStarterSchedule`) phải để `act_nghi_ngoi`, không tự động gán việc làm kiếm tiền, học tập hay `fallbackRules`.

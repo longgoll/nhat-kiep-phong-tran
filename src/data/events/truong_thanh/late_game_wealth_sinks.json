@@ -1,0 +1,204 @@
+[
+  {
+    "id": "evt_wealth_build_ancestral_hall",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Hưng Công Xây Dựng Từ Đường Dòng Họ",
+    "conditions": {
+      "min_age": 35,
+      "min_copper": 3000,
+      "has_any_property": true,
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": { "base": 42 },
+    "description": "Cơ nghiệp đã vững vàng, các bậc trưởng lão trong họ mong muốn bạn đứng ra hưng công xây lại nhà thờ tổ khang trang bằng gỗ lim.",
+    "choices": [
+      {
+        "label": "Đứng ra bỏ toàn bộ kinh phí dựng từ đường bề thế (-2500 đồng)",
+        "conditions": { "min_copper": 2500 },
+        "hint": "Thanh danh +25 · Quan hệ +15 · Hạnh phúc +12",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Ngôi từ đường chạm trổ tinh xảo hoàn thành, tên tuổi bạn được khắc trên bia đá lưu truyền hậu thế.",
+            "effects": { "copper": -2500, "fame": 25, "relationships": 15, "happiness": 12, "milestone_title": "Xây dựng Từ đường dòng họ" }
+          }
+        ]
+      },
+      {
+        "label": "Góp một phần công đức tu sửa mái ngói (-800 đồng)",
+        "conditions": { "min_copper": 800 },
+        "hint": "Thanh danh +10 · Quan hệ +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Sự đóng góp thiết thực của bạn giúp việc tu sửa hoàn tất gọn gàng.",
+            "effects": { "copper": -800, "fame": 10, "relationships": 6 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_wealth_sponsor_academy",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 2160,
+    "title": "Lập Nghĩa Thục Miễn Học Phí Cho Trẻ Nghèo",
+    "conditions": {
+      "min_age": 32,
+      "min_copper": 2500,
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": { "base": 36 },
+    "description": "Thấy nhiều trẻ em trong vùng ham học nhưng nhà nghèo không đủ tiền sắm giấy bút, bạn nghĩ tới việc mở trường nghĩa thục.",
+    "choices": [
+      {
+        "label": "Mở lớp học, mời thầy đồ giỏi và cấp sách vở miễn phí (-1800 đồng)",
+        "conditions": { "min_copper": 1800 },
+        "hint": "Thanh danh +20 · Học thức +4 · Quan hệ +12",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Tiếng đọc sách vang lên rộn rã mỗi sớm mai, cả phủ đều ca ngợi tấm lòng nhân nghĩa của bạn.",
+            "effects": { "copper": -1800, "fame": 20, "education": 4, "relationships": 12, "happiness": 10 }
+          }
+        ]
+      },
+      {
+        "label": "Tặng một ít giấy bút cho học trò nghèo trong xóm (-400 đồng)",
+        "conditions": { "min_copper": 400 },
+        "hint": "Thanh danh +6 · Hạnh phúc +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Món quà nhỏ giúp vài đứa trẻ tiếp tục theo đuổi con chữ.",
+            "effects": { "copper": -400, "fame": 6, "happiness": 4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_wealth_imperial_relief_fund",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 2160,
+    "title": "Xuất Kho Tư Gia Cứu Tế Nạn Dân Liên Tỉnh",
+    "conditions": {
+      "min_age": 30,
+      "min_copper": 4000,
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": { "base": 34 },
+    "description": "Trận lụt lớn khiến dân nhiều huyện lâm vào cảnh màn trời chiếu đất. Quan phủ gửi thư vận động các nhà hào phú chung tay cứu trợ.",
+    "choices": [
+      {
+        "label": "Mở chẩn phát cháo và cấp gạo cứu đói quy mô lớn (-3000 đồng)",
+        "conditions": { "min_copper": 3000 },
+        "hint": "Thanh danh +28 · Quan hệ +15 · Hạnh phúc +10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Hàng ngàn người dân qua được cơn hoạn nạn, triều đình ban biển vàng khen tặng nghĩa cử cao đẹp.",
+            "effects": { "copper": -3000, "fame": 28, "relationships": 15, "happiness": 10 }
+          }
+        ]
+      },
+      {
+        "label": "Quyên góp mức vừa phải theo lệ địa phương (-600 đồng)",
+        "conditions": { "min_copper": 600 },
+        "hint": "Thanh danh +7 · Quan hệ +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn đóng góp phần của mình rồi quay về trông nom việc nhà.",
+            "effects": { "copper": -600, "fame": 7, "relationships": 4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_wealth_merchant_fleet_loss",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1800,
+    "title": "Biến Cố Mùa Vụ & Hàng Hóa Thất Thoát",
+    "conditions": {
+      "min_age": 28,
+      "min_copper": 3500,
+      "has_any_property": true,
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": { "base": 30 },
+    "description": "Cơn bão bất ngờ ập xuống làm hư hại kho hàng và nhiều diện tích điền sản của bạn, người làm đang chờ tiền khắc phục.",
+    "choices": [
+      {
+        "label": "Xuất tiền sửa sang toàn bộ, giữ uy tín với đối tác và tá điền (-2000 đồng)",
+        "conditions": { "min_copper": 2000 },
+        "hint": "Quan hệ +10 · Thanh danh +8 · Thương tài +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nhờ xử lý dứt khoát và giữ chữ tín, cơ nghiệp nhanh chóng phục hồi sau bão.",
+            "effects": { "copper": -2000, "relationships": 10, "fame": 8, "craft_trade": 2 }
+          }
+        ]
+      },
+      {
+        "label": "Cắt giảm chi tiêu, tạm hoãn giao hàng để bù lỗ (-900 đồng)",
+        "conditions": { "min_copper": 900 },
+        "hint": "Quan hệ -4 · Hạnh phúc -3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giảm thiểu được thiệt hại tiền mặt nhưng mất lòng một số bạn hàng cũ.",
+            "effects": { "copper": -900, "relationships": -4, "happiness": -3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_wealth_royal_contribution_title",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 2520,
+    "title": "Quyên Nạp Quân Lương Bảo Vệ Biên Cương",
+    "conditions": {
+      "min_age": 35,
+      "min_copper": 5000,
+      "missing_flags": ["trong_hau_cung", "thai_giam"]
+    },
+    "weight": { "base": 32 },
+    "description": "Biên ải cần thêm quân lương phòng thủ, bộ Hộ mở lệ cho các hào phú quyên góp tiền bạc để đổi lấy danh hiệu vinh dự.",
+    "choices": [
+      {
+        "label": "Hiến tặng ngân khố quốc gia (-4000 đồng)",
+        "conditions": { "min_copper": 4000 },
+        "hint": "Thanh danh +30 · Quan hệ +15",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Triều đình ban sắc khen thưởng lòng trung nghĩa, thanh thế gia tộc vang xa.",
+            "effects": { "copper": -4000, "fame": 30, "relationships": 15, "happiness": 8 }
+          }
+        ]
+      },
+      {
+        "label": "Từ chối khéo, giữ bạc phòng thân tuổi già",
+        "hint": "Giữ tiền · Thanh danh -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn chọn giữ chắc túi tiền giữa thời cuộc nhiều biến động.",
+            "effects": { "fame": -2 }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,208 @@
+[
+  {
+    "id": "evt_family_child_coming_of_age",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1800,
+    "title": "Con Cái Trưởng Thành — Dựng Vợ Gả Chồng",
+    "conditions": {
+      "min_age": 38,
+      "max_age": 68,
+      "has_flags": ["da_co_con"],
+      "missing_flags": ["trong_hau_cung", "thai_giam"]
+    },
+    "weight": { "base": 36 },
+    "description": "Con bạn nay đã đến tuổi cập kê thành gia lập thất. Việc lo sính lễ, chọn thông gia hiền đức khiến cả nhà rộn ràng bàn tính.",
+    "choices": [
+      {
+        "label": "Tổ chức hôn lễ tươm tất, cho con vốn liếng ra riêng (-450 đồng)",
+        "conditions": { "min_copper": 450 },
+        "hint": "Hạnh phúc +12 · Quan hệ +10 · Thanh danh +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Ngày vui rộn rã tiếng cười, con cái hiếu thuận và hai họ thêm phần gắn bó.",
+            "effects": { "copper": -450, "happiness": 12, "relationships": 10, "fame": 8 }
+          }
+        ]
+      },
+      {
+        "label": "Làm lễ gia tiên giản dị ấm cúng trong nhà (-120 đồng)",
+        "conditions": { "min_copper": 120 },
+        "hint": "Hạnh phúc +7 · Quan hệ +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Lễ cưới tuy đạm bạc nhưng chan chứa tình cảm gia đình, các con rất biết điều.",
+            "effects": { "copper": -120, "happiness": 7, "relationships": 6 }
+          }
+        ]
+      },
+      {
+        "label": "Khuyên con tự lập trước khi tính chuyện trăm năm",
+        "hint": "Tiền giữ nguyên · Quan hệ -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Con bạn nghe lời cha mẹ, chăm chỉ làm ăn tích góp thêm vài năm nữa.",
+            "effects": { "relationships": -2, "happiness": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_family_clan_dispute",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1800,
+    "title": "Tranh Chấp Đất Hương Hỏa Trong Họ Tộc",
+    "conditions": {
+      "min_age": 30,
+      "max_age": 70,
+      "missing_flags": ["trong_hau_cung", "thai_giam"]
+    },
+    "weight": { "base": 26 },
+    "description": "Mấy người chú bác trong họ xảy ra bất hòa chuyện chia hoa lợi từ mảnh ruộng hương hỏa, mời bạn đứng ra phân xử.",
+    "choices": [
+      {
+        "label": "Bỏ tiền túi bù vào quỹ giỗ chạp để đôi bên hòa giải (-250 đồng)",
+        "conditions": { "min_copper": 250 },
+        "hint": "Quan hệ +12 · Thanh danh +8 · Hạnh phúc +5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Sự hào phóng và công tâm của bạn khiến cả dòng họ cảm phục, giữ được hòa khí.",
+            "effects": { "copper": -250, "relationships": 12, "fame": 8, "happiness": 5 }
+          }
+        ]
+      },
+      {
+        "label": "Phân xử rạch ròi theo gia phả và lệ làng",
+        "hint": "Thanh danh +5 · Quan hệ +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Dù có người hơi phật ý lúc đầu, nhưng lẽ phải cuối cùng vẫn được công nhận.",
+            "effects": { "fame": 5, "relationships": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_grandchild_blessing",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 2160,
+    "title": "Sum Vầy Con Cháu Mừng Tuổi Thất Tuần",
+    "conditions": {
+      "min_age": 58,
+      "has_flags": ["da_co_con"]
+    },
+    "weight": { "base": 40 },
+    "description": "Con cháu tề tựu đông đủ dưới mái nhà dâng trà chúc thọ, tiếng trẻ thơ ríu rít khắp sân.",
+    "choices": [
+      {
+        "label": "Phát tiền mừng tuổi cho các cháu và mở tiệc gia đình (-300 đồng)",
+        "conditions": { "min_copper": 300 },
+        "hint": "Hạnh phúc +15 · Sức khỏe +3 · Quan hệ +10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nhìn con cháu quây quần hiếu thảo, bạn thấy mọi vất vả cả đời đều xứng đáng.",
+            "effects": { "copper": -300, "happiness": 15, "health": 3, "relationships": 10 }
+          }
+        ]
+      },
+      {
+        "label": "Ôn tồn kể cho con cháu nghe chuyện lập nghiệp thuở hàn vi",
+        "hint": "Hạnh phúc +9 · Học thức +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Lũ trẻ chăm chú lắng nghe từng bài học làm người của bậc trưởng bối.",
+            "effects": { "happiness": 9, "education": 2, "relationships": 4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_memoir_writing",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Soạn Gia Phả & Hồi Ký Lưu Truyền Hậu Thế",
+    "conditions": {
+      "min_age": 55,
+      "min_education": 20
+    },
+    "weight": { "base": 35 },
+    "description": "Tuổi đã xế chiều, bạn muốn ghi chép lại những biến cố, nhân tình thế thái và gia huấn để con cháu đời sau ghi nhớ.",
+    "choices": [
+      {
+        "label": "Thuê thợ khắc bản in cuốn gia huấn đóng tập trang trọng (-350 đồng)",
+        "conditions": { "min_copper": 350 },
+        "hint": "Thanh danh +16 · Học thức +4 · Hạnh phúc +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Cuốn gia phả và gia huấn được đặt trang trọng trên bàn thờ tổ, lưu danh muôn đời.",
+            "effects": { "copper": -350, "fame": 16, "education": 4, "happiness": 8, "milestone_title": "Lưu truyền gia huấn cho hậu thế" }
+          }
+        ]
+      },
+      {
+        "label": "Tự tay chép lại từng trang bằng mực tàu giấy bản",
+        "hint": "Thanh danh +8 · Học thức +3 · Hạnh phúc +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nét chữ run run nhưng chứa đựng trọn vẹn tâm huyết cả một kiếp phong trần.",
+            "effects": { "fame": 8, "education": 3, "happiness": 6 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_old_rival_reconcile",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Gặp Lại Cố Nhân Xưa Lúc Tuổi Xế Chiều",
+    "conditions": {
+      "min_age": 52,
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": { "base": 32 },
+    "description": "Trên con đường rợp bóng cây, bạn bất ngờ gặp lại người từng cạnh tranh gay gắt với mình thời trẻ, nay tóc cũng đã bạc trắng.",
+    "choices": [
+      {
+        "label": "Mời vào quán trà, cùng cười xóa bỏ mọi hiềm khích năm xưa",
+        "hint": "Hạnh phúc +10 · Quan hệ +8 · Thanh danh +5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Chén trà ấm làm tan biến mọi ân oán nửa đời người, lòng nhẹ tựa mây bay.",
+            "effects": { "happiness": 10, "relationships": 8, "fame": 5 }
+          }
+        ]
+      },
+      {
+        "label": "Chắp tay gật đầu chào xã giao rồi lặng lẽ bước qua",
+        "hint": "Hạnh phúc +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Mọi chuyện đã là quá khứ, bạn tiếp tục bước đi thanh thản.",
+            "effects": { "happiness": 2 }
+          }
+        ]
+      }
+    ]
+  }
+]

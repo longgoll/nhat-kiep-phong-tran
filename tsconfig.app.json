@@ -19,5 +19,9 @@
     "resolveJsonModule": true
   },
   "include": ["src"],
-  "exclude": ["src/**/*.audit.ts"]
+  "exclude": [
+    "src/**/*.audit.ts",
+    "src/engine/__tests__/auditRunner.ts",
+    "src/engine/__tests__/auditGlobalSetup.ts"
+  ]
 }

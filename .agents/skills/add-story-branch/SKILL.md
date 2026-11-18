@@ -30,9 +30,9 @@ npm test
 Đảm bảo `dataIntegrity.test.ts` (trùng ID, sai `origin_in`, gãy link `schedule_delayed`) và `lifeAuditSimulation.test.ts` pass 100%.
 
 ## Bước 4: Kiểm chứng Thực tế bằng Giả lập (`audit:1000`)
-1. Nếu nhánh mới cần điều kiện đặc thù từ Bot (VD: hành động bổ nhiệm quan, chọn lối sống cụ thể), cập nhật thêm logic cho Bot Archetype tương ứng trong `src/engine/__tests__/audit1000.audit.ts`.
-2. Chạy `npm run audit:1000` (200 kiếp mặc định).
-3. Đọc `docs/audit-report-1000.md`:
+1. Nếu nhánh mới cần điều kiện đặc thù từ Bot (VD: hành động bổ nhiệm quan, chọn lối sống cụ thể), cập nhật thêm logic cho Bot Archetype tương ứng trong `src/engine/__tests__/auditRunner.ts`.
+2. Lúc đang dev nhanh có thể lọc đúng nhánh bằng biến môi trường `AUDIT_ORIGINS` / `AUDIT_ARCHS` / `AUDIT_SEEDS=1`; khi hoàn tất chạy full `npm run audit:1000` (chạy song song 5 luồng, 200 kiếp mặc định).
+3. Đọc `docs/audit-summary.json` (tiết kiệm token) và `docs/audit-report-1000.md`:
    - Kiểm tra các event mới **không nằm trong danh sách Dead Major Events (0%)**.
    - Soi phần **Outliers / Sample Chronicles** để đảm bảo không có lỗi nhân quả (VD: đang ở tù/hậu cung mà vẫn nổ sự kiện bên ngoài).
    - Kiểm tra tuổi thọ TB và tài sản TB giữ được sự phân hóa hợp lý.

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { expect } from 'vitest';
 import {
   ALL_ACTIONS as ACTIONS,
   ALL_ADULTHOOD_EVENTS as EVENTS,
@@ -44,9 +44,9 @@ const SILENT_AUTOPAUSE: AutoPauseConfig = {
   pauseOnNoFood: false,
 };
 
-const ALL_ORIGINS: OriginClass[] = ['ban_nong', 'thu_cong', 'dia_chu', 'quan_lai', 'hoang_toc'];
+export const ALL_ORIGINS: OriginClass[] = ['ban_nong', 'thu_cong', 'dia_chu', 'quan_lai', 'hoang_toc'];
 
-interface ArchetypeConfig {
+export interface ArchetypeConfig {
   id: string;
   focus: LifeFocusId;
   morning: string;
@@ -62,7 +62,7 @@ interface ArchetypeConfig {
   riskyChoices: boolean;
 }
 
-const ARCHETYPES: ArchetypeConfig[] = [
+export const ARCHETYPES: ArchetypeConfig[] = [
   {
     id: 'cong_danh_exam',
     focus: 'cong_danh',
@@ -242,7 +242,7 @@ function createStarter(seed: number, originClass: OriginClass, arch: ArchetypeCo
       profile: { ...life.profile, originClass, totalDays: 13 * DAYS_PER_YEAR, currentRole: 'Thiếu niên' },
     };
   }
-  life = {
+  return {
     ...life,
     assets: {
       ...life.assets,
@@ -258,7 +258,6 @@ function createStarter(seed: number, originClass: OriginClass, arch: ArchetypeCo
       night: 'act_ngu',
     },
   };
-  return life;
 }
 
 function applyAnnualBotSpendAndInvest(state: ActiveLifeState, arch: ArchetypeConfig): ActiveLifeState {
@@ -266,7 +265,6 @@ function applyAnnualBotSpendAndInvest(state: ActiveLifeState, arch: ArchetypeCon
   const age = getAgeYears(s.profile.totalDays);
   if (age < 18 || !s.isAlive || s.livelihoodStatus === 'prison') return s;
 
-  // Keep desired lifeFocus (if valid for current status, else engine normalizes)
   s = {
     ...s,
     schedule: {
@@ -281,7 +279,6 @@ function applyAnnualBotSpendAndInvest(state: ActiveLifeState, arch: ArchetypeCon
     },
   };
 
-  // Marriage & children
   if (arch.tryMarriage && age >= 20 && canMarrySpouse(s).ok) {
     s = marrySpouse(s);
   }
@@ -289,7 +286,6 @@ function applyAnnualBotSpendAndInvest(state: ActiveLifeState, arch: ArchetypeCon
     s = haveChild(s);
   }
 
-  // Exams (Hương / Hội / Đình) & Official Appointment/Promotion
   if (arch.tryExams) {
     for (const lvl of ['huong', 'hoi', 'dinh'] as const) {
       if (getExamEligibility(s, lvl).ok) {
@@ -300,13 +296,11 @@ function applyAnnualBotSpendAndInvest(state: ActiveLifeState, arch: ArchetypeCon
     s = appointOrPromoteOfficial(s);
   }
 
-  // Hobby practice
   if (arch.tryHobby && s.assets.wealthCopper >= 200) {
     const res = executeInstantAdultAction(s, 'inst_hobby_practice');
     if (res.ok) s = res.state;
   }
 
-  // Property, housing & gold reserve
   if (arch.tryPropertyAndGold) {
     if (s.assets.wealthCopper > 1500) {
       s = buyGoldReserve(s, 300);
@@ -326,7 +320,6 @@ function applyAnnualBotSpendAndInvest(state: ActiveLifeState, arch: ArchetypeCon
     }
   }
 
-  // Trigger venture startup flag once wealthy enough
   if (
     arch.tryVenture &&
     !s.activeVenture &&
@@ -367,7 +360,7 @@ function pickChoice(state: ActiveLifeState, event: GameEventDef, arch: Archetype
   return (state.profile.totalDays + arch.id.length) % event.choices.length;
 }
 
-interface LifeAuditRecord {
+export interface LifeAuditRecord {
   origin: OriginClass;
   archetype: string;
   focus: LifeFocusId;
@@ -388,6 +381,12 @@ interface LifeAuditRecord {
   decisionsFired: string[];
   anomalies: string[];
   timeline: string[];
+}
+
+export interface AuditShardOutput {
+  origin: OriginClass;
+  majorEventIds: string[];
+  records: LifeAuditRecord[];
 }
 
 function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): LifeAuditRecord {
@@ -441,7 +440,6 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
       const evt = res.pendingEvent;
       const age = getAgeYears(state.profile.totalDays);
 
-      // Logic sanity checks
       if (state.livelihoodStatus === 'prison' && evt.id === 'dec_college_18') {
         anomalies.push(`PRISON_COLLEGE_CONFLICT_AGE_${age}`);
       }
@@ -493,120 +491,65 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
   };
 }
 
-describe('Monte Carlo 1,000-Life Narrative & Logic Audit', () => {
-  it('simulates 1,000 lifetimes across 5 origins x 10 archetypes and writes docs/audit-report-1000.md', async () => {
-    const records: LifeAuditRecord[] = [];
-    const eventHits = new Map<string, number>();
-    const decisionHits = new Map<string, number>();
-    const deathReasons = new Map<string, number>();
+export function getAuditConfigFromEnv(): {
+  seedsPerCombo: number;
+  origins: OriginClass[];
+  archetypes: ArchetypeConfig[];
+} {
+  const seedsPerCombo = Math.max(1, Number(process.env.AUDIT_SEEDS ?? '4'));
+  const rawOrigins = process.env.AUDIT_ORIGINS?.trim();
+  const rawArchs = process.env.AUDIT_ARCHS?.trim();
 
-    const SEEDS_PER_COMBO = Number(process.env.AUDIT_SEEDS ?? '4'); // default 200 lives (~1 min); set AUDIT_SEEDS=20 for 1,000 lives
-    let seed = 5000;
+  const origins = rawOrigins
+    ? (rawOrigins.split(',').map((s) => s.trim()).filter(Boolean) as OriginClass[])
+    : ALL_ORIGINS;
+  const archFilter = rawArchs
+    ? new Set(rawArchs.split(',').map((s) => s.trim()).filter(Boolean))
+    : null;
+  const archetypes = archFilter
+    ? ARCHETYPES.filter((a) => archFilter.has(a.id))
+    : ARCHETYPES;
 
-    for (const origin of ALL_ORIGINS) {
-      for (const arch of ARCHETYPES) {
-        for (let i = 0; i < SEEDS_PER_COMBO; i++) {
-          seed += 13;
-          const rec = runOneLife(seed, origin, arch);
-          records.push(rec);
+  return { seedsPerCombo, origins, archetypes };
+}
 
-          for (const id of rec.eventsFired) eventHits.set(id, (eventHits.get(id) ?? 0) + 1);
-          for (const id of rec.decisionsFired) decisionHits.set(id, (decisionHits.get(id) ?? 0) + 1);
-          deathReasons.set(rec.deathReason, (deathReasons.get(rec.deathReason) ?? 0) + 1);
-          if (records.length % 10 === 0) {
-            await new Promise((r) => setTimeout(r, 0));
-          }
-        }
+export const AUDIT_SHARDS_DIR = path.resolve(process.cwd(), 'docs', '.audit-shards');
+
+export async function runAuditForOrigin(origin: OriginClass): Promise<void> {
+  const { seedsPerCombo, origins, archetypes } = getAuditConfigFromEnv();
+  const majorEventIds = EVENTS.filter(
+    (e) => (e.stage === 'adulthood' || e.stage === 'any') && e.severity === 'major' && e.cooldownDays > 0,
+  ).map((e) => e.id);
+
+  if (!origins.includes(origin) || archetypes.length === 0) {
+    fs.mkdirSync(AUDIT_SHARDS_DIR, { recursive: true });
+    const emptyPayload: AuditShardOutput = { origin, majorEventIds, records: [] };
+    fs.writeFileSync(path.join(AUDIT_SHARDS_DIR, `${origin}.json`), JSON.stringify(emptyPayload), 'utf8');
+    return;
+  }
+
+  const originIdx = ALL_ORIGINS.indexOf(origin);
+  const records: LifeAuditRecord[] = [];
+
+  for (const arch of archetypes) {
+    const archIdx = ARCHETYPES.findIndex((a) => a.id === arch.id);
+    for (let i = 0; i < seedsPerCombo; i++) {
+      const seed = 5000 + ((originIdx * ARCHETYPES.length + archIdx) * seedsPerCombo + i + 1) * 13;
+      const rec = runOneLife(seed, origin, arch);
+      records.push(rec);
+      if (records.length % 10 === 0) {
+        await new Promise((r) => setTimeout(r, 0));
       }
     }
+  }
 
-    expect(records.length).toBe(50 * SEEDS_PER_COMBO);
-    const allAnomalies = records.flatMap((r) => r.anomalies.map((a) => `${r.origin}/${r.archetype}#${r.seed}: ${a}`));
-    expect(allAnomalies).toEqual([]);
+  expect(records.length).toBe(archetypes.length * seedsPerCombo);
+  const allAnomalies = records.flatMap((r) =>
+    r.anomalies.map((a) => `${r.origin}/${r.archetype}#${r.seed}: ${a}`),
+  );
+  expect(allAnomalies).toEqual([]);
 
-    const lines: string[] = [];
-    lines.push('# Báo Cáo Kiểm Định 1.000 Cuộc Đời (Monte Carlo + Narrative Audit)');
-    lines.push('');
-    lines.push(`- **Tổng số kiếp:** ${records.length} (5 Xuất thân × 10 Archetype × 20 Seeds)`);
-    const avgAgeAll = records.reduce((a, r) => a + r.finalAge, 0) / records.length;
-    const earlyDeaths = records.filter((r) => !r.isAlive && r.finalAge < 20).length;
-    lines.push(`- **Tuổi thọ trung bình:** ${avgAgeAll.toFixed(1)} tuổi | **Tử vong sớm (<20 tuổi):** ${earlyDeaths}/${records.length} (${((earlyDeaths / records.length) * 100).toFixed(1)}%)`);
-    lines.push(`- **Lỗi logic/NaN phát hiện:** ${allAnomalies.length}`);
-    lines.push('');
-
-    lines.push('## 1. Thống Kê Theo Xuất Thân (`OriginClass`)');
-    lines.push('| Xuất thân | Tuổi TB | Tài sản TB (đ) | Học thức TB | Thanh danh TB | Quan hàm >0 | Triggers/kiếp |');
-    lines.push('| :--- | ---: | ---: | ---: | ---: | ---: | ---: |');
-    for (const orig of ALL_ORIGINS) {
-      const sub = records.filter((r) => r.origin === orig);
-      const avgA = sub.reduce((a, r) => a + r.finalAge, 0) / sub.length;
-      const avgC = sub.reduce((a, r) => a + r.finalCopper, 0) / sub.length;
-      const avgE = sub.reduce((a, r) => a + r.finalEducation, 0) / sub.length;
-      const avgF = sub.reduce((a, r) => a + r.finalFame, 0) / sub.length;
-      const rankPct = (sub.filter((r) => r.officialRank > 0).length / sub.length) * 100;
-      const avgT = sub.reduce((a, r) => a + r.eventsFired.length + r.decisionsFired.length, 0) / sub.length;
-      lines.push(`| ${orig} | ${avgA.toFixed(1)} | ${Math.round(avgC)} | ${avgE.toFixed(1)} | ${avgF.toFixed(1)} | ${rankPct.toFixed(1)}% | ${avgT.toFixed(1)} |`);
-    }
-    lines.push('');
-
-    lines.push('## 2. Thống Kê Theo Trọng Tâm & Chiến Lược (`Archetype`)');
-    lines.push('| Archetype (Focus) | Tuổi TB | Tài sản TB (đ) | Học thức TB | Kết hôn | Khởi nghiệp | Điền sản TB |');
-    lines.push('| :--- | ---: | ---: | ---: | ---: | ---: | ---: |');
-    for (const arch of ARCHETYPES) {
-      const sub = records.filter((r) => r.archetype === arch.id);
-      const avgA = sub.reduce((a, r) => a + r.finalAge, 0) / sub.length;
-      const avgC = sub.reduce((a, r) => a + r.finalCopper, 0) / sub.length;
-      const avgE = sub.reduce((a, r) => a + r.finalEducation, 0) / sub.length;
-      const spousePct = (sub.filter((r) => r.hadSpouse).length / sub.length) * 100;
-      const bizPct = (sub.filter((r) => r.hadVenture).length / sub.length) * 100;
-      const propAvg = sub.reduce((a, r) => a + r.propertiesCount, 0) / sub.length;
-      lines.push(`| ${arch.id} (${arch.focus}) | ${avgA.toFixed(1)} | ${Math.round(avgC)} | ${avgE.toFixed(1)} | ${spousePct.toFixed(0)}% | ${bizPct.toFixed(0)}% | ${propAvg.toFixed(1)} |`);
-    }
-    lines.push('');
-
-    lines.push('## 3. Tần Suất Quyết Định & Nguyên Nhân Tử Vong');
-    lines.push(`- **Decision Hits:** \`${JSON.stringify(Object.fromEntries(decisionHits.entries()))}\``);
-    const topDeaths = [...deathReasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
-    lines.push(`- **Top Nguyên nhân kết thúc:** ${topDeaths.map(([k, v]) => `${k} (${v})`).join(' · ')}`);
-    lines.push('');
-
-    const majorPool = EVENTS.filter(
-      (e) => (e.stage === 'adulthood' || e.stage === 'any') && e.severity === 'major' && e.cooldownDays > 0,
-    );
-    const deadMajors = majorPool.filter((e) => !eventHits.has(e.id)).map((e) => e.id);
-    const topEvents = [...eventHits.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12);
-    lines.push('## 4. Độ Phủ Sự Kiện');
-    lines.push(`- **Top 12 sự kiện nổ nhiều nhất:** ${topEvents.map(([k, v]) => `\`${k}\` (${v})`).join(', ')}`);
-    lines.push(`- **Dead Major Events (0% sau 1.000 kiếp — ${deadMajors.length}/${majorPool.length}):** ${deadMajors.length === 0 ? 'Không có!' : deadMajors.map((id) => `\`${id}\``).join(', ')}`);
-    lines.push('');
-
-    const sortedByAge = [...records].sort((a, b) => a.finalAge - b.finalAge);
-    const sortedByWealth = [...records].sort((a, b) => b.finalCopper - a.finalCopper);
-    const outliers: Array<{ label: string; rec: LifeAuditRecord }> = [
-      { label: 'Chết sớm nhất #1', rec: sortedByAge[0] },
-      { label: 'Chết sớm nhất #2', rec: sortedByAge[1] },
-      { label: 'Giàu nhất #1', rec: sortedByWealth[0] },
-      { label: 'Nợ nặng nhất #1', rec: sortedByWealth[sortedByWealth.length - 1] },
-      { label: 'Thọ nhất #1', rec: sortedByAge[sortedByAge.length - 1] },
-      { label: 'Mẫu Gia đình', rec: records.find((r) => r.archetype === 'gia_dinh_marriage' && r.finalAge >= 45) ?? records[0] },
-      { label: 'Mẫu Thương buôn', rec: records.find((r) => r.archetype === 'thuong_buon_venture' && r.hadVenture) ?? records[0] },
-      { label: 'Mẫu Công danh', rec: records.find((r) => r.archetype === 'cong_danh_exam' && r.officialRank > 0) ?? records[0] },
-    ];
-
-    lines.push('## 5. Các Ca Mẫu & Bất Thường (Outliers để Agent Soi Mạch Truyện)');
-    for (const { label, rec } of outliers) {
-      lines.push(`### ${label}: \`${rec.origin}\` / \`${rec.archetype}\` (seed=${rec.seed}, tuổi=${rec.finalAge}, tiền=${rec.finalCopper}đ, quan hàm=${rec.officialRank}, lý do="${rec.deathReason}")`);
-      for (const t of rec.timeline.slice(0, 14)) {
-        lines.push(`- ${t}`);
-      }
-      if (rec.timeline.length > 14) {
-        lines.push(`- ... *(còn ${rec.timeline.length - 14} sự kiện nữa)*`);
-      }
-      lines.push('');
-    }
-
-    const outPath = path.resolve(process.cwd(), 'docs', 'audit-report-1000.md');
-    fs.writeFileSync(outPath, lines.join('\n'), 'utf8');
-    console.info(`Wrote 1,000-life audit report to ${outPath}`);
-  }, 900000);
-});
+  fs.mkdirSync(AUDIT_SHARDS_DIR, { recursive: true });
+  const payload: AuditShardOutput = { origin, majorEventIds, records };
+  fs.writeFileSync(path.join(AUDIT_SHARDS_DIR, `${origin}.json`), JSON.stringify(payload), 'utf8');
+}

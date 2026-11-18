@@ -16,4 +16,5 @@ Toàn bộ file `.json` trong các thư mục con được gom tự động qua 
 6. **`events/chains/`** — Chuỗi sự kiện có cốt truyện nối tiếp nhiều bước (tự phân vào `childhood` hoặc `adulthood` theo trường `stage`).
 
 ## Kiểm tra dữ liệu
-Chạy `npm test` để [dataIntegrity.test.ts](./__tests__/dataIntegrity.test.ts) tự động kiểm tra trùng `id`, cấu trúc `choices`/`outcomes`, `origin_in` hợp lệ và tham chiếu `schedule_delayed`.
+- **JSON Schema:** Toàn bộ file sự kiện trong `events/**` được gắn schema tự động qua [`.vscode/settings.json`](../../.vscode/settings.json) trỏ tới [`events/event.schema.json`](./events/event.schema.json) để IDE gợi ý và báo lỗi ngay khi gõ.
+- **Unit Test:** Chạy `npm test` để [dataIntegrity.test.ts](./__tests__/dataIntegrity.test.ts) tự động kiểm tra trùng `id`, cấu trúc `choices`/`outcomes`, `origin_in` hợp lệ và tham chiếu `schedule_delayed`.

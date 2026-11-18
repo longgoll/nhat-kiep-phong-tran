@@ -1,0 +1,266 @@
+{
+  "generatedAt": "2026-11-18T19:15:28.081Z",
+  "elapsedSec": 29.8,
+  "totalLives": 200,
+  "filters": {
+    "seedsPerCombo": 4,
+    "origins": null,
+    "archetypes": null
+  },
+  "avgAge": 67.4,
+  "agePercentiles": {
+    "p10": 19,
+    "p50": 75,
+    "p90": 80
+  },
+  "wealthPercentiles": {
+    "p10": 2,
+    "p50": 4544734,
+    "p90": 14882225
+  },
+  "earlyDeaths": 20,
+  "anomaliesCount": 0,
+  "anomalies": [],
+  "byOrigin": [
+    {
+      "origin": "ban_nong",
+      "count": 40,
+      "avgAge": 60.4,
+      "avgCopper": 4859516,
+      "avgEducation": 73.3,
+      "avgFame": 1323.7,
+      "officialRankPct": 5,
+      "avgTriggers": 81
+    },
+    {
+      "origin": "dia_chu",
+      "count": 40,
+      "avgAge": 69.3,
+      "avgCopper": 6767068,
+      "avgEducation": 91.9,
+      "avgFame": 2080,
+      "officialRankPct": 15,
+      "avgTriggers": 101
+    },
+    {
+      "origin": "hoang_toc",
+      "count": 40,
+      "avgAge": 72.8,
+      "avgCopper": 6425742,
+      "avgEducation": 88,
+      "avgFame": 2152.5,
+      "officialRankPct": 20,
+      "avgTriggers": 113.7
+    },
+    {
+      "origin": "quan_lai",
+      "count": 40,
+      "avgAge": 64.9,
+      "avgCopper": 6813838,
+      "avgEducation": 90.5,
+      "avgFame": 1915.9,
+      "officialRankPct": 17.5,
+      "avgTriggers": 90.9
+    },
+    {
+      "origin": "thu_cong",
+      "count": 40,
+      "avgAge": 69.4,
+      "avgCopper": 5614628,
+      "avgEducation": 78.5,
+      "avgFame": 1548.4,
+      "officialRankPct": 7.5,
+      "avgTriggers": 100.3
+    }
+  ],
+  "byArchetype": [
+    {
+      "archetype": "cong_danh_exam",
+      "focus": "cong_danh",
+      "count": 20,
+      "avgAge": 50.5,
+      "avgCopper": 7261643,
+      "avgEducation": 92.4,
+      "spousePct": 50,
+      "venturePct": 0,
+      "avgProperties": 6.3
+    },
+    {
+      "archetype": "gia_dinh_marriage",
+      "focus": "gia_dinh",
+      "count": 20,
+      "avgAge": 73.7,
+      "avgCopper": 9190535,
+      "avgEducation": 89.5,
+      "spousePct": 95,
+      "venturePct": 0,
+      "avgProperties": 11
+    },
+    {
+      "archetype": "thuong_buon_venture",
+      "focus": "lam_them",
+      "count": 20,
+      "avgAge": 74,
+      "avgCopper": 14299388,
+      "avgEducation": 85.8,
+      "spousePct": 100,
+      "venturePct": 90,
+      "avgProperties": 11.7
+    },
+    {
+      "archetype": "dien_san_gold",
+      "focus": "can_bang",
+      "count": 20,
+      "avgAge": 72.2,
+      "avgCopper": 11167990,
+      "avgEducation": 87.8,
+      "spousePct": 100,
+      "venturePct": 0,
+      "avgProperties": 11.6
+    },
+    {
+      "archetype": "suc_khoe_longevity",
+      "focus": "suc_khoe",
+      "count": 20,
+      "avgAge": 76,
+      "avgCopper": 633041,
+      "avgEducation": 91.2,
+      "spousePct": 0,
+      "venturePct": 0,
+      "avgProperties": 0.1
+    },
+    {
+      "archetype": "tu_than_moral",
+      "focus": "tu_than",
+      "count": 20,
+      "avgAge": 51.3,
+      "avgCopper": 1897194,
+      "avgEducation": 71.8,
+      "spousePct": 0,
+      "venturePct": 0,
+      "avgProperties": 0.2
+    },
+    {
+      "archetype": "so_thich_hobby",
+      "focus": "so_thich",
+      "count": 20,
+      "avgAge": 71.5,
+      "avgCopper": 1600104,
+      "avgEducation": 89.4,
+      "spousePct": 90,
+      "venturePct": 0,
+      "avgProperties": 0.2
+    },
+    {
+      "archetype": "nghi_ngoi_chill",
+      "focus": "nghi_ngoi",
+      "count": 20,
+      "avgAge": 59.9,
+      "avgCopper": 1166471,
+      "avgEducation": 71.7,
+      "spousePct": 0,
+      "venturePct": 0,
+      "avgProperties": 0.1
+    },
+    {
+      "archetype": "hanh_thien_fame",
+      "focus": "hanh_thien",
+      "count": 20,
+      "avgAge": 71.6,
+      "avgCopper": 9246436,
+      "avgEducation": 85.8,
+      "spousePct": 100,
+      "venturePct": 0,
+      "avgProperties": 10.7
+    },
+    {
+      "archetype": "risk_debt_hardship",
+      "focus": "lam_them",
+      "count": 20,
+      "avgAge": 73.2,
+      "avgCopper": 4498783,
+      "avgEducation": 79.2,
+      "spousePct": 0,
+      "venturePct": 100,
+      "avgProperties": 0
+    }
+  ],
+  "decisionHits": {
+    "dec_college_18": 153,
+    "dec_retire_60": 167,
+    "dec_job_offers": 110,
+    "dec_official_promote": 437,
+    "dec_biz_offers": 38,
+    "dec_official_appoint": 67,
+    "dec_loan_heavy": 24
+  },
+  "topDeathReasons": [
+    {
+      "reason": "Sức khỏe suy kiệt qua đời",
+      "count": 78
+    },
+    {
+      "reason": "Tuổi cao sức yếu, an nhiên qua đời",
+      "count": 76
+    },
+    {
+      "reason": "Sống qua 80 tuổi",
+      "count": 46
+    }
+  ],
+  "deadMajorEventsCount": 1,
+  "totalMajorEventsPool": 165,
+  "deadMajorEvents": [
+    "evt_adult_hoang_toc_teen_royal_hunt"
+  ],
+  "topEvents": [
+    {
+      "id": "evt_wealth_sponsor_academy",
+      "count": 564
+    },
+    {
+      "id": "evt_biz_caravan_venture",
+      "count": 505
+    },
+    {
+      "id": "evt_wealth_imperial_relief_fund",
+      "count": 498
+    },
+    {
+      "id": "evt_wealth_royal_contribution_title",
+      "count": 428
+    },
+    {
+      "id": "evt_family_clan_dispute",
+      "count": 407
+    },
+    {
+      "id": "evt_adult_martial_bandit_ambush",
+      "count": 399
+    },
+    {
+      "id": "evt_biz_apothecary_rare_herb",
+      "count": 395
+    },
+    {
+      "id": "evt_biz_craft_guild_order",
+      "count": 385
+    },
+    {
+      "id": "evt_biz_supply_contract",
+      "count": 376
+    },
+    {
+      "id": "evt_adult_major_noble_patron",
+      "count": 373
+    },
+    {
+      "id": "evt_adult_infamy_bounty",
+      "count": 357
+    },
+    {
+      "id": "evt_biz_property_tenant_crisis",
+      "count": 319
+    }
+  ]
+}

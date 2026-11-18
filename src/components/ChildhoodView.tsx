@@ -80,7 +80,8 @@ export function ChildhoodView() {
   const colorMode = useLegacyArchiveStore((s) => s.colorMode ?? 'dark');
   const themeClass = getThemeWrapperClass(activeTheme, colorMode);
 
-  const [autoPlaySpeed, setAutoPlaySpeed] = useState<0 | 1 | 2 | 4 | 8 | 12 | 16>(0);
+  const autoPlaySpeed = useActiveLifeStore((s) => s.autoPlaySpeed);
+  const setAutoPlaySpeed = useActiveLifeStore((s) => s.setAutoPlaySpeed);
   const [subMonthProgress, setSubMonthProgress] = useState<number>(0);
   const lastTickTimeRef = useRef<number>(0);
 
@@ -93,12 +94,12 @@ export function ChildhoodView() {
       setSubMonthProgress(0);
       return;
     }
-    if (!isLifeAlive || currentAge >= 13) {
+    if (!isLifeAlive) {
       setAutoPlaySpeed(0);
       setSubMonthProgress(0);
       return;
     }
-    if (hasPendingEvent) {
+    if (currentAge >= 13 || hasPendingEvent) {
       setSubMonthProgress(0);
       return;
     }

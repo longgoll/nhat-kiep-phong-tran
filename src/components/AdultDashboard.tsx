@@ -165,7 +165,8 @@ export function AdultDashboard() {
   const [showArchive, setShowArchive] = useState(false);
   const [showActionModal, setShowActionModal] = useState(false);
   const [mobileTab, setMobileTab] = useState<'profile' | 'planner' | 'logs'>('planner');
-  const [autoPlaySpeed, setAutoPlaySpeed] = useState<0 | 1 | 2 | 4 | 8 | 12 | 16>(0);
+  const autoPlaySpeed = useActiveLifeStore((s) => s.autoPlaySpeed);
+  const setAutoPlaySpeed = useActiveLifeStore((s) => s.setAutoPlaySpeed);
   const [subMonthProgress, setSubMonthProgress] = useState<number>(0);
   const lastTickTimeRef = useRef<number>(0);
   const [showLifestyleDetails, setShowLifestyleDetails] = useState(false);
@@ -316,7 +317,7 @@ export function AdultDashboard() {
             if (spd > 0) clearPauseReason();
             setAutoPlaySpeed(spd as 0 | 1 | 2 | 4 | 8 | 12 | 16);
           }}
-          controlsDisabled={isSimulating || !life.isAlive || hasPendingEvent}
+          controlsDisabled={!life.isAlive || hasPendingEvent}
           onReset={resetLife}
         />
 
@@ -812,7 +813,7 @@ export function AdultDashboard() {
             {/* Ghi Chép Cuộc Đời (Timeline Hero) */}
             <LifeTimeline
               logs={life.logs}
-              maxHeightClass="max-h-96"
+              maxHeightClass="max-h-[440px]"
               isRunning={autoPlaySpeed > 0 && !hasPendingEvent}
             />
           </div>

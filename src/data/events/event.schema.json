@@ -1,0 +1,212 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GameEventDefArray",
+  "description": "Schema cho danh sách sự kiện (GameEventDef[]) trong src/data/events/",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/GameEventDef"
+  },
+  "definitions": {
+    "OriginClass": {
+      "type": "string",
+      "enum": ["ban_nong", "thu_cong", "dia_chu", "quan_lai", "hoang_toc"]
+    },
+    "HousingTier": {
+      "type": "string",
+      "enum": ["nha_tranh", "nha_gach", "phu_de", "phu_vuong"]
+    },
+    "Season": {
+      "type": "string",
+      "enum": ["xuan", "ha", "thu", "dong"]
+    },
+    "WorldState": {
+      "type": "string",
+      "enum": ["thai_binh", "han_han", "chien_tranh", "dich_benh", "duoc_mua"]
+    },
+    "ConditionSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_age": { "type": "number" },
+        "max_age": { "type": "number" },
+        "season_in": { "type": "array", "items": { "$ref": "#/definitions/Season" } },
+        "gender": { "type": "string", "enum": ["nam", "nu"] },
+        "origin_in": { "type": "array", "items": { "$ref": "#/definitions/OriginClass" } },
+        "childhood_focus": { "type": "string" },
+        "housing_in": { "type": "array", "items": { "$ref": "#/definitions/HousingTier" } },
+        "world_state_in": { "type": "array", "items": { "$ref": "#/definitions/WorldState" } },
+        "min_health": { "type": "number" },
+        "max_health": { "type": "number" },
+        "min_happiness": { "type": "number" },
+        "max_happiness": { "type": "number" },
+        "min_relationships": { "type": "number" },
+        "max_relationships": { "type": "number" },
+        "min_education": { "type": "number" },
+        "max_education": { "type": "number" },
+        "min_stamina": { "type": "number" },
+        "min_martial": { "type": "number" },
+        "max_martial": { "type": "number" },
+        "min_craft_trade": { "type": "number" },
+        "max_craft_trade": { "type": "number" },
+        "min_fame": { "type": "number" },
+        "max_fame": { "type": "number" },
+        "min_infamy": { "type": "number" },
+        "max_infamy": { "type": "number" },
+        "min_copper": { "type": "number" },
+        "max_copper": { "type": "number" },
+        "min_rice": { "type": "number" },
+        "max_rice": { "type": "number" },
+        "has_flags": { "type": "array", "items": { "type": "string" } },
+        "missing_flags": { "type": "array", "items": { "type": "string" } },
+        "has_any_flag": { "type": "array", "items": { "type": "string" } },
+        "has_property": { "type": "string" },
+        "has_any_property": { "type": "boolean" },
+        "has_living_parent": { "type": "boolean" },
+        "has_living_spouse": { "type": "boolean" },
+        "has_living_npc_id": { "type": "string" },
+        "min_official_rank": { "type": "number" },
+        "max_official_rank": { "type": "number" },
+        "has_traits": { "type": "array", "items": { "type": "string" } },
+        "has_any_trait": { "type": "array", "items": { "type": "string" } },
+        "has_interests": { "type": "array", "items": { "type": "string" } },
+        "has_any_interest": { "type": "array", "items": { "type": "string" } },
+        "family_occupation_in": { "type": "array", "items": { "type": "string" } },
+        "family_circumstance_in": { "type": "array", "items": { "type": "string" } },
+        "birth_order_in": { "type": "array", "items": { "type": "string" } },
+        "family_tier_in": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "EffectSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "health": { "type": "number" },
+        "happiness": { "type": "number" },
+        "relationships": { "type": "number" },
+        "education": { "type": "number" },
+        "stamina": { "type": "number" },
+        "martial": { "type": "number" },
+        "craft_trade": { "type": "number" },
+        "fame": { "type": "number" },
+        "infamy": { "type": "number" },
+        "copper": { "type": "number" },
+        "rice": { "type": "number" },
+        "set_housing": { "$ref": "#/definitions/HousingTier" },
+        "add_property": { "type": "string" },
+        "add_flags": { "type": "array", "items": { "type": "string" } },
+        "remove_flags": { "type": "array", "items": { "type": "string" } },
+        "reset_official_rank": { "type": "boolean" },
+        "official_rank_delta": { "type": "number" },
+        "add_traits": { "type": "array", "items": { "type": "string" } },
+        "remove_traits": { "type": "array", "items": { "type": "string" } },
+        "add_interests": { "type": "array", "items": { "type": "string" } },
+        "family_copper": { "type": "number" },
+        "scale_family_copper": { "type": "number" },
+        "kill_npc_id": { "type": "string" },
+        "set_circumstance": {
+          "type": "object",
+          "required": ["id", "label"],
+          "properties": {
+            "id": { "type": "string" },
+            "label": { "type": "string" }
+          }
+        },
+        "npc_affinity": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["delta"],
+            "properties": {
+              "relation": {
+                "type": "string",
+                "enum": ["parent", "sibling", "spouse", "child", "friend", "rival", "mentor", "household"]
+              },
+              "npc_id": { "type": "string" },
+              "delta": { "type": "number" }
+            }
+          }
+        },
+        "schedule_delayed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["event_id", "delay_days"],
+            "properties": {
+              "event_id": { "type": "string" },
+              "delay_days": { "type": "number" }
+            }
+          }
+        },
+        "milestone_title": { "type": "string" },
+        "kill_reason": { "type": "string" }
+      }
+    },
+    "WeightSpec": {
+      "type": "object",
+      "required": ["base"],
+      "additionalProperties": false,
+      "properties": {
+        "base": { "type": "number" },
+        "modifiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["conditions", "addWeight"],
+            "properties": {
+              "conditions": { "$ref": "#/definitions/ConditionSpec" },
+              "addWeight": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "EventOutcome": {
+      "type": "object",
+      "required": ["weight", "resultText", "effects"],
+      "additionalProperties": false,
+      "properties": {
+        "weight": { "$ref": "#/definitions/WeightSpec" },
+        "resultText": { "type": "string", "minLength": 1 },
+        "effects": { "$ref": "#/definitions/EffectSpec" }
+      }
+    },
+    "EventChoice": {
+      "type": "object",
+      "required": ["label", "outcomes"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "hint": { "type": "string" },
+        "conditions": { "$ref": "#/definitions/ConditionSpec" },
+        "outcomes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/EventOutcome" }
+        }
+      }
+    },
+    "GameEventDef": {
+      "type": "object",
+      "required": ["id", "stage", "severity", "cooldownDays", "title", "conditions", "weight", "description", "choices"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "stage": { "type": "string", "enum": ["infancy", "childhood", "adulthood", "any"] },
+        "severity": { "type": "string", "enum": ["minor", "major"] },
+        "isMilestone": { "type": "boolean" },
+        "contextNote": { "type": "string" },
+        "cooldownDays": { "type": "number", "minimum": 0 },
+        "oncePerLife": { "type": "boolean" },
+        "title": { "type": "string", "minLength": 1 },
+        "conditions": { "$ref": "#/definitions/ConditionSpec" },
+        "weight": { "$ref": "#/definitions/WeightSpec" },
+        "description": { "type": "string" },
+        "choices": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/EventChoice" }
+        }
+      }
+    }
+  }
+}
