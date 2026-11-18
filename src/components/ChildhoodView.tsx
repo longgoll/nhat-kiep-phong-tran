@@ -22,7 +22,7 @@ import {
   ORIGIN_METADATA,
   TRAIT_LABELS,
 } from '../engine/lifeInitializer';
-import { CHILDHOOD_FOCUS_OPTIONS } from '../engine/childhoodEngine';
+import { getChildhoodFocusOptions } from '../engine/childhoodEngine';
 import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
 import { FeudalPortrait } from './FeudalPortrait';
@@ -394,7 +394,7 @@ export function ChildhoodView() {
                     </p>
                   ) : (
                     <div className="flex flex-wrap gap-1.5">
-                      {CHILDHOOD_FOCUS_OPTIONS.map((opt) => {
+                      {getChildhoodFocusOptions(life).map((opt) => {
                         const active = activeFocusId === opt.id;
                         return (
                           <button

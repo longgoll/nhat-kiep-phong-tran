@@ -12,7 +12,7 @@
       "origin_in": [
         "ban_nong"
       ],
-      "childhood_focus": "hoc_lom"
+      "childhood_focus": "hoc_tap"
     },
     "weight": {
       "base": 60,
@@ -133,7 +133,14 @@
     },
     "weight": {
       "base": 40,
-      "modifiers": []
+      "modifiers": [
+        {
+          "conditions": {
+            "childhood_focus": "giup_nha"
+          },
+          "addWeight": 20
+        }
+      ]
     },
     "description": "Tiếng mõ thúc sưu thuế vang rền đầu ngõ. Đám lính lệ mặt mày hung tợn xộc vào sân đòi thu thêm gạo phụ thu khi cha mẹ chưa kịp về.",
     "choices": [
@@ -231,7 +238,20 @@
     },
     "weight": {
       "base": 28,
-      "modifiers": []
+      "modifiers": [
+        {
+          "conditions": {
+            "childhood_focus": "giup_nha"
+          },
+          "addWeight": 12
+        },
+        {
+          "conditions": {
+            "childhood_focus": "ban_be"
+          },
+          "addWeight": 10
+        }
+      ]
     },
     "description": "Lính lệ làng mang trát quan xuống bắt đinh đi phu đắp đê ngoài sông cái giữa mùa mưa bão.",
     "choices": [

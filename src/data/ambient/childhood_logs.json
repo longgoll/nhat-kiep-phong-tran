@@ -194,6 +194,15 @@
     },
     {
       "focusId": "ban_be",
+      "text": "Bạn cùng đám trẻ con nhà nghèo trong xóm rủ nhau bắt cào cào, đá cầu lá chuối rộn rã cả bãi cỏ đầu làng.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong"
+        ]
+      }
+    },
+    {
+      "focusId": "ban_be",
       "text": "Các công tử, tiểu thư con nhà danh giá tụ họp trong hoa viên làm thơ, thả diều và bàn chuyện kinh thành.",
       "conditions": {
         "origin_in": [
@@ -244,6 +253,15 @@
     {
       "focusId": "ren_vo",
       "text": "Bạn chạy quanh bờ ao rèn sức bền, mồ hôi ướt đẫm nhưng tinh thần rất sảng khoái."
+    },
+    {
+      "focusId": "ren_vo",
+      "text": "Bạn rủ đám bạn lội sông bắt cá, trèo cây hái quả và chạy dọc triền đê khiến tay chân săn chắc hẳn lên.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong"
+        ]
+      }
     },
     {
       "focusId": "ren_vo",

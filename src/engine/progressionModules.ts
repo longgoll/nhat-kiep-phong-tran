@@ -242,7 +242,9 @@ export function takeExam(state: ActiveLifeState, level: ExamLevel): ActiveLifeSt
   next = { ...next, prngState: roll.nextState };
 
   const skill = Math.max(next.stats.education, next.stats.martial);
-  const scholarBonus = next.flags.includes('gia_phong_thu_huong') ? 0.05 : 0;
+  const scholarBonus =
+    (next.flags.includes('gia_phong_thu_huong') ? 0.05 : 0) +
+    (next.traits.includes('than_dong') ? 0.05 : 0);
   const exposureBump = next.flags.includes('nu_cai_nam_trang') ? 2 : 0;
 
   if (level === 'huong') {

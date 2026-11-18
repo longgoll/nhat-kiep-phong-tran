@@ -66,6 +66,151 @@ export const CHILDHOOD_FOCUS_OPTIONS: ChildhoodFocusOption[] = [
   },
 ];
 
+/**
+ * Returns childhood focus options tailored to the character's origin class, living tier, and traits.
+ */
+export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocusOption[] {
+  const origin = state.profile.originClass;
+  const tier = state.family?.familyLivingTier ?? 'du_an';
+  const isProdigy = state.traits.includes('than_dong');
+  const prodigyEduBonus = isProdigy ? 0.1 : 0;
+  const isDeclined =
+    tier === 'tung_thieu' ||
+    state.flags.includes('gia_toc_sa_sut') ||
+    state.flags.includes('that_sung_cung_dinh');
+
+  const resolveStudyOption = (base: ChildhoodFocusOption): ChildhoodFocusOption => {
+    const suffix = isProdigy ? ' (Thần đồng↑)' : '';
+    switch (origin) {
+      case 'ban_nong': {
+        const hasTeacher = state.flags.includes('duoc_thay_do_quy');
+        return hasTeacher
+          ? {
+              ...base,
+              label: 'Theo học thầy đồ',
+              effectHint: `Học thức↑${suffix} · Hạnh phúc↑`,
+              description:
+                'Nhờ được thầy đồ thương tình nhận dạy, bạn chăm chỉ mài mực, học chữ thánh hiền.',
+              monthlyEffects: { education: 0.25 + prodigyEduBonus, happiness: 0.06 },
+            }
+          : {
+              ...base,
+              label: 'Tự học · Học lỏm',
+              effectHint: `Học thức${isProdigy ? '↑ (Thần đồng)' : '↗'} · Hạnh phúc↑`,
+              description:
+                'Không có tiền đi học, bạn lén nghe thầy đồ giảng bài và lấy que tre vạch chữ xuống đất.',
+              monthlyEffects: { education: 0.15 + prodigyEduBonus, happiness: 0.04 },
+            };
+      }
+      case 'thu_cong':
+        return {
+          ...base,
+          label: 'Học chữ · Tính sổ',
+          effectHint: `Học thức↑${suffix} · Khéo tay↑`,
+          description:
+            'Theo học lớp thầy đồ làng và tập tính toán sổ sách buôn bán cùng cha mẹ.',
+          monthlyEffects: { education: 0.2 + prodigyEduBonus, craft_trade: 0.06, happiness: 0.04 },
+        };
+      case 'dia_chu':
+        return {
+          ...base,
+          label: 'Học chữ · Sổ điền trang',
+          effectHint: `Học thức↑${suffix} · Hạnh phúc↑`,
+          description:
+            'Nhà có điều kiện mời ông đồ về dạy chữ thánh hiền và tập đọc khế ước điền trang.',
+          monthlyEffects: { education: 0.26 + prodigyEduBonus, happiness: 0.05 },
+        };
+      case 'quan_lai':
+        return isDeclined
+          ? {
+              ...base,
+              label: 'Tự đọc tàng thư cũ',
+              effectHint: `Học thức↑${suffix} · Hạnh phúc↑`,
+              description:
+                'Gia đạo sa sút không còn mời được danh sư, bạn tự nghiền ngẫm sách vở cũ trong nhà.',
+              monthlyEffects: { education: 0.2 + prodigyEduBonus, happiness: 0.03 },
+            }
+          : {
+              ...base,
+              label: 'Đèn sách · Gia học',
+              effectHint: `Học thức↑↑${suffix} · Hạnh phúc↑`,
+              description:
+                'Dưới sự kèm cặp của danh sư và thư viện gia đình, bạn dùi mài kinh sử chuẩn bị khoa cử.',
+              monthlyEffects: { education: 0.3 + prodigyEduBonus, happiness: 0.05 },
+            };
+      case 'hoang_toc':
+        return isDeclined
+          ? {
+              ...base,
+              label: 'Đọc sách nơi lãnh cung',
+              effectHint: `Học thức↑${suffix} · Hạnh phúc↑`,
+              description:
+                'Thất sủng thiếu thầy chỉ dạy, bạn lặng lẽ tự đọc kinh sử để giữ phẩm cách Tôn thất.',
+              monthlyEffects: { education: 0.2 + prodigyEduBonus, happiness: 0.02 },
+            }
+          : {
+              ...base,
+              label: 'Quốc Tử Giám · Kinh sử',
+              effectHint: `Học thức↑↑${suffix} · Hạnh phúc↑`,
+              description:
+                'Được Thái phó và các bậc đại nho triều đình trực tiếp truyền thụ kinh sử, trị quốc.',
+              monthlyEffects: { education: 0.32 + prodigyEduBonus, happiness: 0.06 },
+            };
+      default:
+        return base;
+    }
+  };
+
+  return CHILDHOOD_FOCUS_OPTIONS.map((opt) => {
+    if (opt.id === 'hoc_tap') {
+      return resolveStudyOption(opt);
+    }
+
+    if (origin !== 'ban_nong') {
+      return opt;
+    }
+
+    switch (opt.id) {
+      case 'ban_be':
+        return {
+          ...opt,
+          label: 'Bạn bè · Thả diều',
+          effectHint: 'Quan hệ↑ · Hạnh phúc↑',
+          description: 'Chơi ô ăn quan, thả diều sáo ngoài bãi cỏ cùng đám trẻ con trong xóm.',
+          monthlyEffects: { relationships: 0.24, happiness: 0.14 },
+        };
+      case 'giup_nha':
+        return {
+          ...opt,
+          label: 'Chăn trâu · Phụ đồng áng',
+          effectHint: 'Gia sản↑ · Sức khỏe↑ · Gắn kết↑',
+          description:
+            'Theo cha mẹ ra đồng cắt cỏ, chăn trâu, mót lúa để đỡ đần miếng cơm manh áo cho cả nhà.',
+          monthlyEffects: { health: 0.08, relationships: 0.14, family_copper: 15 },
+        };
+      case 'ren_vo':
+        return {
+          ...opt,
+          label: 'Chạy nhảy · Lội đồng',
+          effectHint: 'Sức khỏe↑ · Võ nghệ↗',
+          description:
+            'Bơi sông, leo cây, chạy nhảy khắp triền đê giúp thân thể dẻo dai dù không có thầy dạy võ.',
+          monthlyEffects: { health: 0.22, martial: 0.14 },
+        };
+      case 'so_thich':
+        return {
+          ...opt,
+          label: 'Khéo tay · Đan lát',
+          effectHint: 'Hạnh phúc↑ · Khéo tay↑',
+          description: 'Thắt cào cào lá dừa, đẽo con quay gỗ hoặc tập đan rổ rá dưới gốc đa đầu làng.',
+          monthlyEffects: { happiness: 0.16, craft_trade: 0.18 },
+        };
+      default:
+        return opt;
+    }
+  });
+}
+
 function inferOutcomeTone(effects: EffectSpec): LogEntry['tone'] {
   if (effects.kill_reason) return 'negative';
   const score =
@@ -354,8 +499,9 @@ export function advanceChildhoodMonth(
   if (prevAge >= 6) {
     const focusId =
       state.schedule.childhoodFocus || ORIGIN_CORE_CONFIG[state.profile.originClass].defaultChildhoodFocus;
+    const focusOptions = getChildhoodFocusOptions(state);
     const focusOpt =
-      CHILDHOOD_FOCUS_OPTIONS.find((f) => f.id === focusId) ?? CHILDHOOD_FOCUS_OPTIONS[2];
+      focusOptions.find((f) => f.id === focusId) ?? focusOptions[2];
     state = applyEffects(state, focusOpt.monthlyEffects);
     if (isBirthday && focusOpt.interestOnBirthday) {
       state = applyEffects(state, { add_interests: [focusOpt.interestOnBirthday] });

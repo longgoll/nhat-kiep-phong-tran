@@ -109,6 +109,7 @@ const DYNASTY_NAMES = ['Đại Việt', 'Đại Ngu', 'Đại Nam', 'Hồng Đ�
 
 export const TRAIT_LABELS: Record<string, string> = {
   ham_hoc: 'Ham học',
+  than_dong: 'Thần đồng',
   hieu_dong: 'Hiếu động',
   kheo_tay: 'Khéo tay',
   trong_nghia: 'Trọng nghĩa',
@@ -401,9 +402,35 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
   const varRel = randomInt(prng, -5, 5);
   prng = varRel.nextState;
 
+  // Natural intellectual variance + rare prodigy ("thần đồng") roll across all origins
+  const eduRangeByOrigin: Record<OriginClass, [number, number]> = {
+    ban_nong: [0, 3],
+    thu_cong: [0, 4],
+    dia_chu: [-3, 3],
+    quan_lai: [-5, 4],
+    hoang_toc: [-6, 4],
+  };
+  const [eduMin, eduMax] = eduRangeByOrigin[originClass];
+  const varEdu = randomInt(prng, eduMin, eduMax);
+  prng = varEdu.nextState;
+
+  const prodigyRoll = mulberry32Next(prng);
+  prng = prodigyRoll.nextState;
+  const isProdigy = prodigyRoll.value < 0.07;
+  let prodigyEduBonus = 0;
+  if (isProdigy) {
+    const bonusPick = randomInt(prng, 5, 8);
+    prng = bonusPick.nextState;
+    prodigyEduBonus = bonusPick.value;
+    pushUnique(initialTraits, 'than_dong');
+    pushUnique(initialInterests, 'kinh_su');
+    pushUnique(initialFlags, 'than_dong_bam_sinh');
+  }
+
   health = Math.max(40, Math.min(86, health + varHealth.value));
   happiness = Math.max(38, Math.min(84, happiness + varHappy.value));
   relationships = Math.max(35, Math.min(84, relationships + varRel.value));
+  education = Math.max(0, Math.min(30, education + varEdu.value + prodigyEduBonus));
 
   const isStartDeclined =
     initialFlags.includes('gia_toc_sa_sut') ||
@@ -960,7 +987,7 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       {
         day: 0,
         category: 'birth',
-        text: `Năm ${dynastyName} thứ ${yPick.value}, ${fullName} chào đời tại ${birthPlace} trong ${meta.label.toLowerCase()} (${birthOrderLabel}). ${fatherLogDesc}, mẹ là ${motherOcc.label.toLowerCase()}. ${circ.label}.`,
+        text: `Năm ${dynastyName} thứ ${yPick.value}, ${fullName} chào đời tại ${birthPlace} trong ${meta.label.toLowerCase()} (${birthOrderLabel}). ${fatherLogDesc}, mẹ là ${motherOcc.label.toLowerCase()}. ${circ.label}.${isProdigy ? ' Từ thuở lọt lòng đã lộ ánh mắt tinh anh, tư chất thần đồng khác thường.' : ''}`,
       },
     ],
   };
