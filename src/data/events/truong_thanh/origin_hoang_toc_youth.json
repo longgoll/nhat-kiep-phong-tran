@@ -75,7 +75,7 @@
       ]
     },
     "weight": {
-      "base": 280,
+      "base": 220,
       "modifiers": []
     },
     "description": "Đêm khuya thanh vắng, một lão nội thị từng chịu ân đức của ngoại tổ phụ bạn lén lút mang theo một túi bạc nhỏ cùng ít tin tức mật về tình hình triều chính tới tẩm cung.",
@@ -142,7 +142,7 @@
       ]
     },
     "weight": {
-      "base": 280,
+      "base": 220,
       "modifiers": []
     },
     "description": "Mùa thu khí trời mát mẻ, Phụ hoàng tổ chức cuộc đi săn lớn tại Lâm Uyển Hoàng gia. Các hoàng thân và đại thần đều cưỡi tuấn mã trổ tài cung tiễn.",
@@ -203,7 +203,7 @@
       ]
     },
     "weight": {
-      "base": 70,
+      "base": 180,
       "modifiers": []
     },
     "description": "Đầu xuân, bạn vào cung Từ Ninh vấn an Hoàng Thái Hậu. Giữa hương trầm ấm áp, Thái Hậu hiền từ nắm tay hỏi thăm chí hướng tương lai của bạn.",
