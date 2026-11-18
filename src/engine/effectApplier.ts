@@ -193,6 +193,9 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
       if (schedule.morning === 'act_tuan_tra_quan_ngu') schedule = { ...schedule, morning: 'act_nghi_ngoi' };
       if (schedule.afternoon === 'act_tuan_tra_quan_ngu') schedule = { ...schedule, afternoon: 'act_nghi_ngoi' };
     }
+    if (effects.remove_flags.includes('tung_o_do') && currentRole === 'Đi ở đợ nhà địa chủ') {
+      currentRole = 'Thiếu niên';
+    }
   }
   if (effects.reset_official_rank) {
     officialRank = 0;

@@ -57,6 +57,7 @@ export function LifeTopBar({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (controlsDisabled) return;
       const target = e.target as HTMLElement | null;
       if (
         target &&
@@ -87,7 +88,7 @@ export function LifeTopBar({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [autoPlaySpeed, speedOptions, onSetSpeed]);
+  }, [autoPlaySpeed, speedOptions, onSetSpeed, controlsDisabled]);
 
   return (
     <div className="space-y-2.5">

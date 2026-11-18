@@ -11,6 +11,9 @@
       "max_age": 12,
       "origin_in": [
         "thu_cong"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -127,6 +130,9 @@
       "max_age": 12,
       "origin_in": [
         "thu_cong"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -244,6 +250,9 @@
       "max_age": 12,
       "origin_in": [
         "thu_cong"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -322,6 +331,9 @@
       "max_age": 12,
       "origin_in": [
         "thu_cong"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {

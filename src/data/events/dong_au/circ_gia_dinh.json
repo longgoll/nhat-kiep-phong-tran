@@ -106,6 +106,9 @@
       "max_age": 12,
       "birth_order_in": [
         "con_ut"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -369,6 +372,9 @@
       "origin_in": [
         "ban_nong",
         "thu_cong"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -457,6 +463,9 @@
       ],
       "has_flags": [
         "gia_dinh_mac_no"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {

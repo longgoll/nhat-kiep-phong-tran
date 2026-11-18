@@ -12,7 +12,10 @@
       "origin_in": [
         "ban_nong"
       ],
-      "childhood_focus": "hoc_tap"
+      "childhood_focus": "hoc_tap",
+      "missing_flags": [
+        "tung_o_do"
+      ]
     },
     "weight": {
       "base": 60,
@@ -129,7 +132,10 @@
       "origin_in": [
         "ban_nong"
       ],
-      "has_living_npc_id": "npc_father"
+      "has_living_npc_id": "npc_father",
+      "missing_flags": [
+        "tung_o_do"
+      ]
     },
     "weight": {
       "base": 40,
@@ -233,7 +239,8 @@
         "ban_nong"
       ],
       "missing_flags": [
-        "mo_coi_cha"
+        "mo_coi_cha",
+        "tung_o_do"
       ]
     },
     "weight": {

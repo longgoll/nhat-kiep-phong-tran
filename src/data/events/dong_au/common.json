@@ -13,6 +13,9 @@
         "ban_nong",
         "thu_cong",
         "dia_chu"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -157,6 +160,9 @@
         "ban_nong",
         "thu_cong",
         "dia_chu"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -238,6 +244,9 @@
         "con_truong",
         "con_thu",
         "con_ut"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {

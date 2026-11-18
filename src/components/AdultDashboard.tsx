@@ -186,8 +186,12 @@ export function AdultDashboard() {
       setSubMonthProgress(0);
       return;
     }
-    if (!isLifeAlive || hasPendingEvent || hasPauseReason) {
+    if (!isLifeAlive || hasPauseReason) {
       setAutoPlaySpeed(0);
+      setSubMonthProgress(0);
+      return;
+    }
+    if (hasPendingEvent) {
       setSubMonthProgress(0);
       return;
     }
@@ -291,18 +295,18 @@ export function AdultDashboard() {
         <LifeTopBar
           ageYears={age}
           dayOfYear={life.profile.totalDays % 360}
-          subMonthProgress={autoPlaySpeed > 0 ? subMonthProgress : 0}
+          subMonthProgress={autoPlaySpeed > 0 && !hasPendingEvent ? subMonthProgress : 0}
           dynastyName={life.world.dynastyName}
           yearInEra={life.world.yearInEra}
           seasonLabel={getSeasonLabel(life.world.season)}
           seed={life.seed}
-          autoPlaySpeed={autoPlaySpeed}
+          autoPlaySpeed={hasPendingEvent ? 0 : autoPlaySpeed}
           speedOptions={[1, 2, 4, 8, 12, 16]}
           onSetSpeed={(spd) => {
             if (spd > 0) clearPauseReason();
             setAutoPlaySpeed(spd as 0 | 1 | 2 | 4 | 8 | 12 | 16);
           }}
-          controlsDisabled={isSimulating || !life.isAlive}
+          controlsDisabled={isSimulating || !life.isAlive || hasPendingEvent}
           onReset={resetLife}
         />
 
@@ -762,7 +766,7 @@ export function AdultDashboard() {
             <LifeTimeline
               logs={life.logs}
               maxHeightClass="max-h-96"
-              isRunning={autoPlaySpeed > 0}
+              isRunning={autoPlaySpeed > 0 && !hasPendingEvent}
             />
           </div>
 

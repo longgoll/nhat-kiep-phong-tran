@@ -161,7 +161,61 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
     }
   };
 
+  const isIndentured = state.flags.includes('tung_o_do');
+
   return CHILDHOOD_FOCUS_OPTIONS.map((opt) => {
+    if (isIndentured) {
+      switch (opt.id) {
+        case 'hoc_tap':
+          return {
+            ...opt,
+            label: 'Học lỏm thư phòng phủ chủ',
+            effectHint: `Học thức↑${isProdigy ? ' (Thần đồng↑)' : ''} · Hạnh phúc↗`,
+            description:
+              'Tranh thủ lúc bưng trà, dọn dẹp thư phòng để nghe lỏm thầy đồ giảng chữ cho con nhà chủ.',
+            monthlyEffects: { education: 0.18 + prodigyEduBonus, happiness: 0.03 },
+          };
+        case 'ban_be':
+          return {
+            ...opt,
+            label: 'Kết giao gia nhân · Con nhà chủ',
+            effectHint: 'Quan hệ↑ · Hạnh phúc↑',
+            description:
+              'Cư xử lễ phép, thật thà với đám gia nhân lâu năm và con cái nhà chủ để bớt phần cơ cực.',
+            monthlyEffects: { relationships: 0.22, happiness: 0.1 },
+          };
+        case 'giup_nha':
+          return {
+            ...opt,
+            label: 'Làm lụng trừ nợ · Tích cóp',
+            effectHint: 'Gia sản↑ · Tiền riêng↑ · Khéo tay↑',
+            description:
+              'Chăm chỉ làm việc nhà chủ để trừ dần nợ cho gia đình và chắt chiu ít tiền công lẻ.',
+            monthlyEffects: { craft_trade: 0.16, family_copper: 14, copper: 2 },
+          };
+        case 'ren_vo':
+          return {
+            ...opt,
+            label: 'Gánh nước · Bổ củi rèn sức',
+            effectHint: 'Sức khỏe↑ · Võ nghệ↗',
+            description:
+              'Mượn chính việc nặng nhọc hàng ngày như gánh nước, bổ củi để rèn gân cốt dẻo dai.',
+            monthlyEffects: { health: 0.14, martial: 0.2 },
+          };
+        case 'so_thich':
+          return {
+            ...opt,
+            label: 'Thủ công vặt lúc rảnh rỗi',
+            effectHint: 'Hạnh phúc↑ · Khéo tay↑',
+            description:
+              'Tối đến tranh thủ đan lát, vá víu đồ đạc sau bếp để khuây khỏa nỗi nhớ nhà.',
+            monthlyEffects: { happiness: 0.12, craft_trade: 0.18 },
+          };
+        default:
+          return opt;
+      }
+    }
+
     if (opt.id === 'hoc_tap') {
       return resolveStudyOption(opt);
     }
@@ -760,9 +814,28 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
     },
   };
 
+  const wasIndentured = inputState.flags.includes('tung_o_do');
+  const continueServitude =
+    wasIndentured &&
+    (inputState.family?.familyLivingTier === 'tung_thieu' ||
+      inputState.flags.includes('gia_dinh_mac_no'));
+
+  const transitionAddFlags = ['da_truong_thanh_13'];
+  const transitionRemoveFlags: string[] = [];
+  if (wasIndentured) {
+    transitionRemoveFlags.push('tung_o_do');
+    transitionAddFlags.push('xuat_than_o_do');
+    if (continueServitude) {
+      transitionAddFlags.push('bi_ep_lam_gia_no');
+    }
+  }
+
   state = applyEffects(state, {
-    add_flags: ['da_truong_thanh_13'],
-    milestone_title: 'Bước vào tuổi 13 tự lập',
+    add_flags: transitionAddFlags,
+    remove_flags: transitionRemoveFlags.length > 0 ? transitionRemoveFlags : undefined,
+    milestone_title: continueServitude
+      ? 'Tuổi 13 tiếp tục kiếp gia nô trừ nợ'
+      : 'Bước vào tuổi 13 tự lập',
   });
 
   const teenLogByOrigin: Record<ActiveLifeState['profile']['originClass'], string> = {
@@ -777,13 +850,19 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
       : `Tuổi 13 vào Thượng Thư Phòng theo học lễ nghi và kinh sử! Triều đình cấp ${familyGrantCopper} đồng tiền tiêu cùng ${personalRice} đấu gạo theo lệ ${gender === 'male' ? 'Hoàng tử' : 'Công chúa'}.`,
   };
 
+  const transitionLogText = wasIndentured
+    ? continueServitude
+      ? `Tuổi 13 mãn hạn ở đợ nhỏ nhưng gia cảnh vẫn túng thiếu, nhà địa chủ ép ký tiếp khế ước dài hạn làm gia nô trừ nợ.`
+      : `Tuổi 13 mãn hạn ở đợ! Bạn rời phủ địa chủ trở về tự lập với ${familyGrantCopper} đồng vốn liếng và ${personalRice} đấu gạo.`
+    : teenLogByOrigin[originClass];
+
   state = {
     ...state,
     logs: appendLog(
       state.logs,
       state.profile.totalDays,
       'childhood',
-      teenLogByOrigin[originClass],
+      transitionLogText,
     ),
   };
 

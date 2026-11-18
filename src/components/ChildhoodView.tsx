@@ -93,8 +93,12 @@ export function ChildhoodView() {
       setSubMonthProgress(0);
       return;
     }
-    if (!isLifeAlive || hasPendingEvent || currentAge >= 13) {
+    if (!isLifeAlive || currentAge >= 13) {
       setAutoPlaySpeed(0);
+      setSubMonthProgress(0);
+      return;
+    }
+    if (hasPendingEvent) {
       setSubMonthProgress(0);
       return;
     }
@@ -140,15 +144,15 @@ export function ChildhoodView() {
         <LifeTopBar
           ageYears={age}
           dayOfYear={dayOfYear}
-          subMonthProgress={autoPlaySpeed > 0 ? subMonthProgress : 0}
+          subMonthProgress={autoPlaySpeed > 0 && !hasPendingEvent ? subMonthProgress : 0}
           dynastyName={life.world.dynastyName}
           yearInEra={life.world.yearInEra}
           seasonLabel={getSeasonLabel(life.world.season)}
           seed={life.seed}
-          autoPlaySpeed={autoPlaySpeed}
+          autoPlaySpeed={hasPendingEvent ? 0 : autoPlaySpeed}
           speedOptions={[1, 2, 4, 8, 12, 16]}
           onSetSpeed={(spd) => setAutoPlaySpeed(spd as 0 | 1 | 2 | 4 | 8 | 12 | 16)}
-          controlsDisabled={!life.isAlive || isTeenReady}
+          controlsDisabled={!life.isAlive || isTeenReady || hasPendingEvent}
           onReset={resetLife}
         />
 
@@ -408,7 +412,7 @@ export function ChildhoodView() {
             <LifeTimeline
               logs={life.logs}
               maxHeightClass="max-h-[440px]"
-              isRunning={autoPlaySpeed > 0}
+              isRunning={autoPlaySpeed > 0 && !hasPendingEvent}
             />
           </div>
 

@@ -5,17 +5,36 @@
     "severity": "minor",
     "cooldownDays": 300,
     "title": "Thả diều sáo trên đê",
-    "conditions": { "min_age": 6, "max_age": 12, "season_in": ["summer", "autumn"] },
-    "weight": { "base": 28, "modifiers": [] },
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "season_in": [
+        "summer",
+        "autumn"
+      ],
+      "missing_flags": [
+        "tung_o_do"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": []
+    },
     "description": "Gió nồm thổi mạnh trên triền đê, lũ trẻ trong xóm rủ nhau chạy thả diều.",
     "choices": [
       {
         "label": "Chạy theo cánh diều",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Tiếng sáo diều vi vu giữa trời chiều khiến tuổi thơ của bạn thêm rộn rã tiếng cười.",
-            "effects": { "happiness": 3, "health": 1 }
+            "effects": {
+              "happiness": 3,
+              "health": 1
+            }
           }
         ]
       }
@@ -27,17 +46,33 @@
     "severity": "minor",
     "cooldownDays": 300,
     "title": "Mài mực giúp thầy đồ",
-    "conditions": { "min_age": 7, "max_age": 12, "min_education": 4 },
-    "weight": { "base": 25, "modifiers": [] },
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "min_education": 4,
+      "missing_flags": [
+        "tung_o_do"
+      ]
+    },
+    "weight": {
+      "base": 25,
+      "modifiers": []
+    },
     "description": "Trước giờ giảng bài, bạn tự giác mài mực và sắp xếp sách vở ngay ngắn.",
     "choices": [
       {
         "label": "Chăm chỉ phụ thầy",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Thầy đồ gật đầu khen ngợi sự lễ phép của bạn, giảng thêm cho bạn mấy chữ khó.",
-            "effects": { "education": 1.5, "fame": 0.5 }
+            "effects": {
+              "education": 1.5,
+              "fame": 0.5
+            }
           }
         ]
       }
@@ -49,17 +84,35 @@
     "severity": "minor",
     "cooldownDays": 360,
     "title": "Nghe chuyện cổ tích bên bếp lửa",
-    "conditions": { "min_age": 6, "max_age": 12, "season_in": ["winter"] },
-    "weight": { "base": 26, "modifiers": [] },
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "season_in": [
+        "winter"
+      ],
+      "missing_flags": [
+        "tung_o_do"
+      ]
+    },
+    "weight": {
+      "base": 26,
+      "modifiers": []
+    },
     "description": "Đêm đông gió bấc, cả nhà quây quần bên bếp lửa hồng nghe kể chuyện anh hùng thuở trước.",
     "choices": [
       {
         "label": "Lắng nghe say sưa",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Những câu chuyện nghĩa hiệp bên bếp lửa gieo vào lòng bạn nhiều ước mơ đẹp.",
-            "effects": { "happiness": 2.5, "relationships": 1.5 }
+            "effects": {
+              "happiness": 2.5,
+              "relationships": 1.5
+            }
           }
         ]
       }
@@ -71,17 +124,30 @@
     "severity": "minor",
     "cooldownDays": 300,
     "title": "Đẽo kiếm gỗ tập trận giả",
-    "conditions": { "min_age": 7, "max_age": 12 },
-    "weight": { "base": 24, "modifiers": [] },
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": []
+    },
     "description": "Lũ trẻ trong làng chia phe đánh trận giả dưới gốc đa đầu xóm.",
     "choices": [
       {
         "label": "Tham gia trận giả",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Bạn chạy nhảy hăng hái khắp bãi cỏ, người khỏe khoắn và nhanh nhẹn hơn hẳn.",
-            "effects": { "martial": 1, "health": 1, "relationships": 1 }
+            "effects": {
+              "martial": 1,
+              "health": 1,
+              "relationships": 1
+            }
           }
         ]
       }
@@ -93,17 +159,32 @@
     "severity": "minor",
     "cooldownDays": 270,
     "title": "Phụ mẹ nhóm bếp thổi cơm",
-    "conditions": { "min_age": 6, "max_age": 12 },
-    "weight": { "base": 25, "modifiers": [] },
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "missing_flags": [
+        "tung_o_do"
+      ]
+    },
+    "weight": {
+      "base": 25,
+      "modifiers": []
+    },
     "description": "Chiều muộn, bạn giúp mẹ nhặt rau và giữ lửa bếp rơm.",
     "choices": [
       {
         "label": "Chăm chỉ giúp việc",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Mẹ xoa đầu khen bạn ngoan ngoãn, biết san sẻ việc nhà từ nhỏ.",
-            "effects": { "relationships": 2, "happiness": 1 }
+            "effects": {
+              "relationships": 2,
+              "happiness": 1
+            }
           }
         ]
       }
@@ -115,17 +196,35 @@
     "severity": "minor",
     "cooldownDays": 360,
     "title": "Đêm rước đèn Trung Thu",
-    "conditions": { "min_age": 6, "max_age": 12, "season_in": ["autumn"] },
-    "weight": { "base": 28, "modifiers": [] },
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "season_in": [
+        "autumn"
+      ],
+      "missing_flags": [
+        "tung_o_do"
+      ]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": []
+    },
     "description": "Trăng rằm tháng Tám sáng vằng vặc, tiếng trống lân vang khắp ngõ xóm.",
     "choices": [
       {
         "label": "Cùng bạn rước đèn",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Bạn cầm chiếc đèn ông sao chạy khắp xóm cùng chúng bạn, niềm vui trọn vẹn.",
-            "effects": { "happiness": 3.5, "relationships": 1.5 }
+            "effects": {
+              "happiness": 3.5,
+              "relationships": 1.5
+            }
           }
         ]
       }
@@ -137,17 +236,29 @@
     "severity": "minor",
     "cooldownDays": 300,
     "title": "Chong đèn dầu ôn chữ",
-    "conditions": { "min_age": 6, "max_age": 12 },
-    "weight": { "base": 24, "modifiers": [] },
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": []
+    },
     "description": "Đêm xuống yên tĩnh, bên ngọn đèn dầu leo lét, bạn mở sách ra nhẩm lại bài thầy vừa giảng.",
     "choices": [
       {
         "label": "Cố đọc thêm một trang",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Ánh đèn tuy mờ nhưng lòng ham học khiến đầu óc bạn sáng ra nhiều điều.",
-            "effects": { "education": 2, "happiness": 1 }
+            "effects": {
+              "education": 2,
+              "happiness": 1
+            }
           }
         ]
       }
@@ -159,22 +270,44 @@
     "severity": "minor",
     "cooldownDays": 300,
     "title": "Trèo cây hái ổi vườn nhà",
-    "conditions": { "min_age": 6, "max_age": 12, "season_in": ["summer", "autumn"] },
-    "weight": { "base": 24, "modifiers": [] },
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "season_in": [
+        "summer",
+        "autumn"
+      ]
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": []
+    },
     "description": "Thấy chùm ổi chín vàng trên cành cao, bạn hí hửng leo lên hái nhưng cành hơi trơn.",
     "choices": [
       {
         "label": "Leo lên hái quả",
         "outcomes": [
           {
-            "weight": { "base": 65, "modifiers": [] },
+            "weight": {
+              "base": 65,
+              "modifiers": []
+            },
             "resultText": "Bạn hái được mấy quả ổi thơm lừng chia cho cả nhà cùng ăn.",
-            "effects": { "happiness": 2, "relationships": 1 }
+            "effects": {
+              "happiness": 2,
+              "relationships": 1
+            }
           },
           {
-            "weight": { "base": 35, "modifiers": [] },
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
             "resultText": "Bạn trượt chân ngã xuống thảm cỏ, chỉ xây xát nhẹ nhưng cười trừ.",
-            "effects": { "health": -1, "happiness": 2 }
+            "effects": {
+              "health": -1,
+              "happiness": 2
+            }
           }
         ]
       }
@@ -186,17 +319,32 @@
     "severity": "minor",
     "cooldownDays": 360,
     "title": "Áo mới ngày đầu xuân",
-    "conditions": { "min_age": 5, "max_age": 12, "season_in": ["spring"] },
-    "weight": { "base": 26, "modifiers": [] },
+    "conditions": {
+      "min_age": 5,
+      "max_age": 12,
+      "season_in": [
+        "spring"
+      ]
+    },
+    "weight": {
+      "base": 26,
+      "modifiers": []
+    },
     "description": "Sáng mùng Một Tết, cha mẹ mang ra bộ áo mới may gọn gàng cho bạn mặc đi chúc Tết họ hàng.",
     "choices": [
       {
         "label": "Hớn hở khoe áo mới",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Mùi vải mới và lời khen của cô bác khiến bạn vui suốt mấy ngày Tết.",
-            "effects": { "happiness": 3, "relationships": 1 }
+            "effects": {
+              "happiness": 3,
+              "relationships": 1
+            }
           }
         ]
       }
@@ -208,17 +356,32 @@
     "severity": "minor",
     "cooldownDays": 320,
     "title": "Nghịch nước mưa đầu mùa",
-    "conditions": { "min_age": 5, "max_age": 10, "season_in": ["summer"] },
-    "weight": { "base": 24, "modifiers": [] },
+    "conditions": {
+      "min_age": 5,
+      "max_age": 10,
+      "season_in": [
+        "summer"
+      ]
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": []
+    },
     "description": "Cơn mưa rào đầu hạ vừa tạnh, sân đình đọng nước trong vắt khiến lũ trẻ thích thú lội bì bõm.",
     "choices": [
       {
         "label": "Chạy ra nghịch nước mưa",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Bạn nô đùa ướt sũng cả áo, cười vang cả xóm dù tối về hơi hắt hơi.",
-            "effects": { "happiness": 2, "health": -1 }
+            "effects": {
+              "happiness": 2,
+              "health": -1
+            }
           }
         ]
       }
@@ -230,17 +393,29 @@
     "severity": "minor",
     "cooldownDays": 360,
     "title": "Bị bạn lớn trêu chọc",
-    "conditions": { "min_age": 7, "max_age": 12 },
-    "weight": { "base": 20, "modifiers": [] },
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12
+    },
+    "weight": {
+      "base": 20,
+      "modifiers": []
+    },
     "description": "Trên đường đi học về, mấy đứa trẻ lớn hơn buông lời trêu ghẹo khiến bạn ấm ức.",
     "choices": [
       {
         "label": "Nín nhịn đi thẳng về nhà",
         "outcomes": [
           {
-            "weight": { "base": 100, "modifiers": [] },
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
             "resultText": "Bạn ấm ức mất một buổi chiều, tự nhủ sau này phải cứng cỏi hơn.",
-            "effects": { "happiness": -2, "relationships": -1 }
+            "effects": {
+              "happiness": -2,
+              "relationships": -1
+            }
           }
         ]
       }

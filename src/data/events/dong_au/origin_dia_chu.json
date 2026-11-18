@@ -13,7 +13,8 @@
         "dia_chu"
       ],
       "missing_flags": [
-        "mo_coi_cha"
+        "mo_coi_cha",
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -123,6 +124,9 @@
       "max_age": 12,
       "origin_in": [
         "dia_chu"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -222,6 +226,9 @@
       "max_age": 12,
       "origin_in": [
         "dia_chu"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {
@@ -353,6 +360,9 @@
         "con_truong",
         "con_thu",
         "con_ut"
+      ],
+      "missing_flags": [
+        "tung_o_do"
       ]
     },
     "weight": {

@@ -1,0 +1,415 @@
+[
+  {
+    "id": "evt_child_odo_heavy_chores",
+    "stage": "childhood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Việc Nặng Nơi Sân Sau Phủ Địa Chủ",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "has_flags": ["tung_o_do"]
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": []
+    },
+    "description": "Từ tinh mơ bạn đã phải gánh nước, chẻ củi, quét dọn sân gạch trong phủ địa chủ. Công việc bộn bề khiến tay chân mỏi nhừ nhưng cũng giúp bạn quen dần nề nếp lao động.",
+    "choices": [
+      {
+        "label": "Cắn răng làm cho xong việc để khỏi bị quở trách",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn lặng lẽ hoàn thành hết phần việc được giao. Bà quản gia gật đầu hài lòng, thưởng thêm ít tiền lẻ cuối tháng.",
+            "effects": {
+              "craft_trade": 2,
+              "martial": 1,
+              "health": -2,
+              "happiness": -3,
+              "copper": 15,
+              "add_traits": ["kien_cuong"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tranh thủ nghỉ tay góc bếp để giữ sức",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 65, "modifiers": [] },
+            "resultText": "Bạn ngồi thở dốc một lát sau đống rơm rồi mới làm tiếp, nhờ vậy cơ thể đỡ kiệt sức hơn.",
+            "effects": {
+              "health": 2,
+              "stamina": 8,
+              "happiness": 2
+            }
+          },
+          {
+            "weight": { "base": 35, "modifiers": [] },
+            "resultText": "Quản gia đi ngang bắt gặp bạn đang ngồi nghỉ, liền lớn tiếng nhắc nhở và bắt làm bù đến tối mịt.",
+            "effects": {
+              "happiness": -5,
+              "stamina": -6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_odo_study_eavesdrop",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Đứng Ngoài Cửa Thư Phòng Cậu Ấm",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "has_flags": ["tung_o_do"]
+    },
+    "weight": {
+      "base": 60,
+      "modifiers": [
+        {
+          "conditions": { "childhood_focus": "hoc_tap" },
+          "addWeight": 30
+        }
+      ]
+    },
+    "description": "Mỗi lần bưng trà vào thư phòng cho thầy đồ dạy con nhà địa chủ, bạn lại nán bước bên hiên lắng nghe tiếng giảng Tam Tự Kinh.",
+    "choices": [
+      {
+        "label": "Ghi nhớ mặt chữ, tối đến lấy que vạch lại lên nền đất",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": { "has_any_trait": ["ham_hoc"] },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Dưới ánh trăng mờ ngoài sân sau, bạn tự ôn lại từng nét chữ nghe được ban ngày. Kiến thức tích góp từng chút một.",
+            "effects": {
+              "education": 5,
+              "stamina": -8,
+              "add_traits": ["ham_hoc"]
+            }
+          },
+          {
+            "weight": { "base": 30, "modifiers": [] },
+            "resultText": "Bạn lẩm nhẩm đọc theo lời thầy giảng và nhớ được vài chữ cơ bản, dù đôi mắt díp lại vì buồn ngủ.",
+            "effects": {
+              "education": 3,
+              "stamina": -5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lễ phép xin thầy đồ cho nhặt giấy vụn bỏ đi để tập viết",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Thầy đồ thấy bạn thật thà ham học nên gật đầu cho ít giấy thừa và dặn chỉ viết vào lúc xong việc.",
+            "effects": {
+              "education": 4,
+              "relationships": 3,
+              "happiness": 4,
+              "add_flags": ["duoc_thay_do_quy"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_odo_ledger_kitchen",
+    "stage": "childhood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Phụ Bếp & Đong Đếm Kho Thóc Phủ Lớn",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "has_flags": ["tung_o_do"]
+    },
+    "weight": {
+      "base": 60,
+      "modifiers": []
+    },
+    "description": "Bà quản gia sai bạn phụ cân đong thóc gạo xuất nhập trong kho bếp nhà địa chủ. Đây là dịp hiếm có để học cách tính toán sổ sách.",
+    "choices": [
+      {
+        "label": "Cẩn thận đong đếm chính xác từng đấu gạo",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Sổ kho khớp từng hào từng đấu, bà quản gia khen bạn nhanh nhẹn và thưởng cho ít tiền lẻ cùng nắm cơm nóng.",
+            "effects": {
+              "craft_trade": 3,
+              "fame": 2,
+              "copper": 25,
+              "happiness": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhân lúc vắng người gói ít gạo thừa gửi người mang về cho mẹ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 70, "modifiers": [] },
+            "resultText": "Túi gạo nhỏ được gửi trót lọt về quê giúp mẹ đỡ bữa đói, nhưng trong lòng bạn vẫn nơm nớp lo âu.",
+            "effects": {
+              "family_copper": 35,
+              "relationships": 4,
+              "infamy": 2
+            }
+          },
+          {
+            "weight": { "base": 30, "modifiers": [] },
+            "resultText": "Người coi kho kiểm lại thấy hụt nên quở trách bạn một trận và cắt phần tiền thưởng tháng này.",
+            "effects": {
+              "fame": -3,
+              "infamy": 3,
+              "happiness": -6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_odo_master_child_bond",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Kết Giao Nơi Phủ Đệ",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "has_flags": ["tung_o_do"]
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": [
+        {
+          "conditions": { "childhood_focus": "ban_be" },
+          "addWeight": 30
+        }
+      ]
+    },
+    "description": "Sống lâu trong phủ, tính tình thật thà và nhanh nhẹn của bạn khiến con cái nhà chủ cùng đám gia nhân lâu năm có phần quý mến.",
+    "choices": [
+      {
+        "label": "Chân thành giúp đỡ mọi người, giữ đúng lễ nghĩa trên dưới",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Mọi người trong phủ đều thương tình, thỉnh thoảng san sẻ cho bạn ít bánh trái và đỡ lời giúp khi có việc khó.",
+            "effects": {
+              "relationships": 6,
+              "fame": 3,
+              "happiness": 5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ khoảng cách, chỉ tập trung làm tròn bổn phận",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn ít giao du nhưng giữ được sự điềm tĩnh, công việc hàng ngày cũng gọn gàng trôi chảy hơn.",
+            "effects": {
+              "craft_trade": 2,
+              "stamina": 5,
+              "happiness": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_odo_redeem_freedom",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 360,
+    "title": "Cơ Hội Chuộc Khế Ước Trở Về Nhà",
+    "conditions": {
+      "min_age": 9,
+      "max_age": 12,
+      "has_flags": ["tung_o_do"]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": [
+        {
+          "conditions": { "min_copper": 120 },
+          "addWeight": 40
+        },
+        {
+          "conditions": { "family_tier_in": ["du_an", "kha_gia", "gia_u"] },
+          "addWeight": 45
+        }
+      ]
+    },
+    "description": "Sau thời gian dài làm lụng cần mẫn nơi phủ địa chủ, món nợ cũ của gia đình đã vơi đi nhiều. Nay có dịp thương lượng xin chuộc lại khế ước để trở về sum họp.",
+    "choices": [
+      {
+        "label": "Dùng tiền dành dụm riêng chuộc khế ước tự do (120 đồng)",
+        "conditions": {
+          "min_copper": 120
+        },
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn đặt xâu tiền chắt chiu suốt mấy năm lên bàn. Lão địa chủ gật đầu xé tờ khế ước, trả lại tự do cho bạn ngay trong ngày.",
+            "effects": {
+              "copper": -120,
+              "remove_flags": ["tung_o_do"],
+              "add_flags": ["xuat_than_o_do"],
+              "happiness": 16,
+              "fame": 4,
+              "milestone_title": "Tự chuộc thân trở về sau những năm đi ở đợ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Xin chủ nhà nể tình siêng năng mà xóa phần nợ còn lại",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": [
+                {
+                  "conditions": { "family_tier_in": ["du_an", "kha_gia", "gia_u"] },
+                  "addWeight": 45
+                },
+                {
+                  "conditions": { "min_relationships": 55 },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": { "min_craft_trade": 12 },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Nể tình bạn chăm chỉ thật thà bấy lâu và thấy gia cảnh nhà bạn đã đỡ hơn trước, lão địa chủ đồng ý xóa phần nợ lẻ, cho bạn khăn gói về quê.",
+            "effects": {
+              "remove_flags": ["tung_o_do"],
+              "add_flags": ["xuat_than_o_do"],
+              "happiness": 14,
+              "fame": 3,
+              "milestone_title": "Được chủ nhà xóa nợ cho hồi hương"
+            }
+          },
+          {
+            "weight": { "base": 55, "modifiers": [] },
+            "resultText": "Chủ nhà bảo khế ước chưa mãn hạn nên chưa thể thả ngay, nhưng cũng thưởng cho ít tiền lẻ động viên bạn ráng làm thêm.",
+            "effects": {
+              "copper": 40,
+              "craft_trade": 2,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ở lại làm thêm một thời gian để tích cóp thêm vốn liếng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn quyết định nán lại phủ làm thêm ít lâu, vừa quen việc vừa giữ được khoản tiền công phòng thân.",
+            "effects": {
+              "copper": 60,
+              "craft_trade": 2,
+              "happiness": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_odo_run_away",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "oncePerLife": true,
+    "title": "Ý Định Trốn Khỏi Phủ Địa Chủ",
+    "conditions": {
+      "min_age": 9,
+      "max_age": 12,
+      "has_flags": ["tung_o_do"]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": []
+    },
+    "description": "Đêm khuya cổng sau phủ địa chủ chỉ cài then hờ. Nhớ cha mẹ nơi quê nhà, bạn phân vân giữa việc thừa đêm rời đi hay ở lại giữ chữ tín chờ ngày mãn hạn.",
+    "choices": [
+      {
+        "label": "Lặng lẽ rời khỏi cổng sau trở về quê trong đêm",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 70, "modifiers": [] },
+            "resultText": "Bạn thoát khỏi phủ địa chủ trong đêm tối và tìm đường về với gia đình, dù mang tiếng bỏ khế ước giữa chừng.",
+            "effects": {
+              "remove_flags": ["tung_o_do"],
+              "add_flags": ["xuat_than_o_do", "bo_tron_o_do"],
+              "infamy": 5,
+              "fame": -3,
+              "happiness": 8,
+              "milestone_title": "Rời phủ địa chủ trở về với gia đình"
+            }
+          },
+          {
+            "weight": { "base": 30, "modifiers": [] },
+            "resultText": "Người canh cổng phát hiện giữ bạn lại. Chủ nhà trách phạt nặng lời và bắt làm bù suốt cả tuần.",
+            "effects": {
+              "health": -8,
+              "happiness": -10,
+              "stamina": -12
+            }
+          }
+        ]
+      },
+      {
+        "label": "Dằn lòng ở lại, giữ chữ tín chờ ngày quang minh chính đại hồi hương",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn khép lại cánh cổng sau, tự nhủ phải kiên cường làm tròn bổn phận để gia đình không bị liên lụy.",
+            "effects": {
+              "fame": 3,
+              "happiness": -2,
+              "add_traits": ["kien_cuong"]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
