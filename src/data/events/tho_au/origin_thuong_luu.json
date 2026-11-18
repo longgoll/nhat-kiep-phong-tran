@@ -12,6 +12,9 @@
       "origin_in": [
         "dia_chu",
         "quan_lai"
+      ],
+      "missing_flags": [
+        "gia_toc_sa_sut"
       ]
     },
     "weight": {

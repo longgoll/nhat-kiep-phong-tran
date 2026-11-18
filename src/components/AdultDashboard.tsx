@@ -53,6 +53,8 @@ import { LifeGrid } from './LifeGrid';
 import { LifeTimeline } from './LifeTimeline';
 import { LifeTopBar } from './LifeTopBar';
 import { StatExplainer } from './StatExplainer';
+import { ActiveCommitmentBanner } from './ActiveCommitmentBanner';
+import { LearningCommitmentModal } from './LearningCommitmentModal';
 
 const SLOT_LABELS: Record<TimeSlot, string> = {
   morning: 'Buổi Sáng',
@@ -145,6 +147,7 @@ export function AdultDashboard() {
   const lastTickTimeRef = useRef<number>(0);
   const [showScheduleDetails, setShowScheduleDetails] = useState(false);
   const [showLifestyleDetails, setShowLifestyleDetails] = useState(false);
+  const [isLearningModalOpen, setIsLearningModalOpen] = useState(false);
 
   const isLifeAlive = life?.isAlive ?? false;
   const hasPendingEvent = Boolean(pendingEvent);
@@ -690,6 +693,10 @@ export function AdultDashboard() {
                   {Math.round(life.stats.stamina)}/{life.stats.maxStamina}
                 </span>
               </div>
+              <ActiveCommitmentBanner
+                onOpenSelector={() => setIsLearningModalOpen(true)}
+                buttonLabel="Khóa học · Tòng quân"
+              />
             </div>
 
             {/* Ghi Chép Cuộc Đời (Timeline Hero) */}
@@ -1009,15 +1016,25 @@ export function AdultDashboard() {
                             const slotActions = ALL_ACTIONS.filter(
                               (a) => a.allowedSlots.includes(slot) && evaluateConditions(life, a.conditions),
                             );
+                            const slotLockedByCommitment =
+                              life.activeCommitment?.lockedSlots.includes(slot) ?? false;
                             return (
                               <div key={slot} className="space-y-1">
-                                <label className="block text-[11px] font-medium text-stone-400">
-                                  {SLOT_LABELS[slot]}
+                                <label className="flex items-center justify-between text-[11px] font-medium text-stone-400">
+                                  <span>{SLOT_LABELS[slot]}</span>
+                                  {slotLockedByCommitment && (
+                                    <span className="text-[10px] text-sky-300">Khóa theo lộ trình</span>
+                                  )}
                                 </label>
                                 <select
-                                  value={life.schedule[slot]}
+                                  value={
+                                    slotLockedByCommitment && life.activeCommitment?.dailyActionId
+                                      ? life.activeCommitment.dailyActionId
+                                      : life.schedule[slot]
+                                  }
+                                  disabled={slotLockedByCommitment}
                                   onChange={(e) => setSlotAction(slot, e.target.value)}
-                                  className="w-full px-2.5 py-2 rounded-lg bg-stone-950 border border-stone-700 text-xs text-stone-100 focus:outline-none focus:border-amber-500"
+                                  className="w-full px-2.5 py-2 rounded-lg bg-stone-950 border border-stone-700 text-xs text-stone-100 focus:outline-none focus:border-amber-500 disabled:opacity-60 disabled:cursor-not-allowed"
                                 >
                                   {slotActions.map((act) => (
                                     <option key={act.id} value={act.id}>
@@ -1030,6 +1047,10 @@ export function AdultDashboard() {
                           })}
                         </div>
                       )}
+                      <ActiveCommitmentBanner
+                        onOpenSelector={() => setIsLearningModalOpen(true)}
+                        buttonLabel="Chọn khóa học · Tòng quân"
+                      />
                     </div>
 
                     {/* Auto-Pause Toggles */}
@@ -1197,6 +1218,10 @@ export function AdultDashboard() {
       </nav>
 
       {showArchive && <LegacyArchiveModal onClose={() => setShowArchive(false)} />}
+      <LearningCommitmentModal
+        isOpen={isLearningModalOpen}
+        onClose={() => setIsLearningModalOpen(false)}
+      />
     </div>
   );
 }

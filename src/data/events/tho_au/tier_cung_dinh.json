@@ -12,6 +12,10 @@
       "origin_in": [
         "quan_lai",
         "hoang_toc"
+      ],
+      "missing_flags": [
+        "gia_toc_sa_sut",
+        "that_sung_cung_dinh"
       ]
     },
     "weight": {
@@ -78,6 +82,9 @@
       "origin_in": [
         "quan_lai",
         "hoang_toc"
+      ],
+      "missing_flags": [
+        "gia_toc_sa_sut"
       ]
     },
     "weight": {

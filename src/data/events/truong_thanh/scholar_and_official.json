@@ -89,8 +89,7 @@
       "origin_in": [
         "ban_nong",
         "thu_cong",
-        "dia_chu",
-        "quan_lai"
+        "dia_chu"
       ],
       "has_flags": [
         "do_cu_nhan"

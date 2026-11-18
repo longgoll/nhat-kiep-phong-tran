@@ -95,9 +95,59 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
     for (const f of effects.add_flags) {
       if (!flags.includes(f)) flags.push(f);
     }
+    if (effects.add_flags.includes('gia_toc_sa_sut') && !state.flags.includes('gia_toc_sa_sut')) {
+      npcs = npcs.filter((npc) => npc.relation !== 'household');
+      if (family) {
+        const keptAssets = (family.familyAssetsSummary ?? []).filter(
+          (item) =>
+            !item.includes('Phủ đệ') &&
+            !item.includes('gia nhân') &&
+            !item.includes('Quản gia') &&
+            !item.includes('gia đinh') &&
+            !item.includes('hòm bạc') &&
+            !item.includes('Kho bạc'),
+        );
+        family = {
+          ...family,
+          familyAssetsSummary: ['Gian nhà nhỏ nơi quê cũ', ...keptAssets, 'Gia nhân đã ly tán'],
+        };
+      }
+      if (state.profile.originClass === 'quan_lai' && officialRank === 0) {
+        currentRole = 'Con nhà quan sa sút';
+      }
+    }
+    if (
+      effects.add_flags.includes('that_sung_cung_dinh') &&
+      !state.flags.includes('that_sung_cung_dinh') &&
+      state.profile.originClass === 'hoang_toc'
+    ) {
+      npcs = npcs.map((npc) => {
+        if (npc.id === 'npc_butler' && npc.isAlive) {
+          return { ...npc, role: 'Thái giám cũ trung thành nơi lãnh cung' };
+        }
+        if (npc.id === 'npc_wetnurse' && npc.isAlive) {
+          return { ...npc, role: 'Cung nữ thân cận theo hầu mẫu phi' };
+        }
+        return npc;
+      });
+      if (family) {
+        family = {
+          ...family,
+          familyAssetsSummary: [
+            'Tẩm cung hẻo lánh',
+            'Bổng lộc bị cắt giảm',
+            'Lão thái giám & cung nữ trung thành',
+          ],
+        };
+      }
+    }
   }
+  let activeCommitment = state.activeCommitment;
   if (effects.remove_flags) {
     flags = flags.filter((f) => !effects.remove_flags!.includes(f));
+    if (effects.remove_flags.includes('trong_quan_ngu') && activeCommitment?.category === 'military') {
+      activeCommitment = null;
+    }
   }
   if (effects.reset_official_rank) {
     officialRank = 0;
@@ -207,6 +257,7 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
     traits,
     interests,
     flags,
+    activeCommitment,
     npcs,
     delayedEvents,
     milestones,

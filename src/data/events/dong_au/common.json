@@ -12,8 +12,7 @@
       "origin_in": [
         "ban_nong",
         "thu_cong",
-        "dia_chu",
-        "quan_lai"
+        "dia_chu"
       ]
     },
     "weight": {
@@ -157,8 +156,7 @@
       "origin_in": [
         "ban_nong",
         "thu_cong",
-        "dia_chu",
-        "quan_lai"
+        "dia_chu"
       ]
     },
     "weight": {

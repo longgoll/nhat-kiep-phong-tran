@@ -123,5 +123,402 @@
         ]
       }
     ]
+  },
+  {
+    "id": "evt_child_quan_lai_concubine_rivalry",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Sóng Ngầm Nơi Hậu Viện Phủ Quan",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "missing_flags": [
+        "gia_toc_sa_sut"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Trong phủ quan đông người nhiều miệng, chuyện đích thứ phân biệt và lời ra tiếng vào giữa các phòng thiếp thất khiến không khí hậu viện lúc nào cũng căng như dây đàn. Hôm nay, một bà vú bên phòng khác cố tình nói bóng gió châm chọc mẫu thân bạn.",
+    "choices": [
+      {
+        "label": "Giữ bình tĩnh đáp trả lễ độ nhưng sắc sảo, không để mất thể diện",
+        "conditions": {
+          "min_education": 12
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 50
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Lời lẽ chừng mực mà cứng cỏi của bạn khiến kẻ kia á khẩu lui đi. Mẫu thân nghe chuyện liền âm thầm gật đầu hài lòng.",
+            "effects": {
+              "fame": 3,
+              "relationships": 4,
+              "happiness": 4,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 10
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Dù lý lẽ sắc bén nhưng bạn vẫn còn nhỏ tuổi nên lời qua tiếng lại khiến trưởng bối quở trách cả hai bên vì làm ầm ĩ.",
+            "effects": {
+              "happiness": -4,
+              "relationships": -2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nín nhịn quay về thư phòng đọc sách, tránh xa thị phi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn hiểu chỉ có bản lĩnh và học vấn thật sự mới khiến người trong phủ phải nể trọng. Bạn dồn tâm trí vào trang sách.",
+            "effects": {
+              "education": 4,
+              "happiness": -2,
+              "add_traits": [
+                "da_nghi"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_quan_lai_father_lesson",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Theo Phụ Thân Học Việc Công Đường",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "has_living_npc_id": "npc_father",
+      "missing_flags": [
+        "mo_coi_cha",
+        "gia_toc_sa_sut"
+      ]
+    },
+    "weight": {
+      "base": 48,
+      "modifiers": []
+    },
+    "description": "Phụ thân cho gọi bạn vào thư phòng riêng, bày ra một chồng công văn, bản đồ biên ải và sổ sách thu chi, bảo bạn thử xem qua để sớm hiểu đường lối xử thế chốn quan trường.",
+    "choices": [
+      {
+        "label": "Chú tâm hỏi phụ thân về phép trị quốc và cách soạn tấu sớ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_occupation_in": [
+                      "quan_van"
+                    ]
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Phụ thân vui mừng giảng giải cặn kẽ từng điều luật lệ và phép hành văn. Bạn tiếp thu rất nhanh.",
+            "effects": {
+              "education": 6,
+              "fame": 2,
+              "add_interests": [
+                "kinh_su"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 10
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Chữ nghĩa công văn khô khan khiến bạn đọc một hồi liền hoa mắt, nhưng cũng nắm được đại khái nề nếp nha môn.",
+            "effects": {
+              "education": 3,
+              "happiness": -2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Say mê xem bản đồ binh lực và chuyện điều binh khiển tướng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_occupation_in": [
+                      "quan_vo"
+                    ]
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Bạn chỉ ra được mấy điểm hiểm yếu trên bản đồ khiến phụ thân ngạc nhiên khen ngợi, lập tức truyền cho vài khẩu quyết binh pháp.",
+            "effects": {
+              "martial": 5,
+              "education": 2,
+              "add_interests": [
+                "vo_nghe"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 10
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Bạn thích thú ngắm nhìn binh phù và sa bàn, lòng dấy lên khát vọng lập công nơi sa trường.",
+            "effects": {
+              "martial": 3,
+              "happiness": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Để ý cách cha tính toán sổ sách, lễ vật và đối nhân xử thế",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_occupation_in": [
+                      "tham_quan"
+                    ]
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Bạn sớm nhận ra sau mỗi món lễ vật đều là một mối quan hệ chằng chịt. Phụ thân khen bạn tinh đời hơn bạn đồng trang lứa.",
+            "effects": {
+              "craft_trade": 4,
+              "relationships": 5,
+              "add_traits": [
+                "tham_vong"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 8
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Những con số thu chi phức tạp làm bạn hơi rối trí, nhưng cũng mở mang tầm mắt về chuyện tiền bạc chốn quan trường.",
+            "effects": {
+              "craft_trade": 2,
+              "relationships": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_quan_lai_academy_peer",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Kết Giao Đồng Môn Nơi Tư Thục Danh Sư",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "quan_lai"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_relationships": 55
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Tại lớp học của vị lão sư nổi tiếng Kinh kỳ, các thiếu niên con nhà quan tụ tập bàn luận thơ văn và khoe gia thế. Một công tử nhà Thượng thư tỏ ý muốn kết giao riêng với bạn.",
+    "choices": [
+      {
+        "label": "Chủ động kết nghĩa tri kỷ, cùng nhau dùi mài kinh sử",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hai người tâm đầu ý hợp, hẹn sau này cùng bước lên bảng vàng, giúp nhau giữa chốn triều đường.",
+            "effects": {
+              "relationships": 8,
+              "education": 3,
+              "happiness": 6,
+              "add_flags": [
+                "co_ban_tri_ky"
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "giao_du"
+              ],
+              "milestone_title": "Kết giao đồng môn nơi kinh kỳ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ lễ vừa phải, chỉ trao đổi bài vở chứ không kết bè",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thái độ điềm đạm, không xu nịnh của bạn khiến cả thầy đồ lẫn bạn học đều thầm kính nể.",
+            "effects": {
+              "education": 4,
+              "fame": 3,
+              "relationships": 3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_quan_lai_temptation",
+    "stage": "childhood",
+    "severity": "minor",
+    "cooldownDays": 1080,
+    "title": "Cậy Thế Phủ Quan Nơi Phố Thị",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "missing_flags": [
+        "gia_toc_sa_sut"
+      ]
+    },
+    "weight": {
+      "base": 38,
+      "modifiers": []
+    },
+    "description": "Ra phố dạo chơi, tên tiểu đồng đi theo hống hách đòi chủ sạp đồ cổ tặng không món nghiên mực quý vì biết bạn là công tử phủ quan. Chủ sạp sợ sệt không dám nói gì.",
+    "choices": [
+      {
+        "label": "Quát mắng tên tiểu đồng, trả đủ tiền cho chủ sạp",
+        "conditions": {
+          "min_copper": 100
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Chủ sạp cảm kích rưng rưng, người xung quanh xì xào khen nhà quan dạy con có phép tắc.",
+            "effects": {
+              "copper": -100,
+              "fame": 5,
+              "happiness": 4,
+              "add_traits": [
+                "trong_nghia"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Làm ngơ nhận lấy món đồ quý, coi như chuyện thường tình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn mang chiếc nghiên mực quý về phủ, nhưng lời đồn về thói hống hách của phủ quan bắt đầu lan ra ngoài phố.",
+            "effects": {
+              "fame": -4,
+              "infamy": 5,
+              "happiness": 5
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

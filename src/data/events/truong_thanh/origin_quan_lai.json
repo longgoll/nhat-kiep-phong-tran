@@ -1,0 +1,525 @@
+[
+  {
+    "id": "evt_adult_quan_lai_tap_am",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Đặc Ân Tập Ấm Nơi Nha Môn",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 28,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "has_living_npc_id": "npc_father",
+      "missing_flags": [
+        "gia_toc_sa_sut",
+        "mo_coi_cha",
+        "dang_lam_quan",
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": [
+        {
+          "conditions": {
+            "min_fame": 25
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Nhờ công lao của phụ thân trên triều, Lại bộ gửi trát nhắc đến lệ tập ấm cho con cháu thế gia, mở đường cho bạn vào tập sự tại nha môn Kinh thành trước khi tự mình ứng thí hoặc xin bổ nhiệm.",
+    "choices": [
+      {
+        "label": "Nhận ân ấm vào nha môn tập sự, sớm nắm đường đi nước bước quan trường",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn khoác áo nho sinh vào nha môn phụ giúp xử lý công văn. Tuy có lời xì xào dựa hơi gia thế, nhưng bạn nhanh chóng tích lũy được kinh nghiệm và nhân mạch quý giá.",
+            "effects": {
+              "education": 5,
+              "relationships": 10,
+              "fame": 4,
+              "copper": 600,
+              "add_flags": [
+                "co_an_tap_am"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 10
+                }
+              ],
+              "milestone_title": "Nhận ân ấm tập sự nơi nha môn"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khước từ ân ấm, quyết tự lực thi đỗ bảng vàng không dựa hơi cha",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Quyết định cứng cỏi của bạn khiến phụ thân vừa bất ngờ vừa cảm khái. Danh tiếng thanh liêm, tự trọng của bạn lan khắp giới sĩ tử Kinh kỳ.",
+            "effects": {
+              "fame": 10,
+              "education": 4,
+              "happiness": 6,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "milestone_title": "Khước từ ân ấm, tự lập công danh"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_quan_lai_marriage_alliance",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Nghị Hôn Môn Đăng Hộ Đối",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 28,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "missing_flags": [
+        "da_ket_hon",
+        "gia_toc_sa_sut",
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 38,
+      "modifiers": []
+    },
+    "description": "Một vị đại thần cùng triều cho bà mối mang lễ vật sang phủ ngỏ ý kết thông gia với gia tộc bạn để đôi bên nương tựa thanh thế trên quan trường.",
+    "choices": [
+      {
+        "label": "Thuận theo sắp đặt của trưởng bối, nhận lễ kết giao thông gia",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Lễ dạm hỏi diễn ra trang trọng. Hai nhà thế gia chính thức giao hảo, đường quan lộ và nhân mạch của bạn rộng mở hơn hẳn.",
+            "effects": {
+              "fame": 8,
+              "relationships": 12,
+              "copper": 1200,
+              "happiness": -2,
+              "add_flags": [
+                "lien_minh_the_gia"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo cáo từ, lấy cớ muốn chuyên tâm lập nghiệp trước khi thành gia",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_relationships": 55
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Bạn đối đáp nhã nhặn khiến nhà kia không thể trách móc, lại giữ được tự do cho chuyện trăm năm của chính mình.",
+            "effects": {
+              "happiness": 6,
+              "fame": 2
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Nhà kia cho rằng gia tộc bạn kiêu ngạo khinh người, từ đó sinh lòng hiềm khích ngầm.",
+            "effects": {
+              "relationships": -6,
+              "fame": -3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_quan_lai_family_estate",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1440,
+    "title": "Sổ Sách & Môn Khách Trong Phủ Đệ",
+    "conditions": {
+      "min_age": 20,
+      "max_age": 50,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "missing_flags": [
+        "gia_toc_sa_sut"
+      ]
+    },
+    "weight": {
+      "base": 35,
+      "modifiers": []
+    },
+    "description": "Quản gia trình lên sổ sách thu chi cuối quý của phủ đệ: chi phí nuôi môn khách, quà cáp lễ tiết và sửa sang dinh thự tăng vọt, trong đó có nhiều khoản kê khai mập mờ.",
+    "choices": [
+      {
+        "label": "Rà soát lại toàn bộ sổ sách, cắt giảm môn khách ăn bám",
+        "conditions": {
+          "min_education": 15
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 80,
+              "modifiers": []
+            },
+            "resultText": "Bạn phanh phui mấy khoản chi khống và tinh giản đám gia nhân lười biếng, giữ lại cho phủ một khoản bạc đáng kể.",
+            "effects": {
+              "copper": 900,
+              "craft_trade": 4,
+              "relationships": -3
+            }
+          },
+          {
+            "weight": {
+              "base": 20,
+              "modifiers": []
+            },
+            "resultText": "Mấy tên môn khách bị đuổi ôm hận đi rêu rao rằng nhà bạn keo kiệt, nhưng tài chính phủ đệ vững vàng trở lại.",
+            "effects": {
+              "copper": 700,
+              "fame": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ nguyên lệ cũ và mở tiệc khoản đãi để giữ thể diện thế gia (-800 đồng)",
+        "conditions": {
+          "min_copper": 800
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bữa tiệc linh đình khiến tiếng tăm hiếu khách của phủ đệ vang xa, môn khách hết lời ca tụng.",
+            "effects": {
+              "copper": -800,
+              "fame": 6,
+              "relationships": 8,
+              "happiness": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_quan_lai_father_legacy",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Thư Tiến Cử & Tâm Huyết Của Phụ Thân",
+    "conditions": {
+      "min_age": 22,
+      "max_age": 50,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "has_living_npc_id": "npc_father",
+      "missing_flags": [
+        "gia_toc_sa_sut",
+        "mo_coi_cha"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Một đêm thanh vắng, phụ thân gọi bạn vào thư phòng, trao cho bạn tập bút ký cả đời làm quan cùng danh sách những cố nhân đáng tin cậy nơi triều đình.",
+    "choices": [
+      {
+        "label": "Cẩn trọng tiếp nhận và ghi nhớ từng lời căn dặn của cha",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_occupation_in": [
+                      "quan_van"
+                    ]
+                  },
+                  "addWeight": 60
+                }
+              ]
+            },
+            "resultText": "Tập bút ký luận bàn chính sự và phép trị dân của phụ thân khiến bạn bừng tỉnh nhiều điều sâu sắc.",
+            "effects": {
+              "education": 8,
+              "fame": 5,
+              "relationships": 6,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 12
+                }
+              ],
+              "milestone_title": "Thừa hưởng tâm huyết quan văn của phụ thân"
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_occupation_in": [
+                      "quan_vo"
+                    ]
+                  },
+                  "addWeight": 60
+                }
+              ]
+            },
+            "resultText": "Phụ thân trao lại binh thư tâm đắc và thanh bảo kiếm năm xưa, căn dặn bạn giữ vững khí phách tướng môn.",
+            "effects": {
+              "martial": 8,
+              "fame": 5,
+              "relationships": 6,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 12
+                }
+              ],
+              "milestone_title": "Thừa hưởng binh thư & bảo kiếm tướng môn"
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "family_occupation_in": [
+                      "tham_quan"
+                    ]
+                  },
+                  "addWeight": 60
+                }
+              ]
+            },
+            "resultText": "Phụ thân chỉ cho bạn những khoản ngân lượng phòng thân giấu kín cùng các đầu mối giao thương ngầm với quan lại địa phương.",
+            "effects": {
+              "copper": 2500,
+              "craft_trade": 6,
+              "relationships": 8,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 12
+                }
+              ],
+              "milestone_title": "Nắm giữ mạng lưới & tài sản ngầm của phụ thân"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_quan_lai_fallen_humiliation",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Ánh Nhìn Lạnh Lẽo Khi Thế Gia Sa Cơ",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 48,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "has_flags": [
+        "gia_toc_sa_sut"
+      ]
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": []
+    },
+    "description": "Trên đường phố, bạn tình cờ chạm mặt một kẻ từng khúm núm nịnh bợ phủ đệ nhà bạn năm xưa. Nay hắn đã lên chức, nhìn bộ quần áo vải thô của bạn rồi buông lời cười nhạo trước đám đông.",
+    "choices": [
+      {
+        "label": "Nén giận giữ lễ, khắc sâu nỗi nhục này làm chí tiến thủ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn không tranh cãi nửa lời, lặng lẽ quay lưng bước đi. Ngọn lửa quyết tâm phục hưng môn hộ bùng cháy dữ dội trong lòng.",
+            "effects": {
+              "education": 5,
+              "happiness": -4,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "milestone_title": "Nuốt giận nuôi chí phục hưng gia tộc"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đáp trả đanh thép bằng khí tiết con nhà thế gia",
+        "conditions": {
+          "min_education": 20
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 70,
+              "modifiers": []
+            },
+            "resultText": "Lời lẽ sắc bén, dẫn điển tích thâm thúy của bạn khiến kẻ tiểu nhân tái mặt bỏ đi giữa tiếng xì xào của người qua đường.",
+            "effects": {
+              "fame": 8,
+              "happiness": 6
+            }
+          },
+          {
+            "weight": {
+              "base": 30,
+              "modifiers": []
+            },
+            "resultText": "Hắn tức tối sai nha dịch gây khó dễ khiến bạn mất một khoản tiền dàn xếp, nhưng danh dự gia tộc không hề sứt mẻ.",
+            "effects": {
+              "copper": -300,
+              "fame": 4,
+              "happiness": -3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_quan_lai_extravagant_peer",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1080,
+    "title": "Cuộc Vui Thâu Đêm Chốn Tràng An",
+    "conditions": {
+      "min_age": 17,
+      "max_age": 34,
+      "origin_in": [
+        "quan_lai"
+      ],
+      "missing_flags": [
+        "gia_toc_sa_sut",
+        "thai_giam",
+        "trong_hau_cung"
+      ]
+    },
+    "weight": {
+      "base": 32,
+      "modifiers": []
+    },
+    "description": "Đám công tử nhà quyền quý rủ bạn tối nay ra tửu lầu lớn nhất Kinh thành uống rượu, nghe ca trù và đánh bạc thâu đêm.",
+    "choices": [
+      {
+        "label": "Nhập cuộc tiêu tiền như nước để giữ vòng giao du (-600 đồng)",
+        "conditions": {
+          "min_copper": 600
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": []
+            },
+            "resultText": "Bạn vung tay hào phóng khiến đám công tử hết sức nể mặt, giới thiệu thêm cho bạn nhiều mối quan hệ mới.",
+            "effects": {
+              "copper": -600,
+              "relationships": 8,
+              "happiness": 8,
+              "stamina": -12,
+              "infamy": 2
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Say xỉn quá đà lại thua bạc nặng, sáng hôm sau lời đồn về thói ăn chơi trác táng của bạn lan khắp phố quan.",
+            "effects": {
+              "copper": -1400,
+              "fame": -6,
+              "infamy": 6,
+              "stamina": -15,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo cáo từ, ở lại thư phòng tự rèn giũa bản thân",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn từ chối nhã nhặn rồi về đóng cửa đọc sách, luyện chữ suốt đêm.",
+            "effects": {
+              "education": 4,
+              "fame": 2,
+              "relationships": -2
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

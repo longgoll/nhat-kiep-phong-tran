@@ -245,4 +245,53 @@ describe('Core Engine (MVP 1)', () => {
     }
     expect(checked).toBeGreaterThan(0);
   });
+
+  it('dismisses household staff and updates familyAssetsSummary when gia_toc_sa_sut triggers', () => {
+    let quanLaiLife: ReturnType<typeof createNewLife> | null = null;
+    for (let s = 1; s <= 1500; s += 1) {
+      const life = createNewLife(s);
+      if (
+        life.profile.originClass === 'quan_lai' &&
+        !life.flags.includes('gia_toc_sa_sut') &&
+        life.npcs.some((n) => n.relation === 'household')
+      ) {
+        quanLaiLife = life;
+        break;
+      }
+    }
+    expect(quanLaiLife).not.toBeNull();
+    const afterFall = applyEffects(quanLaiLife!, {
+      set_housing: 'nha_gach',
+      add_flags: ['gia_toc_sa_sut'],
+    });
+
+    expect(afterFall.npcs.some((n) => n.relation === 'household')).toBe(false);
+    expect(afterFall.family?.familyAssetsSummary).toContain('Gian nhà nhỏ nơi quê cũ');
+    expect(afterFall.family?.familyAssetsSummary).toContain('Gia nhân đã ly tán');
+    expect(afterFall.family?.familyAssetsSummary?.some((s) => s.includes('Phủ đệ'))).toBe(false);
+    expect(afterFall.profile.currentRole).toBe('Con nhà quan sa sút');
+  });
+
+  it('updates royal attendants and familyAssetsSummary when that_sung_cung_dinh triggers', () => {
+    let royalLife: ReturnType<typeof createNewLife> | null = null;
+    for (let s = 1; s <= 1500; s += 1) {
+      const life = createNewLife(s);
+      if (
+        life.profile.originClass === 'hoang_toc' &&
+        !life.flags.includes('that_sung_cung_dinh')
+      ) {
+        royalLife = life;
+        break;
+      }
+    }
+    expect(royalLife).not.toBeNull();
+    const afterFall = applyEffects(royalLife!, {
+      add_flags: ['that_sung_cung_dinh'],
+    });
+
+    expect(afterFall.family?.familyAssetsSummary).toContain('Tẩm cung hẻo lánh');
+    expect(afterFall.family?.familyAssetsSummary).toContain('Bổng lộc bị cắt giảm');
+    const butler = afterFall.npcs.find((n) => n.id === 'npc_butler');
+    expect(butler?.role).toContain('lãnh cung');
+  });
 });

@@ -85,6 +85,9 @@
         "origin_in": [
           "quan_lai",
           "hoang_toc"
+        ],
+        "missing_flags": [
+          "gia_toc_sa_sut"
         ]
       }
     },
@@ -139,6 +142,9 @@
         "origin_in": [
           "quan_lai",
           "hoang_toc"
+        ],
+        "missing_flags": [
+          "gia_toc_sa_sut"
         ]
       }
     },
@@ -195,6 +201,9 @@
         "origin_in": [
           "hoang_toc",
           "quan_lai"
+        ],
+        "missing_flags": [
+          "gia_toc_sa_sut"
         ]
       }
     },
@@ -265,6 +274,21 @@
           "hoang_toc",
           "dia_chu",
           "quan_lai"
+        ],
+        "missing_flags": [
+          "gia_toc_sa_sut"
+        ]
+      }
+    },
+    {
+      "focusId": "ban_be",
+      "text": "Dù gia đạo đã sa sút, bạn vẫn giữ phong thái điềm đạm khi trò chuyện và kết bạn với đám trẻ đồng trang lứa.",
+      "conditions": {
+        "origin_in": [
+          "quan_lai"
+        ],
+        "has_flags": [
+          "gia_toc_sa_sut"
         ]
       }
     },
@@ -364,6 +388,9 @@
         "origin_in": [
           "hoang_toc",
           "quan_lai"
+        ],
+        "missing_flags": [
+          "gia_toc_sa_sut"
         ]
       }
     },

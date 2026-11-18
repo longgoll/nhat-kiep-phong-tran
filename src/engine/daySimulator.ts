@@ -13,6 +13,7 @@ import {
 } from '../types/activeLife';
 import type { ActionDef, EffectSpec, GameEventDef } from '../types/dsl';
 import { computeWeight, evaluateConditions } from './conditionEvaluator';
+import { tickCommitmentDays } from './commitmentSystem';
 import { calculateRicePrice, formatCopper } from './economy';
 import { appendLog, applyEffects } from './effectApplier';
 import { pickWeightedIndex } from './prng';
@@ -138,6 +139,18 @@ function resolveSlotAction(
   ) {
     const serv = actionsMap.get('act_lam_gia_no');
     if (serv && canExecuteAction(state, serv)) return serv;
+  }
+
+  // Active timed commitment lock (e.g. study course, military enlistment, apprenticeship)
+  if (
+    state.activeCommitment &&
+    state.activeCommitment.lockedSlots.includes(slot) &&
+    state.activeCommitment.dailyActionId
+  ) {
+    const committedAction = actionsMap.get(state.activeCommitment.dailyActionId);
+    if (committedAction && canExecuteAction(state, committedAction)) {
+      return committedAction;
+    }
   }
 
   const chosen = actionsMap.get(actionId);
@@ -635,6 +648,7 @@ export function advanceDays(
             : 0,
       });
     }
+    state = tickCommitmentDays(state, 1);
     daysSimulated += 1;
 
     if (!state.isAlive) {

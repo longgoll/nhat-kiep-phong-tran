@@ -15,7 +15,8 @@
         "dia_chu"
       ],
       "missing_flags": [
-        "mo_coi_cha"
+        "mo_coi_cha",
+        "gia_toc_sa_sut"
       ]
     },
     "weight": {

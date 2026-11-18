@@ -86,6 +86,45 @@ export interface AnnualFinanceLedger {
   otherExpenseCopper: number;
 }
 
+export interface ActiveCommitment {
+  id: string;
+  title: string;
+  category: 'study' | 'military' | 'craft' | 'work';
+  totalDays: number;
+  remainingDays: number;
+  lockedSlots: TimeSlot[];
+  dailyActionId?: string;
+  childhoodFocus?: string;
+  completionEffects?: {
+    education?: number;
+    martial?: number;
+    craft_trade?: number;
+    fame?: number;
+    relationships?: number;
+    happiness?: number;
+    copper?: number;
+    add_flags?: string[];
+    remove_flags?: string[];
+    add_interests?: string[];
+    milestone_title?: string;
+  };
+  completionMessage?: string;
+  passCondition?: {
+    stat: 'education' | 'martial' | 'craftTrade';
+    min: number;
+  };
+  failEffects?: {
+    happiness?: number;
+    fame?: number;
+  };
+  failMessage?: string;
+  abandonPenalty?: {
+    fame?: number;
+    happiness?: number;
+    remove_flags?: string[];
+  };
+}
+
 export interface ActiveLifeState {
   schemaVersion: number;
   seed: number;
@@ -170,6 +209,8 @@ export interface ActiveLifeState {
   lastMajorEventDay?: number;
   milestones: MilestoneRecord[];
   yearlyHappiness?: Record<number, number>;
+  activeCommitment?: ActiveCommitment | null;
+  promptedLearningAges?: number[];
   logs: LogEntry[];
 }
 

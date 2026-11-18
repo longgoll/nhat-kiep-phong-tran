@@ -228,6 +228,9 @@
         "quan_lai",
         "hoang_toc"
       ],
+      "missing_flags": [
+        "gia_toc_sa_sut"
+      ],
       "birth_order_in": [
         "con_truong",
         "con_thu",
