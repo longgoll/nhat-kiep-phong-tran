@@ -21,9 +21,9 @@
         │
         ▼
 [22–60+ tuổi: 3 Trụ cột Trưởng thành — `planYear` (tối đa 2 Quyết định + 2–3 Feed/năm)]
-  ├── TRỤ CỘT VĂN (Khoa cử & Quan trường)  <-- ĐANG ƯU TIÊN MỞ RỘNG
-  ├── TRỤ CỘT THƯƠNG (Nghề, Khởi nghiệp, Điền sản) <-- Đã đầy đặn
-  └── TRỤ CỘT VÕ / GIANG HỒ (Quân ngũ, Tù tội, Khởi nghĩa) <-- Mở rộng sau
+  ├── TRỤ CỘT VĂN (Học trò Nghèo/Giàu → Khoa cử → Quan trường → Cung đình nội đấu) [Đã hoàn thiện]
+  ├── TRỤ CỘT THƯƠNG (Nghề, Khởi nghiệp, Điền sản) [Đã hoàn thiện]
+  └── TRỤ CỘT VÕ / GIANG HỒ (Võ tướng Biên ải, Khởi nghĩa, Giang hồ) [Đã hoàn thiện]
         │
         ▼
 [60+ tuổi: Tuổi xế chiều]
@@ -47,25 +47,23 @@ Mọi sự kiện mới **phải** kiểm tra các trạng thái khóa dưới �
 
 ---
 
-## 3. Thiết Kế Mở Rộng Tiếp Theo (2 Đợt)
+## 3. Các Nhánh Đã Triển Khai & Kiểm Chứng (95.0% Coverage · 268 Events)
 
-### Đợt 1 — Nhánh Học Trò Nghèo vs. Học Trò Giàu
-- **File 1 (`src/data/events/truong_thanh/scholar_poor.json` — 5–6 events):**
-  - Đối tượng: `ban_nong`, `thu_cong`, `min_education >= 12`, `missing_flags: ["trong_hau_cung", "dang_lam_quan"]`.
-  - Mạch nội dung: *Chép sách thuê / dạy trẻ đầu làng* (kiếm tiền ăn học), *Thầy đồ nhận làm môn sinh* (mở đường thi Hương), *Phú hộ kén rể hiếu học* (ngã rẽ nhận chu cấp đèn sách vs. rẽ sang thương buôn), *Đèn sách dưới ánh trăng / Thi trượt lần đầu* (kiên trì hay bỏ cuộc).
-- **File 2 (`src/data/events/truong_thanh/scholar_rich.json` — 5–6 events):**
-  - Đối tượng: `dia_chu`, `quan_lai`, `hoang_toc`, `min_education >= 12`, `missing_flags: ["trong_hau_cung", "thai_giam"]`.
-  - Mạch nội dung: *Hội văn thơ Tràng An* (kết giao sĩ tử tăng `fame` & `relationships`), *Bạn giàu rủ rê tửu sắc / trường bạc* (giữ tiết tháo vs. sa ngã), *Cám dỗ chạy cửa sau / mua danh* (tiền đổi học vị giả, tăng `infamy`), *Áp lực gia phong kỳ vọng đỗ đạt*.
+### Đợt 1 — Nhánh Học Trò Nghèo vs. Học Trò Giàu (Đã xong)
+- `src/data/events/truong_thanh/scholar_poor.json` (5 sự kiện: chép sách thuê, thầy đồ nhận môn sinh, phú hộ kén dâu rể, thi trượt, quỹ nghĩa học).
+- `src/data/events/truong_thanh/scholar_rich.json` (5 sự kiện: hội văn thơ, rủ rê tửu sắc, chạy cửa sau, áp lực gia phong, giúp sĩ tử nghèo).
 
-### Đợt 2 — Nhánh Quan Trường (Thanh Quan vs. Tham Quan)
-- **Mở thông cổ chai vào quan trường (`src/engine/decisionGenerator.ts`):**
-  - Thêm quyết định động `dec_official_appoint` (khi đã có `do_cu_nhan` hoặc `do_tien_si` mà `officialRank === 0`, hỏi người chơi có muốn *Nhận chức Tri huyện / Hàn Lâm* không) để tỷ lệ vào quan trường không bị kẹt ở `0–5%`.
-- **File 3 (`src/data/events/truong_thanh/official_clean.json` — 5–6 events):**
-  - Đối tượng: `has_flags: ["dang_lam_quan"]`, `max_infamy: 20`.
-  - Mạch nội dung: *Xử án oan cho dân nghèo*, *Tuần tra đê điều mùa lũ*, *Từ chối lễ vật của hào cường*, *Được Ngự sử khen ngợi tấu trình* (tăng `fame` để thăng phẩm hàm).
-- **File 4 (`src/data/events/truong_thanh/official_corrupt.json` — 5–6 events):**
-  - Đối tượng: `has_flags: ["dang_lam_quan"]`.
-  - Mạch nội dung: *Móc ngoặc lái buôn chia phần*, *Nhận hối lộ chạy án*, *Kết bè đảng triều đình*, *Đoàn thanh tra Ngự sử ập tới* (rủi ro mất chức/tịch thu gia sản/vào tù nếu `infamy` quá cao).
+### Đợt 2 — Nhánh Quan Trường, Phe Phái & Cung Đình Nội Đấu (Đã xong)
+- Engine: `official_rank_delta` (`dsl.ts` / `effectApplier.ts`), `dec_official_appoint` & `dec_official_promote` (`decisionGenerator.ts`).
+- `src/data/events/truong_thanh/official_clean.json` (4 sự kiện Thanh quan).
+- `src/data/events/truong_thanh/official_corrupt.json` (4 sự kiện Tham quan & thanh tra).
+- `src/data/events/truong_thanh/official_factions.json` (5 sự kiện: 3 phe `phe_thanh_luu` / `phe_quyen_than` / `phe_hoang_tu`, đại án, liên lụy & phục chức).
+- `src/data/events/truong_thanh/official_intrigue.json` (4 sự kiện: vu khống, đàn hặc đối thủ, biên viễn, khâm sai).
+- `src/data/events/truong_thanh/court_succession.json` (4 sự kiện: Trữ vị, Tân Hoàng đăng cơ, mật chỉ binh biến, liên minh hậu cung).
+
+### Đợt 3 — Nhánh Võ Tướng Biên Ải & Khởi Nghĩa (Đã xong)
+- `src/data/events/truong_thanh/martial_general.json` (5 sự kiện: xuất chinh, tử thủ thành trì, văn-võ bất hòa, quân công phong võ quan, mở võ quán).
+- `src/data/events/truong_thanh/rebellion_arc.json` (4 sự kiện: ngọn lửa khởi nghĩa, chiêu mộ thảo khấu, trận quyết chiến kinh thành, kết nghĩa giang hồ).
 
 ---
 
