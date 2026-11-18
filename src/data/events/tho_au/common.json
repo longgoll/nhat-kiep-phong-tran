@@ -6,16 +6,150 @@
     "cooldownDays": 99999,
     "oncePerLife": true,
     "title": "Lễ Thôi Nôi Tròn Một Tuổi",
-    "contextNote": "Tục 'Bốc đồ vật' (Thử nhi) trong lễ thôi nôi xưa là cách cha mẹ gửi gắm kỳ vọng về thiên hướng chữ nghĩa, võ nghệ hay thương nghiệp của con cái.",
+    "contextNote": "Tục 'Bốc đồ vật' (Thử nhi) trong lễ thôi nôi xưa là cách cha mẹ gửi gắm kỳ vọng về thiên hướng tương lai của con cái.",
     "conditions": {
       "min_age": 1,
-      "max_age": 1
+      "max_age": 1,
+      "origin_in": [
+        "ban_nong"
+      ]
     },
     "weight": {
       "base": 100,
       "modifiers": []
     },
-    "description": "Tròn một tuổi, cha mẹ bày một chiếc mâm trước mặt để xem thiên hướng tương lai của bạn. Đôi tay nhỏ xíu của bạn hướng về món đồ nào?",
+    "description": "Tròn một tuổi, cha mẹ dọn một chiếc mẹt tre trước sân nhà, bày vài món đồ mộc mạc để xem thiên hướng của bạn. Đôi tay nhỏ xíu của bạn hướng về món nào?",
+    "choices": [
+      {
+        "label": "Bốc cây bút tre",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nắm chặt cây bút tre không buông. Cha mẹ mừng thầm mong sau này con biết chữ nghĩa, thoát cảnh chân lấm tay bùn.",
+            "effects": {
+              "education": 5,
+              "happiness": 5,
+              "add_flags": [
+                "thien_huong_but_long"
+              ],
+              "add_traits": [
+                "ham_hoc"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ],
+              "milestone_title": "Thôi nôi bốc bút tre"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chụp lấy thanh gậy gỗ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn vung vẩy thanh gậy gỗ cười khanh khách. Cha bạn gật gù khen đứa trẻ khỏe mạnh, có khí phách cứng cỏi.",
+            "effects": {
+              "martial": 5,
+              "health": 3,
+              "add_flags": [
+                "thien_huong_kiem_go"
+              ],
+              "add_traits": [
+                "hieu_dong"
+              ],
+              "add_interests": [
+                "vo_nghe"
+              ],
+              "milestone_title": "Thôi nôi bốc gậy gỗ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vớ lấy chiếc liềm nhỏ & đồng xu cũ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Ánh mắt bạn sáng rực khi chạm vào đồng xu cũ. Người lớn cười bảo số này khéo tay tính toán, biết chắt chiu làm ăn.",
+            "effects": {
+              "craft_trade": 5,
+              "add_flags": [
+                "thien_huong_thoi_bac"
+              ],
+              "add_traits": [
+                "kheo_tay"
+              ],
+              "add_interests": [
+                "thuong_buon"
+              ],
+              "milestone_title": "Thôi nôi bốc đồng xu cũ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ôm chặt nắm xôi / củ khoai",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn bốc ngay nắm xôi cho vào miệng nhai ngon lành. Cả nhà chúc bạn một đời no ấm, mạnh khỏe bình an.",
+            "effects": {
+              "health": 6,
+              "happiness": 8,
+              "add_flags": [
+                "thien_huong_nam_xoi"
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "dien_vien"
+              ],
+              "milestone_title": "Thôi nôi bốc nắm xôi"
+            }
+          }
+        ]
+      }
+    ],
+    "isMilestone": true
+  },
+  {
+    "id": "evt_milestone_thoi_noi_thu_cong",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Thôi Nôi Tròn Một Tuổi",
+    "contextNote": "Nhà nghề thủ công và buôn bán thường bày thước mộc, bàn tính cùng bút sách trong lễ thôi nôi để xem con có nối nghiệp khéo tay hay theo chữ nghĩa.",
+    "conditions": {
+      "min_age": 1,
+      "max_age": 1,
+      "origin_in": [
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Tròn một tuổi, cha mẹ bày mâm đồ trước gian xưởng nhỏ. Đôi tay nhỏ xíu của bạn hướng về món đồ nào?",
     "choices": [
       {
         "label": "Bốc cây bút lông",
@@ -26,7 +160,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn nắm chặt cây bút lông không buông. Cả nhà trầm trồ khen sau này ắt có đường công danh chữ nghĩa.",
+            "resultText": "Bạn nắm chặt cây bút lông không buông. Cả nhà trầm trồ khen sau này ắt có đường chữ nghĩa, làm rạng danh cửa nhà.",
             "effects": {
               "education": 5,
               "happiness": 5,
@@ -53,7 +187,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn vung vẩy thanh gươm gỗ cười khanh khách. Cha bạn gật gù khen đứa trẻ có khí phách võ biền.",
+            "resultText": "Bạn vung vẩy thanh gươm gỗ cười khanh khách. Cha bạn gật gù khen đứa trẻ có khí phách mạnh mẽ.",
             "effects": {
               "martial": 5,
               "health": 3,
@@ -72,7 +206,7 @@
         ]
       },
       {
-        "label": "Vớ lấy thỏi bạc / bàn tính nhỏ",
+        "label": "Vớ lấy thước mộc & bàn tính nhỏ",
         "conditions": {},
         "outcomes": [
           {
@@ -80,7 +214,138 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Ánh mắt bạn sáng rực khi chạm vào thỏi bạc. Người lớn cười bảo số này khéo tay tính toán, không sợ chết đói.",
+            "resultText": "Bạn cầm ngay cây thước mộc và bàn tính nhỏ nghịch ngợm. Cha mẹ mừng rỡ vì con có duyên nối nghiệp thủ công buôn bán.",
+            "effects": {
+              "craft_trade": 5,
+              "add_flags": [
+                "thien_huong_thoi_bac"
+              ],
+              "add_traits": [
+                "kheo_tay"
+              ],
+              "add_interests": [
+                "thuong_buon"
+              ],
+              "milestone_title": "Thôi nôi bốc thước mộc"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ôm chặt nắm xôi gấc",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn bốc ngay nắm xôi đỏ tươi cho vào miệng nhai ngon lành. Ai nấy đều chúc bạn một đời no ấm, thuận hòa.",
+            "effects": {
+              "health": 6,
+              "happiness": 8,
+              "add_flags": [
+                "thien_huong_nam_xoi"
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "dien_vien"
+              ],
+              "milestone_title": "Thôi nôi bốc nắm xôi"
+            }
+          }
+        ]
+      }
+    ],
+    "isMilestone": true
+  },
+  {
+    "id": "evt_milestone_thoi_noi_dia_chu",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Thôi Nôi Tròn Một Tuổi",
+    "contextNote": "Nhà địa chủ phú hộ thường bày bút nghiên, gươm gỗ, bàn tính bạc và xôi gấc trong lễ thôi nôi để xem con cái theo văn, võ hay giữ cơ nghiệp.",
+    "conditions": {
+      "min_age": 1,
+      "max_age": 1,
+      "origin_in": [
+        "dia_chu"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Tròn một tuổi, cha mẹ bày mâm sơn son thếp vàng giữa nhà gạch lớn để bạn bốc đồ thử thiên hướng. Đôi tay nhỏ xíu của bạn hướng về món nào?",
+    "choices": [
+      {
+        "label": "Bốc cây bút lông & nghiên mực",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nắm chặt cây bút lông không buông. Cả nhà trầm trồ khen sau này ắt đỗ đạt khoa bảng.",
+            "effects": {
+              "education": 5,
+              "happiness": 5,
+              "add_flags": [
+                "thien_huong_but_long"
+              ],
+              "add_traits": [
+                "ham_hoc"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ],
+              "milestone_title": "Thôi nôi bốc bút lông"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chụp lấy thanh kiếm gỗ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn vung vẩy thanh kiếm gỗ cười khanh khách. Cha bạn gật gù khen đứa trẻ có khí phách giữ gìn điền trang.",
+            "effects": {
+              "martial": 5,
+              "health": 3,
+              "add_flags": [
+                "thien_huong_kiem_go"
+              ],
+              "add_traits": [
+                "hieu_dong"
+              ],
+              "add_interests": [
+                "vo_nghe"
+              ],
+              "milestone_title": "Thôi nôi bốc kiếm gỗ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vớ lấy thỏi bạc & bàn tính nhỏ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Ánh mắt bạn sáng rực khi chạm vào thỏi bạc. Người lớn cười bảo số này khéo tay tính toán, gia sản ắt ngày càng hưng thịnh.",
             "effects": {
               "craft_trade": 5,
               "add_flags": [
@@ -106,7 +371,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn bốc ngay nắm xôi cho vào miệng nhai ngon lành. Ai nấy đều chúc bạn một đời no ấm bình an.",
+            "resultText": "Bạn bốc ngay nắm xôi gấc ăn ngon lành. Mọi người chúc bạn một đời phúc lộc đầy nhà, an khang thịnh vượng.",
             "effects": {
               "health": 6,
               "happiness": 8,
@@ -120,6 +385,268 @@
                 "dien_vien"
               ],
               "milestone_title": "Thôi nôi bốc nắm xôi"
+            }
+          }
+        ]
+      }
+    ],
+    "isMilestone": true
+  },
+  {
+    "id": "evt_milestone_thoi_noi_quan_lai",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Thôi Nôi Tròn Một Tuổi",
+    "contextNote": "Phủ quan thế gia bày bút sách, kiếm gỗ, ấn triện gỗ và ngọc bội trong lễ thôi nôi để gửi gắm kỳ vọng nối dõi hoạn lộ.",
+    "conditions": {
+      "min_age": 1,
+      "max_age": 1,
+      "origin_in": [
+        "quan_lai"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Tròn một tuổi, giữa đại sảnh phủ đệ, cha mẹ bày mâm lễ gồm văn phòng tứ bảo, kiếm gỗ, bàn tính và ấn triện nhỏ. Đôi tay nhỏ xíu của bạn hướng về món nào?",
+    "choices": [
+      {
+        "label": "Bốc cây bút lông & quyển kinh sử",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nắm chặt cây bút lông không buông. Cả phủ trầm trồ khen sau này ắt nối nghiệp khoa bảng, rạng danh dòng tộc.",
+            "effects": {
+              "education": 5,
+              "happiness": 5,
+              "add_flags": [
+                "thien_huong_but_long"
+              ],
+              "add_traits": [
+                "ham_hoc"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ],
+              "milestone_title": "Thôi nôi bốc bút lông"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chụp lấy thanh kiếm gỗ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn vung vẩy thanh kiếm gỗ cười khanh khách. Cha bạn gật gù khen đứa trẻ có khí chất võ tướng.",
+            "effects": {
+              "martial": 5,
+              "health": 3,
+              "add_flags": [
+                "thien_huong_kiem_go"
+              ],
+              "add_traits": [
+                "hieu_dong"
+              ],
+              "add_interests": [
+                "vo_nghe"
+              ],
+              "milestone_title": "Thôi nôi bốc kiếm gỗ"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vớ lấy thỏi bạc & bàn tính ngà",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Ánh mắt bạn sáng rực khi chạm vào bàn tính ngà. Người lớn khen đứa trẻ lanh lợi, giỏi quản lý tài chính phủ đệ.",
+            "effects": {
+              "craft_trade": 5,
+              "add_flags": [
+                "thien_huong_thoi_bac"
+              ],
+              "add_traits": [
+                "kheo_tay"
+              ],
+              "add_interests": [
+                "thuong_buon"
+              ],
+              "milestone_title": "Thôi nôi bốc bàn tính ngà"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ôm lấy chiếc ấn triện gỗ nhỏ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn ôm chặt chiếc ấn triện gỗ không rời. Các bậc trưởng bối vui mừng bảo đó là điềm báo sớm hiểu lễ nghĩa, giữ gìn gia phong.",
+            "effects": {
+              "health": 6,
+              "happiness": 8,
+              "add_flags": [
+                "thien_huong_nam_xoi"
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "dien_vien"
+              ],
+              "milestone_title": "Thôi nôi bốc ấn triện"
+            }
+          }
+        ]
+      }
+    ],
+    "isMilestone": true
+  },
+  {
+    "id": "evt_milestone_thoi_noi_hoang_toc",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lễ Thí Chu Tròn Một Tuổi",
+    "contextNote": "Trong Hoàng thất, lễ tròn một tuổi gọi là Lễ Thí Chu: bày bút ngọc, tiểu bảo kiếm, ngọc bội và ấn triện ngọc để xem khí chất Hoàng tử / Công chúa.",
+    "conditions": {
+      "min_age": 1,
+      "max_age": 1,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 100,
+      "modifiers": []
+    },
+    "description": "Tròn một tuổi, trong cung bày chiếc mâm gấm vàng với các bảo vật nhỏ của Hoàng gia để thử thiên hướng. Đôi tay nhỏ xíu của bạn hướng về món nào?",
+    "choices": [
+      {
+        "label": "Bốc cây bút ngọc & quyển kinh sử",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nắm chặt cây bút ngọc không buông. Trưởng bối trong cung gật gù khen sau này ắt có tài văn trị thiên hạ.",
+            "effects": {
+              "education": 5,
+              "happiness": 5,
+              "add_flags": [
+                "thien_huong_but_long"
+              ],
+              "add_traits": [
+                "ham_hoc"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ],
+              "milestone_title": "Thí chu bốc bút ngọc"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chụp lấy thanh tiểu bảo kiếm chạm rồng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn nắm lấy chuôi tiểu bảo kiếm ánh mắt lanh lợi. Người hầu quanh cung trầm trồ khen khí phách uy nghi của bậc Hoàng thất.",
+            "effects": {
+              "martial": 5,
+              "health": 3,
+              "add_flags": [
+                "thien_huong_kiem_go"
+              ],
+              "add_traits": [
+                "hieu_dong"
+              ],
+              "add_interests": [
+                "vo_nghe"
+              ],
+              "milestone_title": "Thí chu bốc bảo kiếm"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Vớ lấy thỏi vàng & ngọc bội",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Ánh mắt bạn sáng rực khi chạm vào ngọc bội vàng son. Mẫu thân khẽ mỉm cười chúc bạn một đời phú quý, khéo léo giữ gìn tài lộc.",
+            "effects": {
+              "craft_trade": 5,
+              "add_flags": [
+                "thien_huong_thoi_bac"
+              ],
+              "add_traits": [
+                "kheo_tay"
+              ],
+              "add_interests": [
+                "thuong_buon"
+              ],
+              "milestone_title": "Thí chu bốc ngọc bội"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ôm lấy chiếc ấn triện ngọc nhỏ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn ôm chặt chiếc ấn triện ngọc không buông. Mọi người trong cung đều kinh ngạc, thầm khen đứa trẻ có phong thái điềm tĩnh đoan trang.",
+            "effects": {
+              "health": 6,
+              "happiness": 8,
+              "add_flags": [
+                "thien_huong_nam_xoi"
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "dien_vien"
+              ],
+              "milestone_title": "Thí chu bốc ấn ngọc"
             }
           }
         ]

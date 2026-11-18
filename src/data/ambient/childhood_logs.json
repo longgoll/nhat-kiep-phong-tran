@@ -142,18 +142,33 @@
     },
     {
       "day": 1890,
-      "text": "Người lớn trong xóm khen bạn lanh lợi, ngoan ngoãn.",
+      "text": "Người lớn xung quanh khen bạn lanh lợi, ngoan ngoãn.",
       "tone": "positive"
     }
   ],
   "focusAmbientLogs": [
     {
       "focusId": "hoc_tap",
-      "text": "Bạn mượn sách cũ ngồi đọc dưới hiên nhà, thuộc thêm nhiều mặt chữ."
+      "text": "Bạn mượn sách cũ ngồi đọc dưới hiên nhà, thuộc thêm nhiều mặt chữ.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu"
+        ]
+      }
     },
     {
       "focusId": "hoc_tap",
-      "text": "Buổi tối bên ánh đèn dầu, bạn chăm chỉ luyện viết từng nét chữ ngay ngắn."
+      "text": "Buổi tối bên ánh đèn dầu, bạn chăm chỉ luyện viết từng nét chữ ngay ngắn.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu",
+          "quan_lai"
+        ]
+      }
     },
     {
       "focusId": "hoc_tap",
@@ -162,6 +177,15 @@
         "origin_in": [
           "hoang_toc",
           "quan_lai"
+        ]
+      }
+    },
+    {
+      "focusId": "hoc_tap",
+      "text": "Bên án thư son thiếp trong cung, bạn chăm chú đọc sử sách triều trước và luyện từng nét chữ khải thư.",
+      "conditions": {
+        "origin_in": [
+          "hoang_toc"
         ]
       }
     },
@@ -186,11 +210,25 @@
     },
     {
       "focusId": "ban_be",
-      "text": "Bạn cùng đám trẻ trong xóm thả diều, chơi ô ăn quan rộn rã cả buổi chiều."
+      "text": "Bạn cùng đám trẻ trong xóm thả diều, chơi ô ăn quan rộn rã cả buổi chiều.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu"
+        ]
+      }
     },
     {
       "focusId": "ban_be",
-      "text": "Lũ bạn đồng niên kéo nhau ra bờ đê hóng gió và chia nhau trái ổi vườn nhà."
+      "text": "Lũ bạn đồng niên kéo nhau ra bờ đê hóng gió và chia nhau trái ổi vườn nhà.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu"
+        ]
+      }
     },
     {
       "focusId": "ban_be",
@@ -206,6 +244,7 @@
       "text": "Các công tử, tiểu thư con nhà danh giá tụ họp trong hoa viên làm thơ, thả diều và bàn chuyện kinh thành.",
       "conditions": {
         "origin_in": [
+          "hoang_toc",
           "dia_chu",
           "quan_lai"
         ]
@@ -213,11 +252,36 @@
     },
     {
       "focusId": "giup_nha",
-      "text": "Bạn phụ cha mẹ thu dọn đồ đạc, quét sân và làm những việc vừa sức."
+      "text": "Bạn phụ cha mẹ thu dọn đồ đạc, quét sân và làm những việc vừa sức.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu",
+          "quan_lai"
+        ]
+      }
     },
     {
       "focusId": "giup_nha",
-      "text": "Thấy bạn chăm chỉ đỡ đần việc nhà, cha mẹ mỉm cười đầy tự hào."
+      "text": "Thấy bạn chăm chỉ đỡ đần việc nhà, cha mẹ mỉm cười đầy tự hào.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu",
+          "quan_lai"
+        ]
+      }
+    },
+    {
+      "focusId": "giup_nha",
+      "text": "Bạn ngoan ngoãn vấn an trưởng bối, giữ gìn lễ nghi trong cung khiến mẫu thân rất hài lòng.",
+      "conditions": {
+        "origin_in": [
+          "hoang_toc"
+        ]
+      }
     },
     {
       "focusId": "giup_nha",
@@ -252,7 +316,14 @@
     },
     {
       "focusId": "ren_vo",
-      "text": "Bạn chạy quanh bờ ao rèn sức bền, mồ hôi ướt đẫm nhưng tinh thần rất sảng khoái."
+      "text": "Bạn chạy quanh bờ ao rèn sức bền, mồ hôi ướt đẫm nhưng tinh thần rất sảng khoái.",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu"
+        ]
+      }
     },
     {
       "focusId": "ren_vo",

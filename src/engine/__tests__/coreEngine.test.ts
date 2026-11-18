@@ -7,6 +7,7 @@ import { breakdownCopper, calculateRicePrice } from '../economy';
 import {
   advanceChildhoodMonth,
   advanceChildhoodYear,
+  computeFamilyMonthlyNetCopper,
   getAvailableChildhoodActivities,
   resolveEventChoice,
 } from '../childhoodEngine';
@@ -70,7 +71,7 @@ describe('Core Engine (MVP 1)', () => {
 
     let life = createNewLife(777);
     const step1 = advanceChildhoodYear(life, events);
-    expect(step1.pendingEvent?.id).toBe('evt_milestone_thoi_noi');
+    expect(step1.pendingEvent?.id).toMatch(/^evt_milestone_thoi_noi/);
     life = resolveEventChoice(step1.state, step1.pendingEvent!, 0).state;
     expect(life.flags).toContain('thien_huong_but_long');
 
@@ -221,5 +222,27 @@ describe('Core Engine (MVP 1)', () => {
       }
       expect(life.family?.familyAssetsSummary?.length).toBeGreaterThan(0);
     }
+  });
+
+  it('keeps hoang_toc birthplace, motherStatus, and that_sung cashflow consistent', () => {
+    let checked = 0;
+    for (let s = 1; s <= 1500 && checked < 20; s += 1) {
+      const life = createNewLife(s);
+      if (life.profile.originClass !== 'hoang_toc' || !life.family) continue;
+      checked += 1;
+      const circ = life.family.circumstance;
+      if (circ === 'ton_that') {
+        expect(life.family.birthPlace).toBe('Phủ Tôn thất Kinh thành');
+      } else {
+        expect(life.family.birthPlace).toBe('Hoàng cung Tử Cấm Thành');
+      }
+      if (circ === 'duoc_sung_ai') {
+        expect(life.family.motherStatus).toBe('chinh_that');
+      } else if (circ === 'that_sung') {
+        expect(life.family.motherStatus).toBe('phi_tan');
+        expect(computeFamilyMonthlyNetCopper(life).net).toBeGreaterThanOrEqual(0);
+      }
+    }
+    expect(checked).toBeGreaterThan(0);
   });
 });

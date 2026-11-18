@@ -10,16 +10,27 @@ interface FamilyLifeCardProps {
 function getShortRelationLabel(npc: NPC): string {
   const roleLower = npc.role.toLowerCase();
   if (npc.relation === 'parent') {
-    if (roleLower.includes('phụ hoàng')) return 'Phụ hoàng';
-    if (roleLower.includes('mẫu hậu')) return 'Mẫu hậu';
-    if (roleLower.includes('phi tần')) return 'Phi tần';
+    if (roleLower.includes('thái hậu')) return 'Thái hậu';
+    if (roleLower.includes('mẹ ruột')) {
+      if (roleLower.includes('hoàng hậu')) return 'Mẫu hậu';
+      if (roleLower.includes('vương phi') || roleLower.includes('phi tần')) return 'Mẫu phi';
+      return 'Mẹ';
+    }
+    if (
+      npc.gender === 'male' &&
+      (roleLower.includes('phụ hoàng') || roleLower.includes('hoàng thượng') || roleLower.includes('tiên đế'))
+    ) {
+      return 'Phụ hoàng';
+    }
+    if (npc.gender === 'female' && roleLower.includes('mẫu hậu')) return 'Mẫu hậu';
+    if (npc.gender === 'female' && roleLower.includes('phi tần')) return 'Phi tần';
     if (
       npc.gender === 'female' &&
       (roleLower.includes('thứ mẫu') || roleLower.includes('vợ lẽ') || roleLower.includes('chính thất'))
     ) {
       return roleLower.includes('chính thất') ? 'Kế mẫu' : 'Thứ mẫu';
     }
-    if (npc.gender === 'female' || roleLower.includes('mẹ ruột')) return 'Mẹ';
+    if (npc.gender === 'female') return 'Mẹ';
     return 'Cha';
   }
   if (npc.relation === 'spouse') return npc.gender === 'male' ? 'Phu quân' : 'Thê tử';

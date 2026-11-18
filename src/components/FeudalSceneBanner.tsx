@@ -1,5 +1,6 @@
-import type { Gender, HousingTier, NPC, OriginClass, Season, WorldState } from '../types/activeLife';
+import type { FamilyContext, Gender, HousingTier, NPC, OriginClass, Season, WorldState } from '../types/activeLife';
 import { getSeasonLabel, getWorldStateLabel } from '../engine/daySimulator';
+import { getHousingDisplayLabel } from '../engine/lifeInitializer';
 
 interface FeudalSceneBannerProps {
   housing: HousingTier;
@@ -10,14 +11,9 @@ interface FeudalSceneBannerProps {
   originClass?: OriginClass;
   birthPlace?: string;
   npcs?: NPC[];
+  flags?: string[];
+  family?: FamilyContext;
 }
-
-const HOUSING_LABELS: Record<HousingTier, string> = {
-  gam_cau: 'Gầm cầu / Mái hiên tạm',
-  nha_tranh: 'Nhà tranh vách đất',
-  nha_gach: 'Nhà gạch khang trang',
-  phu_de: 'Phủ đệ son thiếp',
-};
 
 const SKY_BY_SEASON: Record<Season, { from: string; to: string; accent: string }> = {
   spring: { from: '#1e293b', to: '#334155', accent: '#f472b6' },
@@ -134,7 +130,9 @@ function buildHouseholdDisplay(
   originClass: OriginClass,
   npcs: NPC[],
   housing: HousingTier,
-  birthPlace?: string
+  birthPlace?: string,
+  flags: string[] = [],
+  family?: FamilyContext
 ): {
   members: SceneMember[];
   primaryLine: string;
@@ -247,10 +245,12 @@ function buildHouseholdDisplay(
 
   // Primary info line (1in8b style): Địa điểm · Nhà ở · Sống cùng...
   const livingParts: string[] = [];
+  const isColdPalace = originClass === 'hoang_toc' && flags.includes('that_sung_cung_dinh');
   if (isChildhood) {
     const hasFather = parents.some((p) => p.gender === 'male');
     const hasMother = parents.some((p) => p.gender === 'female');
-    if (hasFather && hasMother) livingParts.push('cha mẹ');
+    if (isColdPalace && hasMother) livingParts.push('mẫu phi');
+    else if (hasFather && hasMother) livingParts.push('cha mẹ');
     else if (hasFather) livingParts.push('cha');
     else if (hasMother) livingParts.push('mẹ');
     if (siblings.length > 0) livingParts.push(`${siblings.length} anh chị em`);
@@ -262,7 +262,7 @@ function buildHouseholdDisplay(
       livingParts.push(`${children.length} con`);
     }
     if (livingParts.length === 0 && ageYears < 22 && parents.length > 0) {
-      livingParts.push('cha mẹ');
+      livingParts.push(isColdPalace ? 'mẫu phi' : 'cha mẹ');
     }
   }
 
@@ -273,15 +273,30 @@ function buildHouseholdDisplay(
         ? 'tự lập sớm'
         : 'sống tự lập';
 
-  const primaryParts = [birthPlace, HOUSING_LABELS[housing], livingText].filter(Boolean);
+  const displayPlace =
+    originClass === 'hoang_toc' && flags.includes('da_khai_phu_hoang_toc')
+      ? 'Kinh thành'
+      : birthPlace;
+  const housingLabel = getHousingDisplayLabel({
+    housing,
+    originClass,
+    gender,
+    ageYears,
+    flags,
+    family,
+  });
+  const primaryParts = [displayPlace, housingLabel, livingText].filter(Boolean);
   const primaryLine = primaryParts.join(' · ');
 
   // Secondary info line (1in8b style): Bạn, X tuổi · Mẹ, Y tuổi · Cha, Z tuổi · ...
   const ageSummary: string[] = [`Bạn, ${ageYears} tuổi`];
   if (isChildhood || (spouses.length === 0 && children.length === 0 && ageYears < 22)) {
-    const mother = parents.find(
-      (p) => p.gender === 'female' && !p.role.toLowerCase().includes('thứ mẫu') && !p.role.toLowerCase().includes('phi tần')
-    ) ?? parents.find((p) => p.gender === 'female');
+    const mother =
+      parents.find((p) => p.gender === 'female' && p.role.toLowerCase().includes('mẹ ruột')) ??
+      parents.find(
+        (p) => p.gender === 'female' && !p.role.toLowerCase().includes('thứ mẫu') && !p.role.toLowerCase().includes('phi tần')
+      ) ??
+      parents.find((p) => p.gender === 'female');
     const father = parents.find((p) => p.gender === 'male');
     if (mother && mother.age !== undefined) {
       ageSummary.push(`Mẹ, ${mother.age + ageYears} tuổi`);
@@ -338,6 +353,8 @@ export function FeudalSceneBanner({
   originClass = 'ban_nong',
   birthPlace,
   npcs = [],
+  flags = [],
+  family,
 }: FeudalSceneBannerProps) {
   const sky = SKY_BY_SEASON[season];
   const { members, primaryLine, secondaryLine } = buildHouseholdDisplay(
@@ -346,7 +363,9 @@ export function FeudalSceneBanner({
     originClass,
     npcs,
     housing,
-    birthPlace
+    birthPlace,
+    flags,
+    family
   );
 
   const startX = 188;

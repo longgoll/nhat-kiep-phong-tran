@@ -368,5 +368,291 @@
         ]
       }
     ]
+  },
+  {
+    "id": "evt_biz_tea_cart_rumor",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Khách Quán Nước Đồn Chuyện Lạ",
+    "conditions": {
+      "min_age": 14,
+      "has_flags": [
+        "khoi_nghiep_quan_nuoc"
+      ]
+    },
+    "weight": {
+      "base": 36,
+      "modifiers": []
+    },
+    "description": "Chiều muộn ở quán nước đầu ngõ, một lái buôn ghé uống bát chè xanh rồi vô tình buột miệng kể về chuyến hàng muối và vải sắp khan hiếm ở phủ bên.",
+    "choices": [
+      {
+        "label": "Khéo léo dò hỏi thêm đầu mối để mua đi bán lại kiếm lời (-60đ)",
+        "conditions": {
+          "min_copper": 60
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_craft_trade": 10
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Nhờ tin sớm từ quán nước, bạn gom được ít hàng bán đúng lúc khan hiếm, lời ròng 140 đồng và thêm kinh nghiệm thương trường.",
+            "effects": {
+              "copper": 140,
+              "craft_trade": 3,
+              "happiness": 5
+            }
+          },
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": []
+            },
+            "resultText": "Tin đồn hóa ra bị thổi phồng, hàng về chậm nên bạn chỉ thu hồi được phần lớn vốn, lỗ nhẹ 30 đồng.",
+            "effects": {
+              "copper": -30,
+              "craft_trade": 1,
+              "happiness": -2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ mỉm cười rót thêm nước, giữ khách quen là chính",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Quán nước của bạn nổi tiếng hiếu khách, bà con và khách bộ hành ghé lại ngày một đông.",
+            "effects": {
+              "copper": 35,
+              "relationships": 4,
+              "happiness": 3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_biz_scribe_secret_letter",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Lá Thư Nhờ Viết Hộ Đầy Bí Ẩn",
+    "conditions": {
+      "min_age": 15,
+      "has_flags": [
+        "khoi_nghiep_thay_do_viet_thue"
+      ]
+    },
+    "weight": {
+      "base": 36,
+      "modifiers": []
+    },
+    "description": "Một người lạ mặt đội nón lá che kín mặt ghé bàn viết thư thuê của bạn, đặt 80 đồng tiền công nhờ chép một lá đơn tố giác cường hào ức hiếp dân lành.",
+    "choices": [
+      {
+        "label": "Giữ đúng đạo kẻ sĩ, thảo lá đơn rành mạch giúp người yếu thế",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nét chữ sắc sảo và lý lẽ chặt chẽ của bạn giúp lá đơn thấu tới quan phủ. Bạn nhận được 80 đồng tiền công và tiếng thơm ngay thẳng.",
+            "effects": {
+              "copper": 80,
+              "fame": 5,
+              "education": 2,
+              "happiness": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ngại vạ lây, lịch sự từ chối và chỉ nhận viết thư gia đình bình thường",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn tránh được rắc rối cửa quan, vẫn đều đặn kiếm sống yên ổn bằng bàn viết chữ thuê.",
+            "effects": {
+              "copper": 25,
+              "happiness": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_biz_apothecary_rare_herb",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 540,
+    "title": "Khách Quý Tìm Mua Vị Thuốc Hiếm",
+    "conditions": {
+      "min_age": 16,
+      "has_flags": [
+        "khoi_nghiep_thuoc_nam"
+      ]
+    },
+    "weight": {
+      "base": 36,
+      "modifiers": []
+    },
+    "description": "Một vị hào phú trong vùng bị đau khớp lâu năm tìm đến gánh thuốc nam của bạn, hứa thưởng hậu nếu bạn bào chế được bài cao dán công hiệu.",
+    "choices": [
+      {
+        "label": "Dốc hết tâm sức gia giảm vị thuốc quý để chữa trị",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_craft_trade": 15
+                  },
+                  "addWeight": 25
+                }
+              ]
+            },
+            "resultText": "Bài cao dán công hiệu bất ngờ! Vị hào phú khỏi hẳn đau nhức, thưởng hậu 240 đồng và giới thiệu thêm nhiều khách quý.",
+            "effects": {
+              "copper": 240,
+              "fame": 6,
+              "craft_trade": 3,
+              "relationships": 4
+            }
+          },
+          {
+            "weight": {
+              "base": 40,
+              "modifiers": []
+            },
+            "resultText": "Thuốc chỉ đỡ phần nào chưa dứt hẳn, bạn không dám nhận tiền thưởng lớn nhưng vẫn rút ra được bài học quý về dược tính.",
+            "effects": {
+              "copper": 40,
+              "craft_trade": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thật thà khuyên ông nên mời danh y bắt mạch kỹ hơn",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Vị hào phú cảm kích sự thật thà không tham tiền của bạn, biếu 60 đồng làm quen.",
+            "effects": {
+              "copper": 60,
+              "fame": 4,
+              "relationships": 5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_biz_craft_guild_order",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 600,
+    "title": "Đơn Hàng Lớn Từ Thương Đoàn Kinh Kỳ",
+    "conditions": {
+      "min_age": 18,
+      "has_flags": [
+        "khoi_nghiep_phuong_tho"
+      ]
+    },
+    "weight": {
+      "base": 36,
+      "modifiers": []
+    },
+    "description": "Một thương đoàn từ Kinh kỳ về đặt phường thợ của bạn làm gấp lô hàng thủ công mỹ nghệ lớn, trả trước một phần tiền cọc nhưng đòi giao đúng hạn.",
+    "choices": [
+      {
+        "label": "Ứng thêm 300 đồng thuê thêm thợ phụ làm ngày đêm cho kịp hẹn",
+        "conditions": {
+          "min_copper": 300
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_craft_trade": 25
+                  },
+                  "addWeight": 15
+                }
+              ]
+            },
+            "resultText": "Lô hàng tinh xảo giao đúng hẹn! Thương đoàn thanh toán sòng phẳng, bạn lãi ròng 550 đồng và mở rộng được mối làm ăn lớn.",
+            "effects": {
+              "copper": 550,
+              "craft_trade": 4,
+              "fame": 6,
+              "happiness": 6
+            }
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": []
+            },
+            "resultText": "Thợ mới làm hỏng một phần hàng phải sửa lại, trừ hết chi phí bạn chỉ lãi nhẹ 80 đồng.",
+            "effects": {
+              "copper": 80,
+              "craft_trade": 2,
+              "happiness": -2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ nhận phần việc vừa sức để giữ uy tín chất lượng",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Làm gọn gàng chắc tay, bạn thu về 200 đồng tiền lãi và được bạn hàng tin cậy.",
+            "effects": {
+              "copper": 200,
+              "craft_trade": 2,
+              "fame": 3
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

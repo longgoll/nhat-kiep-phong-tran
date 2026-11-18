@@ -72,7 +72,7 @@ export const CHILDHOOD_FOCUS_OPTIONS: ChildhoodFocusOption[] = [
 export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocusOption[] {
   const origin = state.profile.originClass;
   const tier = state.family?.familyLivingTier ?? 'du_an';
-  const isProdigy = state.traits.includes('than_dong');
+  const isProdigy = state.traits?.includes('than_dong') ?? false;
   const prodigyEduBonus = isProdigy ? 0.1 : 0;
   const isDeclined =
     tier === 'tung_thieu' ||
@@ -461,6 +461,82 @@ const DEFAULT_AMBIENT_DATA: ChildhoodAmbientData = {
 };
 
 /**
+ * Estimates monthly family income, living expenses, and net copper change during childhood.
+ */
+export function computeFamilyMonthlyNetCopper(state: ActiveLifeState): {
+  income: number;
+  expense: number;
+  net: number;
+} {
+  const origin = state.profile.originClass;
+  const baseIncomeByOrigin: Record<ActiveLifeState['profile']['originClass'], number> = {
+    ban_nong: 22,
+    thu_cong: 65,
+    dia_chu: 260,
+    quan_lai: 520,
+    hoang_toc: 1400,
+  };
+  const perMouthCostByOrigin: Record<ActiveLifeState['profile']['originClass'], number> = {
+    ban_nong: 4,
+    thu_cong: 11,
+    dia_chu: 42,
+    quan_lai: 85,
+    hoang_toc: 220,
+  };
+
+  let income = baseIncomeByOrigin[origin];
+  const fatherAlive = state.npcs.some((n) => n.id === 'npc_father' && n.isAlive);
+  const motherAlive = state.npcs.some((n) => n.id === 'npc_mother' && n.isAlive);
+
+  if (!fatherAlive || state.flags.includes('mo_coi_cha')) {
+    income *= 0.55;
+  }
+  if (!motherAlive) {
+    income *= 0.75;
+  }
+  if (state.flags.includes('gia_toc_sa_sut') || state.flags.includes('that_sung_cung_dinh')) {
+    income *= 0.45;
+  }
+
+  const livingFamilyMembers = state.npcs.filter(
+    (n) =>
+      n.isAlive &&
+      (n.relation === 'parent' || n.relation === 'sibling') &&
+      !(origin === 'hoang_toc' && (n.id.startsWith('npc_concubine_') || n.id === 'npc_grandmother')),
+  ).length;
+  const mouthsToFeed = 1 + livingFamilyMembers;
+  let expense = mouthsToFeed * perMouthCostByOrigin[origin];
+
+  if (state.flags.includes('that_sung_cung_dinh')) {
+    expense *= 0.5;
+  }
+
+  if (state.flags.includes('gia_dinh_mac_no')) {
+    expense += origin === 'ban_nong' || origin === 'thu_cong' ? 8 : 30;
+  }
+
+  const worldState = state.world.worldState;
+  if (worldState === 'mat_mua') {
+    if (origin === 'ban_nong') income *= 0.75;
+    expense *= 1.25;
+  } else if (worldState === 'dich_benh') {
+    income *= 0.85;
+    expense *= 1.2;
+  } else if (worldState === 'chien_tranh') {
+    income *= 0.75;
+    expense *= 1.3;
+  }
+
+  const roundedIncome = Math.round(income);
+  const roundedExpense = Math.round(expense);
+  return {
+    income: roundedIncome,
+    expense: roundedExpense,
+    net: roundedIncome - roundedExpense,
+  };
+}
+
+/**
  * Advances 1 month (30 days) during Infancy (0-5) or Childhood (6-12).
  * Updates stats every month and triggers milestone/conditional events organically.
  */
@@ -491,8 +567,17 @@ export function advanceChildhoodMonth(
     },
   };
 
+  // Monthly family economy (income vs mouths to feed & debt interest)
+  if (state.family) {
+    const familyCashflow = computeFamilyMonthlyNetCopper(state);
+    if (familyCashflow.net !== 0) {
+      state = applyEffects(state, { family_copper: familyCashflow.net });
+    }
+  }
+
   // Monthly stat progression (balanced with family tier & gentle equilibrium)
   const tier = state.family?.familyLivingTier ?? 'du_an';
+  const familyWealth = state.family?.familyWealthCopper ?? state.assets.wealthCopper;
   const happyBaseline =
     tier === 'tung_thieu' ? 56 : tier === 'du_an' ? 63 : tier === 'kha_gia' ? 69 : tier === 'sung_tuc' ? 73 : 70;
 
@@ -507,7 +592,16 @@ export function advanceChildhoodMonth(
       state = applyEffects(state, { add_interests: [focusOpt.interestOnBirthday] });
     }
   } else {
-    const healthGain = tier === 'tung_thieu' ? 0.05 : tier === 'du_an' ? 0.06 : 0.07;
+    const healthGain =
+      tier === 'tung_thieu'
+        ? familyWealth < 40
+          ? -0.06
+          : 0.03
+        : tier === 'du_an'
+          ? 0.06
+          : tier === 'kha_gia'
+            ? 0.09
+            : 0.11;
     const happyDrift =
       state.stats.happiness < happyBaseline ? 0.08 : state.stats.happiness > happyBaseline + 12 ? -0.1 : 0.02;
     state = applyEffects(state, {
@@ -515,6 +609,51 @@ export function advanceChildhoodMonth(
       happiness: happyDrift,
       relationships: 0.04,
     });
+  }
+
+  // Poverty & living-tier health/sickness simulation
+  if (prevAge >= 6 && tier === 'tung_thieu' && familyWealth < 40) {
+    state = applyEffects(state, { health: -0.06 });
+  }
+  const sickChance =
+    (tier === 'tung_thieu' ? 0.045 : tier === 'du_an' ? 0.022 : 0.01) +
+    (state.stats.health < 55 ? 0.025 : 0);
+  const sickRoll = mulberry32Next(state.prngState);
+  state = { ...state, prngState: sickRoll.nextState };
+  if (sickRoll.value < sickChance) {
+    const canAffordMedicine = familyWealth >= 45;
+    if (canAffordMedicine) {
+      state = applyEffects(state, { family_copper: -25, health: -1.5, happiness: -1 });
+      const sickMsg =
+        state.profile.originClass === 'hoang_toc'
+          ? 'Trở trời bạn bị cảm sốt, trong cung vội mời thái y bắt mạch kê phương thuốc bổ cho uống nên mau khỏi.'
+          : 'Trở trời bạn bị cảm sốt, cha mẹ vội trích tiền cắt thuốc bắc cho uống nên mau khỏi.';
+      state = {
+        ...state,
+        logs: appendLog(
+          state.logs,
+          nextTotalDays,
+          'childhood',
+          sickMsg,
+          { tone: 'neutral' },
+        ),
+      };
+    } else {
+      state = applyEffects(state, { health: -5, happiness: -3 });
+      state = {
+        ...state,
+        logs: appendLog(
+          state.logs,
+          nextTotalDays,
+          'warning',
+          'Bạn lên cơn sốt nhưng nhà túng thiếu không có tiền mua thuốc, chỉ đành uống nước lá cầm cự khiến người gầy rộc.',
+          { tone: 'negative' },
+        ),
+      };
+    }
+  }
+  if (state.stats.health < 40 && !state.flags.includes('the_chat_yeu')) {
+    state = applyEffects(state, { add_flags: ['the_chat_yeu'] });
   }
 
   // Gentle mean reversion at extremes so stats don't stay pinned at 100%
@@ -771,8 +910,8 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
       ? `Tuổi 13 giữa lúc gia đạo sa sút, nhà chỉ còn gom được ${familyGrantCopper} đồng và ${personalRice} đấu gạo cho bạn tự lập.`
       : `Tuổi 13 trưởng thành trong phủ quan! Gia đình cấp ${familyGrantCopper} đồng bạc cùng ${personalRice} đấu gạo để bạn dùi mài công danh.`,
     hoang_toc: isDeclined
-      ? `Tuổi 13 nơi lãnh cung thất thế, bạn chỉ nhận được ${familyGrantCopper} đồng và ${personalRice} đấu gạo ít ỏi để tự mưu sinh.`
-      : `Tuổi 13 khai phủ Tôn thất! Triều đình ban ${familyGrantCopper} đồng bổng lộc cùng ${personalRice} đấu gạo theo lệ Hoàng gia.`,
+      ? `Tuổi 13 nơi cung hẻo lánh, bạn chỉ nhận được ${familyGrantCopper} đồng bổng lộc ít ỏi cùng ${personalRice} đấu gạo để tự xoay xở.`
+      : `Tuổi 13 vào Thượng Thư Phòng theo học lễ nghi và kinh sử! Triều đình cấp ${familyGrantCopper} đồng tiền tiêu cùng ${personalRice} đấu gạo theo lệ ${gender === 'male' ? 'Hoàng tử' : 'Công chúa'}.`,
   };
 
   state = {

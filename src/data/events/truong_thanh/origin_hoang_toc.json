@@ -6,7 +6,7 @@
     "cooldownDays": 99999,
     "oncePerLife": true,
     "isMilestone": true,
-    "title": "Lễ Gia Quan & Khai Phủ Tôn Thất",
+    "title": "Lễ Trưởng Thành & Khai Phủ Tôn Thất",
     "conditions": {
       "min_age": 16,
       "origin_in": [
@@ -452,6 +452,130 @@
               "health": -6,
               "copper": -300,
               "happiness": 3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_adult_exp_hoang_toc_vindication",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Minh Oan Cho Mẫu Phi Nơi Triều Đường",
+    "conditions": {
+      "min_age": 15,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_flags": [
+        "that_sung_cung_dinh"
+      ],
+      "has_living_npc_id": "npc_mother"
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_flags": [
+              "duoc_phu_hoang_chu_y"
+            ]
+          },
+          "addWeight": 25
+        },
+        {
+          "conditions": {
+            "min_fame": 35
+          },
+          "addWeight": 20
+        }
+      ]
+    },
+    "description": "Lão thái giám cũ bất ngờ trao cho bạn mảnh chứng cứ năm xưa mẫu phi bị hãm hại dẫn đến thất sủng. Nay bạn đã trưởng thành, đây là cơ hội hiếm có để lật lại bản án cũ.",
+    "choices": [
+      {
+        "label": "Dâng sớ trình chứng cứ lên Hoàng thượng xin minh oan cho mẫu phi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 40
+                  },
+                  "addWeight": 25
+                },
+                {
+                  "conditions": {
+                    "min_relationships": 55
+                  },
+                  "addWeight": 20
+                }
+              ]
+            },
+            "resultText": "Chứng cứ rành rành khiến kẻ gièm pha năm xưa phải cúi đầu nhận tội! Hoàng thượng hạ chỉ phục vị cho mẫu phi, ban thưởng trọng hậu và xóa bỏ cảnh lạnh lẽo năm nào.",
+            "effects": {
+              "copper": 2000,
+              "fame": 18,
+              "happiness": 18,
+              "relationships": 8,
+              "remove_flags": [
+                "that_sung_cung_dinh"
+              ],
+              "add_flags": [
+                "mau_phi_phuc_sung"
+              ],
+              "npc_affinity": [
+                {
+                  "npcId": "npc_mother",
+                  "delta": 20
+                },
+                {
+                  "npcId": "npc_father",
+                  "delta": 12
+                }
+              ],
+              "milestone_title": "Minh oan cho mẫu phi, xoay chuyển vận mệnh nơi cung cấm"
+            }
+          },
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": []
+            },
+            "resultText": "Phe cánh đối thủ trong triều ra sức ngăn cản khiến chứng cứ bị bác bỏ. Dù không lật được án cũ, tấm lòng hiếu nghĩa của bạn vẫn khiến nhiều triều thần kính phục.",
+            "effects": {
+              "fame": 6,
+              "happiness": -6,
+              "relationships": -4,
+              "npc_affinity": [
+                {
+                  "npcId": "npc_mother",
+                  "delta": 12
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giấu kín chứng cứ, khuyên mẫu phi an phận tránh họa sát thân",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn đốt lá thư cũ dưới ánh nến để giữ bình yên cho hai mẹ con, quyết tâm tự gây dựng cơ nghiệp ngoài cung.",
+            "effects": {
+              "happiness": 2,
+              "relationships": 4
             }
           }
         ]

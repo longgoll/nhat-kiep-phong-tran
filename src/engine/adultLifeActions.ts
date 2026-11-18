@@ -6,6 +6,7 @@ import {
   type LifeFocusId,
   type NPC,
   type OriginClass,
+  type WorldState,
 } from '../types/activeLife';
 import type { EffectSpec } from '../types/dsl';
 import { appendLog, applyEffects } from './effectApplier';
@@ -65,6 +66,14 @@ export interface InstantAdultActionDef {
   costCopper: number;
   cooldownDays: number;
   minAge?: number;
+  maxAge?: number;
+  minEducation?: number;
+  minMartial?: number;
+  minCraftTrade?: number;
+  minFame?: number;
+  blockedWorldStates?: WorldState[];
+  requiresWorldStates?: WorldState[];
+  category?: 'medical' | 'social' | 'economic' | 'growth';
   requiresNotHousing?: HousingTier;
   requiresHousingIn?: HousingTier[];
   requiresLivingFamily?: boolean;
@@ -98,6 +107,21 @@ export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdult
   if (def.requiresLivingParent) {
     const hasParent = state.npcs.some((n) => n.relation === 'parent' && n.isAlive);
     if (!hasParent) return false;
+  }
+  if (def.minEducation !== undefined && state.stats.education < def.minEducation) {
+    return false;
+  }
+  if (def.minMartial !== undefined && state.stats.martial < def.minMartial) {
+    return false;
+  }
+  if (def.minCraftTrade !== undefined && state.stats.craftTrade < def.minCraftTrade) {
+    return false;
+  }
+  if (def.minFame !== undefined && state.stats.fame < def.minFame) {
+    return false;
+  }
+  if (def.requiresWorldStates && !def.requiresWorldStates.includes(state.world.worldState)) {
+    return false;
   }
   if (def.requiresLivingFamily) {
     const hasFamily = state.npcs.some(
@@ -217,6 +241,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     subtitle: 'Sức khỏe +10 · Giảm nguy cơ đổ bệnh',
     costCopper: 150,
     cooldownDays: 180,
+    category: 'medical',
     effects: {
       health: 10,
       stamina: 15,
@@ -224,11 +249,25 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     logText: 'Bạn ghé hiệu thuốc bắc bắt mạch điều dưỡng, uống ba thang thuốc bổ giúp khí huyết lưu thông.',
   },
   {
+    id: 'inst_folk_remedy',
+    title: 'Cắt thang thuốc nam bình dân',
+    subtitle: 'Sức khỏe +4 · Thể lực +10 (Giá rẻ cho dân thường)',
+    costCopper: 25,
+    cooldownDays: 90,
+    category: 'medical',
+    effects: {
+      health: 4,
+      stamina: 10,
+    },
+    logText: 'Bạn ra chợ mua ít lá thuốc nam sắc uống giải cảm, cơ thể nhẹ nhõm và đỡ mệt mỏi hơn.',
+  },
+  {
     id: 'inst_travel_solo',
     title: 'Du ngoạn vãn cảnh một mình',
     subtitle: 'Hạnh phúc +5 · Học thức +2',
     costCopper: 45,
     cooldownDays: 180,
+    blockedWorldStates: ['chien_tranh'],
     effects: {
       happiness: 5,
       education: 2,
@@ -241,6 +280,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     subtitle: 'Hạnh phúc +7 · Quan hệ +5 · Thân thiết người nhà +8',
     costCopper: 140,
     cooldownDays: 180,
+    blockedWorldStates: ['chien_tranh'],
     requiresLivingFamily: true,
     effects: {
       happiness: 7,
@@ -310,6 +350,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     subtitle: 'Sức khỏe +18 · Thể lực +25',
     costCopper: 450,
     cooldownDays: 180,
+    category: 'medical',
     requiresOfficialOrNoble: true,
     effects: {
       health: 18,
@@ -345,7 +386,235 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     },
     logText: 'Bạn ban thưởng tiền lụa cho gia nhân trong nhà, trên dưới đều tận tụy đồng lòng.',
   },
+  {
+    id: 'inst_scholar_books',
+    title: 'Mua sách quý · Mài mực luyện văn',
+    subtitle: 'Học thức +3 · Thanh danh +2 · Hạnh phúc +2 (Học thức ≥ 20)',
+    costCopper: 90,
+    cooldownDays: 120,
+    minEducation: 20,
+    category: 'growth',
+    effects: {
+      education: 3,
+      fame: 2,
+      happiness: 2,
+    },
+    logText: 'Bạn tìm mua thêm sách kinh sử và giấy bút tốt, nghiền ngẫm thâu đêm giúp văn phong sắc sảo hẳn.',
+  },
+  {
+    id: 'inst_weapon_training',
+    title: 'Sắm binh khí · Tỉ thí luyện võ',
+    subtitle: 'Võ nghệ +3 · Sức khỏe +2 (Võ nghệ ≥ 18)',
+    costCopper: 90,
+    cooldownDays: 120,
+    minMartial: 18,
+    category: 'growth',
+    effects: {
+      martial: 3,
+      health: 2,
+      stamina: -10,
+    },
+    logText: 'Bạn sắm sửa binh khí mới và mời bạn đồng môn ra bãi tập giao đấu, chiêu thức ngày càng thuần thục.',
+  },
+  {
+    id: 'inst_trade_expand',
+    title: 'Nhập nguyên liệu · Mở rộng tay nghề',
+    subtitle: 'Thương tài +2.5 · Thu về ~190đ (Thương tài ≥ 15)',
+    costCopper: 120,
+    cooldownDays: 120,
+    minCraftTrade: 15,
+    category: 'economic',
+    effects: {
+      copper: 190,
+      craft_trade: 2.5,
+      stamina: -15,
+    },
+    logText: 'Nhờ tay nghề vững vàng, bạn mạnh dạn nhập thêm nguyên liệu làm hàng bán được giá hơn hẳn.',
+  },
+  {
+    id: 'inst_elder_memoir',
+    title: 'Viết gia phả · Truyền kinh nghiệm cho hậu thế',
+    subtitle: 'Thanh danh +6 · Hạnh phúc +6 · Quan hệ +4 (50+ tuổi)',
+    costCopper: 80,
+    cooldownDays: 360,
+    minAge: 50,
+    category: 'social',
+    effects: {
+      fame: 6,
+      happiness: 6,
+      relationships: 4,
+      education: 2,
+    },
+    logText: 'Tuổi đã cao, bạn ngồi ghi chép lại gia phả và lời răn dạy cho con cháu đời sau noi theo.',
+  },
+  {
+    id: 'inst_ancestor_worship',
+    title: 'Cúng giỗ tổ tiên · Hương khói từ đường',
+    subtitle: 'Hạnh phúc +5 · Thanh danh +3 · Quan hệ +4 (18+ tuổi)',
+    costCopper: 60,
+    cooldownDays: 180,
+    minAge: 18,
+    category: 'social',
+    effects: {
+      happiness: 5,
+      fame: 3,
+      relationships: 4,
+    },
+    logText: 'Bạn sắm sửa mâm cỗ cúng giỗ tổ tiên, họ hàng quây quần thắp hương tưởng nhớ cội nguồn.',
+  },
+  {
+    id: 'inst_pay_family_debt',
+    title: 'Trả nợ thay cha mẹ · Xóa văn tự nợ',
+    subtitle: 'Xóa cờ mắc nợ · Hạnh phúc +14 · Thanh danh +6 · Thân thiết +15',
+    costCopper: 220,
+    cooldownDays: 9999,
+    requiresFlag: 'gia_dinh_mac_no',
+    category: 'social',
+    effects: {
+      remove_flags: ['gia_dinh_mac_no'],
+      happiness: 14,
+      fame: 6,
+      npc_affinity: [{ relation: 'parent', delta: 15 }],
+      milestone_title: 'Trả sạch nợ nần cho gia đình',
+    },
+    logText: 'Bạn mang tiền dành dụm về trả sạch món nợ cũ, xé bỏ văn tự nợ trước sự nhẹ nhõm và tự hào của cha mẹ.',
+  },
+  {
+    id: 'inst_plague_prayer',
+    title: 'Lập đàn cầu an · Cắt thuốc phòng dịch',
+    subtitle: 'Sức khỏe +6 · Hạnh phúc +5 (Mùa dịch / Mất mùa)',
+    costCopper: 70,
+    cooldownDays: 90,
+    requiresWorldStates: ['dich_benh', 'mat_mua'],
+    category: 'medical',
+    effects: {
+      health: 6,
+      happiness: 5,
+    },
+    logText: 'Giữa buổi thời cuộc nhiễu nhương, bạn sắc thuốc phòng bệnh và làm lễ cầu bình an cho cả nhà.',
+  },
+  {
+    id: 'inst_village_chess',
+    title: 'Đánh cờ tướng · Xem hội làng',
+    subtitle: 'Hạnh phúc +4 · Quan hệ +3 (Giải trí bình dân)',
+    costCopper: 20,
+    cooldownDays: 60,
+    excludeOrigins: ['hoang_toc', 'quan_lai'],
+    category: 'social',
+    effects: {
+      happiness: 4,
+      relationships: 3,
+    },
+    logText: 'Bạn ra sân đình đánh vài ván cờ tướng và xem trò vui hội làng, tinh thần sảng khoái hẳn.',
+  },
+  {
+    id: 'inst_poetry_gathering',
+    title: 'Ngâm thơ xướng họa cùng tao nhân',
+    subtitle: 'Thanh danh +4 · Quan hệ +5 · Học thức +1 (Học thức ≥ 25)',
+    costCopper: 140,
+    cooldownDays: 120,
+    minEducation: 25,
+    category: 'social',
+    effects: {
+      fame: 4,
+      relationships: 5,
+      happiness: 4,
+      education: 1,
+    },
+    logText: 'Bạn cùng các bậc văn nhân uống trà ngâm vịnh, câu đối hay được truyền tụng khắp vùng.',
+  },
+  {
+    id: 'inst_startup_tea_cart',
+    title: 'Mở quán nước chè · Bánh rán đầu ngõ',
+    subtitle: 'Khởi nghiệp nhỏ · Thương tài +1.5 · Thu về ~115đ',
+    costCopper: 80,
+    cooldownDays: 90,
+    excludeOrigins: ['hoang_toc', 'quan_lai'],
+    category: 'economic',
+    effects: {
+      copper: 115,
+      craft_trade: 1.5,
+      stamina: -10,
+      add_flags: ['khoi_nghiep_quan_nuoc'],
+    },
+    logText: 'Bạn dọn một góc quán nước chè xanh và mẹt bánh rán đầu ngõ bán cho khách qua đường, thu được đồng ra đồng vào.',
+  },
+  {
+    id: 'inst_startup_scribe',
+    title: 'Mở bàn viết thư thuê · Cho chữ đầu xuân',
+    subtitle: 'Lập nghề chữ nghĩa · Học thức +1.5 · Thu về ~110đ (Học thức ≥ 18)',
+    costCopper: 50,
+    cooldownDays: 90,
+    minEducation: 18,
+    category: 'economic',
+    effects: {
+      copper: 110,
+      education: 1.5,
+      fame: 1,
+      stamina: -10,
+      add_flags: ['khoi_nghiep_thay_do_viet_thue'],
+    },
+    logText: 'Bạn bày nghiên mực giấy đỏ viết đơn từ, câu đối thuê cho bà con trong vùng, vừa có tiền vừa giữ nếp chữ.',
+  },
+  {
+    id: 'inst_startup_apothecary',
+    title: 'Bào chế cao dán · Bán thuốc nam dạo',
+    subtitle: 'Thương tài +2 · Sức khỏe +1 · Thu về ~220đ (Thương tài ≥ 10)',
+    costCopper: 140,
+    cooldownDays: 120,
+    minCraftTrade: 10,
+    category: 'economic',
+    effects: {
+      copper: 220,
+      craft_trade: 2,
+      health: 1,
+      stamina: -15,
+      add_flags: ['khoi_nghiep_thuoc_nam'],
+    },
+    logText: 'Bạn hái thuốc nam phơi sấy, sắc cao dán bán khắp chợ phiên, đắt hàng nhất là lúc trái gió trở trời.',
+  },
+  {
+    id: 'inst_startup_craft_guild',
+    title: 'Góp vốn lập phường thợ · Buôn hàng thủ công',
+    subtitle: 'Khởi nghiệp vừa · Thương tài +3 · Thanh danh +3 · Thu về ~860đ (Thương tài ≥ 20)',
+    costCopper: 600,
+    cooldownDays: 180,
+    minCraftTrade: 20,
+    category: 'economic',
+    effects: {
+      copper: 860,
+      craft_trade: 3,
+      fame: 3,
+      stamina: -20,
+      add_flags: ['khoi_nghiep_phuong_tho'],
+    },
+    logText: 'Bạn chung vốn cùng mấy tay thợ giỏi lập phường sản xuất đồ thủ công giao mối cho thương nhân, lợi nhuận rất khá.',
+  },
 ];
+
+export function getEffectiveInstantActionCost(
+  state: ActiveLifeState,
+  def: InstantAdultActionDef,
+): number {
+  let mult = 1.0;
+  const ws = state.world.worldState;
+  if (ws === 'dich_benh') {
+    mult *= def.category === 'medical' ? 1.5 : 1.2;
+  } else if (ws === 'mat_mua') {
+    mult *= 1.25;
+  } else if (ws === 'chien_tranh') {
+    mult *= 1.4;
+  }
+
+  const place = state.family?.birthPlace ?? '';
+  if (place.includes('Thăng Long') || place.includes('Kinh') || place.includes('Phủ thành')) {
+    mult *= 1.15;
+  } else if (place.includes('Thị trấn')) {
+    mult *= 1.05;
+  }
+
+  return Math.max(1, Math.round(def.costCopper * mult));
+}
 
 export function getInstantActionCooldownRemaining(
   state: ActiveLifeState,
@@ -370,35 +639,53 @@ export function executeInstantAdultAction(
   if (def.minAge && age < def.minAge) {
     return { ok: false, state: inputState, message: `Cần đủ ${def.minAge} tuổi để thực hiện.` };
   }
+  if (def.maxAge && age > def.maxAge) {
+    return { ok: false, state: inputState, message: `Không còn phù hợp ở độ tuổi hiện tại.` };
+  }
+  if (def.blockedWorldStates?.includes(inputState.world.worldState)) {
+    return { ok: false, state: inputState, message: 'Thời cuộc đang loạn lạc, không thể thực hiện lúc này.' };
+  }
   if (def.requiresNotHousing && inputState.assets.housing === def.requiresNotHousing) {
     return { ok: false, state: inputState, message: 'Chưa có nhà riêng để sửa sang.' };
   }
 
+  const effectiveCost = getEffectiveInstantActionCost(inputState, def);
   const remaining = getInstantActionCooldownRemaining(inputState, def.id, def.cooldownDays);
   if (remaining > 0) {
     return { ok: false, state: inputState, message: `Cần chờ thêm ${remaining} ngày nữa.` };
   }
-  if (inputState.assets.wealthCopper < def.costCopper) {
+  if (inputState.assets.wealthCopper < effectiveCost) {
     return { ok: false, state: inputState, message: 'Không đủ tiền đồng.' };
   }
 
   const scaledEffects: EffectSpec = { ...def.effects };
   if (def.id === 'inst_rent_land_season' && inputState.world.worldState === 'mat_mua') {
     scaledEffects.rice = 3;
-  } else if (def.id === 'inst_rent_market_stall') {
+  } else if (
+    def.id === 'inst_rent_market_stall' ||
+    def.id === 'inst_startup_tea_cart' ||
+    def.id === 'inst_startup_craft_guild'
+  ) {
     const baseGain = scaledEffects.copper ?? 240;
     const mult =
       inputState.world.worldState === 'binh_on'
         ? 1.15
         : inputState.world.worldState === 'chien_tranh' || inputState.world.worldState === 'dich_benh'
-          ? 0.7
+          ? 0.72
           : 0.9;
     scaledEffects.copper = Math.round(baseGain * mult + inputState.stats.craftTrade * 1.5);
+  } else if (def.id === 'inst_startup_scribe') {
+    const baseGain = scaledEffects.copper ?? 110;
+    scaledEffects.copper = Math.round(baseGain + inputState.stats.education * 1.2);
+  } else if (def.id === 'inst_startup_apothecary') {
+    const baseGain = scaledEffects.copper ?? 220;
+    const plagueMult = inputState.world.worldState === 'dich_benh' ? 1.3 : 1.0;
+    scaledEffects.copper = Math.round(baseGain * plagueMult + inputState.stats.craftTrade * 2);
   }
 
   let state = applyEffects(inputState, {
     ...scaledEffects,
-    copper: -def.costCopper + (scaledEffects.copper ?? 0),
+    copper: -effectiveCost + (scaledEffects.copper ?? 0),
   });
 
   const hobbyLevels = { ...(state.hobbyLevels ?? {}) };
@@ -426,7 +713,7 @@ export function executeInstantAdultAction(
       state.logs,
       state.profile.totalDays,
       'survival',
-      `${def.logText}${extraLog} (-${def.costCopper}đ)`,
+      `${def.logText}${extraLog} (-${effectiveCost}đ)`,
     ),
   };
 

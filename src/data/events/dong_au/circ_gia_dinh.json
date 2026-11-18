@@ -346,5 +346,167 @@
         ]
       }
     ]
+  },
+  {
+    "id": "evt_child_poor_begging",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Nhà Hết Gạo, Theo Gia Đình Đi Xin Ăn",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "family_tier_in": [
+        "tung_thieu"
+      ],
+      "origin_in": [
+        "ban_nong",
+        "thu_cong"
+      ]
+    },
+    "weight": {
+      "base": 42,
+      "modifiers": [
+        {
+          "conditions": {
+            "has_any_flag": [
+              "gia_dinh_mac_no",
+              "mo_coi_cha"
+            ]
+          },
+          "addWeight": 25
+        }
+      ]
+    },
+    "description": "Tháng ba ngày tám giáp hạt, hũ gạo trong nhà đã cạn đáy từ mấy hôm nay. Cha mẹ nhìn đàn con đói lả mà rưng rưng nước mắt, đành tính chuyện dẫn nhau ra chợ đầu làng xin bố thí.",
+    "choices": [
+      {
+        "label": "Theo mẹ cầm bát mẻ ra cổng chợ xin từng nắm cơm nguội",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Cầm chiếc bát mẻ dưới cái nắng gắt, bạn nếm trọn vị tủi nhục của cảnh cơ hàn nhưng cũng gom được ít gạo tiền giúp cả nhà qua cơn đói.",
+            "effects": {
+              "family_copper": 25,
+              "happiness": -8,
+              "health": -1,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "add_flags": [
+                "tung_di_an_xin"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Rủ anh em ra đồng đào củ mài, bắt cua ốc ăn độn thay cơm",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bùn đất lấm lem từ đầu tới chân nhưng giỏ cua ốc đầy ắp khiến cả nhà có bữa cơm độn củ mài ấm lòng mà không phải ngửa tay xin ai.",
+            "effects": {
+              "family_copper": 10,
+              "health": 2,
+              "stamina": -6,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "add_interests": [
+                "dien_vien"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_poor_sell_indenture",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Chủ Nợ Ép Cửa, Nguy Cơ Bán Con Trừ Nợ",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "family_tier_in": [
+        "tung_thieu"
+      ],
+      "has_flags": [
+        "gia_dinh_mac_no"
+      ]
+    },
+    "weight": {
+      "base": 48,
+      "modifiers": []
+    },
+    "description": "Lãi mẹ đẻ lãi con, tên tay sai nhà bá hộ kéo đến đòi xiết nợ ngay trước sân. Hắn chỉ vào bạn, gằn giọng bảo nếu không có tiền trả thì ký giấy bán đứt cho nhà hắn làm đứa ở trừ nợ.",
+    "choices": [
+      {
+        "label": "Gạt nước mắt nhận đi ở đợ vài năm để cứu cả nhà khỏi cảnh màn trời chiếu đất",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Mẹ ôm bạn khóc ngất bên thềm. Món nợ nhà được xóa sạch nhờ tiền công ứng trước, còn bạn bắt đầu những tháng ngày làm lụng vất vả nơi nhà giàu.",
+            "effects": {
+              "family_copper": 160,
+              "happiness": -14,
+              "health": -2,
+              "craft_trade": 3,
+              "remove_flags": [
+                "gia_dinh_mac_no"
+              ],
+              "add_flags": [
+                "tung_o_do"
+              ],
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "milestone_title": "Đi ở đợ trừ nợ giúp gia đình"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cả nhà quỳ lạy van xin khất nợ, hứa làm thuê cuốc mướn trả dần",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tên tay sai hậm hực vơ vét hết số tiền dành dụm ít ỏi trong nhà rồi mới chịu bỏ đi. Gia đình vẫn giữ được nhau nhưng gánh nợ vẫn còn treo lơ lửng.",
+            "effects": {
+              "family_copper": -50,
+              "happiness": -10,
+              "relationships": 5,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 10
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -447,20 +447,49 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       ? circ.isTonThat
         ? `${surname} Quận Vương`
         : circ.fatherAlive === false
-          ? `${surname} Tiên Đế`
-          : `${surname} Hoàng Thượng`
+          ? `Tiên đế ${surname} ${MALE_GIVEN_NAMES[fNamePick.value]}`
+          : `Hoàng đế ${surname} ${MALE_GIVEN_NAMES[fNamePick.value]}`
       : `${surname} Văn ${MALE_GIVEN_NAMES[fNamePick.value]}`;
 
   const mNamePick = randomInt(prng, 0, FEMALE_GIVEN_NAMES.length - 1);
   prng = mNamePick.nextState;
+
+  // Feudal polygamy (Vợ lẽ / Phi tần) for wealthy/noble families
+  const canHaveConcubines =
+    originClass === 'hoang_toc' ||
+    ((originClass === 'quan_lai' || originClass === 'dia_chu') && !isStartDeclined);
+  const concubineRoll = mulberry32Next(prng);
+  prng = concubineRoll.nextState;
+  const concubineChance =
+    originClass === 'hoang_toc' ? 0.85 : originClass === 'quan_lai' ? 0.55 : 0.35;
+  const hasConcubines = canHaveConcubines && concubineRoll.value < concubineChance;
+
+  const motherStatusRoll = mulberry32Next(prng);
+  prng = motherStatusRoll.nextState;
+  let motherStatus: 'chinh_that' | 'thu_that' | 'phi_tan' = 'chinh_that';
+  if (originClass === 'hoang_toc' && !circ.isTonThat) {
+    if (circ.id === 'duoc_sung_ai') {
+      motherStatus = 'chinh_that';
+    } else if (circ.id === 'that_sung') {
+      motherStatus = 'phi_tan';
+    } else {
+      motherStatus = motherStatusRoll.value < 0.28 ? 'chinh_that' : 'phi_tan';
+    }
+  } else if (hasConcubines && motherStatusRoll.value < 0.35) {
+    motherStatus = 'thu_that';
+  }
+
+  const motherGivenName = FEMALE_GIVEN_NAMES[mNamePick.value];
   const motherName =
     originClass === 'hoang_toc'
       ? circ.isTonThat
-        ? 'Vương Phi'
-        : circ.id === 'that_sung'
-          ? 'Phi Tần thất sủng'
-          : 'Hoàng Hậu / Phi Tần'
-      : `Bà Thị ${FEMALE_GIVEN_NAMES[mNamePick.value]}`;
+        ? `${motherGivenName} Vương Phi`
+        : motherStatus === 'chinh_that'
+          ? `${motherGivenName} Hoàng Hậu`
+          : circ.id === 'that_sung'
+            ? `${motherGivenName} Tài Nhân`
+            : `${motherGivenName} Phi`
+      : `Bà Thị ${motherGivenName}`;
 
   const fAff = randomInt(prng, 45, 80);
   prng = fAff.nextState;
@@ -497,29 +526,14 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     },
   ];
 
-  // Feudal polygamy (Vợ lẽ / Phi tần) for wealthy/noble families
-  const canHaveConcubines =
-    originClass === 'hoang_toc' ||
-    ((originClass === 'quan_lai' || originClass === 'dia_chu') && !isStartDeclined);
-  const concubineRoll = mulberry32Next(prng);
-  prng = concubineRoll.nextState;
-  const concubineChance =
-    originClass === 'hoang_toc' ? 0.85 : originClass === 'quan_lai' ? 0.55 : 0.35;
-  const hasConcubines = canHaveConcubines && concubineRoll.value < concubineChance;
-
-  const motherStatusRoll = mulberry32Next(prng);
-  prng = motherStatusRoll.nextState;
-  let motherStatus: 'chinh_that' | 'thu_that' | 'phi_tan' = 'chinh_that';
-  if (originClass === 'hoang_toc' && !circ.isTonThat) {
-    motherStatus = motherStatusRoll.value < 0.28 ? 'chinh_that' : 'phi_tan';
-  } else if (hasConcubines && motherStatusRoll.value < 0.35) {
-    motherStatus = 'thu_that';
-  }
-
   if (motherStatus === 'thu_that') {
     npcs[1].role = `Mẹ ruột (Thứ thất / Di nương) • ${motherOcc.label}`;
-  } else if (originClass === 'hoang_toc' && motherStatus === 'phi_tan' && !circ.isTonThat) {
-    npcs[1].role = circ.id === 'that_sung' ? 'Mẹ ruột (Phi tần thất sủng)' : 'Mẹ ruột (Phi tần)';
+  } else if (originClass === 'hoang_toc' && !circ.isTonThat) {
+    if (motherStatus === 'chinh_that') {
+      npcs[1].role = 'Mẹ ruột • Hoàng hậu';
+    } else {
+      npcs[1].role = circ.id === 'that_sung' ? 'Mẹ ruột (Phi tần thất sủng)' : 'Mẹ ruột (Phi tần)';
+    }
   }
 
   if (hasConcubines && circ.fatherAlive !== false) {
@@ -578,7 +592,7 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
   if (hasConcubines) {
     if (motherStatus === 'chinh_that' && (birthOrder === 'con_truong' || birthOrder === 'con_mot')) {
       birthOrderLabel = `${birthOrderLabel} (Đích tử)`;
-    } else if (motherStatus === 'thu_that') {
+    } else if (motherStatus === 'thu_that' || motherStatus === 'phi_tan') {
       birthOrderLabel = `${birthOrderLabel} (Thứ xuất)`;
     }
   }
@@ -637,15 +651,36 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
   if (originClass === 'hoang_toc') {
     const rAff = randomInt(prng, -15, 15);
     prng = rAff.nextState;
+    const rNamePick = randomInt(prng, 0, MALE_GIVEN_NAMES.length - 1);
+    prng = rNamePick.nextState;
+    const rAgePick = randomInt(prng, 2, 6);
+    prng = rAgePick.nextState;
     npcs.push({
       id: 'npc_royal_rival',
-      name: `${surname} Hoàng Huynh`,
+      name: `${surname} ${MALE_GIVEN_NAMES[rNamePick.value]}`,
       gender: 'male',
       relation: 'rival',
       affinity: rAff.value,
       isAlive: true,
-      role: 'Hoàng tử tranh đoạt ngôi vị',
-      age: 4,
+      role: circ.isTonThat ? 'Công tử Tôn thất cạnh tranh tước vị' : 'Hoàng huynh tranh đoạt ngôi vị',
+      age: rAgePick.value,
+    });
+  }
+
+  if (originClass === 'hoang_toc' && !circ.isTonThat) {
+    const thNamePick = randomInt(prng, 0, FEMALE_GIVEN_NAMES.length - 1);
+    prng = thNamePick.nextState;
+    const thAff = randomInt(prng, 35, 65);
+    prng = thAff.nextState;
+    npcs.push({
+      id: 'npc_grandmother',
+      name: `${FEMALE_GIVEN_NAMES[thNamePick.value]} Thái Hậu`,
+      gender: 'female',
+      relation: 'parent',
+      affinity: thAff.value,
+      isAlive: true,
+      role: 'Hoàng Thái Hậu (Tổ mẫu)',
+      age: fatherAgeAtBirth + 24,
     });
   }
 
@@ -731,14 +766,44 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
         },
       );
     }
+  } else if (originClass === 'hoang_toc') {
+    servantCount = 2;
+    const bNamePick = randomInt(prng, 0, MALE_GIVEN_NAMES.length - 1);
+    prng = bNamePick.nextState;
+    const wNamePick = randomInt(prng, 0, FEMALE_GIVEN_NAMES.length - 1);
+    prng = wNamePick.nextState;
+    npcs.push(
+      {
+        id: 'npc_butler',
+        name: `Lão thái giám ${MALE_GIVEN_NAMES[bNamePick.value]}`,
+        gender: 'male',
+        relation: 'household',
+        affinity: 68,
+        isAlive: true,
+        role: 'Thái giám cũ trung thành nơi lãnh cung',
+        age: 52,
+      },
+      {
+        id: 'npc_wetnurse',
+        name: `Cung nữ ${FEMALE_GIVEN_NAMES[wNamePick.value]}`,
+        gender: 'female',
+        relation: 'household',
+        affinity: 74,
+        isAlive: true,
+        role: 'Cung nữ thân cận theo hầu mẫu phi',
+        age: 32,
+      },
+    );
   }
 
   const bpPool = BIRTH_PLACES_BY_ORIGIN[originClass];
   const bpPick = randomInt(prng, 0, bpPool.length - 1);
   prng = bpPick.nextState;
   const birthPlace =
-    originClass === 'hoang_toc' && circ.isTonThat
-      ? 'Phủ Tôn thất Kinh thành'
+    originClass === 'hoang_toc'
+      ? circ.isTonThat
+        ? 'Phủ Tôn thất Kinh thành'
+        : 'Hoàng cung Tử Cấm Thành'
       : originClass === 'quan_lai' && initialFlags.includes('gia_toc_sa_sut')
         ? 'Quê cũ vùng ngoại ô'
         : bpPool[bpPick.value];
@@ -830,7 +895,11 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
         : circ.isTonThat
           ? `${royalAcres.value} mẫu đất phong & bổng lộc`
           : 'Đất phong & bổng lộc Hoàng gia',
-      servantCount > 0 ? `Thái giám, nhũ mẫu & ${servantCount} cung nữ` : 'Ít người hầu hạ',
+      isStartDeclined
+        ? 'Lão thái giám & cung nữ trung thành'
+        : servantCount > 0
+          ? `Thái giám, nhũ mẫu & ${servantCount} cung nữ`
+          : 'Ít người hầu hạ',
     );
   }
 
@@ -899,7 +968,9 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
 
   const dynastyName = DYNASTY_NAMES[dPick.value];
   const meta = ORIGIN_METADATA[originClass];
-  const initialHousing = circ.housingOverride ?? meta.housing;
+  const initialHousing =
+    circ.housingOverride ??
+    (originClass === 'thu_cong' && !isStartDeclined && familyWealthCopper >= 900 ? 'nha_gach' : meta.housing);
   let initialRoleLabel = meta.roleLabel;
   if (originClass === 'hoang_toc' && circ.isTonThat) {
     initialRoleLabel = gender === 'male' ? 'Thế tử phủ Tôn thất' : 'Quận chúa phủ Tôn thất';
@@ -908,8 +979,16 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
   }
   const fatherLogDesc =
     circ.fatherAlive === false
-      ? `cha (${fatherOcc.label.toLowerCase()}) đã mất sớm`
-      : `cha làm ${fatherOcc.label.toLowerCase()}`;
+      ? `Cha (${fatherOcc.label.toLowerCase()}) đã mất sớm`
+      : originClass === 'hoang_toc' && !circ.isTonThat
+        ? 'Phụ hoàng đang trị vì'
+        : `Cha làm ${fatherOcc.label.toLowerCase()}`;
+  const motherLogDesc =
+    originClass === 'hoang_toc' && !circ.isTonThat
+      ? motherStatus === 'chinh_that'
+        ? 'mẫu hậu là Hoàng hậu'
+        : 'mẫu phi là phi tần'
+      : `mẹ là ${motherOcc.label.toLowerCase()}`;
 
   return {
     schemaVersion: 1,
@@ -987,7 +1066,7 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       {
         day: 0,
         category: 'birth',
-        text: `Năm ${dynastyName} thứ ${yPick.value}, ${fullName} chào đời tại ${birthPlace} trong ${meta.label.toLowerCase()} (${birthOrderLabel}). ${fatherLogDesc}, mẹ là ${motherOcc.label.toLowerCase()}. ${circ.label}.${isProdigy ? ' Từ thuở lọt lòng đã lộ ánh mắt tinh anh, tư chất thần đồng khác thường.' : ''}`,
+        text: `Năm ${dynastyName} thứ ${yPick.value}, ${fullName} chào đời tại ${birthPlace} trong ${meta.label.toLowerCase()} (${birthOrderLabel}). ${fatherLogDesc}, ${motherLogDesc}. ${circ.label}.${isProdigy ? ' Từ thuở lọt lòng đã lộ ánh mắt tinh anh, tư chất thần đồng khác thường.' : ''}`,
       },
     ],
   };
@@ -995,4 +1074,55 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
 
 export function getBirthYearSummary(totalDays: number): number {
   return Math.floor(totalDays / DAYS_PER_YEAR);
+}
+
+const BASE_HOUSING_LABELS: Record<HousingTier, string> = {
+  gam_cau: 'Gầm cầu / Mái hiên tạm',
+  nha_tranh: 'Nhà tranh vách đất',
+  nha_gach: 'Nhà gạch khang trang',
+  phu_de: 'Phủ đệ son thiếp',
+};
+
+/**
+ * Returns a contextual residence label reflecting royal palace quarters,
+ * cold-palace exile, or adult estate separation choices.
+ */
+export function getHousingDisplayLabel(opts: {
+  housing: HousingTier;
+  originClass?: OriginClass;
+  gender?: Gender;
+  ageYears?: number;
+  flags?: string[];
+  family?: FamilyContext;
+}): string {
+  const { housing, originClass, gender, ageYears = 0, flags = [], family } = opts;
+  if (originClass === 'hoang_toc' && housing === 'phu_de') {
+    if (flags.includes('da_khai_phu_hoang_toc')) {
+      return family?.circumstance === 'ton_that'
+        ? 'Phủ Tôn thất riêng'
+        : gender === 'female'
+          ? 'Phủ Công chúa riêng'
+          : 'Phủ Hoàng tử riêng';
+    }
+    if (flags.includes('da_nhan_tuoc_vi')) {
+      return 'Phủ đệ nội triều';
+    }
+    if (flags.includes('dong_cung_thai_tu')) {
+      return 'Đông Cung';
+    }
+    if (family?.circumstance === 'ton_that') {
+      return 'Phủ Quận vương (Tôn thất)';
+    }
+    if (flags.includes('that_sung_cung_dinh')) {
+      return 'Tẩm cung hẻo lánh (Lãnh cung)';
+    }
+    if (flags.includes('mau_phi_phuc_sung')) {
+      return 'Tẩm cung trong Tử Cấm Thành';
+    }
+    if (family?.motherStatus === 'chinh_that') {
+      return ageYears < 13 ? 'Chính cung Hoàng hậu' : 'Tẩm cung trong Tử Cấm Thành';
+    }
+    return ageYears < 13 ? 'Tẩm cung mẫu phi' : 'Tẩm cung trong Tử Cấm Thành';
+  }
+  return BASE_HOUSING_LABELS[housing] ?? housing;
 }

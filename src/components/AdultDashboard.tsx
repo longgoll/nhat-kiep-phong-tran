@@ -23,6 +23,7 @@ import {
 import { evaluateConditions } from '../engine/conditionEvaluator';
 import { formatCopper } from '../engine/economy';
 import {
+  getDailyFixedExpenseSummary,
   getDayInSeason,
   getSeasonLabel,
   getWorldStateLabel,
@@ -32,6 +33,7 @@ import {
   AUTO_ACTION_CANDIDATES,
   canHaveChild,
   canMarrySpouse,
+  getEffectiveInstantActionCost,
   getInstantActionCooldownRemaining,
   GIFT_ETIQUETTE_OPTIONS,
   INSTANT_ADULT_ACTIONS,
@@ -60,10 +62,11 @@ const SLOT_LABELS: Record<TimeSlot, string> = {
 };
 
 const LIFESTYLE_OPTIONS: Array<{ value: LifestyleTier; label: string; desc: string }> = [
-  { value: 'nhin_doi', label: 'Nhịn đói', desc: '0 gạo, 0đ (-3 HP/ngày)' },
-  { value: 'chao_loang', label: 'Cháo loãng', desc: '0.5 đấu gạo/ngày (-0.5 HP)' },
-  { value: 'com_rau', label: 'Cơm rau đạm bạc', desc: '1 đấu gạo + 5đ/ngày' },
-  { value: 'thit_ca', label: 'Thịt cá đủ đầy', desc: '1.5 đấu gạo + 30đ/ngày' },
+  { value: 'nhin_doi', label: 'Nhịn đói', desc: '0 gạo, 0đ (-1.8 SK, -1.2 HP/ngày)' },
+  { value: 'chao_loang', label: 'Cháo loãng', desc: '0.5 đấu gạo/ngày (-0.04 SK, -0.1 HP)' },
+  { value: 'com_rau', label: 'Cơm rau đạm bạc', desc: '1 đấu gạo + 5đ/ngày (+0.2 SK)' },
+  { value: 'thit_ca', label: 'Thịt cá đủ đầy', desc: '1.5 đấu gạo + 30đ/ngày (+1 SK, +1.5 HP)' },
+  { value: 'son_hao', label: 'Yến tiệc · Sơn hào', desc: '2 đấu gạo + 120đ/ngày (+1.5 SK, +2.5 HP, +0.15 Danh)' },
 ];
 
 const PAUSE_MESSAGES: Record<string, string> = {
@@ -637,6 +640,8 @@ export function AdultDashboard() {
               originClass={life.profile.originClass}
               birthPlace={life.family?.birthPlace}
               npcs={life.npcs}
+              flags={life.flags}
+              family={life.family}
             />
 
             {/* Trọng tâm hiện tại (Life Focus) */}
@@ -820,6 +825,16 @@ export function AdultDashboard() {
                     Gạo: {life.assets.rice.toFixed(1)} đấu · Thể lực: {Math.round(life.stats.stamina)}/{life.stats.maxStamina}
                   </span>
                 </div>
+                {(() => {
+                  const fixed = getDailyFixedExpenseSummary(life);
+                  return (
+                    <div className="text-[11px] text-stone-300 font-mono">
+                      {fixed.isFamilyCovered
+                        ? 'Chi cố định: 0đ/ngày (Đang được gia đình chu cấp)'
+                        : `Chi cố định: ${fixed.totalCopper}đ/ngày (Ăn ${fixed.foodCopper}đ + ${fixed.ricePerDay} đấu gạo · Nhà ở ${fixed.housingCopper}đ)`}
+                    </div>
+                  );
+                })()}
                 <p className="text-xs text-stone-400">
                   Cách bạn chi tiêu và sinh hoạt sẽ thay đổi hạnh phúc, quan hệ, sức khỏe và tương lai. Thời gian tạm dừng trong lúc bạn chọn.
                 </p>
@@ -837,9 +852,12 @@ export function AdultDashboard() {
                   {INSTANT_ADULT_ACTIONS.filter((act) => isInstantActionVisible(life, act)).map((act) => {
                     const cd = getInstantActionCooldownRemaining(life, act.id, act.cooldownDays);
                     const ageBlocked = act.minAge !== undefined && age < act.minAge;
+                    const maxAgeBlocked = act.maxAge !== undefined && age > act.maxAge;
+                    const worldBlocked = act.blockedWorldStates?.includes(life.world.worldState) ?? false;
                     const houseBlocked = act.requiresNotHousing !== undefined && life.assets.housing === act.requiresNotHousing;
-                    const cantAfford = life.assets.wealthCopper < act.costCopper;
-                    const disabled = cd > 0 || ageBlocked || houseBlocked || cantAfford;
+                    const effectiveCost = getEffectiveInstantActionCost(life, act);
+                    const cantAfford = life.assets.wealthCopper < effectiveCost;
+                    const disabled = cd > 0 || ageBlocked || maxAgeBlocked || worldBlocked || houseBlocked || cantAfford;
                     return (
                       <button
                         key={act.id}
@@ -851,10 +869,13 @@ export function AdultDashboard() {
                         <div className="flex items-start justify-between gap-2">
                           <span className="text-xs font-semibold text-stone-100 leading-snug">{act.title}</span>
                           <span className="shrink-0 text-[11px] font-mono text-amber-300">
-                            {act.costCopper}đ
+                            {effectiveCost}đ
                           </span>
                         </div>
                         <div className="text-[11px] text-stone-400">{act.subtitle}</div>
+                        {worldBlocked && (
+                          <div className="text-[10px] text-rose-400 font-medium">Tạm khóa do thời cuộc loạn lạc</div>
+                        )}
                         {cd > 0 && (
                           <div className="text-[10px] text-sky-400 font-mono">Chờ {cd} ngày</div>
                         )}

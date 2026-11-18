@@ -407,5 +407,164 @@
         ]
       }
     ]
+  },
+  {
+    "id": "evt_child_exp_hoang_toc_cold_palace_encounter",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Gặp Phụ Hoàng Nơi Ngự Hoa Viên",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_flags": [
+        "that_sung_cung_dinh"
+      ],
+      "has_living_npc_id": "npc_father"
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Một buổi chiều tà, bạn theo lão thái giám ra góc khuất Ngự Hoa Viên hái lá thuốc cho mẫu phi thì bất ngờ chạm mặt Phụ hoàng đang dạo bước giải khuây.",
+    "choices": [
+      {
+        "label": "Quỳ xuống hành lễ chỉnh tề, ứng đối gãy gọn khi được hỏi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "min_education": 15
+                  },
+                  "addWeight": 30
+                }
+              ]
+            },
+            "resultText": "Phụ hoàng ngạc nhiên trước phong thái điềm đạm và lời đối đáp thông tuệ của bạn, bèn sai nội thị ban thêm sách quý cùng ít ngân lượng về cung.",
+            "effects": {
+              "family_copper": 350,
+              "education": 3,
+              "fame": 6,
+              "happiness": 8,
+              "npc_affinity": [
+                {
+                  "npcId": "npc_father",
+                  "delta": 14
+                }
+              ],
+              "add_flags": [
+                "duoc_phu_hoang_chu_y"
+              ]
+            }
+          },
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": []
+            },
+            "resultText": "Phụ hoàng chỉ gật đầu khẽ hỏi vài câu rồi tiếp tục bước đi, nhưng ánh mắt bớt phần lạnh nhạt hơn trước.",
+            "effects": {
+              "happiness": 3,
+              "npc_affinity": [
+                {
+                  "npcId": "npc_father",
+                  "delta": 6
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Kính cẩn né sang bên đường để tránh gây phiền nhiễu",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn giữ đúng bổn phận, lặng lẽ lui về cung hẻo lánh. Tuy không có thưởng nhưng cũng tránh được ánh mắt dò xét của các phi tần khác.",
+            "effects": {
+              "relationships": 2,
+              "happiness": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_hoang_toc_cold_palace_study",
+    "stage": "childhood",
+    "severity": "minor",
+    "cooldownDays": 720,
+    "title": "Đèn Khuya Nơi Lãnh Cung",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "hoang_toc"
+      ],
+      "has_flags": [
+        "that_sung_cung_dinh"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Đêm đông gió lùa qua mái ngói cũ nơi cung hẻo lánh. Mẫu phi thắp ngọn đèn dầu nhỏ, khẽ khuyên bạn dù hoàn cảnh lạnh lẽo cũng chớ bỏ bê chuyện rèn tài.",
+    "choices": [
+      {
+        "label": "Chong đèn theo mẫu phi học đọc kinh sử và thư pháp",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Hai mẹ con nương tựa nhau dưới ánh đèn khuya, chữ nghĩa và nghị lực của bạn đều tiến bộ rõ rệt.",
+            "effects": {
+              "education": 4,
+              "happiness": 3,
+              "npc_affinity": [
+                {
+                  "npcId": "npc_mother",
+                  "delta": 8
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nghe lão thái giám kể chuyện cũ triều chính để hiểu thế sự",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Những câu chuyện thâm cung từ bậc lão nô giúp bạn sớm hiểu lòng người và biết cách giữ mình trước sóng gió.",
+            "effects": {
+              "relationships": 4,
+              "education": 2,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -57,12 +57,27 @@ export interface AdvanceDaysResult {
 
 const LIFESTYLE_TABLE: Record<
   LifestyleTier,
-  { rice: number; copper: number; stamina: number; health: number; happiness: number }
+  { rice: number; copper: number; stamina: number; health: number; happiness: number; fame?: number }
 > = {
   nhin_doi: { rice: 0, copper: 0, stamina: 0, health: -1.8, happiness: -1.2 },
   chao_loang: { rice: 0.5, copper: 0, stamina: 5, health: -0.04, happiness: -0.1 },
   com_rau: { rice: 1.0, copper: 5, stamina: 15, health: 0.2, happiness: 0 },
   thit_ca: { rice: 1.5, copper: 30, stamina: 30, health: 1.0, happiness: 1.5 },
+  son_hao: { rice: 2.0, copper: 120, stamina: 40, health: 1.5, happiness: 2.5, fame: 0.15 },
+};
+
+const HOUSING_DAILY_UPKEEP: Record<HousingTier, number> = {
+  gam_cau: 0,
+  nha_tranh: 2,
+  nha_gach: 8,
+  phu_de: 25,
+};
+
+const WORLD_LIVING_COST_MULT: Record<ActiveLifeState['world']['worldState'], number> = {
+  binh_on: 1.0,
+  dich_benh: 1.2,
+  mat_mua: 1.35,
+  chien_tranh: 1.5,
 };
 
 const HOUSING_SLEEP_RECOVERY: Record<
@@ -219,7 +234,7 @@ function addLedger(
   };
 }
 
-const LIFESTYLE_ORDER: LifestyleTier[] = ['thit_ca', 'com_rau', 'chao_loang', 'nhin_doi'];
+const LIFESTYLE_ORDER: LifestyleTier[] = ['son_hao', 'thit_ca', 'com_rau', 'chao_loang', 'nhin_doi'];
 
 function canReceiveFamilySupport(state: ActiveLifeState): boolean {
   if (!state.family) return false;
@@ -282,6 +297,34 @@ function applyMonthlyFamilyAllowance(state: ActiveLifeState, ageYears: number): 
   return addLedger(nextState, { propertyIncomeCopper: allowance });
 }
 
+export function getDailyFixedExpenseSummary(state: ActiveLifeState): {
+  foodCopper: number;
+  ricePerDay: number;
+  housingCopper: number;
+  totalCopper: number;
+  isFamilyCovered: boolean;
+} {
+  const tier = state.schedule.lifestyle;
+  const spec = LIFESTYLE_TABLE[tier];
+  const familyCoveredTier = getFamilyCoveredLifestyleTier(state);
+  const familyCoveredIdx = familyCoveredTier ? LIFESTYLE_ORDER.indexOf(familyCoveredTier) : -1;
+  const tierIdx = LIFESTYLE_ORDER.indexOf(tier);
+  const isFamilyCovered = familyCoveredIdx !== -1 && tierIdx >= familyCoveredIdx;
+
+  const worldMult = WORLD_LIVING_COST_MULT[state.world.worldState] ?? 1.0;
+  const foodCopper = isFamilyCovered ? 0 : Math.round(spec.copper * worldMult);
+  const ricePerDay = isFamilyCovered ? 0 : spec.rice;
+  const housingCopper = familyCoveredIdx === -1 ? (HOUSING_DAILY_UPKEEP[state.assets.housing] ?? 0) : 0;
+
+  return {
+    foodCopper,
+    ricePerDay,
+    housingCopper,
+    totalCopper: foodCopper + housingCopper,
+    isFamilyCovered,
+  };
+}
+
 function applyDailyLifestyle(inputState: ActiveLifeState): ActiveLifeState {
   const startIdx = LIFESTYLE_ORDER.indexOf(inputState.schedule.lifestyle);
   const familyCoveredTier = getFamilyCoveredLifestyleTier(inputState);
@@ -295,8 +338,9 @@ function applyDailyLifestyle(inputState: ActiveLifeState): ActiveLifeState {
     // If the family household covers this tier (i >= familyCoveredIdx since order is rich -> poor),
     // the character eats at the family table with no personal copper/rice cost.
     const isCoveredByFamily = familyCoveredIdx !== -1 && i >= familyCoveredIdx;
+    const worldMult = WORLD_LIVING_COST_MULT[inputState.world.worldState] ?? 1.0;
 
-    let neededCopper = isCoveredByFamily ? 0 : spec.copper;
+    let neededCopper = isCoveredByFamily ? 0 : Math.round(spec.copper * worldMult);
     let riceToDeduct = isCoveredByFamily ? 0 : spec.rice;
 
     if (!isCoveredByFamily && state.assets.rice < spec.rice) {
@@ -318,15 +362,24 @@ function applyDailyLifestyle(inputState: ActiveLifeState): ActiveLifeState {
       continue;
     }
 
+    const housingUpkeep =
+      familyCoveredIdx === -1 ? (HOUSING_DAILY_UPKEEP[state.assets.housing] ?? 0) : 0;
+    const paidUpkeep =
+      housingUpkeep > 0 && state.assets.wealthCopper >= neededCopper + housingUpkeep
+        ? housingUpkeep
+        : 0;
+    const totalCopperSpent = neededCopper + paidUpkeep;
+
     state = applyEffects(state, {
       rice: -riceToDeduct,
-      copper: -neededCopper,
+      copper: -totalCopperSpent,
       stamina: spec.stamina,
       health: spec.health,
       happiness: spec.happiness,
+      ...(spec.fame ? { fame: spec.fame } : {}),
     });
-    if (neededCopper > 0) {
-      state = addLedger(state, { livingExpenseCopper: neededCopper });
+    if (totalCopperSpent > 0) {
+      state = addLedger(state, { livingExpenseCopper: totalCopperSpent });
     }
 
     if (tier !== inputState.schedule.lifestyle && i === LIFESTYLE_ORDER.length - 1) {

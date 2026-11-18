@@ -1,6 +1,7 @@
 import type { ActiveLifeState, FamilyLivingTier } from '../types/activeLife';
+import { computeFamilyMonthlyNetCopper } from '../engine/childhoodEngine';
 import { formatCopper } from '../engine/economy';
-import { FAMILY_TIER_LABELS } from '../engine/lifeInitializer';
+import { FAMILY_TIER_LABELS, getHousingDisplayLabel } from '../engine/lifeInitializer';
 
 export const HOUSING_NAMES: Record<string, string> = {
   gam_cau: 'Gầm cầu / Mái hiên tạm',
@@ -26,6 +27,8 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
   const tierNum = family ? TIER_INDEX[family.familyLivingTier] ?? 1 : 1;
   const personalWealth = life.assets.wealthCopper;
   const personalRice = life.assets.rice;
+  const familyCashflow = family ? computeFamilyMonthlyNetCopper(life) : null;
+  const annualFamilyNet = familyCashflow ? familyCashflow.net * 12 : 0;
 
   return (
     <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-3.5 space-y-3">
@@ -53,9 +56,21 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
         </div>
 
         <div>
-          <div className="text-[11px] text-stone-400">Thu nhập hằng năm</div>
-          <div className="text-base font-bold font-mono text-stone-400 leading-tight mt-0.5">
-            —
+          <div className="text-[11px] text-stone-400">Thu nhập gia đình / năm</div>
+          <div
+            className={`text-base font-bold font-mono leading-tight mt-0.5 ${
+              !familyCashflow
+                ? 'text-stone-400'
+                : annualFamilyNet > 0
+                  ? 'text-emerald-300'
+                  : annualFamilyNet < 0
+                    ? 'text-rose-400'
+                    : 'text-stone-300'
+            }`}
+          >
+            {!familyCashflow
+              ? '—'
+              : `${annualFamilyNet > 0 ? '+' : annualFamilyNet < 0 ? '-' : ''}${formatCopper(Math.abs(annualFamilyNet))}`}
           </div>
           <div className="text-[11px] text-stone-500 mt-0.5 leading-snug">
             {family
@@ -98,7 +113,14 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
         <div className="flex items-center justify-between gap-2">
           <span className="text-stone-500">Nơi ở hiện tại</span>
           <span className="text-stone-200 font-medium text-right">
-            {HOUSING_NAMES[life.assets.housing] ?? life.assets.housing}
+            {getHousingDisplayLabel({
+              housing: life.assets.housing,
+              originClass: life.profile.originClass,
+              gender: life.profile.gender,
+              ageYears: Math.floor(life.profile.totalDays / 360),
+              flags: life.flags,
+              family: life.family,
+            })}
           </span>
         </div>
         {personalRice > 0 && (

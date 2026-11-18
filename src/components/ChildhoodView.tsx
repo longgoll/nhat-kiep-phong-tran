@@ -355,6 +355,8 @@ export function ChildhoodView() {
               originClass={life.profile.originClass}
               birthPlace={life.family?.birthPlace}
               npcs={life.npcs}
+              flags={life.flags}
+              family={life.family}
             />
 
             {/* Trọng Tâm Năm Nay (1in8b style, synced with AdultDashboard) */}

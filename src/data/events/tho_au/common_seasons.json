@@ -99,14 +99,43 @@
         "outcomes": [
           {
             "weight": {
+              "base": 0,
+              "modifiers": [
+                {
+                  "conditions": {
+                    "origin_in": [
+                      "hoang_toc"
+                    ]
+                  },
+                  "addWeight": 120
+                }
+              ]
+            },
+            "resultText": "Nhờ trong cung kịp mời thái y kê phương thuốc giải nhiệt lại thêm bạn ngoan ngoãn uống hết chén thuốc, cơn sốt hạ nhanh chỉ sau hai đêm.",
+            "effects": {
+              "family_copper": -60,
+              "health": -2,
+              "happiness": 2,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ]
+            }
+          },
+          {
+            "weight": {
               "base": 40,
               "modifiers": [
                 {
                   "conditions": {
                     "family_tier_in": [
                       "kha_gia",
-                      "sung_tuc",
-                      "hoang_gia"
+                      "sung_tuc"
                     ]
                   },
                   "addWeight": 60

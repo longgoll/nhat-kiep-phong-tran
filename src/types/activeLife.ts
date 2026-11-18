@@ -1,7 +1,7 @@
 export type OriginClass = 'ban_nong' | 'thu_cong' | 'dia_chu' | 'quan_lai' | 'hoang_toc';
 export type Gender = 'male' | 'female';
 export type TimeSlot = 'morning' | 'afternoon' | 'evening' | 'night';
-export type LifestyleTier = 'nhin_doi' | 'chao_loang' | 'com_rau' | 'thit_ca';
+export type LifestyleTier = 'nhin_doi' | 'chao_loang' | 'com_rau' | 'thit_ca' | 'son_hao';
 export type HousingTier = 'gam_cau' | 'nha_tranh' | 'nha_gach' | 'phu_de';
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 export type WorldState = 'binh_on' | 'mat_mua' | 'chien_tranh' | 'dich_benh';

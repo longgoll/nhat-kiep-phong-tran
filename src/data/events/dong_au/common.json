@@ -8,7 +8,13 @@
     "contextNote": "Hội làng thời phong kiến không chỉ là dịp vui chơi mà còn là nơi trai tráng, thiếu niên trổ tài vật võ, cờ tướng và kết giao bằng hữu.",
     "conditions": {
       "min_age": 6,
-      "max_age": 12
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ]
     },
     "weight": {
       "base": 45,
@@ -147,7 +153,13 @@
     "title": "Lời Hẹn Dưới Gốc Đa Đầu Làng",
     "conditions": {
       "min_age": 8,
-      "max_age": 12
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ]
     },
     "weight": {
       "base": 45,
