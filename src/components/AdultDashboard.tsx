@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import {
   getAgeYears,
+  type FamilyLivingTier,
   type GiftEtiquetteTier,
   type LifestyleTier,
 } from '../types/activeLife';
@@ -26,21 +27,31 @@ import {
   getSeasonLabel,
   getWorldStateLabel,
 } from '../engine/daySimulator';
-import { INTEREST_LABELS, ORIGIN_METADATA, TRAIT_LABELS } from '../engine/lifeInitializer';
+import {
+  FAMILY_TIER_LABELS,
+  INTEREST_LABELS,
+  ORIGIN_METADATA,
+  TRAIT_LABELS,
+} from '../engine/lifeInitializer';
 import {
   AUTO_ACTION_CANDIDATES,
   canHaveChild,
   canMarrySpouse,
   getEffectiveInstantActionCost,
   getInstantActionCooldownRemaining,
+  getLifeFocusOptions,
   GIFT_ETIQUETTE_OPTIONS,
   INSTANT_ADULT_ACTIONS,
-  isInstantActionVisible,
-  LIFE_FOCUS_OPTIONS,
+  rankInstantActions,
 } from '../engine/adultLifeActions';
 import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 import { getPropertySeasonalIncome, PROPERTY_CATALOG } from '../engine/progressionModules';
-import { getCurrentLivelihoodLabel, getEducationLabel } from '../engine/lifeStatus';
+import {
+  getCohortPeerStatusLabel,
+  getCurrentLivelihoodLabel,
+  getEducationLabel,
+  hasActiveLivelihood,
+} from '../engine/lifeStatus';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
 import { ProgressionModules } from './ProgressionModules';
 import { LegacyArchiveModal } from './LegacyArchiveModal';
@@ -54,6 +65,14 @@ import { LifeTopBar } from './LifeTopBar';
 import { StatExplainer } from './StatExplainer';
 import { CareerModal } from './CareerModal';
 import { CAREER_CATALOG, VENTURE_CATALOG } from '../engine/careerSystem';
+
+const TIER_DOTS: Record<FamilyLivingTier, number> = {
+  tung_thieu: 1,
+  du_an: 2,
+  kha_gia: 3,
+  sung_tuc: 4,
+  hoang_gia: 5,
+};
 
 const LIFESTYLE_OPTIONS: Array<{ value: LifestyleTier; label: string; desc: string }> = [
   { value: 'nhin_doi', label: 'Nhịn đói', desc: '0 gạo, 0đ (-1.8 SK, -1.2 HP/ngày)' },
@@ -137,6 +156,7 @@ export function AdultDashboard() {
   const [subMonthProgress, setSubMonthProgress] = useState<number>(0);
   const lastTickTimeRef = useRef<number>(0);
   const [showLifestyleDetails, setShowLifestyleDetails] = useState(false);
+  const [showMoreSpendActions, setShowMoreSpendActions] = useState(false);
   const [isCareerModalOpen, setIsCareerModalOpen] = useState(false);
   const [careerModalTab, setCareerModalTab] = useState<'current' | 'jobs' | 'ventures'>('jobs');
 
@@ -219,6 +239,15 @@ export function AdultDashboard() {
 
   const currentJobLabel = getCurrentLivelihoodLabel(life);
   const educationLabel = getEducationLabel(life);
+  const hasJob = hasActiveLivelihood(life);
+  const tierDots = life.family ? TIER_DOTS[life.family.familyLivingTier] ?? 1 : 1;
+  const focusOptions = getLifeFocusOptions(life);
+  const { recommended: recommendedSpendActions, others: moreSpendActions } = rankInstantActions(
+    life,
+    INSTANT_ADULT_ACTIONS,
+    4,
+  );
+  const hasNegativeCash = life.assets.wealthCopper < 0;
 
   const openActionModal = () => {
     setAutoPlaySpeed(0);
@@ -345,13 +374,41 @@ export function AdultDashboard() {
                       <span className="text-stone-200 text-right">{life.family.birthOrderLabel}</span>
                     </div>
                   )}
+                  {life.family && (
+                    <div className="flex justify-between gap-2 items-center">
+                      <span className="text-stone-500 shrink-0">Gia cảnh</span>
+                      <span className="text-amber-200 font-medium flex items-center gap-1">
+                        <span className="inline-flex gap-0.5" aria-hidden="true">
+                          {[1, 2, 3, 4, 5].map((i) => (
+                            <span
+                              key={i}
+                              className={`w-1.5 h-1.5 rounded-full ${
+                                i <= tierDots ? 'bg-amber-400' : 'bg-stone-700'
+                              }`}
+                            />
+                          ))}
+                        </span>
+                        {FAMILY_TIER_LABELS[life.family.familyLivingTier]}
+                      </span>
+                    </div>
+                  )}
                   <div className="flex justify-between gap-2">
                     <span className="text-stone-500 shrink-0">Học vấn</span>
                     <span className="text-emerald-300 font-medium text-right">{educationLabel}</span>
                   </div>
                   <div className="flex justify-between gap-2">
                     <span className="text-stone-500 shrink-0">Sinh kế</span>
-                    <span className="text-amber-200 text-right leading-snug">{currentJobLabel}</span>
+                    <span
+                      className={`text-right leading-snug font-medium ${
+                        hasJob
+                          ? 'text-amber-200'
+                          : age >= 60
+                            ? 'text-stone-400'
+                            : 'text-rose-300'
+                      }`}
+                    >
+                      {currentJobLabel}
+                    </span>
                   </div>
                   {ownedProperties.length > 0 && (
                     <div className="flex justify-between gap-2">
@@ -471,27 +528,32 @@ export function AdultDashboard() {
               </div>
 
               {/* Nợ */}
-              {(isInDebt || isBroke) && (
+              {(isInDebt || isBroke || hasNegativeCash) && (
                 <div className="pt-2.5 border-t border-stone-800/80 space-y-1 text-xs">
-                  <div className="text-[11px] text-stone-400">Nợ</div>
+                  <div className="text-[11px] text-rose-400 font-semibold">Nợ &amp; Cảnh báo tài chính</div>
+                  {hasNegativeCash && (
+                    <div className="font-mono font-bold text-rose-400">
+                      Âm tiền mặt: {formatCopper(life.assets.wealthCopper)}
+                    </div>
+                  )}
                   {isInDebt ? (
                     <div className="font-semibold text-rose-400">
                       Nợ địa chủ (Đáo hạn sau 180 ngày • lãi 60%)
                     </div>
-                  ) : (
+                  ) : !hasJob && age < 60 ? (
                     <div className="space-y-1.5">
                       <div className="text-[11px] text-rose-400">
                         Cạn tiền &amp; lương thực! Hãy tìm việc làm thuê hoặc vay nóng.
                       </div>
                       <button
                         type="button"
-                        onClick={() => setIsCareerModalOpen(true)}
+                        onClick={() => openCareerModal('jobs')}
                         className="inline-flex items-center gap-1 px-2 py-1 rounded bg-amber-600/20 hover:bg-amber-600/35 border border-amber-500/50 text-[11px] font-semibold text-amber-200 cursor-pointer"
                       >
                         <Briefcase className="w-3 h-3" /> Tìm việc ngay
                       </button>
                     </div>
-                  )}
+                  ) : null}
                 </div>
               )}
 
@@ -633,7 +695,7 @@ export function AdultDashboard() {
                 <span className="text-[10px] text-stone-400">Có thể đổi bất cứ lúc nào</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {LIFE_FOCUS_OPTIONS.map((opt) => {
+                {focusOptions.map((opt) => {
                   const active = (life.schedule.lifeFocus || 'can_bang') === opt.id || (life.schedule.lifeFocus === 'sinh_ton' && opt.id === 'can_bang');
                   return (
                     <button
@@ -660,8 +722,8 @@ export function AdultDashboard() {
                   onClick={openActionModal}
                   className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stone-950 hover:bg-stone-800 border border-stone-700 hover:border-amber-500/60 text-xs font-semibold text-amber-200 transition cursor-pointer"
                 >
-                  <span>Chi tiêu · Sinh hoạt</span>
-                  <span className="text-[10px] font-mono text-stone-400">
+                  <span>Chi tiêu · Đầu tư</span>
+                  <span className={`text-[10px] font-mono ${hasNegativeCash ? 'text-rose-400' : 'text-stone-400'}`}>
                     {formatCopper(life.assets.wealthCopper)}
                   </span>
                 </button>
@@ -703,15 +765,15 @@ export function AdultDashboard() {
                 </div>
                 <div className="space-y-1">
                   {life.cohortPeers.slice(0, 4).map((peer) => {
-                    const peerDead = peer.deathAge !== undefined && age >= peer.deathAge;
+                    const status = getCohortPeerStatusLabel(peer, age);
                     return (
                       <div
                         key={peer.id}
                         className="flex items-center justify-between gap-2 text-[11px]"
                       >
                         <span className="text-stone-300 truncate">{peer.name}</span>
-                        <span className={peerDead ? 'text-rose-400 shrink-0' : 'text-stone-500 shrink-0'}>
-                          {peerDead ? `Mất năm ${peer.deathAge}t` : peer.originLabel}
+                        <span className={status.isDead ? 'text-rose-400 shrink-0' : 'text-stone-500 shrink-0'}>
+                          {status.text}
                         </span>
                       </div>
                     );
@@ -772,7 +834,7 @@ export function AdultDashboard() {
         </div>
       </div>
 
-      {/* Chi tiêu · Sinh hoạt Modal */}
+      {/* Chi tiêu · Đầu tư Modal (1in8b 3-tier structure) */}
       {showActionModal && (
         <div
           className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-3 sm:p-4"
@@ -785,7 +847,7 @@ export function AdultDashboard() {
             {/* Modal Header */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-stone-800 bg-stone-950/60">
               <span className="text-xs font-semibold uppercase tracking-wider text-amber-300">
-                Chi tiêu · Sinh hoạt
+                Chi tiêu · Đầu tư
               </span>
               <button
                 type="button"
@@ -797,12 +859,12 @@ export function AdultDashboard() {
             </div>
 
             {/* Scrollable Body */}
-            <div className="p-5 space-y-5 overflow-y-auto">
-              {/* Financial Summary */}
+            <div className="p-5 space-y-4 overflow-y-auto">
+              {/* Tier 1: Financial Header */}
               <div className="space-y-1">
                 <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                  <h2 className="text-xl font-bold text-stone-100">
-                    Tiền mặt {formatCopper(life.assets.wealthCopper)}
+                  <h2 className={`text-xl font-bold ${hasNegativeCash ? 'text-rose-400' : 'text-stone-100'}`}>
+                    {hasNegativeCash ? `Đang nợ ${formatCopper(Math.abs(life.assets.wealthCopper))}` : `Tiền mặt ${formatCopper(life.assets.wealthCopper)}`}
                   </h2>
                   <span className="text-xs font-mono text-amber-300">
                     Gạo: {life.assets.rice.toFixed(1)} đấu
@@ -819,20 +881,20 @@ export function AdultDashboard() {
                   );
                 })()}
                 <p className="text-xs text-stone-400">
-                  Cách bạn chi tiêu và sinh hoạt sẽ thay đổi hạnh phúc, quan hệ, sức khỏe và tương lai. Thời gian tạm dừng trong lúc bạn chọn.
+                  Các lựa chọn hợp hoàn cảnh nhất được ưu tiên lên trên. Thời gian tự động tạm dừng khi bạn xem bảng này.
                 </p>
               </div>
 
-              {/* Nên làm lúc này */}
+              {/* Tier 2: Nên làm lúc này (Top ranked) */}
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-sky-300">
                     Nên làm lúc này
                   </h3>
-                  <span className="text-[10px] text-stone-400">Thực hiện ngay</span>
+                  <span className="text-[10px] text-stone-400">Gợi ý theo hoàn cảnh</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {/* Tìm chỗ làm mới (1in8b style) */}
+                  {/* Tìm chỗ làm mới */}
                   <button
                     type="button"
                     onClick={() => openCareerModal('jobs')}
@@ -840,7 +902,7 @@ export function AdultDashboard() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <span className="text-xs font-semibold text-emerald-200 leading-snug">
-                        Tìm chỗ làm mới
+                        {hasJob ? 'Đổi chỗ làm mới' : 'Tìm chỗ làm mới'}
                       </span>
                       <span className="shrink-0 text-[11px] font-mono text-emerald-300">Miễn phí</span>
                     </div>
@@ -849,7 +911,7 @@ export function AdultDashboard() {
                     </div>
                   </button>
 
-                  {/* Tìm hiểu việc khởi nghiệp (1in8b style) */}
+                  {/* Tìm hiểu việc khởi nghiệp */}
                   <button
                     type="button"
                     onClick={() => openCareerModal('ventures')}
@@ -866,7 +928,7 @@ export function AdultDashboard() {
                     </div>
                   </button>
 
-                  {/* Quản lý công việc hiện tại (chỉ hiện khi đang làm nghề hoặc tự doanh) */}
+                  {/* Quản lý công việc hiện tại */}
                   {(life.activeCareer || life.activeVenture) && (
                     <button
                       type="button"
@@ -887,7 +949,8 @@ export function AdultDashboard() {
                       <span className="text-[11px] font-semibold text-emerald-300 shrink-0">Quản lý →</span>
                     </button>
                   )}
-                  {INSTANT_ADULT_ACTIONS.filter((act) => isInstantActionVisible(life, act)).map((act) => {
+
+                  {recommendedSpendActions.map((act) => {
                     const cd = getInstantActionCooldownRemaining(life, act.id, act.cooldownDays);
                     const ageBlocked = act.minAge !== undefined && age < act.minAge;
                     const maxAgeBlocked = act.maxAge !== undefined && age > act.maxAge;
@@ -921,52 +984,125 @@ export function AdultDashboard() {
                     );
                   })}
                 </div>
-
-                {/* Gia thất & Con cái */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                  {(() => {
-                    const m = canMarrySpouse(life);
-                    const c = canHaveChild(life);
-                    return (
-                      <>
-                        <button
-                          type="button"
-                          disabled={!m.ok}
-                          onClick={marrySpouseAction}
-                          className="text-left p-2.5 rounded-lg bg-rose-950/30 hover:bg-rose-950/50 border border-rose-800/40 disabled:opacity-45 disabled:cursor-not-allowed cursor-pointer"
-                        >
-                          <div className="flex justify-between text-xs font-semibold text-rose-200">
-                            <span>Thành gia lập thất</span>
-                            <span className="font-mono text-amber-300">300đ</span>
-                          </div>
-                          <div className="text-[10px] text-stone-400 mt-0.5">
-                            {m.ok ? 'Cưới vợ / gả chồng, +14 Hạnh phúc' : m.reason}
-                          </div>
-                        </button>
-                        <button
-                          type="button"
-                          disabled={!c.ok}
-                          onClick={haveChildAction}
-                          className="text-left p-2.5 rounded-lg bg-emerald-950/30 hover:bg-emerald-950/50 border border-emerald-800/40 disabled:opacity-45 disabled:cursor-not-allowed cursor-pointer"
-                        >
-                          <div className="flex justify-between text-xs font-semibold text-emerald-200">
-                            <span>Sinh con nối dõi</span>
-                            <span className="font-mono text-amber-300">150đ</span>
-                          </div>
-                          <div className="text-[10px] text-stone-400 mt-0.5">
-                            {c.ok ? 'Thêm thành viên mới, +15 Hạnh phúc' : c.reason}
-                          </div>
-                        </button>
-                      </>
-                    );
-                  })()}
-                </div>
               </div>
 
-              {/* Sự nghiệp · Sản nghiệp (Khoa cử, Buôn bán, Quan trường, Khởi nghĩa - tự ẩn nếu chưa mở) */}
-              <ProgressionModules />
+              {/* Tier 3: Xem thêm (Collapsible by default - 1in8b pattern) */}
+              <div className="border border-stone-800 rounded-xl bg-stone-950/40">
+                <button
+                  type="button"
+                  onClick={() => setShowMoreSpendActions((v) => !v)}
+                  className="w-full flex items-center justify-between px-4 py-2.5 text-left cursor-pointer hover:bg-stone-900/60 transition rounded-xl"
+                >
+                  <span className="text-xs font-semibold text-stone-200">
+                    Xem thêm ({moreSpendActions.length + 2} mục · Gia thất · Khoa cử · Điền sản)
+                  </span>
+                  <span className="text-[11px] text-sky-400 font-medium">
+                    {showMoreSpendActions ? 'Thu gọn' : 'Mở rộng'}
+                  </span>
+                </button>
 
-              {/* Lối sống & Nếp sinh hoạt (Collapsible) */}
+                {showMoreSpendActions && (
+                  <div className="px-4 pb-4 pt-2 border-t border-stone-800 space-y-4">
+                    {moreSpendActions.length > 0 && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {moreSpendActions.map((act) => {
+                          const cd = getInstantActionCooldownRemaining(life, act.id, act.cooldownDays);
+                          const ageBlocked = act.minAge !== undefined && age < act.minAge;
+                          const maxAgeBlocked = act.maxAge !== undefined && age > act.maxAge;
+                          const worldBlocked = act.blockedWorldStates?.includes(life.world.worldState) ?? false;
+                          const houseBlocked = act.requiresNotHousing !== undefined && life.assets.housing === act.requiresNotHousing;
+                          const effectiveCost = getEffectiveInstantActionCost(life, act);
+                          const cantAfford = life.assets.wealthCopper < effectiveCost;
+                          const disabled = cd > 0 || ageBlocked || maxAgeBlocked || worldBlocked || houseBlocked || cantAfford;
+                          return (
+                            <button
+                              key={act.id}
+                              type="button"
+                              disabled={disabled}
+                              onClick={() => performInstantAction(act.id)}
+                              className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-stone-800 hover:border-sky-600/60 disabled:opacity-45 disabled:cursor-not-allowed transition cursor-pointer space-y-1"
+                            >
+                              <div className="flex items-start justify-between gap-2">
+                                <span className="text-xs font-semibold text-stone-100 leading-snug">{act.title}</span>
+                                <span className="shrink-0 text-[11px] font-mono text-amber-300">
+                                  {effectiveCost}đ
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-stone-400">{act.subtitle}</div>
+                              {worldBlocked && (
+                                <div className="text-[10px] text-rose-400 font-medium">Tạm khóa do thời cuộc loạn lạc</div>
+                              )}
+                              {cd > 0 && (
+                                <div className="text-[10px] text-sky-400 font-mono">Chờ {cd} ngày</div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Gia thất & Con cái */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {(() => {
+                        const m = canMarrySpouse(life);
+                        const c = canHaveChild(life);
+                        return (
+                          <>
+                            <button
+                              type="button"
+                              disabled={!m.ok}
+                              onClick={marrySpouseAction}
+                              className="text-left p-2.5 rounded-lg bg-rose-950/30 hover:bg-rose-950/50 border border-rose-800/40 disabled:opacity-45 disabled:cursor-not-allowed cursor-pointer"
+                            >
+                              <div className="flex justify-between text-xs font-semibold text-rose-200">
+                                <span>Thành gia lập thất</span>
+                                <span className="font-mono text-amber-300">300đ</span>
+                              </div>
+                              <div className="text-[10px] text-stone-400 mt-0.5">
+                                {m.ok ? 'Cưới vợ / gả chồng, +14 Hạnh phúc' : m.reason}
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              disabled={!c.ok}
+                              onClick={haveChildAction}
+                              className="text-left p-2.5 rounded-lg bg-emerald-950/30 hover:bg-emerald-950/50 border border-emerald-800/40 disabled:opacity-45 disabled:cursor-not-allowed cursor-pointer"
+                            >
+                              <div className="flex justify-between text-xs font-semibold text-emerald-200">
+                                <span>Sinh con nối dõi</span>
+                                <span className="font-mono text-amber-300">150đ</span>
+                              </div>
+                              <div className="text-[10px] text-stone-400 mt-0.5">
+                                {c.ok ? 'Thêm thành viên mới, +15 Hạnh phúc' : c.reason}
+                              </div>
+                            </button>
+                          </>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Sự nghiệp · Sản nghiệp */}
+                    <ProgressionModules />
+
+                    {/* Vay nóng địa chủ (khi túng quẫn) */}
+                    <div className="pt-2 border-t border-stone-800 flex items-center justify-between gap-3">
+                      <div className="text-[11px] text-stone-400">
+                        <span className="font-semibold text-rose-400">Vay nóng Địa chủ:</span> Nhận 500đ khi túng quẫn (trả lãi 60% sau 180 ngày).
+                      </div>
+                      <button
+                        type="button"
+                        disabled={isInDebt}
+                        onClick={takeEmergencyLoan}
+                        className="shrink-0 px-3 py-1.5 rounded-lg bg-rose-950/70 hover:bg-rose-900/70 disabled:opacity-40 border border-rose-700/50 text-rose-100 text-xs font-semibold cursor-pointer"
+                      >
+                        {isInDebt ? 'Đang mang nợ' : 'Vay +500đ'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Tier 4: Lối sống & Tự động (Collapsible by default) */}
               <div className="border border-stone-800 rounded-xl bg-stone-950/50">
                 <button
                   type="button"
@@ -974,7 +1110,7 @@ export function AdultDashboard() {
                   className="w-full flex items-center justify-between px-4 py-2.5 text-left cursor-pointer hover:bg-stone-900/60 transition rounded-xl"
                 >
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="font-semibold text-amber-300">Lối sống &amp; Nếp sinh hoạt</span>
+                    <span className="font-semibold text-amber-300">Lối sống &amp; Tự động hằng năm</span>
                     <span className="text-stone-400">
                       · {LIFESTYLE_OPTIONS.find((o) => o.value === life.schedule.lifestyle)?.label}
                     </span>
@@ -1064,52 +1200,37 @@ export function AdultDashboard() {
                         </label>
                       </div>
                     </div>
+
+                    {/* Tự động hằng năm */}
+                    <div className="pt-2 border-t border-stone-800 space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-semibold uppercase tracking-wider text-stone-300">Tự động hằng năm</span>
+                        <span className="text-[11px] text-stone-500">Chỉ chạy khi tiền mặt &gt; 3× chi phí</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                        {AUTO_ACTION_CANDIDATES.map((actId) => {
+                          const def = INSTANT_ADULT_ACTIONS.find((a) => a.id === actId);
+                          if (!def) return null;
+                          const checked = (life.autoActions ?? []).includes(actId);
+                          return (
+                            <label
+                              key={actId}
+                              className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-stone-950/60 border border-stone-800 text-[11px] text-stone-300 cursor-pointer hover:border-stone-700"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={checked}
+                                onChange={() => toggleAutoAction(actId)}
+                                className="accent-sky-500"
+                              />
+                              <span className="truncate">{def.title}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 )}
-              </div>
-
-              {/* Tự động hằng năm */}
-              <div className="pt-1 space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold uppercase tracking-wider text-stone-300">Tự động hằng năm</span>
-                  <span className="text-[11px] text-stone-500">Chỉ chạy khi tiền mặt &gt; 3× chi phí</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                  {AUTO_ACTION_CANDIDATES.map((actId) => {
-                    const def = INSTANT_ADULT_ACTIONS.find((a) => a.id === actId);
-                    if (!def) return null;
-                    const checked = (life.autoActions ?? []).includes(actId);
-                    return (
-                      <label
-                        key={actId}
-                        className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-stone-950/60 border border-stone-800 text-[11px] text-stone-300 cursor-pointer hover:border-stone-700"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleAutoAction(actId)}
-                          className="accent-sky-500"
-                        />
-                        <span className="truncate">{def.title}</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Vay nóng địa chủ (khi túng quẫn) */}
-              <div className="pt-2 border-t border-stone-800 flex items-center justify-between gap-3">
-                <div className="text-[11px] text-stone-400">
-                  <span className="font-semibold text-rose-400">Vay nóng Địa chủ:</span> Nhận 500đ khi túng quẫn (trả lãi 60% sau 180 ngày).
-                </div>
-                <button
-                  type="button"
-                  disabled={isInDebt}
-                  onClick={takeEmergencyLoan}
-                  className="shrink-0 px-3 py-1.5 rounded-lg bg-rose-950/70 hover:bg-rose-900/70 disabled:opacity-40 border border-rose-700/50 text-rose-100 text-xs font-semibold cursor-pointer"
-                >
-                  {isInDebt ? 'Đang mang nợ' : 'Vay +500đ'}
-                </button>
               </div>
             </div>
 

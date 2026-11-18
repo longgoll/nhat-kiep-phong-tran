@@ -57,7 +57,7 @@ export function LifeTopBar({
       ? Math.min(100, Math.max(1, ((dayOfYear + subMonthProgress * 30) / 360) * 100))
       : Math.min(100, Math.max(4, Math.round(((dayOfYear + 1) / 360) * 100)));
   const childhoodYearSeconds =
-    isChildhood && autoPlaySpeed > 0 ? Math.round((52 / autoPlaySpeed) * 10) / 10 : null;
+    isChildhood && autoPlaySpeed > 0 ? Math.round((10.8 / autoPlaySpeed) * 10) / 10 : null;
 
   const lastSpeedRef = useRef<number>(speedOptions[0] ?? 1);
   useEffect(() => {

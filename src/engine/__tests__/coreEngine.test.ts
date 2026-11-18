@@ -3,7 +3,9 @@ import { mulberry32Next } from '../prng';
 import { createNewLife } from '../lifeInitializer';
 import { evaluateConditions } from '../conditionEvaluator';
 import { applyEffects } from '../effectApplier';
-import { breakdownCopper, calculateRicePrice } from '../economy';
+import { breakdownCopper, calculateRicePrice, formatCopper } from '../economy';
+import { getCohortPeerStatusLabel, getCurrentLivelihoodLabel } from '../lifeStatus';
+import { getLifeFocusOptions, INSTANT_ADULT_ACTIONS, rankInstantActions } from '../adultLifeActions';
 import {
   advanceChildhoodMonth,
   advanceChildhoodYear,
@@ -293,5 +295,44 @@ describe('Core Engine (MVP 1)', () => {
     expect(afterFall.family?.familyAssetsSummary).toContain('Bổng lộc bị cắt giảm');
     const butler = afterFall.npcs.find((n) => n.id === 'npc_butler');
     expect(butler?.role).toContain('lãnh cung');
+  });
+
+  it('supports 1in8b-aligned negative currency, contextual livelihood/focus, and spend ranking', () => {
+    expect(formatCopper(-1250)).toBe('-1 Bạc 250 Đồng');
+    expect(formatCopper(0)).toBe('0 Đồng');
+
+    const base = createNewLife(42);
+    const adultUnemployed = {
+      ...base,
+      profile: { ...base.profile, totalDays: 20 * 360 },
+      activeCareer: null,
+      activeVenture: null,
+      officialRank: 0,
+    };
+    expect(getCurrentLivelihoodLabel(adultUnemployed)).toBe('Đang tìm việc');
+    const unemployedFocusIds = getLifeFocusOptions(adultUnemployed).map((f) => f.id);
+    expect(unemployedFocusIds).not.toContain('cong_danh');
+
+    const elderRetired = {
+      ...adultUnemployed,
+      profile: { ...base.profile, totalDays: 65 * 360 },
+    };
+    expect(getCurrentLivelihoodLabel(elderRetired)).toBe('Nghỉ hưu');
+
+    const sickAdult = {
+      ...adultUnemployed,
+      stats: { ...adultUnemployed.stats, health: 30 },
+      assets: { ...adultUnemployed.assets, wealthCopper: 5000 },
+    };
+    const ranked = rankInstantActions(sickAdult, INSTANT_ADULT_ACTIONS, 4);
+    expect(ranked.recommended.length).toBeLessThanOrEqual(4);
+    expect(ranked.recommended.some((a) => a.category === 'medical')).toBe(true);
+
+    const peer = base.cohortPeers?.[0];
+    if (peer) {
+      const s10 = getCohortPeerStatusLabel(peer, 10);
+      expect(s10.isDead).toBe(false);
+      expect(s10.text).toContain('Đang học chữ');
+    }
   });
 });

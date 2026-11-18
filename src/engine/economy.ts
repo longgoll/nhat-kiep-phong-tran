@@ -27,7 +27,7 @@ export interface CurrencyBreakdown {
 }
 
 export function breakdownCopper(totalCopper: number): CurrencyBreakdown {
-  const safe = Math.max(0, Math.floor(totalCopper));
+  const safe = Math.floor(Math.abs(totalCopper));
   const gold = Math.floor(safe / 10000);
   const remAfterGold = safe % 10000;
   const silver = Math.floor(remAfterGold / 1000);
@@ -36,10 +36,11 @@ export function breakdownCopper(totalCopper: number): CurrencyBreakdown {
 }
 
 export function formatCopper(totalCopper: number): string {
+  const sign = totalCopper < 0 ? '-' : '';
   const { gold, silver, copper } = breakdownCopper(totalCopper);
   const parts: string[] = [];
   if (gold > 0) parts.push(`${gold} Vàng`);
   if (silver > 0) parts.push(`${silver} Bạc`);
   if (copper > 0 || parts.length === 0) parts.push(`${copper} Đồng`);
-  return parts.join(' ');
+  return `${sign}${parts.join(' ')}`;
 }

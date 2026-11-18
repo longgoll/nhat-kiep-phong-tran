@@ -1260,3 +1260,106 @@ export function haveChild(inputState: ActiveLifeState): ActiveLifeState {
     logs: appendLog(state.logs, state.profile.totalDays, 'event', `Gia đình vui mừng đón chào bé ${childName} chào đời (-150đ).`),
   };
 }
+
+/**
+ * 1in8b-style contextual LifeFocus options:
+ * - Employed / Official / Venture: full 6 options including 'cong_danh'.
+ * - Seeking work (< 60y): replaces 'cong_danh' with 'tu_than' ("Ôn luyện · Tìm cơ hội").
+ * - Retired / Elderly (>= 60y, no livelihood): focuses on health, family, hobbies & reflection.
+ */
+export function getLifeFocusOptions(state: ActiveLifeState): LifeFocusOption[] {
+  const age = getAgeYears(state.profile.totalDays);
+  const hasJob =
+    state.officialRank > 0 ||
+    Boolean(state.activeCareer) ||
+    Boolean(state.activeVenture) ||
+    state.flags.includes('trong_quan_ngu');
+
+  if (hasJob) {
+    return LIFE_FOCUS_OPTIONS;
+  }
+
+  if (age >= 60) {
+    return LIFE_FOCUS_OPTIONS.filter((opt) => opt.id !== 'cong_danh').map((opt) => {
+      if (opt.id === 'suc_khoe') {
+        return { ...opt, label: 'An dưỡng tuổi già' };
+      }
+      if (opt.id === 'gia_dinh') {
+        return { ...opt, label: 'Vui vầy con cháu' };
+      }
+      if (opt.id === 'tu_than') {
+        return { ...opt, label: 'Đọc sách · Viết hồi ký' };
+      }
+      return opt;
+    });
+  }
+
+  return LIFE_FOCUS_OPTIONS.filter((opt) => opt.id !== 'cong_danh').map((opt) => {
+    if (opt.id === 'tu_than') {
+      return {
+        ...opt,
+        label: 'Ôn luyện · Tìm cơ hội',
+        effectHint: 'Học thức & Võ nghệ↑ (+25%) · Chuẩn bị tiến thân',
+      };
+    }
+    return opt;
+  });
+}
+
+/**
+ * 1in8b-style `shopRank`: scores visible instant actions by current life context
+ * and splits them into top recommended ("Nên làm lúc này") and collapsible ("Xem thêm").
+ */
+export function rankInstantActions(
+  state: ActiveLifeState,
+  actions: InstantAdultActionDef[] = INSTANT_ADULT_ACTIONS,
+  maxRecommended = 4,
+): { recommended: InstantAdultActionDef[]; others: InstantAdultActionDef[] } {
+  const age = getAgeYears(state.profile.totalDays);
+  const visible = actions.filter((act) => isInstantActionVisible(state, act));
+
+  const scored = visible.map((act) => {
+    let score = 0;
+    const cost = getEffectiveInstantActionCost(state, act);
+    const cd = getInstantActionCooldownRemaining(state, act.id, act.cooldownDays);
+    const canAfford = state.assets.wealthCopper >= cost;
+    const isInDebt = state.assets.wealthCopper < 0 || state.flags.includes('dang_no_dia_chu');
+
+    if (cd > 0) score -= 20;
+    if (!canAfford) score -= 10;
+
+    if (act.category === 'medical') {
+      if (state.stats.health < 55) score += 12;
+      else if (age >= 50) score += 6;
+      else score += 1;
+    }
+
+    if (act.category === 'social') {
+      if (state.stats.happiness < 45 || state.stats.relationships < 40) score += 7;
+      else score += 2;
+      if (isInDebt && cost > 0) score -= 4;
+    }
+
+    if (act.category === 'growth') {
+      if (age < 35) score += 5;
+      else score += 2;
+      if (isInDebt && cost > 0) score -= 3;
+    }
+
+    if (act.category === 'economic') {
+      if (isInDebt && act.id.includes('sell')) score += 10;
+      else if (state.assets.wealthCopper > 2000) score += 4;
+    }
+
+    if (act.minAge !== undefined && age < act.minAge) score -= 30;
+    if (act.maxAge !== undefined && age > act.maxAge) score -= 30;
+
+    return { act, score };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+
+  const recommended = scored.slice(0, maxRecommended).map((s) => s.act);
+  const others = scored.slice(maxRecommended).map((s) => s.act);
+  return { recommended, others };
+}

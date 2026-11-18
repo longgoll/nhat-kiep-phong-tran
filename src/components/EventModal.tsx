@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { getAgeYears, type ActiveLifeState } from '../types/activeLife';
 import type { ConditionSpec, EventChoice } from '../types/dsl';
 import { evaluateConditions } from '../engine/conditionEvaluator';
@@ -91,6 +93,8 @@ export function EventModal() {
   const life = useActiveLifeStore((s) => s.life);
   const pendingEvent = useActiveLifeStore((s) => s.pendingEvent);
   const chooseEventOption = useActiveLifeStore((s) => s.chooseEventOption);
+  const toggleAutoDecide = useActiveLifeStore((s) => s.toggleAutoDecide);
+  const [isDeferred, setIsDeferred] = useState(false);
 
   if (!life || !pendingEvent) return null;
 
@@ -101,15 +105,47 @@ export function EventModal() {
       ? 'Quyết định lớn'
       : 'Sự kiện thường nhật';
 
+  if (isDeferred) {
+    return (
+      <div className="fixed bottom-16 lg:bottom-5 right-4 z-50 max-w-sm w-[calc(100%-2rem)] bg-stone-900/95 border border-amber-500/70 rounded-xl shadow-2xl p-3.5 flex items-center justify-between gap-3 backdrop-blur-sm">
+        <div className="min-w-0">
+          <div className="text-[10px] font-mono text-rose-400 font-semibold uppercase tracking-wider">
+            {eventTag} · Đang tạm gác
+          </div>
+          <div className="text-xs font-serif font-bold text-amber-100 truncate">
+            {pendingEvent.title}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsDeferred(false)}
+          className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs cursor-pointer"
+        >
+          Mở lại <ChevronUp className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="max-w-lg w-full bg-stone-900 border border-stone-700 rounded-xl shadow-2xl overflow-hidden">
         {/* 1in8b-style top meta header */}
-        <div className="px-5 pt-4 pb-2 flex items-center justify-between text-[11px] font-mono">
+        <div className="px-5 pt-4 pb-2 flex items-center justify-between gap-2 text-[11px] font-mono">
           <span className="text-rose-400 font-semibold">{eventTag}</span>
-          <span className="text-stone-400">
-            {ageYears} tuổi · {life.world.dynastyName} năm thứ {life.world.yearInEra}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-stone-400">
+              {ageYears} tuổi · {life.world.dynastyName} năm thứ {life.world.yearInEra}
+            </span>
+            <button
+              type="button"
+              onClick={() => setIsDeferred(true)}
+              title="Thu gọn tạm thời để xem lại Hồ sơ, Tài sản hoặc Nhật ký"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-stone-800 hover:bg-stone-700 border border-stone-700 text-stone-200 text-[11px] font-sans cursor-pointer"
+            >
+              Tạm gác lại <ChevronDown className="w-3 h-3" />
+            </button>
+          </div>
         </div>
 
         <div className="px-5 pb-5 space-y-4">
@@ -162,6 +198,20 @@ export function EventModal() {
                 </button>
               );
             })}
+          </div>
+          {/* Footer quick auto-decide toggle (1in8b-style) */}
+          <div className="pt-2 border-t border-stone-800/80 flex items-center justify-between text-[11px] text-stone-400">
+            <span>Thời gian đang tạm dừng để bạn cân nhắc.</span>
+            <button
+              type="button"
+              onClick={() => {
+                setIsDeferred(false);
+                toggleAutoDecide();
+              }}
+              className="inline-flex items-center gap-1 text-sky-400 hover:text-sky-300 font-medium cursor-pointer"
+            >
+              <Sparkles className="w-3 h-3" /> Từ giờ để tự động quyết định
+            </button>
           </div>
         </div>
       </div>

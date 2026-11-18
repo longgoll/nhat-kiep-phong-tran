@@ -1,4 +1,4 @@
-import { getAgeYears, type ActiveLifeState } from '../types/activeLife';
+import { getAgeYears, type ActiveLifeState, type CohortPeer } from '../types/activeLife';
 import { CAREER_CATALOG, VENTURE_CATALOG } from './careerSystem';
 import { OFFICIAL_RANKS } from './progressionModules';
 
@@ -34,6 +34,16 @@ export function getSpecialFateRole(state: ActiveLifeState): string | null {
 }
 
 /**
+ * Returns true if the character currently has an active job, venture, official post, or forced service.
+ */
+export function hasActiveLivelihood(state: ActiveLifeState): boolean {
+  if (state.officialRank > 0) return true;
+  if (getSpecialFateRole(state) !== null) return true;
+  if (state.activeCareer || state.activeVenture) return true;
+  return false;
+}
+
+/**
  * Resolves the character's true current livelihood/occupation for UI display
  * (independent of daily time-slot actions).
  */
@@ -55,5 +65,25 @@ export function getCurrentLivelihoodLabel(state: ActiveLifeState): string {
     if (venture) return `Chủ ${venture.title}`;
   }
 
-  return 'Chưa có nghề nghiệp';
+  const age = getAgeYears(state.profile.totalDays);
+  if (age < 13) return 'Chưa đi làm';
+  if (age >= 60) return 'Nghỉ hưu';
+  return 'Đang tìm việc';
+}
+
+/**
+ * Dynamic 1in8b-style cohort peer status label that evolves with age.
+ */
+export function getCohortPeerStatusLabel(peer: CohortPeer, currentAge: number): {
+  text: string;
+  isDead: boolean;
+} {
+  if (peer.deathAge !== undefined && currentAge >= peer.deathAge) {
+    return { text: `Mất năm ${peer.deathAge}t`, isDead: true };
+  }
+  if (currentAge < 6) return { text: `Ấu thơ · ${peer.originLabel}`, isDead: false };
+  if (currentAge < 13) return { text: `Đang học chữ · ${peer.originLabel}`, isDead: false };
+  if (currentAge < 18) return { text: `Thiếu niên · ${peer.originLabel}`, isDead: false };
+  if (currentAge < 60) return { text: `Đang lập nghiệp · ${peer.originLabel}`, isDead: false };
+  return { text: `Tuổi xế chiều · ${peer.originLabel}`, isDead: false };
 }

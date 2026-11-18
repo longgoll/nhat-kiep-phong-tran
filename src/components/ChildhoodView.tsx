@@ -23,7 +23,7 @@ import {
   TRAIT_LABELS,
 } from '../engine/lifeInitializer';
 import { getChildhoodFocusOptions } from '../engine/childhoodEngine';
-import { getEducationLabel, getSpecialFateRole } from '../engine/lifeStatus';
+import { getCohortPeerStatusLabel, getEducationLabel, getSpecialFateRole } from '../engine/lifeStatus';
 import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
 import { FeudalPortrait } from './FeudalPortrait';
@@ -103,8 +103,8 @@ export function ChildhoodView() {
       return;
     }
 
-    // 1x = 52s/year (12 months) => ~4333ms/month, scaling down proportionally
-    const monthMs = 52000 / 12 / autoPlaySpeed;
+    // Unified 1in8b speed: 1x = 900ms/month (~10.8s/year), scaling down proportionally
+    const monthMs = 900 / autoPlaySpeed;
     lastTickTimeRef.current = performance.now();
     let rafId = 0;
 
@@ -464,12 +464,7 @@ export function ChildhoodView() {
                 </div>
                 <div className="space-y-1.5">
                   {life.cohortPeers.map((peer) => {
-                    const peerDead = peer.deathAge !== undefined && age >= peer.deathAge;
-                    const stageLabel = peerDead
-                      ? `Mất năm ${peer.deathAge} tuổi`
-                      : age <= 5
-                        ? 'thời thơ ấu'
-                        : 'thời đồng ấu';
+                    const status = getCohortPeerStatusLabel(peer, age);
                     return (
                       <div
                         key={peer.id}
@@ -478,15 +473,15 @@ export function ChildhoodView() {
                         <div className="min-w-0">
                           <div className="font-medium text-stone-200 truncate">{peer.name}</div>
                           <div className="text-[10px] text-stone-500 truncate">
-                            {peer.birthPlace} • {peer.originLabel}
+                            {peer.birthPlace}
                           </div>
                         </div>
                         <span
                           className={`shrink-0 text-[10px] ${
-                            peerDead ? 'text-rose-400' : 'text-stone-400'
+                            status.isDead ? 'text-rose-400' : 'text-stone-400'
                           }`}
                         >
-                          {stageLabel}
+                          {status.text}
                         </span>
                       </div>
                     );

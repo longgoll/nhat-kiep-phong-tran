@@ -1,6 +1,6 @@
-# Nhất Kiếp Phong Trần — Bộ Tài Liệu Thiết Kế & Quy Chuẩn Kỹ Thuật (v3.2)
+# Nhất Kiếp Phong Trần — Tài Liệu Thiết Kế & Quy Chuẩn Kỹ Thuật (v4.0)
 
-> Tài liệu này được tách và chuẩn hóa từ bản gốc [main.md](file:///f:/Dev/product/game/pọ_01/desige/main.md) nhằm phục vụ triển khai trực tiếp (Production-Ready), bổ sung đầy đủ công thức cân bằng, quy tắc xử lý biên và chuẩn hóa Schema.
+> Bộ tài liệu chuẩn hóa toàn diện cho **Nhất Kiếp Phong Trần**, được thiết kế lại dựa trên các nguyên tắc kiến trúc, cân bằng số học và trải nghiệm UX của [`1in8b.life/vi`](./1in8b-reference/README.md), kết hợp với bối cảnh phong kiến Đông Á.
 
 ---
 
@@ -8,39 +8,49 @@
 
 | STT | Tài liệu | Nội dung chính |
 | :--- | :--- | :--- |
-| 00 | [README.md](file:///f:/Dev/product/game/pọ_01/docs/README.md) | Triết lý cốt lõi, quy ước đặt tên, quy tắc chung của toàn dự án |
-| 01 | [01-khoi-dau-va-xuat-than.md](file:///f:/Dev/product/game/pọ_01/docs/01-khoi-dau-va-xuat-than.md) | PRNG `mulberry32`, Gacha Xuất thân 5 tầng lớp, Giới tính & NPC khởi đầu |
-| 02 | [02-chi-so-va-kinh-te.md](file:///f:/Dev/product/game/pọ_01/docs/02-chi-so-va-kinh-te.md) | Hệ thống chỉ số, Lão hóa, Kinh tế (`wealthCopper`, `rice`), Mức sống & Van xả áp |
-| 03 | [03-vong-doi-va-thoi-gian.md](file:///f:/Dev/product/game/pọ_01/docs/03-vong-doi-va-thoi-gian.md) | Quy chuẩn `totalDays`, Giai đoạn 0–5, 6–12, 13+, Thời khóa biểu, Fallback & Auto-Pause |
-| 04 | [04-lo-trinh-phat-trien.md](file:///f:/Dev/product/game/pọ_01/docs/04-lo-trinh-phat-trien.md) | 3 lộ trình Sandbox: Khoa cử & Quan trường, Thương nghiệp, Khởi nghĩa |
-| 05 | [05-su-kien-va-dsl.md](file:///f:/Dev/product/game/pọ_01/docs/05-su-kien-va-dsl.md) | Event Engine 2 tầng, Condition DSL, Effect DSL & Schema chuẩn `actions`/`events` |
-| 06 | [06-ui-va-tang-kinh-cac.md](file:///f:/Dev/product/game/pọ_01/docs/06-ui-va-tang-kinh-cac.md) | Dashboard 3 cột, Bia Mộ Tổng Kết, Tàng Kinh Các (`legacy_archive`) |
-| 07 | [07-kien-truc-ky-thuat-va-roadmap.md](file:///f:/Dev/product/game/pọ_01/docs/07-kien-truc-ky-thuat-va-roadmap.md) | Tech Stack, TypeScript Interfaces chuẩn, Web Worker Protocol & Roadmap 4 MVP |
-| 08 | [1in8b-reference/README.md](file:///d:/HoangLong/Dev/nhat-kiep-phong-tran/docs/1in8b-reference/README.md) | Bộ tài liệu tham khảo chi tiết từ `1in8b.life/vi` (Học vấn, Nghề, Chi tiêu·Đầu tư, Sự kiện & Tử vong) |
+| 00 | [README.md](./README.md) | Triết lý cốt lõi, quy ước kỹ thuật, bảng ánh xạ từ `1in8b.life/vi` |
+| 01 | [01-khoi-dau-va-ho-so.md](./01-khoi-dau-va-ho-so.md) | Khởi đầu (`#intro`, `#guard`), Gacha 5 tầng lớp, Giấy khai sinh, 4 Đồng niên, Tính khí & Hồ sơ Sổ bộ |
+| 02 | [02-chi-so-hoc-van-va-trong-tam.md](./02-chi-so-hoc-van-va-trong-tam.md) | 4 chỉ số cốt lõi (`0–100`), Học vấn 6 bậc, Trọng tâm năm động (`lifeFocus`), Lão hóa & Hồi quy |
+| 03 | [03-nghe-nghiep-khoa-cu-va-kinh-doanh.md](./03-nghe-nghiep-khoa-cu-va-kinh-doanh.md) | Hệ thống Nghề nghiệp thống nhất, Khoa cử · Quan trường, Khởi nghiệp · Điền sản |
+| 04 | [04-kinh-te-va-chi-tieu-dau-tu.md](./04-kinh-te-va-chi-tieu-dau-tu.md) | Tiền tệ (`wealthCopper` hỗ trợ âm = Nợ), Gạo & Vàng, Hộp thoại **"Chi tiêu · Đầu tư"** 3 tầng (`shopRank`) |
+| 05 | [05-su-kien-nghich-canh-va-tu-vong.md](./05-su-kien-nghich-canh-va-tu-vong.md) | Nhịp độ sự kiện, Nghịch cảnh (Nợ, Thất nghiệp, Sa sút, Bệnh tật), Gia đình, Tử vong & Tàng Kinh Các |
+| 06 | [06-dac-ta-ui-ux.md](./06-dac-ta-ui-ux.md) | Luồng màn hình, TopBar thống nhất, Dashboard 3 cột, Decision Modal (`Tạm gác lại`) & Bản đồ cuộc đời |
+| Ref | [1in8b-reference/README.md](./1in8b-reference/README.md) | Tài liệu nghiên cứu gốc từ `1in8b.life/vi` |
 
 ---
 
-## 2. Triết Lý & 4 Nguyên Tắc Bất Biến (Core Pillars)
+## 2. Triết Lý & 4 Nguyên Tắc Bất Biến
 
-1. **Một kiếp trọn vẹn:** Bắt đầu từ 0 tuổi và kết thúc hoàn toàn khi nhân vật tử vong (`health <= 0` hoặc bị xử trảm). Không truyền đời cho con cháu.
-2. **Công bằng tuyệt đối (Zero Meta-Buff):** Xóa trắng `active_life` khi Game Over. `legacy_archive` chỉ lưu thành tích, Codex và giao diện trang trí (Pure Cosmetic), tuyệt đối không cộng chỉ số cho kiếp sau.
-3. **Xuất thân định điểm khởi đầu, không khóa tương lai:** Xuất thân chỉ quyết định tài nguyên ban đầu và áp lực rủi ro; mọi con đường đều mở nếu đạt đủ điều kiện.
-4. **Chân thực phong kiến Á Đông:** Tái hiện nhịp sống xưa từ Lễ thôi nôi, đi ở đợ, học lỏm thầy đồ đến lều chõng đi thi, quyên quan hoặc phất cờ khởi nghĩa.
+1. **Một kiếp trọn vẹn:** Bắt đầu từ 0 tuổi và kết thúc hoàn toàn khi nhân vật qua đời (`health <= 0`, tuổi già hoặc bị xử tử). Không truyền đời cho con cháu.
+2. **Công bằng tuyệt đối (Zero Meta-Buff):** Xóa trắng `active_life` khi Game Over. `legacy_archive` (Tàng Kinh Các) chỉ lưu thành tích, văn bia và giao diện trang trí (Pure Cosmetic), tuyệt đối không cộng chỉ số cho kiếp sau.
+3. **Xuất thân định điểm khởi đầu, không khóa tương lai:** Xuất thân quyết định tài nguyên ban đầu, gia cảnh và áp lực rủi ro; mọi con đường (Khoa cử, Thương nghiệp, Võ bị, Khởi nghĩa) đều mở nếu đủ nỗ lực và cơ duyên.
+4. **Rõ ràng, nhất quán, không mơ hồ (Nguyên tắc `1in8b`):**
+   - Người chơi **không bao giờ phải đoán** trạng thái hiện tại (nghề nghiệp, học vấn, nợ nần, gia cảnh đều hiển thị trực diện trên Hồ sơ).
+   - Danh sách thao tác và Trọng tâm **tự động biến đổi theo giai đoạn & hoàn cảnh**, tách biệt "Việc nên làm lúc này" khỏi "Kho tùy chọn mở rộng".
+   - Thời gian tự động tạm dừng khi mở Quyết định hoặc Chi tiêu · Đầu tư; cho phép **Tạm gác lại** để soi lại Hồ sơ trước khi chọn.
 
 ---
 
-## 3. Quy Tắc & Quy Ước Chung (Global Rules)
+## 3. Bảng Ánh Xạ Thiết Kế (`1in8b.life/vi` → `Nhất Kiếp Phong Trần`)
 
-### Quy tắc đặt tên (Naming Conventions)
-- **TypeScript / State trong RAM:** Sử dụng `camelCase` cho thuộc tính (`wealthCopper`, `totalDays`, `originClass`), `PascalCase` cho Type/Interface/Component (`ActiveLifeState`, `ActionPlanner`).
-- **Dữ liệu JSON & ID:** Sử dụng `snake_case` cho tất cả `id`, `flag`, `category`, `condition key` và `effect key`:
-  - Hành động: `act_<nhom>_<ten>` (VD: `act_survival_mot_lua`, `act_study_doc_sach`).
-  - Sự kiện: `evt_<giai_doan>_<ten>_<so>` (VD: `evt_child_eavesdrop_01`).
-  - Cờ trạng thái (`flags`): `snake_case` không dấu (VD: `duoc_thay_do_quy`, `nu_cai_nam_trang`, `da_ket_hon`).
-  - Kết cục / Danh hiệu: `end_<nhom>_<ten>` (VD: `end_ban_nong_chet_cong`).
+| Phân hệ `1in8b` | Áp dụng vào `Nhất Kiếp Phong Trần` |
+| :--- | :--- |
+| `#intro` + `#guard` (Cảnh báo mất save) | `StartScreen`: Nếu đang có kiếp chơi dở, xác nhận trước khi mở kiếp mới hoặc cho phép tiếp tục ngay. |
+| Giấy khai sinh + 4 Người đồng niên | `BirthCertificateView`: Mã số `NK-<seed>`, xuất thân 5 tầng lớp, hoàn cảnh gia đình (`1/5–5/5`), 4 đồng niên lớn lên song song. |
+| Thẻ Hộ chiếu (`Hoàn cảnh`, `Học vấn`, `Nghề nghiệp`) | Thẻ **Hồ Sơ Cá Nhân** (dạng Sổ bộ phong kiến): hiển thị rõ bậc học vấn, nghề nghiệp / `Đang tìm việc` / `Nghỉ hưu`, hoàn cảnh gia đình `1/5–5/5`, tính khí & năng khiếu. |
+| 4 thanh chỉ số `0–100` (`SK`, `HP`, `KT`, `QH`) | 4 thanh chính `0–100`: `Sức khỏe`, `Hạnh phúc`, `Học thức`, `Quan hệ`. Các chỉ số phụ (`Võ nghệ`, `Thương tài`, `Thanh danh`, `Tai tiếng`) hiển thị gọn ở hàng phụ. |
+| Trọng tâm năm (`S.focus`) đổi theo ngữ cảnh | `LifeFocus` pills đổi linh hoạt theo 4 ngữ cảnh: `Tuổi thơ (0–12)`, `Đang đi làm / Quan trường`, `Đang tìm việc (Thất nghiệp)`, `Tuổi già (60+)`. |
+| `Chi tiêu · đầu tư` 3 tầng (`shopRank`) | Modal **Chi tiêu · Đầu tư**: `Nên làm lúc này` (top 4–6 việc chấm điểm theo hoàn cảnh) → `Xem thêm (N)` (thu gọn) → `Lối sống & Tự động` (thu gọn). |
+| Tiền âm = `Nợ` (màu đỏ) | `wealthCopper` cho phép âm (`< 0`), hiển thị chữ **Nợ** màu đỏ và đẩy các lựa chọn giải cứu (Tìm việc, Bán điền sản, Vay địa chủ) lên đầu. |
+| Decision Modal có `Tạm gác lại` & `Tự động` | `EventModal`: Nút **`Tạm gác lại ▾`** thu gọn modal thành thanh bar nhỏ để người chơi xem lại Hồ sơ/Tài sản/Nhật ký trước khi chọn, kèm nút **`Tự động quyết định`**. |
+| `LifeTopBar` + `Tới quyết định tiếp theo` | Đồng bộ 1 chuẩn tốc độ (`1×, 2×, 4×, 8×`) và nút `Tới quyết định tiếp theo` xuyên suốt từ 0 tuổi đến cuối đời. |
 
-### Quy tắc Single Source of Truth (SSOT)
-1. **Thời gian:** Chỉ lưu `totalDays: number` (tổng số ngày đã sống từ 0 tuổi). Không lưu tách `ageYears`/`ageDays` làm biến độc lập để tránh lệch pha.
-2. **Tiền tệ:** Chỉ lưu `wealthCopper: number` (tổng tài sản quy ra Tiền đồng). Mọi phép cộng/trừ/so sánh đều dùng `wealthCopper`; việc tách `Vàng / Bạc / Đồng` chỉ thực hiện ở tầng hiển thị UI.
-3. **Ngẫu nhiên (PRNG):** Mọi phép tung xúc xắc trong simulation bắt buộc đi qua hàm `nextRandom()` sử dụng `mulberry32` gắn với `prngState` trong `ActiveLifeState`. Tuyệt đối **không** dùng `Math.random()` trong logic game.
-4. **An toàn biểu thức:** Tuyệt đối **không** dùng `eval()` hay `new Function()` khi đọc dữ liệu JSON. Mọi điều kiện phải đi qua `ConditionEvaluator` thuần túy.
+---
+
+## 4. Quy Ước Kỹ Thuật & SSOT
+
+- **Single Source of Truth (SSOT):**
+  - Thời gian: Chỉ lưu `profile.totalDays` (`1 năm = 360 ngày`, `1 mùa = 90 ngày`, `1 tháng = 30 ngày`).
+  - Tiền tệ: Chỉ lưu `assets.wealthCopper` (số nguyên, âm = nợ). Quy đổi UI: `1 Vàng = 10 Bạc = 10.000 Đồng`.
+  - Ngẫu nhiên: Mọi tung xúc xắc đều dùng `mulberry32` với `prngState` trong `ActiveLifeState`. Tuyệt đối không dùng `Math.random()`.
+  - Điều kiện JSON: Đi qua `ConditionEvaluator` thuần túy, không dùng `eval()`.
