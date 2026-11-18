@@ -57,7 +57,7 @@ function createAdultStarter(seed: number, originClass: OriginClass, persona: Bot
   const focus =
     persona === 'scholar' ? 'cong_danh' : persona === 'worker' ? 'lam_them' : 'can_bang';
   const morningAct =
-    persona === 'scholar' ? 'act_doc_sach_khoa_cu' : 'act_lam_thue_nong_vu';
+    persona === 'scholar' ? 'act_tu_hoc_chu' : 'act_lam_thue_nong_vu';
 
   life = {
     ...life,
@@ -76,7 +76,7 @@ function createAdultStarter(seed: number, originClass: OriginClass, persona: Bot
       ...life.schedule,
       lifeFocus: focus,
       morning: morningAct,
-      afternoon: persona === 'scholar' ? 'act_doc_sach_khoa_cu' : 'act_nghi_ngoi',
+      afternoon: persona === 'scholar' ? 'act_tu_hoc_chu' : 'act_nghi_ngoi',
       evening: 'act_nghi_ngoi',
       night: 'act_ngu',
     },

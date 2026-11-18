@@ -24,3 +24,9 @@ trigger: always_on
    - Nếu có thêm/sửa event JSON: chạy `npm run gen:index` để cập nhật `docs/event-index.md`.
    - Luôn chạy `npm run build` (`tsc -b && vite build`) và `npm test` (`vitest run`).
    - Nếu thêm nhánh truyện mới hoặc sửa cân bằng: chạy `npm run audit:1000` (mặc định 200 kiếp, ~2 phút) và đọc `docs/audit-report-1000.md` để đảm bảo nhánh mới không bị `0%` Dead Event và không phá cân bằng tuổi thọ/tài sản.
+
+5. **Nguyên tắc Kinh tế, Quyền Tự Quyết & Thừa kế (`src/engine/familyEconomy.ts`):**
+   - **Không tự động định hướng thay người chơi:** Lịch mặc định khi sang tuổi 13 (`teenStarterSchedule`) phải để `act_nghi_ngoi`, không tự động gán việc làm kiếm tiền, học tập hay `fallbackRules`.
+   - **Không phát tiền/bổng lộc vô căn cứ:** Vốn tuổi 13 có trần theo xuất thân và phải trừ vào `familyWealthCopper`; tiền ăn học hàng tháng chỉ cấp khi `isStudent === true` (trừ vào `familyWealthCopper`). Không nghề, không chức vụ, không điền sản thì thu nhập = `0đ`.
+   - **Thu nhập gia đình & Thừa kế:** Dòng tiền gia đình (`computeFamilyMonthlyNetCopper`) tính theo nghề thực tế của cha mẹ (`getParentMonthlyIncome`) và khả năng tự túc lúa gạo. Chia gia sản khi ra riêng (`applyMoveOutInheritance`) và thừa kế khi song thân qua đời (`applyFinalInheritanceIfEligible`) phải trừ trực tiếp từ `familyWealthCopper`.
+   - **Nhất quán UI/UX:** Phương tiện đi lại (`getFeudalTransportLabel`), sinh kế và sổ thu chi phải khớp với nhà ở, phẩm hàm và hành động thực tế của nhân vật.

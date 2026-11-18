@@ -1,7 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ALL_ACTIONS as ACTIONS, ALL_ADULTHOOD_EVENTS as EVENTS } from '../../data/registry';
+import {
+  ALL_ACTIONS as ACTIONS,
+  ALL_ADULTHOOD_EVENTS as EVENTS,
+  ALL_CHILDHOOD_EVENTS as CHILDHOOD_EVENTS,
+} from '../../data/registry';
 import {
   DAYS_PER_YEAR,
   getAgeYears,
@@ -18,7 +22,7 @@ import {
   haveChild,
   marrySpouse,
 } from '../adultLifeActions';
-import { resolveEventChoice } from '../childhoodEngine';
+import { advanceChildhoodMonth, resolveEventChoice } from '../childhoodEngine';
 import { advanceDays, type AutoPauseConfig } from '../daySimulator';
 import { applyDynamicDecisionSideEffects } from '../decisionGenerator';
 import { createNewLife } from '../lifeInitializer';
@@ -62,8 +66,8 @@ const ARCHETYPES: ArchetypeConfig[] = [
   {
     id: 'cong_danh_exam',
     focus: 'cong_danh',
-    morning: 'act_doc_sach_khoa_cu',
-    afternoon: 'act_doc_sach_khoa_cu',
+    morning: 'act_tu_hoc_chu',
+    afternoon: 'act_tu_hoc_chu',
     preferCollegeChoice: 0,
     tryMarriage: true,
     tryChildren: true,
@@ -213,18 +217,37 @@ const ARCHETYPES: ArchetypeConfig[] = [
 
 function createStarter(seed: number, originClass: OriginClass, arch: ArchetypeConfig): ActiveLifeState {
   let life = createNewLife(seed);
+  for (let offset = 0; offset < 500; offset += 1) {
+    const candidate = createNewLife(seed + offset);
+    if (candidate.profile.originClass === originClass) {
+      life = candidate;
+      break;
+    }
+  }
+  const childhoodPool = [...CHILDHOOD_EVENTS];
+  let guard = 0;
+  while (life.isAlive && getAgeYears(life.profile.totalDays) < 13 && guard < 200) {
+    guard += 1;
+    const step = advanceChildhoodMonth(life, childhoodPool);
+    life = step.state;
+    if (step.pendingEvent) {
+      const idx = (life.profile.totalDays + arch.id.length) % step.pendingEvent.choices.length;
+      life = resolveEventChoice(life, step.pendingEvent, idx).state;
+    }
+  }
+  if (!life.isAlive) {
+    life = createNewLife(seed);
+    life = {
+      ...life,
+      profile: { ...life.profile, originClass, totalDays: 13 * DAYS_PER_YEAR, currentRole: 'Thiếu niên' },
+    };
+  }
   life = {
     ...life,
-    profile: {
-      ...life.profile,
-      originClass,
-      totalDays: 13 * DAYS_PER_YEAR,
-      currentRole: 'Thiếu niên',
-    },
     assets: {
       ...life.assets,
-      rice: Math.max(life.assets.rice, 40),
-      wealthCopper: Math.max(life.assets.wealthCopper, 300),
+      rice: Math.max(life.assets.rice, 30),
+      wealthCopper: Math.max(life.assets.wealthCopper, 150),
     },
     schedule: {
       ...life.schedule,
@@ -374,19 +397,33 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
   const anomalies: string[] = [];
   const timeline: string[] = [];
 
-  let lastBotActionAge = 13;
+  let lastBotSeasonKey = '';
   let guard = 0;
   const maxDays = 80 * DAYS_PER_YEAR;
 
-  while (state.isAlive && state.profile.totalDays < maxDays && guard < 400) {
+  while (state.isAlive && state.profile.totalDays < maxDays && guard < 1200) {
     guard += 1;
     const curAge = getAgeYears(state.profile.totalDays);
-    if (curAge > lastBotActionAge) {
-      lastBotActionAge = curAge;
+    const seasonKey = `${curAge}_${state.world.season}`;
+    if (seasonKey !== lastBotSeasonKey) {
+      lastBotSeasonKey = seasonKey;
       state = applyAnnualBotSpendAndInvest(state, arch);
+      if (state.livelihoodStatus !== 'prison' && !state.flags.includes('trong_hau_cung')) {
+        if (state.assets.wealthCopper < 40 && state.assets.rice < 5) {
+          state = {
+            ...state,
+            schedule: { ...state.schedule, afternoon: 'act_lam_thue_nong_vu' },
+          };
+        } else if (state.assets.wealthCopper >= 120 && state.schedule.afternoon !== arch.afternoon) {
+          state = {
+            ...state,
+            schedule: { ...state.schedule, afternoon: arch.afternoon },
+          };
+        }
+      }
     }
 
-    const stepDays = Math.min(DAYS_PER_YEAR, maxDays - state.profile.totalDays);
+    const stepDays = Math.min(90, maxDays - state.profile.totalDays);
     const res = advanceDays(state, stepDays, ACTIONS, EVENTS, SILENT_AUTOPAUSE);
     state = res.state;
 
@@ -415,7 +452,7 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
         anomalies.push(`PALACE_CONCUBINE_CONFLICT_${evt.id}_AGE_${age}`);
       }
       const livingSpouse = state.npcs.some((n) => n.relation === 'spouse' && n.isAlive);
-      if (evt.id.includes('spouse') && !livingSpouse && evt.id !== 'evt_adult_family_spouse_hardship') {
+      if (evt.id.includes('spouse') && !livingSpouse) {
         anomalies.push(`NO_LIVING_SPOUSE_FOR_${evt.id}_AGE_${age}`);
       }
 
@@ -457,7 +494,7 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
 }
 
 describe('Monte Carlo 1,000-Life Narrative & Logic Audit', () => {
-  it('simulates 1,000 lifetimes across 5 origins x 10 archetypes and writes docs/audit-report-1000.md', () => {
+  it('simulates 1,000 lifetimes across 5 origins x 10 archetypes and writes docs/audit-report-1000.md', async () => {
     const records: LifeAuditRecord[] = [];
     const eventHits = new Map<string, number>();
     const decisionHits = new Map<string, number>();
@@ -476,6 +513,9 @@ describe('Monte Carlo 1,000-Life Narrative & Logic Audit', () => {
           for (const id of rec.eventsFired) eventHits.set(id, (eventHits.get(id) ?? 0) + 1);
           for (const id of rec.decisionsFired) decisionHits.set(id, (decisionHits.get(id) ?? 0) + 1);
           deathReasons.set(rec.deathReason, (deathReasons.get(rec.deathReason) ?? 0) + 1);
+          if (records.length % 10 === 0) {
+            await new Promise((r) => setTimeout(r, 0));
+          }
         }
       }
     }

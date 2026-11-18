@@ -168,6 +168,7 @@
     "conditions": {
       "min_age": 20,
       "max_age": 55,
+      "has_living_spouse": true,
       "has_flags": [
         "da_ket_hon"
       ]

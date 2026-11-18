@@ -21,6 +21,8 @@ import {
   type InvestmentChannel,
   type LifestyleTier,
 } from '../types/activeLife';
+import { ALL_ACTIONS } from '../data/registry';
+import { computeFamilyMonthlyNetCopper } from '../engine/childhoodEngine';
 import { formatCopper } from '../engine/economy';
 import {
   getDailyFixedExpenseSummary,
@@ -255,7 +257,15 @@ export function AdultDashboard() {
     })
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
-  const currentJobLabel = getCurrentLivelihoodLabel(life);
+  const rawJobLabel = getCurrentLivelihoodLabel(life);
+  const freelanceAction = [life.schedule.morning, life.schedule.afternoon, life.schedule.evening]
+    .map((id) => ALL_ACTIONS.find((a) => a.id === id))
+    .find((a) => a && (a.rewards.copper ?? 0) > 0);
+  const currentJobLabel =
+    rawJobLabel === 'Đang tìm việc' && freelanceAction
+      ? `Làm thêm tự do (${freelanceAction.name})`
+      : rawJobLabel;
+  const familyCashflow = life.family ? computeFamilyMonthlyNetCopper(life) : null;
   const educationLabel = getEducationLabel(life);
   const incomeRankLabel = getFeudalIncomeRankLabel(annualIncomeCopper);
   const personalPossessions = getPersonalPossessions(life);
@@ -575,7 +585,13 @@ export function AdultDashboard() {
                   </div>
                   {ledger.workIncomeCopper > 0 && (
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-stone-300">Thu nhập lao động &amp; bổng lộc</span>
+                      <span className="text-stone-300">
+                        {life.officialRank > 0
+                          ? 'Lương bổng quan chức & lao động'
+                          : life.activeCareer || life.activeVenture
+                            ? 'Thu nhập nghề nghiệp'
+                            : 'Tiền công làm thêm tự do'}
+                      </span>
                       <span className="font-mono font-semibold text-emerald-400 shrink-0">
                         +{formatCopper(ledger.workIncomeCopper)}
                       </span>
@@ -659,13 +675,44 @@ export function AdultDashboard() {
                   </div>
                 </div>
                 {life.family && (
-                  <div className="pt-2 border-t border-stone-800/70 space-y-1">
+                  <div className="pt-2 border-t border-stone-800/70 space-y-1.5">
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-[11px] text-stone-400">Gia sản gia đình gốc</span>
                       <span className="font-mono font-semibold text-amber-200">
                         {formatCopper(life.family.familyWealthCopper)}
                       </span>
                     </div>
+                    {familyCashflow && (
+                      <div className="rounded bg-stone-950/60 border border-stone-800/70 p-1.5 space-y-0.5 text-[10px]">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-stone-400 truncate">
+                            Cha ({life.family.fatherOccupationLabel ?? 'Không rõ'})
+                          </span>
+                          <span className="font-mono text-emerald-400 shrink-0">
+                            +{formatCopper(familyCashflow.fatherIncome)}/tháng
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-stone-400 truncate">
+                            Mẹ ({life.family.motherOccupationLabel ?? 'Nội trợ'})
+                          </span>
+                          <span className="font-mono text-emerald-400 shrink-0">
+                            {familyCashflow.motherIncome > 0
+                              ? `+${formatCopper(familyCashflow.motherIncome)}/tháng`
+                              : 'Nội trợ (0đ)'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
+                          <span className="text-stone-400">
+                            Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu)
+                            {familyCashflow.foodSelfSufficient ? ' · Tự túc gạo' : ''}
+                          </span>
+                          <span className="font-mono text-rose-400 shrink-0">
+                            -{formatCopper(familyCashflow.expense)}/tháng
+                          </span>
+                        </div>
+                      </div>
+                    )}
                     {life.family.familyAssetsSummary && life.family.familyAssetsSummary.length > 0 && (
                       <div className="flex flex-wrap gap-1 pt-0.5">
                         {life.family.familyAssetsSummary.map((item, idx) => (

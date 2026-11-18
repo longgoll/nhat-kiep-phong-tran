@@ -80,6 +80,8 @@ function generateDynamicDecisionInternal(
     !state.flags.includes('thai_giam') &&
     !state.flags.includes('trong_quan_ngu') &&
     !state.flags.includes('bi_ep_lam_gia_no') &&
+    !state.flags.includes('dang_lam_quan') &&
+    state.officialRank === 0 &&
     (state.eduLevel ?? 0) < 4 &&
     state.livelihoodStatus !== 'prison'
   ) {
@@ -229,12 +231,14 @@ function generateDynamicDecisionInternal(
     state.stats.education >= 24;
   if (
     (!onlyId || onlyId === 'dec_official_appoint') &&
+    state.eventCooldowns['dec_official_appoint'] === undefined &&
     age >= 20 &&
     age < 60 &&
     state.officialRank === 0 &&
     (hasExamDegree || hasPatronEntry) &&
     !state.flags.includes('dec_official_declined') &&
     !state.flags.includes('trong_hau_cung') &&
+    !state.flags.includes('thai_giam') &&
     state.livelihoodStatus !== 'retired' &&
     state.livelihoodStatus !== 'prison'
   ) {
@@ -620,6 +624,7 @@ export function applyDynamicDecisionSideEffects(
       const resigned = resignCareer(next);
       return {
         ...resigned,
+        flags: resigned.flags.filter((f) => f !== 'dang_lam_quan'),
         livelihoodStatus: 'retired',
         officialRank: 0,
         profile: { ...resigned.profile, currentRole: 'Nghỉ hưu' },
@@ -629,17 +634,26 @@ export function applyDynamicDecisionSideEffects(
   }
 
   if (eventId === 'dec_official_appoint') {
+    const stamped = {
+      ...state,
+      eventCooldowns: { ...state.eventCooldowns, dec_official_appoint: totalDays },
+    };
     if (choiceIndex === 0) {
-      if (state.flags.includes('do_cu_nhan') || state.flags.includes('do_tien_si')) {
-        return appointOrPromoteOfficial(state);
+      if (stamped.flags.includes('do_cu_nhan') || stamped.flags.includes('do_tien_si')) {
+        return appointOrPromoteOfficial(stamped);
       }
-      return applyEffects(state, {
+      const next = applyEffects(stamped, {
         official_rank_delta: 1,
+        add_flags: ['dang_lam_quan'],
         fame: 10,
         milestone_title: 'Được tiến cử nhậm chức Tri huyện',
       });
+      return {
+        ...next,
+        profile: { ...next.profile, currentRole: 'Tri huyện' },
+      };
     }
-    return state;
+    return stamped;
   }
 
   if (eventId === 'dec_official_promote') {

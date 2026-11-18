@@ -128,7 +128,7 @@
       "stamina": 25
     },
     "rewards": {
-      "copper": 22,
+      "copper": 4,
       "rice": 1,
       "happiness": -0.015
     }
@@ -155,7 +155,7 @@
       "stamina": 35
     },
     "rewards": {
-      "copper": 38,
+      "copper": 7,
       "martial": 0.02,
       "health": -0.012,
       "happiness": -0.015
@@ -183,7 +183,7 @@
       "stamina": 20
     },
     "rewards": {
-      "copper": 26,
+      "copper": 5,
       "craft_trade": 0.04
     }
   },
@@ -316,7 +316,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 95,
+      "copper": 14,
       "craft_trade": 0.06
     }
   },

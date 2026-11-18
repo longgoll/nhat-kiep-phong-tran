@@ -14,8 +14,16 @@ import type {
 } from '../types/dsl';
 import { computeWeight, evaluateConditions } from './conditionEvaluator';
 import { appendLog, applyAnnualStatMeanReversion, applyEffects } from './effectApplier';
+import {
+  applyFinalInheritanceIfEligible,
+  applyMoveOutInheritance,
+  computeFamilyMonthlyNetCopper,
+  type FamilyCashflowBreakdown,
+} from './familyEconomy';
 import { ORIGIN_CORE_CONFIG } from './originConfigs';
 import { mulberry32Next, pickWeightedIndex } from './prng';
+
+export { computeFamilyMonthlyNetCopper, type FamilyCashflowBreakdown };
 
 export interface ChildhoodFocusOption {
   id: string;
@@ -321,6 +329,9 @@ export function resolveEventChoice(
     },
   };
 
+  const hadLivingParentBefore = inputState.npcs.some((n) => n.relation === 'parent' && n.isAlive);
+  const hadMovedOutBefore = inputState.flags.includes('da_ra_o_rieng');
+
   nextState = applyEffects(nextState, outcome.effects);
   const tone = inferOutcomeTone(outcome.effects);
   nextState = {
@@ -333,6 +344,13 @@ export function resolveEventChoice(
       { tone },
     ),
   };
+
+  if (!hadMovedOutBefore && nextState.flags.includes('da_ra_o_rieng') && choiceIndex === 0) {
+    nextState = applyMoveOutInheritance(nextState);
+  }
+  if (hadLivingParentBefore && !nextState.npcs.some((n) => n.relation === 'parent' && n.isAlive)) {
+    nextState = applyFinalInheritanceIfEligible(nextState);
+  }
 
   return { state: nextState, resultText: outcome.resultText };
 }
@@ -375,82 +393,6 @@ const DEFAULT_AMBIENT_DATA: ChildhoodAmbientData = {
     { focusId: 'so_thich', text: 'Những giờ phút thư thái giúp tâm hồn bạn thêm nhẹ nhàng và sáng tạo.' },
   ],
 };
-
-/**
- * Estimates monthly family income, living expenses, and net copper change during childhood.
- */
-export function computeFamilyMonthlyNetCopper(state: ActiveLifeState): {
-  income: number;
-  expense: number;
-  net: number;
-} {
-  const origin = state.profile.originClass;
-  const baseIncomeByOrigin: Record<ActiveLifeState['profile']['originClass'], number> = {
-    ban_nong: 22,
-    thu_cong: 65,
-    dia_chu: 260,
-    quan_lai: 520,
-    hoang_toc: 1400,
-  };
-  const perMouthCostByOrigin: Record<ActiveLifeState['profile']['originClass'], number> = {
-    ban_nong: 4,
-    thu_cong: 11,
-    dia_chu: 42,
-    quan_lai: 85,
-    hoang_toc: 220,
-  };
-
-  let income = baseIncomeByOrigin[origin];
-  const fatherAlive = state.npcs.some((n) => n.id === 'npc_father' && n.isAlive);
-  const motherAlive = state.npcs.some((n) => n.id === 'npc_mother' && n.isAlive);
-
-  if (!fatherAlive || state.flags.includes('mo_coi_cha')) {
-    income *= 0.55;
-  }
-  if (!motherAlive) {
-    income *= 0.75;
-  }
-  if (state.flags.includes('gia_toc_sa_sut') || state.flags.includes('that_sung_cung_dinh')) {
-    income *= 0.45;
-  }
-
-  const livingFamilyMembers = state.npcs.filter(
-    (n) =>
-      n.isAlive &&
-      (n.relation === 'parent' || n.relation === 'sibling') &&
-      !(origin === 'hoang_toc' && (n.id.startsWith('npc_concubine_') || n.id === 'npc_grandmother')),
-  ).length;
-  const mouthsToFeed = 1 + livingFamilyMembers;
-  let expense = mouthsToFeed * perMouthCostByOrigin[origin];
-
-  if (state.flags.includes('that_sung_cung_dinh')) {
-    expense *= 0.5;
-  }
-
-  if (state.flags.includes('gia_dinh_mac_no')) {
-    expense += origin === 'ban_nong' || origin === 'thu_cong' ? 8 : 30;
-  }
-
-  const worldState = state.world.worldState;
-  if (worldState === 'mat_mua') {
-    if (origin === 'ban_nong') income *= 0.75;
-    expense *= 1.25;
-  } else if (worldState === 'dich_benh') {
-    income *= 0.85;
-    expense *= 1.2;
-  } else if (worldState === 'chien_tranh') {
-    income *= 0.75;
-    expense *= 1.3;
-  }
-
-  const roundedIncome = Math.round(income);
-  const roundedExpense = Math.round(expense);
-  return {
-    income: roundedIncome,
-    expense: roundedExpense,
-    net: roundedIncome - roundedExpense,
-  };
-}
 
 /**
  * Advances 1 month (30 days) during Infancy (0-5) or Childhood (6-12).
@@ -790,19 +732,7 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
     }
   }
 
-  const starterFallbackRules =
-    inputState.schedule.fallbackRules.length > 0
-      ? inputState.schedule.fallbackRules
-      : [
-          {
-            id: 'fb_auto_mot_lua',
-            stat: 'rice' as const,
-            operator: '<=' as const,
-            threshold: 0,
-            targetSlot: 'morning' as const,
-            fallbackActionId: 'act_survival_mot_lua',
-          },
-        ];
+  const starterFallbackRules = inputState.schedule.fallbackRules;
 
   let state: ActiveLifeState = {
     ...inputState,

@@ -6,8 +6,10 @@ import {
 } from '../../data/registry';
 import { DAYS_PER_YEAR, getAgeYears, type ActiveLifeState, type OriginClass } from '../../types/activeLife';
 import { advanceDays, type AutoPauseConfig } from '../daySimulator';
-import { advanceChildhoodMonth, resolveEventChoice } from '../childhoodEngine';
+import { advanceChildhoodMonth, computeFamilyMonthlyNetCopper, resolveEventChoice } from '../childhoodEngine';
+import { applyFinalInheritanceIfEligible, applyMoveOutInheritance } from '../familyEconomy';
 import { createNewLife } from '../lifeInitializer';
+import { getFeudalTransportLabel } from '../lifeStatus';
 import { applyDynamicDecisionSideEffects } from '../decisionGenerator';
 
 const SILENT_AUTOPAUSE: AutoPauseConfig = {
@@ -52,6 +54,11 @@ describe('Economy, Food & Stipend Integrity Audit', () => {
 
       expect(life.isAlive).toBe(true);
       expect(getAgeYears(life.profile.totalDays)).toBe(13);
+      // Age-13 transition must leave schedule & fallbackRules under player control (no auto-assigned work/study)
+      expect(life.schedule.morning).toBe('act_nghi_ngoi');
+      expect(life.schedule.afternoon).toBe('act_nghi_ngoi');
+      expect(life.schedule.evening).toBe('act_nghi_ngoi');
+      expect(life.schedule.fallbackRules).toEqual([]);
       // Personal grant at age 13 must be bounded (never >450đ) and logs must not claim royal stipend without rank
       expect(life.assets.wealthCopper).toBeLessThanOrEqual(450);
       expect(life.assets.rice).toBeLessThanOrEqual(50);
@@ -60,7 +67,8 @@ describe('Economy, Food & Stipend Integrity Audit', () => {
         expect(lastTransitionLog.text).not.toContain('bổng lộc');
       }
 
-      // Now stay completely idle (no job, no officialRank, no properties, not a student) for 1 full year
+      // Advance 1 full year straight out of age-13 transition WITHOUT overriding schedule:
+      // No origin should auto-assign paid work when the character has no job/title/student status.
       const copperAt13 = life.assets.wealthCopper;
       const idleState: ActiveLifeState = {
         ...life,
@@ -71,13 +79,6 @@ describe('Economy, Food & Stipend Integrity Audit', () => {
         assets: {
           ...life.assets,
           properties: [],
-        },
-        schedule: {
-          ...life.schedule,
-          morning: 'act_nghi_ngoi',
-          afternoon: 'act_nghi_ngoi',
-          evening: 'act_nghi_ngoi',
-          night: 'act_ngu',
         },
       };
 
@@ -133,4 +134,77 @@ describe('Economy, Food & Stipend Integrity Audit', () => {
       }
     }
   }, 30000);
+
+  it('computes family cashflow by exact parent occupations, food self-sufficiency, and handles move-out & inheritance accurately', () => {
+    // 1. Occupation-based income differences
+    const officialLife = createOriginLife('quan_lai', 200);
+    const cleanOfficial: ActiveLifeState = {
+      ...officialLife,
+      flags: officialLife.flags.filter((f) => f !== 'mo_coi_cha' && f !== 'gia_toc_sa_sut'),
+      npcs: officialLife.npcs.map((n) => (n.relation === 'parent' ? { ...n, isAlive: true } : n)),
+      family: { ...officialLife.family!, fatherOccupation: 'quan_van', motherOccupation: 'phu_nhan' },
+    };
+    const corruptOfficial: ActiveLifeState = {
+      ...cleanOfficial,
+      family: { ...cleanOfficial.family!, fatherOccupation: 'tham_quan', motherOccupation: 'phu_nhan' },
+    };
+
+    const cleanFlow = computeFamilyMonthlyNetCopper(cleanOfficial);
+    const corruptFlow = computeFamilyMonthlyNetCopper(corruptOfficial);
+    expect(corruptFlow.fatherIncome).toBeGreaterThan(cleanFlow.fatherIncome);
+    expect(cleanFlow.foodSelfSufficient).toBe(false);
+
+    // 2. Agrarian food self-sufficiency drops during famine (mat_mua)
+    const farmerLife = createOriginLife('ban_nong', 300);
+    const farmerNormal = computeFamilyMonthlyNetCopper({
+      ...farmerLife,
+      world: { ...farmerLife.world, worldState: 'binh_on' },
+    });
+    const farmerFamine = computeFamilyMonthlyNetCopper({
+      ...farmerLife,
+      world: { ...farmerLife.world, worldState: 'mat_mua' },
+    });
+    expect(farmerNormal.foodSelfSufficient).toBe(true);
+    expect(farmerFamine.foodSelfSufficient).toBe(false);
+    expect(farmerFamine.expense).toBeGreaterThan(farmerNormal.expense);
+
+    // 3. Move-out share deducts exact copper from familyWealthCopper and adds to personal wealth
+    const richBase: ActiveLifeState = {
+      ...officialLife,
+      assets: { ...officialLife.assets, wealthCopper: 100 },
+      family: { ...officialLife.family!, familyWealthCopper: 5000, birthOrder: 'con_truong' },
+    };
+    const afterMoveOut = applyMoveOutInheritance(richBase);
+    const movedShare = afterMoveOut.assets.wealthCopper - 100;
+    expect(movedShare).toBeGreaterThan(0);
+    expect(afterMoveOut.family!.familyWealthCopper).toBe(5000 - movedShare);
+    // Idempotent: calling again does not grant a second share
+    expect(applyMoveOutInheritance(afterMoveOut).assets.wealthCopper).toBe(afterMoveOut.assets.wealthCopper);
+
+    // 4. Final inheritance on last parent passing, blocked for eunuch/harem/indebted
+    const orphanRich: ActiveLifeState = {
+      ...afterMoveOut,
+      npcs: afterMoveOut.npcs.map((n) => (n.relation === 'parent' ? { ...n, isAlive: false } : n)),
+    };
+    const inherited = applyFinalInheritanceIfEligible(orphanRich);
+    expect(inherited.assets.wealthCopper).toBeGreaterThan(afterMoveOut.assets.wealthCopper);
+    expect(inherited.family!.familyWealthCopper).toBe(0);
+    expect(inherited.flags).toContain('da_chia_di_san');
+
+    const eunuchOrphan: ActiveLifeState = {
+      ...orphanRich,
+      flags: [...orphanRich.flags, 'thai_giam'],
+    };
+    const blocked = applyFinalInheritanceIfEligible(eunuchOrphan);
+    expect(blocked.assets.wealthCopper).toBe(orphanRich.assets.wealthCopper);
+
+    // 5. Transport label must match housing/rank rather than granting sedan chairs in a mud hut
+    const mudHutCommoner: ActiveLifeState = {
+      ...createOriginLife('thu_cong', 400),
+      officialRank: 0,
+      assets: { wealthCopper: 90000, rice: 10, housing: 'nha_tranh', properties: [] },
+      schedule: { ...officialLife.schedule, lifestyle: 'com_rau' },
+    };
+    expect(getFeudalTransportLabel(mudHutCommoner)).not.toContain('Kiệu');
+  });
 });

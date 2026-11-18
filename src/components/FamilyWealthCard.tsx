@@ -90,6 +90,38 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
             </span>
           </div>
 
+          {familyCashflow && (
+            <div className="rounded-lg bg-stone-950/60 border border-stone-800/70 p-2 space-y-1 text-[11px]">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-stone-400 truncate">
+                  Cha ({family.fatherOccupationLabel ?? 'Không rõ'})
+                </span>
+                <span className="font-mono text-emerald-300 shrink-0">
+                  +{formatCopper(familyCashflow.fatherIncome)}/tháng
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-stone-400 truncate">
+                  Mẹ ({family.motherOccupationLabel ?? 'Nội trợ'})
+                </span>
+                <span className="font-mono text-emerald-300 shrink-0">
+                  {familyCashflow.motherIncome > 0
+                    ? `+${formatCopper(familyCashflow.motherIncome)}/tháng`
+                    : 'Nội trợ (0đ)'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
+                <span className="text-stone-400">
+                  Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu)
+                  {familyCashflow.foodSelfSufficient ? ' · Tự túc gạo' : ''}
+                </span>
+                <span className="font-mono text-rose-300 shrink-0">
+                  -{formatCopper(familyCashflow.expense)}/tháng
+                </span>
+              </div>
+            </div>
+          )}
+
           {family.familyAssetsSummary && family.familyAssetsSummary.length > 0 && (
             <div className="space-y-1">
               <div className="text-[11px] text-stone-500">Điền sản &amp; cơ nghiệp</div>

@@ -179,6 +179,7 @@
     "title": "Chuyện Trong Nhà Ngoài Ngõ",
     "conditions": {
       "min_age": 22,
+      "has_living_spouse": true,
       "has_flags": [
         "da_ket_hon"
       ]

@@ -288,11 +288,11 @@ export function ChildhoodView() {
               <div className="grid grid-cols-2 gap-2 pt-2 border-t border-stone-800 text-[11px] text-stone-300">
                 <div className="flex items-center gap-1.5">
                   <Swords className="w-3.5 h-3.5 text-stone-400" />
-                  <span>Võ nghệ: {life.stats.martial}</span>
+                  <span>Võ nghệ: {life.stats.martial.toFixed(1)}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Hammer className="w-3.5 h-3.5 text-stone-400" />
-                  <span>Thương tài: {life.stats.craftTrade}</span>
+                  <span>Thương tài: {life.stats.craftTrade.toFixed(1)}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Award className="w-3.5 h-3.5 text-amber-400" />

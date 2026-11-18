@@ -40,6 +40,7 @@ export interface ConditionSpec {
   has_property?: string;
   has_any_property?: boolean;
   has_living_parent?: boolean;
+  has_living_spouse?: boolean;
   has_living_npc_id?: string;
   min_official_rank?: number;
   max_official_rank?: number;

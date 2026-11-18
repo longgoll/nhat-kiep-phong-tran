@@ -67,6 +67,10 @@ export function evaluateConditions(state: ActiveLifeState, cond?: ConditionSpec)
     const hasParent = state.npcs.some((n) => n.relation === 'parent' && n.isAlive);
     if (hasParent !== cond.has_living_parent) return false;
   }
+  if (cond.has_living_spouse !== undefined) {
+    const hasSpouse = state.npcs.some((n) => n.relation === 'spouse' && n.isAlive);
+    if (hasSpouse !== cond.has_living_spouse) return false;
+  }
   if (cond.has_living_npc_id !== undefined) {
     const isNpcAlive = state.npcs.some((n) => n.id === cond.has_living_npc_id && n.isAlive);
     if (!isNpcAlive) return false;

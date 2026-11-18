@@ -280,7 +280,8 @@ export function getFamilyCoveredLifestyleTier(state: ActiveLifeState): Lifestyle
     return ageYears < 18 ? 'chao_loang' : null;
   }
   if (originClass === 'thu_cong') {
-    return familyWealth >= 300 ? 'com_rau' : null;
+    if (familyWealth >= 300) return 'com_rau';
+    return getAgeYears(state.profile.totalDays) < 18 ? 'chao_loang' : null;
   }
   if (originClass === 'dia_chu') {
     return familyWealth >= 3000 ? 'thit_ca' : 'com_rau';

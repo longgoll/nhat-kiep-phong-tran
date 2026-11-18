@@ -178,21 +178,37 @@ export function getPersonalPossessions(state: ActiveLifeState): string[] {
  * Derives feudal transport mode ("Phương tiện đi lại") from rank, housing, and wealth.
  */
 export function getFeudalTransportLabel(state: ActiveLifeState): string {
-  if (state.officialRank >= 5 || (state.profile.originClass === 'hoang_toc' && state.assets.housing === 'phu_de')) {
+  const isDeclined =
+    state.flags.includes('gia_toc_sa_sut') || state.flags.includes('that_sung_cung_dinh');
+  const lifestyle = state.schedule.lifestyle;
+
+  if (
+    state.officialRank >= 5 ||
+    (state.profile.originClass === 'hoang_toc' && state.assets.housing === 'phu_de' && !isDeclined)
+  ) {
     return 'Kiệu bát cống · Có lính hầu mở đường';
   }
-  if (state.officialRank >= 3 || state.assets.housing === 'phu_de' || state.assets.wealthCopper >= 20000) {
+  if (
+    state.officialRank >= 3 ||
+    (state.assets.housing === 'phu_de' && (lifestyle === 'thit_ca' || lifestyle === 'son_hao'))
+  ) {
     return 'Kiệu bốn người khiêng · Đi lại nhàn nhã';
   }
   if (
-    state.assets.wealthCopper >= 5000 ||
-    state.profile.originClass === 'quan_lai' ||
-    state.profile.originClass === 'hoang_toc'
+    state.officialRank >= 1 ||
+    state.assets.housing === 'phu_de' ||
+    (state.assets.housing === 'nha_gach' && state.assets.wealthCopper >= 10000) ||
+    ((state.profile.originClass === 'quan_lai' || state.profile.originClass === 'hoang_toc') &&
+      !isDeclined &&
+      state.assets.wealthCopper >= 5000)
   ) {
     return 'Ngựa tốt · Yên cương đầy đủ';
   }
-  if (state.assets.housing === 'nha_gach' || state.assets.wealthCopper >= 1200) {
-    return 'Xe bò / Xe ngựa thuê · Đi làm mất nửa canh giờ';
+  if (
+    state.assets.housing === 'nha_gach' ||
+    (state.assets.wealthCopper >= 2000 && lifestyle !== 'nhin_doi' && lifestyle !== 'chao_loang')
+  ) {
+    return 'Xe bò / Xe ngựa thuê · Đi lại tiện hơn';
   }
   return 'Đi bộ · Chân đất hoặc guốc mộc';
 }

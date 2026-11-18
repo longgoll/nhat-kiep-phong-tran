@@ -39,8 +39,8 @@ export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
     defaultChildhoodFocus: 'giup_nha',
     innateInterests: ['dien_vien'],
     teenStarterSchedule: {
-      morning: 'act_lam_thue_nong_vu',
-      afternoon: 'act_lam_thue_nong_vu',
+      morning: 'act_nghi_ngoi',
+      afternoon: 'act_nghi_ngoi',
       evening: 'act_nghi_ngoi',
     },
   },
@@ -60,8 +60,8 @@ export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
     defaultChildhoodFocus: 'so_thich',
     innateInterests: ['thu_cong'],
     teenStarterSchedule: {
-      morning: 'act_phu_ban_hang',
-      afternoon: 'act_phu_ban_hang',
+      morning: 'act_nghi_ngoi',
+      afternoon: 'act_nghi_ngoi',
       evening: 'act_nghi_ngoi',
     },
   },
@@ -81,8 +81,8 @@ export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
     defaultChildhoodFocus: 'hoc_tap',
     innateInterests: ['thuong_buon'],
     teenStarterSchedule: {
-      morning: 'act_buon_ban_nho',
-      afternoon: 'act_tu_hoc_chu',
+      morning: 'act_nghi_ngoi',
+      afternoon: 'act_nghi_ngoi',
       evening: 'act_nghi_ngoi',
     },
   },
@@ -102,9 +102,9 @@ export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
     defaultChildhoodFocus: 'hoc_tap',
     innateInterests: ['kinh_su'],
     teenStarterSchedule: {
-      morning: 'act_tu_hoc_chu',
-      afternoon: 'act_luyen_vo_cong',
-      evening: 'act_doc_sach_den_dau',
+      morning: 'act_nghi_ngoi',
+      afternoon: 'act_nghi_ngoi',
+      evening: 'act_nghi_ngoi',
     },
   },
   hoang_toc: {
@@ -123,9 +123,9 @@ export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
     defaultChildhoodFocus: 'hoc_tap',
     innateInterests: ['kinh_su'],
     teenStarterSchedule: {
-      morning: 'act_tu_hoc_chu',
-      afternoon: 'act_luyen_vo_cong',
-      evening: 'act_doc_sach_den_dau',
+      morning: 'act_nghi_ngoi',
+      afternoon: 'act_nghi_ngoi',
+      evening: 'act_nghi_ngoi',
     },
   },
 };
