@@ -1,0 +1,242 @@
+[
+  {
+    "id": "evt_official_faction_choice",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Ngã Rẽ Phe Phái Nơi Triều Đường",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "missing_flags": ["phe_thanh_luu", "phe_quyen_than", "phe_hoang_tu"]
+    },
+    "weight": {
+      "base": 45
+    },
+    "description": "Bước chân vào chốn quan trường, bạn nhận ra khó có thể đứng một mình mãi. Ba thế lực lớn trong triều đều đang ngầm chiêu mộ người tài.",
+    "choices": [
+      {
+        "label": "Gia nhập phe Thanh lưu (Sĩ phu chính trực)",
+        "hint": "Thanh danh +6 · Học thức +2 · Gắn cờ Phe Thanh lưu",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn chọn đứng về phía giới sĩ phu thanh liêm, coi trọng lễ nghĩa và tiếng thơm muôn đời.",
+            "effects": {
+              "fame": 6,
+              "education": 2,
+              "add_flags": ["phe_thanh_luu"],
+              "milestone_title": "Gia nhập phe Thanh lưu nơi triều đường"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đầu quân phe Quyền thần (Thực dụng thăng tiến nhanh)",
+        "hint": "Tiền +400đ · Tai tiếng +5 · Quan hệ +4 · Gắn cờ Phe Quyền thần",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn dâng danh thiếp dưới trướng đại thần nắm thực quyền, đường thăng tiến và bổng lộc rộng mở nhưng đầy hiểm họa.",
+            "effects": {
+              "copper": 400,
+              "infamy": 5,
+              "relationships": 4,
+              "add_flags": ["phe_quyen_than"],
+              "milestone_title": "Theo phe Quyền thần mưu cầu đại vị"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ngầm kết giao với phe Hoàng tử nơi Đông cung",
+        "hint": "Thanh danh +4 · Võ nghệ +2 · Gắn cờ Phe Hoàng tử",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn hướng mắt về tương lai vương triều, chọn đặt cược vào phe cánh Hoàng tử.",
+            "effects": {
+              "fame": 4,
+              "martial": 2,
+              "add_flags": ["phe_hoang_tu"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ thân cô thần, không theo bất kỳ phe phái nào",
+        "hint": "Thanh danh +3 · Quan hệ -3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn quyết định giữ sự độc lập, chấp nhận con đường quan lộ gập ghềnh không chỗ dựa.",
+            "effects": { "fame": 3, "relationships": -3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_faction_grand_case",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Đại Án Quân Lương Biên Ải",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 2
+    },
+    "weight": {
+      "base": 26
+    },
+    "description": "Hồ sơ quân lương thiếu hụt nơi biên ải được chuyển lên công đường của bạn. Lần theo dấu vết thì đầu mối lại dẫn thẳng tới người nhà một đại thần.",
+    "choices": [
+      {
+        "label": "Tra xét tận gốc, bất chấp đụng chạm quyền quý",
+        "hint": "Thanh danh +10 · Tai tiếng -3 · Quan hệ -4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bản tấu nghiêm minh của bạn làm rung chuyển triều chính, dân chúng nức lòng ca ngợi nhưng phe đối lập bắt đầu thù ghét.",
+            "effects": { "fame": 10, "infamy": -3, "relationships": -4 }
+          }
+        ]
+      },
+      {
+        "label": "Khép án gọn nhẹ để bảo toàn hòa khí phe cánh",
+        "hint": "Tiền +500đ · Tai tiếng +5 · Quan hệ +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn cho xử nhẹ vài viên lại mục cấp dưới để giữ mặt mũi cho đại thần, nhận lại khoản lễ tạ hậu hĩnh.",
+            "effects": { "copper": 500, "infamy": 5, "relationships": 4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_faction_patron_fall",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Quyền Thần Thất Thế — Sóng Gió Liên Lụy",
+    "conditions": {
+      "has_flags": ["dang_lam_quan", "phe_quyen_than"]
+    },
+    "weight": {
+      "base": 24
+    },
+    "description": "Chỗ dựa Quyền thần của bạn bất ngờ bị Hoàng đế tước binh quyền và hạ ngục. Danh sách môn hạ của ông ta đang bị Ngự sử rà soát từng cái tên.",
+    "choices": [
+      {
+        "label": "Dâng sớ tố cáo ngược để tự cứu thân mình",
+        "hint": "Giáng 1 bậc quan hàm · Tai tiếng +6 · Thanh danh -4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn thoát khỏi án tử nhưng bị giáng một bậc phẩm hàm và mang tiếng phản chủ cầu vinh.",
+            "effects": {
+              "official_rank_delta": -1,
+              "infamy": 6,
+              "fame": -4,
+              "remove_flags": ["phe_quyen_than"],
+              "add_flags": ["tung_bi_giang_chuc"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chấp nhận bị giáng chức về làm quan nhỏ vùng xa",
+        "hint": "Giáng 1 bậc quan hàm · Hạnh phúc -5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn lặng lẽ thu dọn hành lý rời kinh thành, bị giáng xuống một bậc chức vị nhưng vẫn giữ được mạng sống.",
+            "effects": {
+              "official_rank_delta": -1,
+              "happiness": -5,
+              "remove_flags": ["phe_quyen_than"],
+              "add_flags": ["tung_bi_giang_chuc"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_faction_scholar_support",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Đồng Môn Thanh Lưu Hợp Sức Cải Cách",
+    "conditions": {
+      "has_flags": ["dang_lam_quan", "phe_thanh_luu"]
+    },
+    "weight": {
+      "base": 25
+    },
+    "description": "Các vị đại thần cùng phe Thanh lưu mời bạn cùng đứng tên dâng sớ xin giảm sưu thuế và chấn chỉnh lại phép thi cử.",
+    "choices": [
+      {
+        "label": "Ký tên dẫn đầu bản sớ cải cách",
+        "hint": "Thanh danh +9 · Quan hệ +5 · Học thức +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bản sớ hợp lòng dân được triều đình tán thưởng, vị thế của bạn trong hàng ngũ sĩ phu tăng cao rõ rệt.",
+            "effects": { "fame": 9, "relationships": 5, "education": 2 }
+          }
+        ]
+      },
+      {
+        "label": "Âm thầm ủng hộ phía sau để giữ thế an toàn",
+        "hint": "Thanh danh +5 · Hạnh phúc +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giữ được sự ủng hộ của đồng môn mà vẫn tránh được mũi dùi công kích trực diện.",
+            "effects": { "fame": 5, "happiness": 4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_faction_rehabilitate",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Tân Triều Ân Xá — Cơ Hội Phục Chức",
+    "conditions": {
+      "has_flags": ["tung_bi_giang_chuc"],
+      "max_official_rank": 0,
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": {
+      "base": 35
+    },
+    "description": "Triều đình ban chiếu đại xá và xét lại các án oan cũ. Nhờ từng có công trạng, tên bạn được đưa vào danh sách phục chức.",
+    "choices": [
+      {
+        "label": "Nhận chiếu phục chức, trở lại chốn quan trường",
+        "hint": "Khôi phục chức Tri huyện · Thanh danh +8 · Hạnh phúc +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Sau bao năm thăng trầm, bạn một lần nữa khoác lại áo mũ triều đình bước vào công đường.",
+            "effects": {
+              "official_rank_delta": 1,
+              "remove_flags": ["tung_bi_giang_chuc"],
+              "fame": 8,
+              "happiness": 8,
+              "milestone_title": "Được ân xá phục chức trở lại quan trường"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

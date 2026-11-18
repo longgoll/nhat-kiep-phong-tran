@@ -298,14 +298,17 @@
     "id": "evt_adult_martial_bandit_ambush",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 540,
+    "cooldownDays": 1440,
     "title": "Thảo Khấu Chặn Đường",
     "conditions": {
       "min_age": 15,
-      "min_copper": 150
+      "min_copper": 150,
+      "missing_flags": [
+        "trong_hau_cung"
+      ]
     },
     "weight": {
-      "base": 30,
+      "base": 14,
       "modifiers": [
         {
           "conditions": {

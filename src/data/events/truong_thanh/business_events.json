@@ -3,7 +3,7 @@
     "id": "evt_biz_caravan_venture",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 480,
+    "cooldownDays": 1080,
     "title": "Cơ Hội Chung Vốn Buôn Chuyến Liên Trấn",
     "conditions": {
       "min_age": 16,
@@ -14,7 +14,7 @@
       ]
     },
     "weight": {
-      "base": 28,
+      "base": 16,
       "modifiers": [
         {
           "conditions": {
@@ -256,7 +256,7 @@
     "id": "evt_biz_supply_contract",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 600,
+    "cooldownDays": 1080,
     "title": "Thầu Cung Ứng Vật Phẩm Cho Phủ Nha",
     "conditions": {
       "min_age": 18,
@@ -268,7 +268,7 @@
       ]
     },
     "weight": {
-      "base": 22,
+      "base": 14,
       "modifiers": [
         {
           "conditions": {
@@ -373,16 +373,19 @@
     "id": "evt_biz_tea_cart_rumor",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 540,
+    "cooldownDays": 1080,
     "title": "Khách Quán Nước Đồn Chuyện Lạ",
     "conditions": {
       "min_age": 14,
-      "has_flags": [
-        "khoi_nghiep_quan_nuoc"
+      "min_craft_trade": 8,
+      "max_copper": 2000,
+      "missing_flags": [
+        "dang_lam_quan",
+        "trong_hau_cung"
       ]
     },
     "weight": {
-      "base": 36,
+      "base": 18,
       "modifiers": []
     },
     "description": "Chiều muộn ở quán nước đầu ngõ, một lái buôn ghé uống bát chè xanh rồi vô tình buột miệng kể về chuyến hàng muối và vải sắp khan hiếm ở phủ bên.",
@@ -450,16 +453,19 @@
     "id": "evt_biz_scribe_secret_letter",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 540,
+    "cooldownDays": 1080,
     "title": "Lá Thư Nhờ Viết Hộ Đầy Bí Ẩn",
     "conditions": {
       "min_age": 15,
-      "has_flags": [
-        "khoi_nghiep_thay_do_viet_thue"
+      "min_education": 16,
+      "max_copper": 2500,
+      "missing_flags": [
+        "dang_lam_quan",
+        "trong_hau_cung"
       ]
     },
     "weight": {
-      "base": 36,
+      "base": 18,
       "modifiers": []
     },
     "description": "Một người lạ mặt đội nón lá che kín mặt ghé bàn viết thư thuê của bạn, đặt 80 đồng tiền công nhờ chép một lá đơn tố giác cường hào ức hiếp dân lành.",
@@ -506,16 +512,18 @@
     "id": "evt_biz_apothecary_rare_herb",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 540,
+    "cooldownDays": 1080,
     "title": "Khách Quý Tìm Mua Vị Thuốc Hiếm",
     "conditions": {
       "min_age": 16,
-      "has_flags": [
-        "khoi_nghiep_thuoc_nam"
+      "min_education": 18,
+      "min_craft_trade": 12,
+      "missing_flags": [
+        "trong_hau_cung"
       ]
     },
     "weight": {
-      "base": 36,
+      "base": 18,
       "modifiers": []
     },
     "description": "Một vị hào phú trong vùng bị đau khớp lâu năm tìm đến gánh thuốc nam của bạn, hứa thưởng hậu nếu bạn bào chế được bài cao dán công hiệu.",
@@ -581,16 +589,19 @@
     "id": "evt_biz_craft_guild_order",
     "stage": "adulthood",
     "severity": "major",
-    "cooldownDays": 600,
+    "cooldownDays": 1080,
     "title": "Đơn Hàng Lớn Từ Thương Đoàn Kinh Kỳ",
     "conditions": {
       "min_age": 18,
-      "has_flags": [
-        "khoi_nghiep_phuong_tho"
+      "min_craft_trade": 14,
+      "min_copper": 400,
+      "missing_flags": [
+        "dang_lam_quan",
+        "trong_hau_cung"
       ]
     },
     "weight": {
-      "base": 36,
+      "base": 18,
       "modifiers": []
     },
     "description": "Một thương đoàn từ Kinh kỳ về đặt phường thợ của bạn làm gấp lô hàng thủ công mỹ nghệ lớn, trả trước một phần tiền cọc nhưng đòi giao đúng hạn.",

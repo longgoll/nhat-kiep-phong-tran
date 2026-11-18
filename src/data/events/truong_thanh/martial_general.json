@@ -1,0 +1,217 @@
+[
+  {
+    "id": "evt_martial_border_campaign",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Xuất Chinh Bình Định Giặc Biên Ải",
+    "conditions": {
+      "min_age": 18,
+      "min_martial": 20,
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": [
+        { "conditions": { "has_any_flag": ["trong_quan_ngu", "quan_ham_hieu_uy", "quan_ham_tuong_quan"] }, "addWeight": 18 }
+      ]
+    },
+    "description": "Biên cương báo tin giặc cỏ tràn qua cướp phá nhiều châu huyện. Triều đình hạ lệnh điều binh mã lên đường dẹp loạn.",
+    "choices": [
+      {
+        "label": "Dẫn quân xung phong đánh thẳng vào đại bản doanh địch",
+        "hint": "Võ nghệ +6 · Thanh danh +10 · Tiền +450đ · Sức khỏe -5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn cưỡi ngựa đi đầu phá tan trại giặc, thu giữ nhiều chiến lợi phẩm và lập chiến công vang dội.",
+            "effects": { "martial": 6, "fame": 10, "copper": 450, "health": -5 }
+          }
+        ]
+      },
+      {
+        "label": "Bố trí phòng tuyến chắc chắn bảo vệ dân lành",
+        "hint": "Võ nghệ +3 · Thanh danh +6 · Quan hệ +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Chiến thuật phòng ngự chặt chẽ giúp quân sĩ ít thương vong và được dân biên ải hết lòng kính trọng.",
+            "effects": { "martial": 3, "fame": 6, "relationships": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_martial_siege_defense",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Tử Thủ Thành Trì Trước Vòng Vây Địch",
+    "conditions": {
+      "min_age": 20,
+      "min_martial": 18,
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": {
+      "base": 20
+    },
+    "description": "Địch quân đông gấp bội bất ngờ vây kín thành trì nơi bạn đóng quân. Lương thảo chỉ còn đủ dùng trong mười ngày.",
+    "choices": [
+      {
+        "label": "Thề sống chết cùng binh sĩ giữ thành chờ viện binh",
+        "hint": "Thanh danh +12 · Võ nghệ +5 · Hạnh phúc +4 · Sức khỏe -6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Tinh thần quả cảm của bạn thổi bùng sĩ khí toàn quân, giữ vững thành trì cho tới ngày viện binh kéo tới.",
+            "effects": { "fame": 12, "martial": 5, "happiness": 4, "health": -6 }
+          }
+        ]
+      },
+      {
+        "label": "Mở đường máu rút lui có trật tự để bảo toàn lực lượng",
+        "hint": "Võ nghệ +3 · Thanh danh -3 · Tiền -150đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn đưa phần lớn quân sĩ thoát khỏi vòng vây an toàn, tránh cảnh tổn thất vô ích.",
+            "effects": { "martial": 3, "fame": -3, "copper": -150 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_martial_court_rivalry",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Văn Quan Dèm Pha Công Trận Của Võ Tướng",
+    "conditions": {
+      "min_age": 22,
+      "has_any_flag": ["trong_quan_ngu", "quan_ham_hieu_uy", "quan_ham_tuong_quan"]
+    },
+    "weight": {
+      "base": 24
+    },
+    "description": "Trong triều có nhóm văn quan dâng sớ chê bai võ tướng chỉ biết chém giết, đòi cắt giảm quân lương của doanh trại bạn.",
+    "choices": [
+      {
+        "label": "Đem chiến công và sổ quân khí ra đối chất thẳng trước triều",
+        "hint": "Thanh danh +9 · Quan hệ -3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bằng chứng thép khiến nhóm văn quan câm nín, quân lương được giữ nguyên vẹn.",
+            "effects": { "fame": 9, "relationships": -3 }
+          }
+        ]
+      },
+      {
+        "label": "Gửi lễ vật kết giao với đại thần văn ban để giữ hòa khí",
+        "hint": "Tiền -300đ · Quan hệ +6 · Thanh danh +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nhờ biết điều ứng xử, bạn có thêm tiếng nói ủng hộ cả ở văn ban lẫn võ ban.",
+            "effects": { "copper": -300, "relationships": 6, "fame": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_martial_merit_to_official",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Lập Quân Công Hiển Hách — Thưởng Chức Võ Quan",
+    "conditions": {
+      "min_age": 22,
+      "min_martial": 28,
+      "min_fame": 25,
+      "max_official_rank": 0,
+      "missing_flags": ["trong_hau_cung", "bi_ep_lam_gia_no"]
+    },
+    "weight": {
+      "base": 32
+    },
+    "description": "Nhờ nhiều năm lăn lộn chiến trường và lập công lớn, triều đình ban chiếu triệu bạn về kinh phong chức Võ quan đứng vào hàng ngũ triều thần.",
+    "choices": [
+      {
+        "label": "Nhận sắc phong Võ quan bước vào triều đình",
+        "hint": "Quan hàm +1 · Thanh danh +12 · Hạnh phúc +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Từ một võ nhân xuất thân chiến trận, bạn chính thức bước vào hàng ngũ quan lại triều đình.",
+            "effects": {
+              "official_rank_delta": 1,
+              "fame": 12,
+              "happiness": 8,
+              "milestone_title": "Lập quân công hiển hách, được phong Võ quan"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Xin giữ quyền cầm quân tự do ngoài biên ải",
+        "hint": "Võ nghệ +6 · Tiền +600đ · Thanh danh +5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Triều đình khen ngợi chí khí của bạn và ban thưởng hậu hĩnh để tiếp tục trấn giữ biên cương.",
+            "effects": { "martial": 6, "copper": 600, "fame": 5 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_martial_train_disciples",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Mở Võ Quán Truyền Thụ Binh Pháp",
+    "conditions": {
+      "min_age": 26,
+      "min_martial": 24,
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": {
+      "base": 22
+    },
+    "description": "Nhiều thanh niên trai tráng trong vùng tìm tới xin bái sư học võ nghệ và binh pháp dưới trướng của bạn.",
+    "choices": [
+      {
+        "label": "Thu nhận đệ tử tâm huyết, rèn luyện đội ngũ trung thành",
+        "hint": "Võ nghệ +4 · Quan hệ +6 · Thanh danh +5 · Mở khóa lực lượng riêng",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn gây dựng được một nhóm môn hạ tinh nhuệ vừa giỏi võ nghệ vừa hết lòng trung thành.",
+            "effects": {
+              "martial": 4,
+              "relationships": 6,
+              "fame": 5,
+              "add_flags": ["co_luc_luong_rieng"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Mở lớp dạy võ thu học phí trang trải cuộc sống",
+        "hint": "Tiền +350đ · Võ nghệ +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Võ quán ngày một đông học trò, mang lại nguồn thu nhập ổn định cho gia đình bạn.",
+            "effects": { "copper": 350, "martial": 2 }
+          }
+        ]
+      }
+    ]
+  }
+]

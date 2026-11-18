@@ -41,6 +41,7 @@ export interface ConditionSpec {
   has_any_property?: boolean;
   has_living_parent?: boolean;
   has_living_npc_id?: string;
+  min_official_rank?: number;
   max_official_rank?: number;
 
   has_traits?: string[];
@@ -72,6 +73,7 @@ export interface EffectSpec {
   add_flags?: string[];
   remove_flags?: string[];
   reset_official_rank?: boolean;
+  official_rank_delta?: number;
   add_traits?: string[];
   remove_traits?: string[];
   add_interests?: string[];

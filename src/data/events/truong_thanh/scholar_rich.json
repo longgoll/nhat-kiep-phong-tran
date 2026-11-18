@@ -1,0 +1,257 @@
+[
+  {
+    "id": "evt_scholar_rich_poetry_club",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Hội Văn Thơ Tao Nhân Chốn Kinh Kỳ",
+    "conditions": {
+      "min_age": 15,
+      "max_age": 35,
+      "min_education": 16,
+      "min_copper": 400,
+      "origin_in": ["dia_chu", "quan_lai", "hoang_toc"],
+      "missing_flags": ["trong_hau_cung", "thai_giam"]
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": [
+        { "conditions": { "min_education": 28 }, "addWeight": 12 }
+      ]
+    },
+    "description": "Nhóm công tử hào hoa và danh sĩ trẻ tổ chức buổi bình thơ bên hồ. Đây là dịp tốt để mở rộng nhân mạch nơi danh môn vọng tộc.",
+    "choices": [
+      {
+        "label": "Chi tiền đãi tiệc rượu ngon, ngâm vịnh kết giao rộng rãi",
+        "hint": "Tiền -250đ · Thanh danh +6 · Quan hệ +6 · Học thức +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bữa tiệc phong lưu khiến các danh sĩ trầm trồ, nhiều người chủ động kết bạn tri âm với bạn.",
+            "effects": { "copper": -250, "fame": 6, "relationships": 6, "education": 2 }
+          }
+        ]
+      },
+      {
+        "label": "Tham dự khiêm nhường, chú tâm học hỏi văn chương",
+        "hint": "Học thức +4 · Quan hệ +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn lắng nghe nhiều bình luận tinh tế và trau dồi thêm vốn từ chương sắc sảo.",
+            "effects": { "education": 4, "relationships": 3 }
+          }
+        ]
+      },
+      {
+        "label": "Thẳng thắn chê bài thơ sáo rỗng của công tử quyền quý",
+        "hint": "Thanh danh +3 · Học thức +2 · Tai tiếng +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Giới học thuật ngầm nể sự cương trực của bạn, nhưng vị công tử kia lại mang lòng hiềm khích.",
+            "effects": { "fame": 3, "education": 2, "infamy": 2, "relationships": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_rich_temptation",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Bạn Giàu Rủ Rê Tửu Sắc & Trường Bạc",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 30,
+      "min_copper": 500,
+      "origin_in": ["dia_chu", "quan_lai", "hoang_toc"],
+      "missing_flags": ["trong_hau_cung", "thai_giam", "dang_lam_quan"]
+    },
+    "weight": {
+      "base": 22
+    },
+    "description": "Đám bạn con nhà giàu rủ bạn bỏ buổi bình văn để tới tửu lầu và sòng bạc nổi tiếng nhất kinh thành giải sầu.",
+    "choices": [
+      {
+        "label": "Dứt áo từ chối, quay về thư phòng giữ tiết tháo",
+        "hint": "Học thức +4 · Thanh danh +4 · Quan hệ -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giữ vững kỷ luật bản thân, tránh xa vòng xoáy ăn chơi sa đọa.",
+            "effects": { "education": 4, "fame": 4, "relationships": -2 }
+          }
+        ]
+      },
+      {
+        "label": "Góp vui một canh rồi về sớm giữ chừng mực",
+        "hint": "Tiền -300đ · Hạnh phúc +5 · Học thức -2 · Tai tiếng +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Một đêm tiêu khiển giúp bạn xả hơi, nhưng lời đồn về thói ăn chơi cũng bắt đầu lan ra.",
+            "effects": { "copper": -300, "happiness": 5, "education": -2, "infamy": 3 }
+          }
+        ]
+      },
+      {
+        "label": "Sa đà thâu đêm suốt sáng trên chiếu bạc",
+        "hint": "Tiền -700đ · Sức khỏe -4 · Học thức -5 · Tai tiếng +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn thua sạch bạc mang theo, thân thể rã rời và bị trưởng bối trong tộc quở trách nặng nề.",
+            "effects": { "copper": -700, "health": -4, "education": -5, "infamy": 6 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_rich_backdoor",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Lời Mời Chạy Cửa Sau Mua Danh",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 35,
+      "min_education": 15,
+      "min_copper": 1200,
+      "origin_in": ["dia_chu", "quan_lai", "hoang_toc"],
+      "missing_flags": ["do_cu_nhan", "do_tien_si", "trong_hau_cung", "dang_lam_quan"]
+    },
+    "weight": {
+      "base": 20
+    },
+    "description": "Một viên lại mục thân tín hé lộ: chỉ cần biếu bạc cho quan chủ khảo, tên bạn sẽ được đưa vào danh sách tiến cử đặc cách mà không cần khổ luyện thêm.",
+    "choices": [
+      {
+        "label": "Chi 1.000đ chạy cửa sau lấy danh tiếng trước mắt",
+        "hint": "Tiền -1000đ · Thanh danh +4 · Tai tiếng +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn có được tấm vé tiến cử bằng bạc trắng, nhưng từ nay luôn phải dè chừng ánh mắt khinh khi của giới thanh lưu.",
+            "effects": {
+              "copper": -1000,
+              "fame": 4,
+              "infamy": 8,
+              "add_flags": ["nho_thu_quan_tham"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Cự tuyệt thẳng thừng, lấy thực học làm gốc",
+        "hint": "Thanh danh +6 · Học thức +3 · Hạnh phúc +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giữ trọn khí tiết sĩ phu, tự tin bước vào trường thi bằng chính năng lực của mình.",
+            "effects": { "fame": 6, "education": 3, "happiness": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_rich_family_pressure",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Áp Lực Gia Phong & Kỳ Vọng Của Tộc Trưởng",
+    "conditions": {
+      "min_age": 17,
+      "max_age": 28,
+      "min_education": 14,
+      "origin_in": ["dia_chu", "quan_lai", "hoang_toc"],
+      "missing_flags": ["trong_hau_cung", "thai_giam"]
+    },
+    "weight": {
+      "base": 24
+    },
+    "description": "Trong buổi giỗ tổ, tộc trưởng nhắc lại truyền thống khoa bảng của gia tộc và đặt trọn kỳ vọng lên vai bạn phải đỗ đạt làm rạng rỡ môn đình.",
+    "choices": [
+      {
+        "label": "Đóng cửa đọc sách thâu đêm, quyết không phụ lòng gia tộc",
+        "hint": "Học thức +5 · Sức khỏe -3 · Hạnh phúc -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Áp lực nặng nề biến thành động lực giúp học lực của bạn tiến bộ vượt bậc.",
+            "effects": { "education": 5, "health": -3, "happiness": -2 }
+          }
+        ]
+      },
+      {
+        "label": "Thưa với trưởng bối xin học song song cả thương toán quản lý gia sản",
+        "hint": "Học thức +2 · Thương tài +5 · Quan hệ +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Tộc trưởng gật đầu tán thành sự thực tế của bạn, giao cho bạn xem trước một phần sổ sách điền trang.",
+            "effects": { "education": 2, "craft_trade": 5, "relationships": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_rich_patron_poor",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Gặp Sĩ Tử Nghèo Hết Tiền Lộ Phí",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 45,
+      "min_copper": 600,
+      "origin_in": ["dia_chu", "quan_lai", "hoang_toc"],
+      "missing_flags": ["trong_hau_cung"]
+    },
+    "weight": {
+      "base": 20
+    },
+    "description": "Trên đường tới trường thi hoặc thư viện, bạn bắt gặp một thư sinh áo vải rách sờn đang phải bán bớt nghiên mực cũ lấy tiền lộ phí.",
+    "choices": [
+      {
+        "label": "Tặng 300đ giúp bạn nghèo ăn học không cần hoàn lại",
+        "hint": "Tiền -300đ · Thanh danh +7 · Quan hệ +6 · Hạnh phúc +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Thư sinh kia cảm kích rơi lệ, kết nghĩa kim lan với bạn và sau này trở thành chỗ dựa đáng tin cậy.",
+            "effects": { "copper": -300, "fame": 7, "relationships": 6, "happiness": 4 }
+          }
+        ]
+      },
+      {
+        "label": "Cho vay 200đ kèm giấy biên nhận sòng phẳng",
+        "hint": "Tiền -200đ · Thương tài +3 · Quan hệ +1",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Thư sinh cảm ơn và hẹn ngày đỗ đạt sẽ hoàn trả sòng phẳng cả vốn lẫn ân tình.",
+            "effects": { "copper": -200, "craft_trade": 3, "relationships": 1 }
+          }
+        ]
+      },
+      {
+        "label": "Làm ngơ bước qua, chuyện ai nấy lo",
+        "hint": "Tai tiếng +1",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn lạnh lùng rảo bước đi tiếp giữa ánh nhìn thất vọng của người xung quanh.",
+            "effects": { "infamy": 1 }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -11,22 +11,72 @@ import {
   startVenture,
 } from './careerSystem';
 import { hasActiveLivelihood } from './lifeStatus';
-import { appendLog } from './effectApplier';
-import { sellProperty } from './progressionModules';
+import { appendLog, applyEffects } from './effectApplier';
+import { OFFICIAL_RANKS, appointOrPromoteOfficial, sellProperty } from './progressionModules';
+
+export interface DecisionCandidate {
+  id: string;
+  priority: number;
+}
+
+const DYNAMIC_DECISION_PRIORITIES: Array<{ id: string; priority: number }> = [
+  { id: 'dec_loan_heavy', priority: 100 },
+  { id: 'dec_college_18', priority: 90 },
+  { id: 'dec_retire_60', priority: 85 },
+  { id: 'dec_official_appoint', priority: 82 },
+  { id: 'dec_official_promote', priority: 78 },
+  { id: 'dec_rankup', priority: 75 },
+  { id: 'dec_job_offers', priority: 65 },
+  { id: 'dec_biz_offers', priority: 55 },
+];
+
+/**
+ * Collects all currently eligible dynamic decision candidates sorted by priority (highest first).
+ */
+export function collectDynamicDecisionCandidates(state: ActiveLifeState): DecisionCandidate[] {
+  const candidates: DecisionCandidate[] = [];
+  for (const spec of DYNAMIC_DECISION_PRIORITIES) {
+    if (buildDynamicDecisionById(state, spec.id) !== null) {
+      candidates.push({ id: spec.id, priority: spec.priority });
+    }
+  }
+  return candidates.sort((a, b) => b.priority - a.priority);
+}
+
+/**
+ * Materializes a specific dynamic decision card by ID if it is still eligible for `state`.
+ */
+export function buildDynamicDecisionById(
+  state: ActiveLifeState,
+  decisionId: string,
+): GameEventDef | null {
+  return generateDynamicDecisionInternal(state, decisionId);
+}
 
 /**
  * 1in8b-style Dynamic Decision Card Generator (`DEC.college`, `DEC.job`, `DEC.rankup`, `DEC.retire`, `DEC.loan`).
- * Returns a contextual GameEventDef on annual milestones or life transitions.
+ * Returns the highest-priority contextual GameEventDef on annual milestones or life transitions.
  */
 export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | null {
+  const candidates = collectDynamicDecisionCandidates(state);
+  if (candidates.length === 0) return null;
+  return buildDynamicDecisionById(state, candidates[0].id);
+}
+
+function generateDynamicDecisionInternal(
+  state: ActiveLifeState,
+  onlyId?: string,
+): GameEventDef | null {
   const age = getAgeYears(state.profile.totalDays);
   const totalDays = state.profile.totalDays;
 
   // 1. DEC.college at age 18 (or 18-20 if not yet decided)
   if (
+    (!onlyId || onlyId === 'dec_college_18') &&
     age >= 18 &&
     age <= 20 &&
     !state.flags.includes('dec_college_done') &&
+    !state.flags.includes('trong_hau_cung') &&
     (state.eduLevel ?? 0) < 4 &&
     state.livelihoodStatus !== 'prison'
   ) {
@@ -111,6 +161,7 @@ export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | 
 
   // 2. DEC.retire around age 60-65
   if (
+    (!onlyId || onlyId === 'dec_retire_60') &&
     age >= 60 &&
     hasActiveLivelihood(state) &&
     !state.flags.includes('dec_retire_asked') &&
@@ -165,8 +216,115 @@ export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | 
     };
   }
 
+  // 2b. DEC.official_appoint when eligible for officialdom via exam degree, tap am, or recommendation
+  const hasExamDegree = state.flags.includes('do_cu_nhan') || state.flags.includes('do_tien_si');
+  const hasPatronEntry =
+    (state.flags.includes('co_an_tap_am') ||
+      state.flags.includes('duoc_quy_nhan_nang_do') ||
+      state.profile.originClass === 'quan_lai' ||
+      state.profile.originClass === 'hoang_toc') &&
+    state.stats.education >= 24;
+  if (
+    (!onlyId || onlyId === 'dec_official_appoint') &&
+    age >= 20 &&
+    age < 60 &&
+    state.officialRank === 0 &&
+    (hasExamDegree || hasPatronEntry) &&
+    !state.flags.includes('dec_official_declined') &&
+    !state.flags.includes('trong_hau_cung') &&
+    state.livelihoodStatus !== 'retired' &&
+    state.livelihoodStatus !== 'prison'
+  ) {
+    const startRankTitle = state.flags.includes('do_tien_si') ? 'Tri phủ' : 'Tri huyện';
+    const entryReason = hasExamDegree
+      ? 'Nhờ khoa bảng đỗ đạt, bộ Lại đã gửi trát triệu tập bạn ra làm quan'
+      : 'Nhờ ân trạch thế gia và sự tiến cử của quý nhân, bộ Lại ban trát bổ nhiệm bạn ra làm quan';
+    return {
+      id: 'dec_official_appoint',
+      stage: 'adulthood',
+      severity: 'major',
+      isMilestone: true,
+      conditions: {},
+      title: `Triều đình bổ nhiệm: Nhậm chức ${startRankTitle}`,
+      description: `${entryReason}, khởi đầu ở chức ${startRankTitle}.`,
+      cooldownDays: 99999,
+      weight: { base: 100 },
+      choices: [
+        {
+          label: `Nhận sắc phong nhậm chức ${startRankTitle}`,
+          hint: 'Chính thức bước vào quan trường · Thanh danh +10',
+          outcomes: [
+            {
+              weight: { base: 100 },
+              effects: { happiness: 6 },
+              resultText: `Bạn bái lạy nhận sắc phong, chính thức nhậm chức ${startRankTitle}.`,
+            },
+          ],
+        },
+        {
+          label: 'Từ chối làm quan, giữ chí ẩn dật hoặc tự lập',
+          hint: 'Không tham gia quan trường',
+          outcomes: [
+            {
+              weight: { base: 100 },
+              effects: { fame: 3, add_flags: ['dec_official_declined'] },
+              resultText: 'Bạn khéo léo cáo từ sắc phong, chọn cuộc sống tự do ngoài chốn quan trường.',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  // 2c. DEC.official_promote when official meets fame requirement for next rank
+  if (
+    (!onlyId || onlyId === 'dec_official_promote') &&
+    state.officialRank >= 1 &&
+    state.officialRank < 5 &&
+    state.stats.fame >= state.officialRank * 25 &&
+    totalDays - (state.eventCooldowns['dec_official_promote'] ?? -99999) >= 720 &&
+    state.livelihoodStatus !== 'prison'
+  ) {
+    const nextRankTitle = OFFICIAL_RANKS[state.officialRank + 1] ?? 'Đại thần';
+    return {
+      id: 'dec_official_promote',
+      stage: 'adulthood',
+      severity: 'major',
+      isMilestone: true,
+      conditions: {},
+      title: `Thăng tiến quan trường: Đề bạt chức ${nextRankTitle}`,
+      description: `Nhờ công trạng và thanh danh tích lũy (${Math.round(state.stats.fame)}), triều đình xét thăng bạn lên chức ${nextRankTitle}.`,
+      cooldownDays: 720,
+      weight: { base: 100 },
+      choices: [
+        {
+          label: `Tiếp nhận chiếu chỉ thăng chức ${nextRankTitle}`,
+          hint: 'Phẩm hàm +1 · Thanh danh +10 · Hạnh phúc +12',
+          outcomes: [
+            {
+              weight: { base: 100 },
+              effects: {},
+              resultText: `Bạn tạ ân nhận ấn tín, chính thức thăng lên chức ${nextRankTitle}.`,
+            },
+          ],
+        },
+        {
+          label: 'Khiêm nhường xin giữ nguyên chức cũ để tránh mũi dùi phe phái',
+          hint: 'Giữ nguyên phẩm hàm hiện tại · Thanh danh +2',
+          outcomes: [
+            {
+              weight: { base: 100 },
+              effects: { fame: 2 },
+              resultText: 'Bạn dâng sớ xin tạm giữ chức cũ để tránh gây chú ý nơi triều đường.',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
   // 3. DEC.rankup when current career is ready for promotion
-  if (state.activeCareer && canPromoteCareer(state).ok) {
+  if ((!onlyId || onlyId === 'dec_rankup') && state.activeCareer && canPromoteCareer(state).ok) {
     const promo = canPromoteCareer(state);
     if (promo.targetJob && totalDays - (state.eventCooldowns['dec_rankup'] ?? -99999) >= 360) {
       return {
@@ -208,6 +366,7 @@ export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | 
 
   // 4. DEC.loan when deeply in debt
   if (
+    (!onlyId || onlyId === 'dec_loan_heavy') &&
     state.assets.wealthCopper < -300 &&
     totalDays - (state.eventCooldowns['dec_loan_heavy'] ?? -99999) >= 360
   ) {
@@ -282,8 +441,10 @@ export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | 
   // 5. DEC.job when unemployed (`seeking`) OR explicitly hunting via Chi tiêu · đầu tư (`cho_tim_viec_moi`)
   const wantsNewJob = state.flags.includes('cho_tim_viec_moi');
   if (
+    (!onlyId || onlyId === 'dec_job_offers') &&
     age >= 18 &&
     !state.isStudent &&
+    !state.flags.includes('trong_hau_cung') &&
     (wantsNewJob ||
       (!hasActiveLivelihood(state) &&
         state.livelihoodStatus !== 'homemaker' &&
@@ -346,8 +507,10 @@ export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | 
 
   // 6. DEC.biz when triggered via Chi tiêu · đầu tư (`cho_khoi_nghiep`)
   if (
+    (!onlyId || onlyId === 'dec_biz_offers') &&
     age >= 18 &&
     state.flags.includes('cho_khoi_nghiep') &&
+    !state.flags.includes('trong_hau_cung') &&
     state.livelihoodStatus !== 'prison'
   ) {
     const bizOffers = getAvailableVentures(state)
@@ -458,6 +621,31 @@ export function applyDynamicDecisionSideEffects(
         officialRank: 0,
         profile: { ...resigned.profile, currentRole: 'Nghỉ hưu' },
       };
+    }
+    return next;
+  }
+
+  if (eventId === 'dec_official_appoint') {
+    if (choiceIndex === 0) {
+      if (state.flags.includes('do_cu_nhan') || state.flags.includes('do_tien_si')) {
+        return appointOrPromoteOfficial(state);
+      }
+      return applyEffects(state, {
+        official_rank_delta: 1,
+        fame: 10,
+        milestone_title: 'Được tiến cử nhậm chức Tri huyện',
+      });
+    }
+    return state;
+  }
+
+  if (eventId === 'dec_official_promote') {
+    const next = {
+      ...state,
+      eventCooldowns: { ...state.eventCooldowns, dec_official_promote: totalDays },
+    };
+    if (choiceIndex === 0) {
+      return appointOrPromoteOfficial(next);
     }
     return next;
   }

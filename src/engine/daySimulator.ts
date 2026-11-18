@@ -12,13 +12,14 @@ import {
   type WorldState,
 } from '../types/activeLife';
 import type { ActionDef, EffectSpec, GameEventDef } from '../types/dsl';
-import { computeWeight, evaluateConditions } from './conditionEvaluator';
+import { evaluateConditions } from './conditionEvaluator';
 import { getCareerIncomeMultiplier, recordDailyCareerProgress } from './careerSystem';
 import { calculateRicePrice, formatCopper } from './economy';
 import { appendLog, applyAnnualStatMeanReversion, applyEffects } from './effectApplier';
 import { mulberry32Next, pickWeightedIndex } from './prng';
 import { getCurrentLivelihoodLabel, hasActiveLivelihood } from './lifeStatus';
-import { generateDynamicDecision } from './decisionGenerator';
+import { buildDynamicDecisionById } from './decisionGenerator';
+import { planYear } from './yearPlanner';
 import { resolveEventChoice } from './childhoodEngine';
 import { getPropertySeasonalIncome, getPropertySeasonalSocial, PROPERTY_CATALOG } from './progressionModules';
 import {
@@ -274,7 +275,10 @@ export function getFamilyCoveredLifestyleTier(state: ActiveLifeState): Lifestyle
 
   const familyWealth = state.family.familyWealthCopper;
 
-  if (originClass === 'ban_nong') return null;
+  if (originClass === 'ban_nong') {
+    const ageYears = getAgeYears(state.profile.totalDays);
+    return ageYears < 18 ? 'chao_loang' : null;
+  }
   if (originClass === 'thu_cong') {
     return familyWealth >= 300 ? 'com_rau' : null;
   }
@@ -569,6 +573,10 @@ export function advanceDays(
 
       const target = eventsPool.find((e) => e.id === dueItem.eventId);
       if (target && evaluateConditions(state, target.conditions)) {
+        state = {
+          ...state,
+          eventCooldowns: { ...state.eventCooldowns, [target.id]: nextTotalDays },
+        };
         if (target.severity === 'major') {
           daysSimulated += 1;
           state = { ...state, lastMajorEventDay: nextTotalDays };
@@ -656,42 +664,45 @@ export function advanceDays(
       return { state, daysSimulated, pausedReason: 'dead' };
     }
 
-    // 4. Roll random adulthood event (1in8b planYear pacing: ~3-4 events/year, max ~2-3 major decisions/year)
-    const MAJOR_EVENT_COOLDOWN_DAYS = 90;
-    const canRollMajor = nextTotalDays - (state.lastMajorEventDay ?? -9999) >= MAJOR_EVENT_COOLDOWN_DAYS;
-    const eligibleEvents = eventsPool.filter((evt) => {
-      if (evt.stage !== 'adulthood' && evt.stage !== 'any') return false;
-      if (evt.cooldownDays === 0) return false; // delayed-only events
-      if (evt.oncePerLife && state.eventCooldowns[evt.id] !== undefined) return false;
-      if (evt.severity === 'major' && !canRollMajor) return false;
-      const last = state.eventCooldowns[evt.id] ?? -99999;
-      if (nextTotalDays - last < evt.cooldownDays) return false;
-      return evaluateConditions(state, evt.conditions);
-    });
+    // 4. 1in8b Annual Event & Decision Scheduler (`planYear` + `scheduledDecisions`)
+    if (newAge >= 13 && state.yearPlan?.yearAge !== newAge) {
+      state = planYear(state, eventsPool);
+    }
 
-    if (eligibleEvents.length > 0) {
-      // ~1.2% chance per day (~4 events/year on average, matching 1in8b's 2-3 feed + 1-2 decisions/year)
-      const triggerRoll = pickWeightedIndex(state.prngState, [12, 988]);
-      state = { ...state, prngState: triggerRoll.nextState };
+    // Immediate player-requested decisions (job hunt / business startup via Chi tiêu · đầu tư)
+    if (state.flags.includes('cho_tim_viec_moi')) {
+      const immediateJob = buildDynamicDecisionById(state, 'dec_job_offers');
+      if (immediateJob) {
+        state = { ...state, lastMajorEventDay: nextTotalDays };
+        return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: immediateJob };
+      }
+    }
+    if (state.flags.includes('cho_khoi_nghiep')) {
+      const immediateBiz = buildDynamicDecisionById(state, 'dec_biz_offers');
+      if (immediateBiz) {
+        state = { ...state, lastMajorEventDay: nextTotalDays };
+        return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: immediateBiz };
+      }
+    }
 
-      if (triggerRoll.index === 0) {
-        const weights = eligibleEvents.map((e) => computeWeight(state, e.weight));
-        const sumW = weights.reduce((a, b) => a + b, 0);
-        if (sumW > 0) {
-          const pick = pickWeightedIndex(state.prngState, weights);
-          state = { ...state, prngState: pick.nextState };
-          const picked = eligibleEvents[pick.index];
-
-          state = {
-            ...state,
-            eventCooldowns: { ...state.eventCooldowns, [picked.id]: nextTotalDays },
-          };
-
-          if (picked.severity === 'major') {
-            state = { ...state, lastMajorEventDay: nextTotalDays };
-            return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: picked };
-          }
-          state = resolveEventChoice(state, picked, 0).state;
+    // Due scheduled decision from this year's planYear
+    if (state.yearPlan && state.yearPlan.scheduledDecisions.length > 0) {
+      const dueIdx = state.yearPlan.scheduledDecisions.findIndex(
+        (slot) => slot.status === 'pending' && slot.triggerDay <= nextTotalDays,
+      );
+      if (dueIdx !== -1) {
+        const slot = state.yearPlan.scheduledDecisions[dueIdx];
+        const dynDecision = buildDynamicDecisionById(state, slot.decisionId);
+        const updatedSlots = state.yearPlan.scheduledDecisions.map((s, idx) =>
+          idx === dueIdx ? { ...s, status: dynDecision ? ('triggered' as const) : ('skipped' as const) } : s,
+        );
+        state = {
+          ...state,
+          yearPlan: { ...state.yearPlan, scheduledDecisions: updatedSlots },
+        };
+        if (dynDecision) {
+          state = { ...state, lastMajorEventDay: nextTotalDays };
+          return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: dynDecision };
         }
       }
     }
@@ -732,7 +743,8 @@ export function advanceDays(
           state = { ...state, prngState: invRoll.nextState };
           rate = -0.02 + invRoll.value * 0.11; // -2% to +9%
         }
-        const invGain = Math.round(state.assets.wealthCopper * rate);
+        const cappedPrincipal = Math.min(state.assets.wealthCopper, 2_000_000);
+        const invGain = Math.round(cappedPrincipal * rate);
         if (invGain !== 0) {
           state = applyEffects(state, { copper: invGain });
           if (invGain > 0) state = addLedger(state, { propertyIncomeCopper: invGain });
@@ -935,13 +947,8 @@ export function advanceDays(
       return { state, daysSimulated, pausedReason: 'birthday' };
     }
 
-    if (isBirthday) {
-      // 1in8b dynamic decision cards on annual milestones (college, job offers, rankup, retire, loan)
-      const dynDecision = generateDynamicDecision(state);
-      if (dynDecision) {
-        state = { ...state, lastMajorEventDay: nextTotalDays };
-        return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: dynDecision };
-      }
+    if (isBirthday && newAge >= 13) {
+      state = planYear(state, eventsPool);
     }
 
     const isLowHealthNow = state.stats.health < 20;

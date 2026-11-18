@@ -122,6 +122,21 @@ export interface AnnualFinanceLedger {
   otherExpenseCopper: number;
 }
 
+export interface ScheduledDecisionSlot {
+  decisionId: string;
+  triggerDay: number;
+  priority: number;
+  status: 'pending' | 'triggered' | 'skipped';
+}
+
+export interface YearPlanSnapshot {
+  yearAge: number;
+  plannedAtDay: number;
+  scheduledDecisions: ScheduledDecisionSlot[];
+  postponedDecisionIds: string[];
+  feedEventIds: Array<{ eventId: string; triggerDay: number }>;
+}
+
 export interface ActiveLifeState {
   schemaVersion: number;
   seed: number;
@@ -204,6 +219,7 @@ export interface ActiveLifeState {
   delayedEvents: Array<{ eventId: string; triggerDay: number }>;
   eventCooldowns: Record<string, number>;
   lastMajorEventDay?: number;
+  yearPlan?: YearPlanSnapshot;
   milestones: MilestoneRecord[];
   yearlyHappiness?: Record<number, number>;
   activeCareer?: ActiveCareer | null;

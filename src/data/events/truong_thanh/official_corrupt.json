@@ -1,0 +1,166 @@
+[
+  {
+    "id": "evt_official_corrupt_merchant_deal",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Móc Ngoặc Lái Buôn Chia Phần Thuế Chợ",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"]
+    },
+    "weight": {
+      "base": 24
+    },
+    "description": "Các chủ thương đoàn lớn ngỏ ý xin giảm thuế bến đò và hứa sẽ trích riêng một phần lợi nhuận hậu hĩnh chuyển vào tư dinh của bạn.",
+    "choices": [
+      {
+        "label": "Gật đầu ngầm bảo kê để thu lợi riêng",
+        "hint": "Tiền +650đ · Tai tiếng +6 · Thanh danh -3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạc trắng chảy đều vào rương riêng, nhưng tiếng xì xào về sự thiên vị bắt đầu lan trong giới tiểu thương.",
+            "effects": { "copper": 650, "infamy": 6, "fame": -3 }
+          }
+        ]
+      },
+      {
+        "label": "Bác bỏ đề nghị, thu thuế công bằng theo lệ triều đình",
+        "hint": "Thanh danh +4 · Tai tiếng -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Thương đoàn đành tuân thủ đúng lệ thuế, còn ngân khố phủ nha thu đủ không thất thoát.",
+            "effects": { "fame": 4, "infamy": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_corrupt_bribe_case",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1200,
+    "title": "Nhận Hối Lộ Chạy Án Trọng Tội",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"]
+    },
+    "weight": {
+      "base": 22
+    },
+    "description": "Con trai một gia đình quyền thế gây án ẩu đả chết người. Người nhà mang 900đ bạc nén tới cửa sau xin bạn sửa hồ sơ thành tai nạn ngoài ý muốn.",
+    "choices": [
+      {
+        "label": "Nhận 900đ bạc nén, xử nhẹ cho kẻ có thế lực",
+        "hint": "Tiền +900đ · Tai tiếng +9 · Thanh danh -5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn ký án nhẹ tội để đổi lấy bạc trắng, nhưng nỗi oán thán của gia đình nạn nhân sẽ còn âm ỉ dài lâu.",
+            "effects": { "copper": 900, "infamy": 9, "fame": -5 }
+          }
+        ]
+      },
+      {
+        "label": "Thẳng tay tống giam kẻ mang bạc tới hối lộ",
+        "hint": "Thanh danh +6 · Tai tiếng -3 · Hạnh phúc +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Kẻ hối lộ bị xử nghiêm theo quốc pháp, uy nghiêm công đường được giữ vững.",
+            "effects": { "fame": 6, "infamy": -3, "happiness": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_corrupt_faction_alliance",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Kết Bè Đảng Với Quyền Thần Trong Triều",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_age": 25
+    },
+    "weight": {
+      "base": 22
+    },
+    "description": "Một đại thần nắm thực quyền nơi trung ương gửi mật thư mời bạn gia nhập phe cánh, hứa sẽ che chở và nâng đỡ khi có biến động.",
+    "choices": [
+      {
+        "label": "Gửi lễ vật gia nhập phe cánh quyền thần",
+        "hint": "Tiền -400đ · Thanh danh +6 · Tai tiếng +7 · Quan hệ +5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn chính thức có chỗ dựa vững chắc nơi triều đình, nhưng từ nay cũng bị cuốn vào vòng xoáy tranh đấu phe phái.",
+            "effects": { "copper": -400, "fame": 6, "infamy": 7, "relationships": 5 }
+          }
+        ]
+      },
+      {
+        "label": "Giữ thế trung lập, không kết bè kéo cánh",
+        "hint": "Thanh danh +3 · Quan hệ -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giữ được sự độc lập của bản thân dù không được phe cánh đại thần ưu ái.",
+            "effects": { "fame": 3, "relationships": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_corrupt_censor_raid",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Đoàn Thanh Tra Ngự Sử Ập Tới Nha Môn",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_infamy": 22
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": [
+        { "conditions": { "min_infamy": 40 }, "addWeight": 20 }
+      ]
+    },
+    "description": "Tiếng xấu tham nhũng và tư lợi bay tới tai triều đình. Đoàn thanh tra Ngự sử bất ngờ ập tới niêm phong sổ sách nha môn để điều tra.",
+    "choices": [
+      {
+        "label": "Dốc bạc chạy chọt lo lót để qua ải thanh tra",
+        "hint": "Tiền -1200đ · Tai tiếng +4 · Hạnh phúc -4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn mất một khoản tài sản lớn để dập tắt hồ sơ, giữ được chiếc ghế quan nhưng lòng nơm nớp lo âu.",
+            "effects": { "copper": -1200, "infamy": 4, "happiness": -4 }
+          }
+        ]
+      },
+      {
+        "label": "Chịu tội nhận án cách chức, hoàn trả một phần cho nhẹ tội",
+        "hint": "Mất chức quan · Thanh danh -10 · Hạnh phúc -8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn bị tước bỏ quan hàm và rời khỏi nha môn, kết thúc giấc mộng công danh trong cay đắng.",
+            "effects": {
+              "reset_official_rank": true,
+              "remove_flags": ["dang_lam_quan"],
+              "fame": -10,
+              "happiness": -8,
+              "milestone_title": "Bị Ngự sử đàn hặc, cách chức quan"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

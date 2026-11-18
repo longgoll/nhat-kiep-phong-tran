@@ -1,0 +1,173 @@
+[
+  {
+    "id": "evt_rebellion_spark",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Áp Bức Nặng Nề — Ngọn Lửa Khởi Nghĩa",
+    "conditions": {
+      "min_age": 22,
+      "min_martial": 22,
+      "has_any_flag": ["chi_lon_phuc_hung", "co_luc_luong_rieng", "tung_bi_giang_chuc", "gia_toc_sa_sut"],
+      "missing_flags": ["trong_hau_cung", "da_khoi_nghia"]
+    },
+    "weight": {
+      "base": 30
+    },
+    "description": "Dân tình lầm than, quan tham hoành hành khắp nơi. Các anh em tâm huyết dưới trướng đồng loạt khuyên bạn phất cờ tụ nghĩa để thay đổi thời cuộc.",
+    "choices": [
+      {
+        "label": "Phất cờ tụ nghĩa, bí mật tích trữ binh lương chờ thời",
+        "hint": "Võ nghệ +6 · Thanh danh +8 · Tai tiếng +12 · Mở nhánh Khởi nghĩa",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn chính thức lập căn cứ bí mật, bắt đầu chiêu mộ nghĩa sĩ bốn phương.",
+            "effects": {
+              "martial": 6,
+              "fame": 8,
+              "infamy": 12,
+              "add_flags": ["da_khoi_nghia"],
+              "milestone_title": "Phất cờ tụ nghĩa, nuôi chí xoay chuyển càn khôn"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Kìm nén lửa giận, giữ phận an toàn cho gia đình",
+        "hint": "Thanh danh +2 · Hạnh phúc -3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn chọn con đường bình yên, giải tán ý định mạo hiểm để tránh họa tru di.",
+            "effects": { "fame": 2, "happiness": -3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_rebellion_recruit_bandits",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Thu Phục Thảo Khấu & Nghĩa Sĩ Bốn Phương",
+    "conditions": {
+      "has_flags": ["da_khoi_nghia"]
+    },
+    "weight": {
+      "base": 32
+    },
+    "description": "Tiếng tăm nghĩa quân của bạn lan rộng khắp vùng núi. Nhiều toán thảo khấu và dân nghèo bất mãn tìm đường xin gia nhập đại trại.",
+    "choices": [
+      {
+        "label": "Xuất 350đ khao quân, thu phục toàn bộ hảo hán về dưới trướng",
+        "hint": "Tiền -350đ · Võ nghệ +6 · Thanh danh +6 · Quan hệ +5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Đại trại ngày một lớn mạnh với hàng trăm tinh binh thiện chiến.",
+            "effects": { "copper": -350, "martial": 6, "fame": 6, "relationships": 5 }
+          }
+        ]
+      },
+      {
+        "label": "Dẫn quân đánh úp kho lương quan tham chia cho dân đói",
+        "hint": "Tiền +600đ · Thanh danh +8 · Tai tiếng +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Trận tập kích thắng lớn giúp nghĩa quân vừa đầy kho lương vừa được dân chúng nức lòng ủng hộ.",
+            "effects": { "copper": 600, "fame": 8, "infamy": 8 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_rebellion_decisive_battle",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Trận Quyết Chiến Tiến Về Kinh Thành",
+    "conditions": {
+      "has_flags": ["da_khoi_nghia"],
+      "min_martial": 35
+    },
+    "weight": {
+      "base": 35
+    },
+    "description": "Thời cơ chín muồi đã điểm, đại quân của bạn áp sát cửa ngõ kinh thành đối đầu trực diện với chủ lực triều đình.",
+    "choices": [
+      {
+        "label": "Toàn quân tổng tiến công quyết một phen định giang sơn",
+        "hint": "Cơ hội đại thắng uy chấn thiên hạ (tăng theo Võ nghệ & Thanh danh)",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": [
+                { "conditions": { "min_martial": 50 }, "addWeight": 25 },
+                { "conditions": { "min_fame": 50 }, "addWeight": 15 }
+              ]
+            },
+            "resultText": "Nghĩa quân phá tan cửa thành! Uy danh của bạn chấn động thiên hạ, mở ra một trang sử mới.",
+            "effects": {
+              "fame": 25,
+              "copper": 3000,
+              "happiness": 15,
+              "milestone_title": "Nghĩa quân đại thắng, uy chấn thiên hạ"
+            }
+          },
+          {
+            "weight": { "base": 45 },
+            "resultText": "Quân triều đình phản công dữ dội khiến bạn trọng thương phải rút lui về căn cứ núi sâu bảo toàn tàn quân.",
+            "effects": { "health": -12, "happiness": -10, "martial": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_underworld_prison_brotherhood",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Kết Nghĩa Giang Hồ Giữa Chốn Phong Trần",
+    "conditions": {
+      "min_age": 18,
+      "min_infamy": 15,
+      "missing_flags": ["trong_hau_cung", "dang_lam_quan"]
+    },
+    "weight": {
+      "base": 20
+    },
+    "description": "Khi tai tiếng vang xa trong giới lục lâm, một tay anh chị có máu mặt tìm tới mời bạn uống rượu kết nghĩa huynh đệ.",
+    "choices": [
+      {
+        "label": "Cạn chén kết nghĩa, mở rộng chân rết giang hồ",
+        "hint": "Quan hệ +6 · Võ nghệ +3 · Tai tiếng +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Từ nay đi đâu trên giang hồ bạn cũng có người che chở và báo tin kịp thời.",
+            "effects": { "relationships": 6, "martial": 3, "infamy": 4 }
+          }
+        ]
+      },
+      {
+        "label": "Từ chối khéo, tìm đường quay về cuộc sống lương thiện",
+        "hint": "Thanh danh +4 · Tai tiếng -4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giữ khoảng cách với chốn đao kiếm, dần gột rửa bớt tiếng xấu năm xưa.",
+            "effects": { "fame": 4, "infamy": -4 }
+          }
+        ]
+      }
+    ]
+  }
+]

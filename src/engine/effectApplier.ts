@@ -200,6 +200,25 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
   if (effects.reset_official_rank) {
     officialRank = 0;
     currentRole = 'Dân thường';
+    flags = flags.filter((f) => f !== 'dang_lam_quan');
+  }
+  if (effects.official_rank_delta !== undefined && effects.official_rank_delta !== 0) {
+    const rankNames = [
+      'Dân thường',
+      'Tri huyện',
+      'Tri phủ',
+      'Tuần phủ',
+      'Thượng thư',
+      'Tể tướng',
+      'Khai quốc Hoàng đế',
+    ];
+    officialRank = Math.max(0, Math.min(5, officialRank + effects.official_rank_delta));
+    currentRole = rankNames[officialRank] ?? 'Dân thường';
+    if (officialRank === 0) {
+      flags = flags.filter((f) => f !== 'dang_lam_quan');
+    } else if (!flags.includes('dang_lam_quan')) {
+      flags.push('dang_lam_quan');
+    }
   }
 
   if (effects.add_traits) {

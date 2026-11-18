@@ -1,0 +1,155 @@
+[
+  {
+    "id": "evt_official_clean_unjust_case",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Xử Án Oan Cho Dân Nghèo",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "max_infamy": 25
+    },
+    "weight": {
+      "base": 26,
+      "modifiers": [
+        { "conditions": { "min_education": 30 }, "addWeight": 10 }
+      ]
+    },
+    "description": "Một nông dân nghèo đội đơn kêu oan trước công đường vì bị hào cường địa phương vu khống cướp ruộng. Kẻ có thế lực ngầm đánh tiếng xin bạn xử nhẹ cho qua.",
+    "choices": [
+      {
+        "label": "Xét xử công minh, trả lại ruộng đất cho dân nghèo",
+        "hint": "Thanh danh +7 · Hạnh phúc +3 · Quan hệ +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bản án công tâm của bạn khiến dân chúng vỗ tay reo hò, tiếng thơm thanh quan vang xa khắp phủ.",
+            "effects": { "fame": 7, "happiness": 3, "relationships": 3 }
+          }
+        ]
+      },
+      {
+        "label": "Dàn xếp hòa giải đôi bên để tránh đụng chạm hào cường",
+        "hint": "Thanh danh +2 · Tiền +100đ",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Vụ án khép lại êm thấm, hào cường gửi chút lễ tạ nhưng dân nghèo vẫn còn chút ấm ức.",
+            "effects": { "fame": 2, "copper": 100 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_clean_dike_patrol",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Tuần Tra Đê Điều Giữa Mùa Lũ",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"]
+    },
+    "weight": {
+      "base": 26
+    },
+    "description": "Nước sông dâng cao bất thường đe dọa đoạn đê xung yếu trong hạt. Dân phu hoảng loạn chờ lệnh điều phối của quan đầu hạt.",
+    "choices": [
+      {
+        "label": "Trực tiếp dầm mưa cùng dân phu đắp đê suốt đêm",
+        "hint": "Thanh danh +8 · Quan hệ +5 · Sức khỏe -4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Thấy quan lớn không quản gian khổ, dân phu đồng lòng giữ vững con đê qua cơn nước dữ.",
+            "effects": { "fame": 8, "relationships": 5, "health": -4 }
+          }
+        ]
+      },
+      {
+        "label": "Bỏ tiền túi thuê thêm thợ và phát cơm cháo cứu trợ",
+        "hint": "Tiền -150đ · Thanh danh +6 · Hạnh phúc +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Khoản chi kịp thời giúp nhân công vững bụng, đê điều an toàn suốt mùa mưa bão.",
+            "effects": { "copper": -150, "fame": 6, "happiness": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_clean_refuse_gift",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1200,
+    "title": "Từ Chối Lễ Vật Của Hào Cường Địa Phương",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "max_infamy": 25
+    },
+    "weight": {
+      "base": 24
+    },
+    "description": "Nhân dịp lễ tiết, một phú hào trong vùng sai người mang tráp bạc và lụa quý tới phủ đường biếu xén nhằm lấy lòng quan mới.",
+    "choices": [
+      {
+        "label": "Niêm phong trả lại toàn bộ lễ vật trước công đường",
+        "hint": "Thanh danh +7 · Tai tiếng -3 · Quan hệ -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Hành động liêm khiết của bạn khiến đám nha lại khiếp sợ, không dám vòi vĩnh dân lành.",
+            "effects": { "fame": 7, "infamy": -3, "relationships": -2 }
+          }
+        ]
+      },
+      {
+        "label": "Chỉ nhận một gói trà mộc rồi ôn tồn răn đe giữ phép nước",
+        "hint": "Thanh danh +3 · Quan hệ +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Cách ứng xử mềm mỏng nhưng cương quyết khiến phú hào vừa nể vừa không dám làm càn.",
+            "effects": { "fame": 3, "relationships": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_clean_censor_praise",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Ngự Sử Tấu Trình Khen Ngợi Thanh Liêm",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_fame": 30,
+      "max_infamy": 15
+    },
+    "weight": {
+      "base": 28
+    },
+    "description": "Đoàn Ngự sử đi thị sát âm thầm ghi nhận dân tình trong hạt đều ca ngợi chính sự liêm minh của bạn, liền dâng sớ biểu dương lên triều đình.",
+    "choices": [
+      {
+        "label": "Khiêm nhường tạ ân, tiếp tục giữ trọn tiết tháo thanh quan",
+        "hint": "Thanh danh +12 · Hạnh phúc +5 · Cột mốc Triều đình biểu dương",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Chiếu khen ngợi từ kinh thành ban xuống, mở ra con đường thăng tiến rộng thênh thang trong triều.",
+            "effects": {
+              "fame": 12,
+              "happiness": 5,
+              "milestone_title": "Được Ngự sử dâng sớ biểu dương thanh quan"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

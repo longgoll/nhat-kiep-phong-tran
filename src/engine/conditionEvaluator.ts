@@ -71,6 +71,9 @@ export function evaluateConditions(state: ActiveLifeState, cond?: ConditionSpec)
     const isNpcAlive = state.npcs.some((n) => n.id === cond.has_living_npc_id && n.isAlive);
     if (!isNpcAlive) return false;
   }
+  if (cond.min_official_rank !== undefined && state.officialRank < cond.min_official_rank) {
+    return false;
+  }
   if (cond.max_official_rank !== undefined && state.officialRank > cond.max_official_rank) {
     return false;
   }

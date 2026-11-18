@@ -51,12 +51,13 @@ describe('Day Simulator (MVP 2)', () => {
       ...life,
       profile: { ...life.profile, totalDays: 18 * 360 },
       assets: { ...life.assets, rice: 500, wealthCopper: 100 },
+      livelihoodStatus: 'homemaker',
     };
 
     life = applyEffects(life, {
       copper: 500,
       rice: 5,
-      add_flags: ['dang_no_dia_chu'],
+      add_flags: ['dang_no_dia_chu', 'dec_college_done'],
       schedule_delayed: [{ event_id: 'evt_debt_collection_01', delay_days: 180 }],
     });
 

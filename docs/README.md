@@ -15,6 +15,9 @@
 | 04 | [04-kinh-te-va-chi-tieu-dau-tu.md](./04-kinh-te-va-chi-tieu-dau-tu.md) | Tiền tệ (`wealthCopper` hỗ trợ âm = Nợ), Gạo & Vàng, Hộp thoại **"Chi tiêu · Đầu tư"** 3 tầng (`shopRank`) |
 | 05 | [05-su-kien-nghich-canh-va-tu-vong.md](./05-su-kien-nghich-canh-va-tu-vong.md) | Nhịp độ sự kiện, Nghịch cảnh (Nợ, Thất nghiệp, Sa sút, Bệnh tật), Gia đình, Tử vong & Tàng Kinh Các |
 | 06 | [06-dac-ta-ui-ux.md](./06-dac-ta-ui-ux.md) | Luồng màn hình, TopBar thống nhất, Dashboard 3 cột, Decision Modal (`Tạm gác lại`) & Bản đồ cuộc đời |
+| 07 | [07-kien-truc-plan-year-va-auto-test.md](./07-kien-truc-plan-year-va-auto-test.md) | Kiến trúc `planYear` 2 kênh, bảng priority, cách mở rộng event/decision & quy chuẩn Auto-Test giả lập |
+| 08 | [story-map.md](./story-map.md) | Bản đồ cốt truyện 0–80+ tuổi, Ma trận xung đột thân phận & lộ trình mở rộng Học trò / Quan trường |
+| Index | [event-index.md](./event-index.md) | Từ điển tự sinh toàn bộ Event ID & Flags (`npm run gen:index`) |
 | Ref | [1in8b-reference/README.md](./1in8b-reference/README.md) | Tài liệu nghiên cứu gốc từ `1in8b.life/vi` |
 
 ---

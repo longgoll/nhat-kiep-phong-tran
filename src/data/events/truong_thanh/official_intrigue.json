@@ -1,0 +1,172 @@
+[
+  {
+    "id": "evt_official_intrigue_slander",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Bị Đồng Liêu Hãm Hại & Vu Khống Tham Ô",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"]
+    },
+    "weight": {
+      "base": 24
+    },
+    "description": "Một kẻ ghen ghét vị trí của bạn ngầm tung tin đồn và gửi mật thư tố cáo bạn bớt xén tiền công quỹ.",
+    "choices": [
+      {
+        "label": "Mang toàn bộ sổ sách minh bạch ra đối chất trước triều",
+        "hint": "Thanh danh +6 · Học thức +2 · Hạnh phúc -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Chứng cứ rõ ràng khiến kẻ vu khống bẽ mặt rút lui, uy tín của bạn càng thêm vững vàng.",
+            "effects": { "fame": 6, "education": 2, "happiness": -2 }
+          }
+        ]
+      },
+      {
+        "label": "Chi 500đ nhờ người thân tín dập tắt sớ đàn hặc",
+        "hint": "Tiền -500đ · Tai tiếng +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Vụ việc được ém nhẹm trước khi tới tai Hoàng đế, nhưng túi tiền của bạn hao hụt đáng kể.",
+            "effects": { "copper": -500, "infamy": 3 }
+          }
+        ]
+      },
+      {
+        "label": "Thế yếu không kịp trở tay, đành chịu giáng một bậc phẩm hàm",
+        "hint": "Giáng 1 bậc quan hàm · Hạnh phúc -8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn ngậm đắng nuốt cay nhận quyết định giáng chức, ghi nhớ mối thù này nơi quan trường.",
+            "effects": {
+              "official_rank_delta": -1,
+              "happiness": -8,
+              "add_flags": ["tung_bi_giang_chuc"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_intrigue_strike_rival",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Nắm Thóp Đối Thủ Tranh Chức",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 2
+    },
+    "weight": {
+      "base": 22
+    },
+    "description": "Thuộc hạ thân tín vừa mang về chứng cứ cho thấy viên quan đối thủ đang tranh ghế với bạn từng ăn chặn tiền cứu tế năm ngoái.",
+    "choices": [
+      {
+        "label": "Dâng mật sớ đàn hặc thẳng tay đẩy đối thủ ngã ngựa",
+        "hint": "Thanh danh +8 · Tai tiếng +5 · Quan hệ -4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Đối thủ bị cách chức ngay lập tức, nhưng giới triều thần bắt đầu dè chừng sự quyết liệt tàn nhẫn của bạn.",
+            "effects": { "fame": 8, "infamy": 5, "relationships": -4 }
+          }
+        ]
+      },
+      {
+        "label": "Dùng chứng cứ ép đối thủ tự xin rút lui trong êm đẹp",
+        "hint": "Thanh danh +4 · Quan hệ +3 · Thương tài +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Đối thủ biết điều nhường bước và từ đó chịu ơn bạn không truy cứu tới cùng.",
+            "effects": { "fame": 4, "relationships": 3, "craft_trade": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_intrigue_border_exile",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1800,
+    "title": "Bị Điều Đi Trấn Nhậm Vùng Biên Viễn",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 1
+    },
+    "weight": {
+      "base": 20
+    },
+    "description": "Phe đối lập ngầm tác động khiến bộ Lại ra lệnh điều chuyển bạn tới vùng biên ải xa xôi đầy sơn lam chướng khí.",
+    "choices": [
+      {
+        "label": "Tuân lệnh lên đường, lập công an dân nơi biên ải",
+        "hint": "Thanh danh +10 · Võ nghệ +4 · Sức khỏe -4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nơi biên cương gian khó, bạn dẹp yên giặc cỏ và ổn định dân tình, lập được chiến công hiển hách.",
+            "effects": { "fame": 10, "martial": 4, "health": -4 }
+          }
+        ]
+      },
+      {
+        "label": "Chi 700đ chạy chọt bộ Lại xin giữ chức ở kinh thành",
+        "hint": "Tiền -700đ · Tai tiếng +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Tờ lệnh điều động được thu hồi vào phút chót nhờ bạc trắng mở đường.",
+            "effects": { "copper": -700, "infamy": 4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_intrigue_tax_audit",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Phụng Chỉ Tra Xét Tham Nhũng Địa Phương",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 2
+    },
+    "weight": {
+      "base": 22
+    },
+    "description": "Bạn được cử làm Khâm sai đi kiểm tra kho thóc và sổ thuế ở các phủ huyện phía nam — nơi nổi tiếng giàu có nhưng nhiều khuất tất.",
+    "choices": [
+      {
+        "label": "Làm việc công minh, thu hồi toàn bộ bạc công thất thoát",
+        "hint": "Thanh danh +9 · Tai tiếng -3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bản báo cáo liêm chính của bạn được Hoàng đế tán thưởng, ngân khố triều đình thu về khoản lớn.",
+            "effects": { "fame": 9, "infamy": -3 }
+          }
+        ]
+      },
+      {
+        "label": "Nhắm mắt làm ngơ, chia phần với quan địa phương",
+        "hint": "Tiền +800đ · Tai tiếng +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn trở về kinh với chiếc rương nặng trĩu vàng bạc, nhưng dấu vết sổ sách giả vẫn còn đó.",
+            "effects": { "copper": 800, "infamy": 8 }
+          }
+        ]
+      }
+    ]
+  }
+]

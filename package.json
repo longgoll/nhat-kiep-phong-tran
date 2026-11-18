@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "audit:1000": "vitest run --config vitest.audit.config.ts",
+    "gen:index": "node scripts/gen-event-index.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.511.0",

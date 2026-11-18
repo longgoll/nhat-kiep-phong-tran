@@ -1,0 +1,264 @@
+[
+  {
+    "id": "evt_scholar_poor_copy_books",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Chép Sách Thuê & Dạy Trẻ Đầu Làng",
+    "conditions": {
+      "min_age": 14,
+      "max_age": 26,
+      "min_education": 10,
+      "max_copper": 1200,
+      "origin_in": ["ban_nong", "thu_cong"],
+      "missing_flags": ["trong_hau_cung", "dang_lam_quan", "bi_ep_lam_gia_no"]
+    },
+    "weight": {
+      "base": 26,
+      "modifiers": [
+        { "conditions": { "min_education": 18 }, "addWeight": 12 }
+      ]
+    },
+    "description": "Tiền giấy bút ngày một cạn, nhưng nhờ vốn chữ nghĩa sẵn có, bạn được người trong vùng thuê chép kinh sách hoặc dạy trẻ vỡ lòng kiếm thêm thu nhập.",
+    "choices": [
+      {
+        "label": "Thức khuya chép sách thuê cho hiệu sách huyện",
+        "hint": "Tiền +180đ · Học thức +3 · Sức khỏe -3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn cặm cụi bên ngọn đèn dầu suốt nhiều đêm, vừa có tiền đong gạo vừa thuộc thêm nhiều đoạn kinh sử.",
+            "effects": { "copper": 180, "education": 3, "health": -3 }
+          }
+        ]
+      },
+      {
+        "label": "Mở lớp dạy trẻ vỡ lòng dưới mái đình",
+        "hint": "Tiền +120đ · Quan hệ +3 · Học thức +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bà con trong làng quý mến nết na điềm đạm của bạn, mang gạo tiền tới biếu và gửi gắm con trẻ.",
+            "effects": { "copper": 120, "relationships": 3, "education": 2 }
+          }
+        ]
+      },
+      {
+        "label": "Từ chối việc lặt vặt, dốc sức ôn bài",
+        "hint": "Học thức +4 · Hạnh phúc -1",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn thắt lưng buộc bụng, dành trọn thời gian cho sách vở với quyết tâm đổi đời bằng khoa cử.",
+            "effects": { "education": 4, "happiness": -1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_poor_mentor",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Thầy Đồ Già Nhận Làm Môn Sinh",
+    "conditions": {
+      "min_age": 14,
+      "max_age": 25,
+      "min_education": 14,
+      "origin_in": ["ban_nong", "thu_cong"],
+      "missing_flags": ["trong_hau_cung", "dang_lam_quan", "duoc_thay_do_quy"]
+    },
+    "weight": {
+      "base": 28,
+      "modifiers": [
+        { "conditions": { "min_education": 22 }, "addWeight": 15 }
+      ]
+    },
+    "description": "Một vị cựu tú tài về hưu ở làng bên tình cờ đọc bài văn của bạn. Thấy học trò nhà nghèo mà chí lớn, thầy ngỏ ý thu nhận vào cửa học miễn phí.",
+    "choices": [
+      {
+        "label": "Dập đầu bái sư, theo học đạo kinh sử",
+        "hint": "Học thức +6 · Thanh danh +3 · Gắn cờ Được thầy đồ quý",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Thầy đồ tận tâm truyền thụ văn phong trường quy và tặng bạn nhiều bộ sách quý hiếm.",
+            "effects": {
+              "education": 6,
+              "fame": 3,
+              "relationships": 4,
+              "add_flags": ["duoc_thay_do_quy"],
+              "milestone_title": "Được thầy đồ già thu nhận làm môn sinh"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Xin thầy chỉ dạy thêm toán pháp và sổ sách thực dụng",
+        "hint": "Học thức +3 · Thương tài +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Thầy đồ cười hiền, dạy bạn cách tính toán điền thổ, thuế khóa và quản lý sổ sách rất bài bản.",
+            "effects": { "education": 3, "craft_trade": 4, "relationships": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_poor_matchmaker",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Phú Hộ Kén Dâu Rể Hiếu Học",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 28,
+      "min_education": 20,
+      "origin_in": ["ban_nong", "thu_cong"],
+      "missing_flags": ["da_ket_hon", "trong_hau_cung", "thai_giam", "dang_lam_quan"]
+    },
+    "weight": {
+      "base": 24,
+      "modifiers": [
+        { "conditions": { "min_fame": 10 }, "addWeight": 12 }
+      ]
+    },
+    "description": "Tiếng tăm hiếu học của bạn truyền đến tai một nhà phú hộ giàu có trong phủ. Họ muốn kết thông gia và sẵn sàng chu cấp toàn bộ chi phí đèn sách.",
+    "choices": [
+      {
+        "label": "Nhận lời hứa hôn, xin chu cấp đèn sách chờ ngày bảng vàng",
+        "hint": "Tiền +500đ · Học thức +4 · Thanh danh +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nhà phú hộ tặng bạn một khoản tiền lớn làm lộ phí học hành, kỳ vọng ngày bạn đỗ đạt rạng danh.",
+            "effects": { "copper": 500, "education": 4, "fame": 3, "happiness": 3 }
+          }
+        ]
+      },
+      {
+        "label": "Theo nhà thông gia học nghề quản lý cửa hiệu",
+        "hint": "Tiền +900đ · Thương tài +5 · Hạnh phúc +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn tạm gác giấc mộng khoa trường, nhận vốn mở mang việc buôn bán cùng gia đình thông gia.",
+            "effects": { "copper": 900, "craft_trade": 5, "happiness": 3 }
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo từ chối, giữ chí tự lập thân",
+        "hint": "Thanh danh +5 · Hạnh phúc +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn cảm tạ tấm lòng của phú hộ nhưng xin tự mình lập thân trước khi tính chuyện trăm năm.",
+            "effects": { "fame": 5, "happiness": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_poor_exam_fail",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Lỡ Hẹn Bảng Vàng Khoa Đầu",
+    "conditions": {
+      "min_age": 17,
+      "max_age": 32,
+      "min_education": 16,
+      "origin_in": ["ban_nong", "thu_cong"],
+      "missing_flags": ["do_cu_nhan", "do_tien_si", "trong_hau_cung", "dang_lam_quan"]
+    },
+    "weight": {
+      "base": 25
+    },
+    "description": "Kỳ khảo hạch kết thúc, tên bạn vẫn chưa xuất hiện trên bảng. Túi tiền cạn dần, bạn đứng trước ngã rẽ giữa việc kiên trì hay quay về mưu sinh.",
+    "choices": [
+      {
+        "label": "Khắc cốt ghi tâm, nghiền ngẫm lại bài vở chờ khoa sau",
+        "hint": "Học thức +5 · Hạnh phúc -4 · Sức khỏe -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Thất bại khiến bạn thức tỉnh nhiều thiếu sót, văn chương từ đó chín chắn và sâu sắc hơn hẳn.",
+            "effects": { "education": 5, "happiness": -4, "health": -2 }
+          }
+        ]
+      },
+      {
+        "label": "Vừa đi làm thuê kiếm cơm vừa tự học buổi tối",
+        "hint": "Tiền +150đ · Học thức +2 · Thương tài +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giữ được cân bằng giữa cơm áo và sách vở, không để gia đình phải gánh nặng thêm.",
+            "effects": { "copper": 150, "education": 2, "craft_trade": 2 }
+          }
+        ]
+      },
+      {
+        "label": "Chán nản, tạm xếp bút nghiên lo cuộc sống thực tế",
+        "hint": "Hạnh phúc +2 · Học thức -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Trút bỏ gánh nặng thi cử, lòng bạn nhẹ nhõm hơn nhưng nét chữ cũng dần phai nhạt.",
+            "effects": { "happiness": 2, "education": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_scholar_poor_village_fund",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Quỹ Nghĩa Học Của Làng Xã",
+    "conditions": {
+      "min_age": 15,
+      "max_age": 24,
+      "min_education": 12,
+      "origin_in": ["ban_nong", "thu_cong"],
+      "missing_flags": ["trong_hau_cung", "dang_lam_quan"]
+    },
+    "weight": {
+      "base": 22
+    },
+    "description": "Các bô lão trong làng họp bàn trích quỹ ruộng công để trợ cấp gạo và tiền lộ phí cho sĩ tử nghèo sắp bước vào kỳ thi.",
+    "choices": [
+      {
+        "label": "Nhận phần trợ cấp, hứa ngày đỗ đạt sẽ báo đáp quê hương",
+        "hint": "Gạo +10 đấu · Tiền +220đ · Quan hệ +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Tấm lòng của bà con chòm xóm tiếp thêm cho bạn sức mạnh và niềm tin trên con đường đèn sách.",
+            "effects": { "rice": 10, "copper": 220, "relationships": 4 }
+          }
+        ]
+      },
+      {
+        "label": "Nhường suất trợ cấp cho bạn đồng môn khó khăn hơn",
+        "hint": "Thanh danh +6 · Quan hệ +6 · Hạnh phúc +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nghĩa cử cao đẹp của bạn khiến cả làng cảm phục, tiếng thơm lan rộng khắp vùng.",
+            "effects": { "fame": 6, "relationships": 6, "happiness": 3 }
+          }
+        ]
+      }
+    ]
+  }
+]

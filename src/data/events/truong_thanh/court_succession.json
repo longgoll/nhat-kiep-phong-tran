@@ -1,0 +1,185 @@
+[
+  {
+    "id": "evt_court_succession_crisis",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Long Ngai Biến Động — Cuộc Chiến Trữ Vị",
+    "conditions": {
+      "min_age": 26,
+      "has_any_flag": ["dang_lam_quan", "trong_hau_cung", "da_nhan_tuoc_vi", "phe_hoang_tu"]
+    },
+    "weight": {
+      "base": 35
+    },
+    "description": "Hoàng đế lâm trọng bệnh, triều đình chia rẽ dữ dội giữa Thái tử chính thống và Nhị Hoàng tử đang nắm trọng binh. Thời khắc quyết định vận mệnh cả gia tộc đã tới.",
+    "choices": [
+      {
+        "label": "Dốc lòng phò tá Thái tử chính thống giữ vững chính nghĩa",
+        "hint": "Thanh danh +10 · Quan hệ +4 · Mở nhánh Công thần Tân triều",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn công khai đứng về phía Đông cung, trở thành trụ cột tinh thần cho phe chính thống.",
+            "effects": {
+              "fame": 10,
+              "relationships": 4,
+              "add_flags": ["phe_thai_tu_thang_the"],
+              "milestone_title": "Phò tá Thái tử trong cuộc chiến Trữ vị"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Đặt cược vào Nhị Hoàng tử nắm binh quyền",
+        "hint": "Thanh danh +6 · Võ nghệ +4 · Tai tiếng +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn ngầm liên lạc với doanh trại của Nhị Hoàng tử, chuẩn bị cho một cuộc đổi ngôi chớp nhoáng.",
+            "effects": {
+              "fame": 6,
+              "martial": 4,
+              "infamy": 4,
+              "add_flags": ["phe_hoang_tu_binh_quyen"],
+              "milestone_title": "Theo phe Nhị Hoàng tử tranh đoạt ngôi báu"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Án binh bất động, giữ thân trung lập chờ sóng yên biển lặng",
+        "hint": "Thanh danh +2 · Hạnh phúc +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn cáo ốm đóng cửa phủ đệ, tránh xa vòng xoáy máu lửa nơi cung cấm.",
+            "effects": { "fame": 2, "happiness": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_court_succession_victory",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Tân Hoàng Đăng Cơ — Luận Công Hành Thưởng",
+    "conditions": {
+      "has_any_flag": ["phe_thai_tu_thang_the", "phe_hoang_tu_binh_quyen"]
+    },
+    "weight": {
+      "base": 45
+    },
+    "description": "Cuộc tranh đoạt ngôi vị ngã ngũ, vị quân vương bạn phò tá chính thức đăng cơ. Triều đình mở đại hội luận công phong thưởng cho các công thần.",
+    "choices": [
+      {
+        "label": "Quỳ lạy nhận chiếu phong thưởng và thăng phẩm hàm",
+        "hint": "Quan hàm +1 · Tiền +1500đ · Thanh danh +15 · Hạnh phúc +10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Tân Hoàng ban thưởng vàng bạc và thăng chức cho bạn trước bá quan văn võ, danh tiếng vang dội thiên hạ.",
+            "effects": {
+              "official_rank_delta": 1,
+              "copper": 1500,
+              "fame": 15,
+              "happiness": 10,
+              "milestone_title": "Công thần phò tá Tân Hoàng đăng cơ"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_court_succession_betrayal",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Mật Chỉ Phế Lập & Âm Mưu Binh Biến",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 3
+    },
+    "weight": {
+      "base": 24
+    },
+    "description": "Một vị tướng quân nắm quân cấm vệ bí mật tìm tới phủ của bạn lúc nửa đêm, ngỏ ý mời bạn cùng phát động binh biến thay đổi triều cục.",
+    "choices": [
+      {
+        "label": "Mật báo triều đình dẹp loạn từ trong trứng nước",
+        "hint": "Thanh danh +14 · Hạnh phúc +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nhờ mật báo kịp thời của bạn, âm mưu binh biến bị dập tắt, Hoàng thượng vô cùng tín nhiệm giao trọng trách.",
+            "effects": {
+              "fame": 14,
+              "happiness": 4,
+              "milestone_title": "Phá giải âm mưu binh biến nơi cung cấm"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ngầm bắt tay tích trữ binh mã chờ thời đại sự",
+        "hint": "Tiền +1000đ · Võ nghệ +6 · Tai tiếng +10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn âm thầm kết giao tướng lĩnh và tích lũy quân lương, nuôi mộng xoay chuyển càn khôn.",
+            "effects": {
+              "copper": 1000,
+              "martial": 6,
+              "infamy": 10,
+              "add_flags": ["chi_lon_phuc_hung"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_court_harem_court_ally",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Liên Minh Hậu Cung & Triều Thần",
+    "conditions": {
+      "has_flags": ["trong_hau_cung"]
+    },
+    "weight": {
+      "base": 24
+    },
+    "description": "Nơi thâm cung, tin tức về các cuộc đấu đá ngoài tiền triều liên tục truyền vào. Một vị đại thần ngoại triều ngầm gửi người xin kết minh với bạn.",
+    "choices": [
+      {
+        "label": "Bắt tay đại thần ngoại triều củng cố thế lực cung cấm",
+        "hint": "Thanh danh +8 · Quan hệ +6 · Tai tiếng +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Trong ứng ngoài hợp, tiếng nói của bạn trong hậu cung ngày càng có trọng lượng với cả tiền triều.",
+            "effects": { "fame": 8, "relationships": 6, "infamy": 3 }
+          }
+        ]
+      },
+      {
+        "label": "Từ chối liên minh, giữ thân an toàn nơi hậu cung",
+        "hint": "Hạnh phúc +4 · Thanh danh +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn tránh xa mọi thị phi tiền triều, giữ cuộc sống bình yên sau bức tường cung cấm.",
+            "effects": { "happiness": 4, "fame": 2 }
+          }
+        ]
+      }
+    ]
+  }
+]
