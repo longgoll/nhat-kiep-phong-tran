@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { ActiveLifeState, FallbackRule, GiftEtiquetteTier, LifestyleTier, TimeSlot } from '../types/activeLife';
 import type { ChildhoodActivityDef, GameEventDef } from '../types/dsl';
 import { createNewLife } from '../engine/lifeInitializer';
+import { evaluateConditions } from '../engine/conditionEvaluator';
 import { advanceChildhoodMonth, advanceChildhoodYear, resolveEventChoice } from '../engine/childhoodEngine';
 import {
   advanceDays,
@@ -48,11 +49,16 @@ interface ActiveLifeStore {
   hasConfirmedBirthCertificate: boolean;
   autoPauseConfig: AutoPauseConfig;
   lastPauseReason: AutoPauseReason | null;
+  autoDecide: boolean;
 
   startNewLife: (customSeed?: number) => void;
   confirmBirthCertificate: () => void;
   stepChildhoodYear: (activity?: ChildhoodActivityDef) => void;
   stepChildhoodMonth: () => void;
+  advanceToNextDecision: () => void;
+  toggleAutoDecide: () => void;
+  togglePinLog: (logIndex: number) => void;
+  addPlayerThought: (text: string) => void;
   setChildhoodFocus: (focusId: string) => void;
   advanceAdultDays: (days: number) => void;
   chooseEventOption: (choiceIndex: number) => void;
@@ -82,6 +88,43 @@ interface ActiveLifeStore {
   resetLife: () => void;
 }
 
+function pickAutoChoiceIndex(life: ActiveLifeState, event: GameEventDef): number {
+  let bestIdx = 0;
+  let bestScore = -Infinity;
+
+  event.choices.forEach((choice, idx) => {
+    if (!evaluateConditions(life, choice.conditions)) return;
+    let avgScore = 0;
+    let totalWeight = 0;
+    for (const out of choice.outcomes) {
+      const w = Math.max(1, out.weight.base);
+      const e = out.effects;
+      let score =
+        (e.health ?? 0) * 1.5 +
+        (e.happiness ?? 0) * 1.1 +
+        (e.relationships ?? 0) * 1.0 +
+        (e.education ?? 0) * 1.2 +
+        (e.martial ?? 0) * 0.9 +
+        (e.craft_trade ?? 0) * 0.9 +
+        (e.fame ?? 0) * 0.8 +
+        (e.copper ?? 0) * 0.02 +
+        (e.family_copper ?? 0) * 0.02 +
+        (e.rice ?? 0) * 0.3 -
+        (e.infamy ?? 0) * 1.2;
+      if (e.kill_reason) score -= 500;
+      avgScore += score * w;
+      totalWeight += w;
+    }
+    const finalScore = totalWeight > 0 ? avgScore / totalWeight : 0;
+    if (finalScore > bestScore) {
+      bestScore = finalScore;
+      bestIdx = idx;
+    }
+  });
+
+  return bestIdx;
+}
+
 export const useActiveLifeStore = create<ActiveLifeStore>()(
   persist(
     (set, get) => ({
@@ -92,6 +135,7 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
       hasConfirmedBirthCertificate: true,
       autoPauseConfig: DEFAULT_AUTO_PAUSE_CONFIG,
       lastPauseReason: null,
+      autoDecide: false,
 
       startNewLife: (customSeed?: number) => {
         const life = createNewLife(customSeed);
@@ -122,15 +166,108 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
       },
 
       stepChildhoodMonth: () => {
-        const { life, pendingEvent } = get();
+        const { life, pendingEvent, autoDecide } = get();
         if (!life || !life.isAlive || pendingEvent) return;
 
         const res = advanceChildhoodMonth(life, ALL_CHILDHOOD_EVENTS, CHILDHOOD_AMBIENT_DATA);
+        if (res.pendingEvent && autoDecide) {
+          const idx = pickAutoChoiceIndex(res.state, res.pendingEvent);
+          const resolved = resolveEventChoice(res.state, res.pendingEvent, idx);
+          set({
+            life: resolved.state,
+            pendingEvent: null,
+            lastEventResult: `[Tự động chọn] ${resolved.resultText}`,
+          });
+          return;
+        }
         set({
           life: res.state,
           pendingEvent: res.pendingEvent,
           lastEventResult: null,
         });
+      },
+
+      advanceToNextDecision: () => {
+        const { life, pendingEvent, isSimulating, autoPauseConfig } = get();
+        if (!life || !life.isAlive || pendingEvent || isSimulating) return;
+
+        const age = Math.floor(life.profile.totalDays / 360);
+        if (age < 13) {
+          let current = life;
+          for (let m = 0; m < 72; m += 1) {
+            const res = advanceChildhoodMonth(current, ALL_CHILDHOOD_EVENTS, CHILDHOOD_AMBIENT_DATA);
+            current = res.state;
+            if (res.pendingEvent || !current.isAlive || Math.floor(current.profile.totalDays / 360) >= 13) {
+              set({
+                life: current,
+                pendingEvent: res.pendingEvent,
+                lastEventResult: null,
+              });
+              return;
+            }
+          }
+          set({ life: current, pendingEvent: null, lastEventResult: null });
+          return;
+        }
+
+        // Adulthood: advance in chunks up to 3 years until a major event or pause triggers
+        let current = life;
+        for (let chunk = 0; chunk < 36; chunk += 1) {
+          const res = advanceDays(current, 30, ALL_ACTIONS, ALL_ADULTHOOD_EVENTS, autoPauseConfig);
+          current = res.state;
+          if (res.pendingEvent || res.pausedReason || !current.isAlive) {
+            set({
+              life: current,
+              pendingEvent: res.pendingEvent ?? null,
+              lastPauseReason: res.pausedReason ?? null,
+              lastEventResult: null,
+            });
+            return;
+          }
+        }
+        set({ life: current, pendingEvent: null, lastPauseReason: null, lastEventResult: null });
+      },
+
+      toggleAutoDecide: () => {
+        const next = !get().autoDecide;
+        const { life, pendingEvent } = get();
+        if (next && life && pendingEvent) {
+          const idx = pickAutoChoiceIndex(life, pendingEvent);
+          const resolved = resolveEventChoice(life, pendingEvent, idx);
+          set({
+            autoDecide: next,
+            life: resolved.state,
+            pendingEvent: null,
+            lastEventResult: `[Tự động chọn] ${resolved.resultText}`,
+          });
+          return;
+        }
+        set({ autoDecide: next });
+      },
+
+      togglePinLog: (logIndex: number) => {
+        const { life } = get();
+        if (!life) return;
+        const nextLogs = life.logs.map((entry, idx) =>
+          idx === logIndex ? { ...entry, pinned: !entry.pinned } : entry,
+        );
+        set({ life: { ...life, logs: nextLogs } });
+      },
+
+      addPlayerThought: (text: string) => {
+        const trimmed = text.trim();
+        const { life } = get();
+        if (!life || !trimmed) return;
+        const entry = {
+          day: life.profile.totalDays,
+          category: 'event' as const,
+          text: trimmed,
+          tone: 'milestone' as const,
+          pinned: true,
+          isThought: true,
+        };
+        const nextLogs = [...life.logs, entry].slice(-150);
+        set({ life: { ...life, logs: nextLogs } });
       },
 
       setChildhoodFocus: (focusId) => {
@@ -173,6 +310,19 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
         worker.onmessage = (e: MessageEvent<WorkerResponse>) => {
           const msg = e.data;
           if (msg.type === 'SIMULATION_DONE') {
+            const { autoDecide } = get();
+            if (msg.pendingEvent && autoDecide) {
+              const idx = pickAutoChoiceIndex(msg.state, msg.pendingEvent);
+              const resolved = resolveEventChoice(msg.state, msg.pendingEvent, idx);
+              set({
+                life: resolved.state,
+                pendingEvent: null,
+                lastPauseReason: (msg.pausedReason as AutoPauseReason | undefined) ?? null,
+                lastEventResult: `[Tự động chọn] ${resolved.resultText}`,
+                isSimulating: false,
+              });
+              return;
+            }
             set({
               life: msg.state,
               pendingEvent: msg.pendingEvent ?? null,

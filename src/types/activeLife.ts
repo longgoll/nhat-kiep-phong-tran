@@ -51,6 +51,8 @@ export interface LogEntry {
   text: string;
   tone?: 'positive' | 'negative' | 'milestone' | 'neutral';
   subNote?: string;
+  pinned?: boolean;
+  isThought?: boolean;
 }
 
 export type BirthOrder = 'con_mot' | 'con_truong' | 'con_thu' | 'con_ut';

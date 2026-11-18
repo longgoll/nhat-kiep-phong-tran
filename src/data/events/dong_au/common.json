@@ -5,6 +5,7 @@
     "severity": "major",
     "cooldownDays": 1440,
     "title": "Hội Làng Đầu Xuân",
+    "contextNote": "Hội làng thời phong kiến không chỉ là dịp vui chơi mà còn là nơi trai tráng, thiếu niên trổ tài vật võ, cờ tướng và kết giao bằng hữu.",
     "conditions": {
       "min_age": 6,
       "max_age": 12

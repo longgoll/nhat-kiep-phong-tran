@@ -514,6 +514,10 @@ export function advanceDays(
 
     // 3. Daily lifestyle consumption & LifeFocus passive tick
     state = applyDailyLifestyle(state);
+    if (newAge >= 45 && state.isAlive) {
+      const ageDecay = newAge >= 75 ? -0.05 : newAge >= 60 ? -0.03 : -0.015;
+      state = applyEffects(state, { health: ageDecay });
+    }
     if (nextTotalDays % 30 === 0) {
       state = applyMonthlyFamilyAllowance(state, newAge);
     }

@@ -6,6 +6,7 @@
     "cooldownDays": 99999,
     "oncePerLife": true,
     "title": "Lễ Thôi Nôi Tròn Một Tuổi",
+    "contextNote": "Tục 'Bốc đồ vật' (Thử nhi) trong lễ thôi nôi xưa là cách cha mẹ gửi gắm kỳ vọng về thiên hướng chữ nghĩa, võ nghệ hay thương nghiệp của con cái.",
     "conditions": {
       "min_age": 1,
       "max_age": 1

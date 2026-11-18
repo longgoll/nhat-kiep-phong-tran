@@ -1,4 +1,7 @@
+import { useState } from 'react';
+import { Star } from 'lucide-react';
 import type { LogEntry } from '../types/activeLife';
+import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 
 const CATEGORY_STYLES: Record<LogEntry['category'], { label: string; badgeClass: string; dotClass: string }> = {
   birth: {
@@ -44,11 +47,18 @@ export function LifeTimeline({
   maxHeightClass = 'max-h-[460px]',
   isRunning = false,
 }: LifeTimelineProps) {
-  const reversed = [...logs].reverse();
+  const [onlyPinned, setOnlyPinned] = useState(false);
+  const togglePinLog = useActiveLifeStore((s) => s.togglePinLog);
+
+  const pinnedCount = logs.filter((l) => l.pinned).length;
+  const indexedLogs = logs
+    .map((entry, origIdx) => ({ entry, origIdx }))
+    .reverse()
+    .filter((item) => !onlyPinned || item.entry.pinned);
 
   return (
     <div className="bg-stone-900/85 border border-stone-800 rounded-xl p-4 space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-200">
             Ghi Chép Cuộc Đời
@@ -60,18 +70,38 @@ export function LifeTimeline({
             </span>
           )}
         </div>
-        <span className="text-[10px] text-stone-400">
-          Mới nhất ở trên • {logs.length} sự kiện
-        </span>
+        <div className="flex items-center gap-2">
+          {pinnedCount > 0 && (
+            <button
+              type="button"
+              onClick={() => setOnlyPinned((p) => !p)}
+              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] font-medium transition cursor-pointer ${
+                onlyPinned
+                  ? 'bg-amber-500/20 border-amber-500 text-amber-200'
+                  : 'bg-stone-950 border-stone-800 text-stone-400 hover:text-amber-200'
+              }`}
+            >
+              <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+              Đã gắn ({pinnedCount})
+            </button>
+          )}
+          <span className="text-[10px] text-stone-400">
+            Chạm để gắn ★ • {logs.length} sự kiện
+          </span>
+        </div>
       </div>
 
       <div className={`${maxHeightClass} overflow-y-auto pr-2`}>
+        {indexedLogs.length === 0 ? (
+          <div className="text-xs text-stone-500 py-4 text-center">
+            Chưa có dòng nào được gắn ★. Chạm vào bất kỳ sự kiện nào để đánh dấu.
+          </div>
+        ) : (
         <div className="relative border-l-2 border-stone-800 ml-2 pl-4 space-y-3 py-1">
-          {reversed.map((entry, idx) => {
-            const origIdx = logs.length - 1 - idx;
+          {indexedLogs.map(({ entry, origIdx }, idx) => {
             const age = Math.floor(entry.day / 360);
             const style = CATEGORY_STYLES[entry.category] ?? CATEGORY_STYLES.survival;
-            const isNewest = idx === 0;
+            const isNewest = idx === 0 && !onlyPinned;
 
             return (
               <div
@@ -86,10 +116,22 @@ export function LifeTimeline({
                 />
 
                 <div
-                  className={`rounded-lg p-2.5 border transition-colors ${
-                    isNewest
-                      ? 'bg-stone-950 border-amber-600/50 shadow-sm'
-                      : 'bg-stone-950/60 border-stone-800/70'
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => togglePinLog(origIdx)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      togglePinLog(origIdx);
+                    }
+                  }}
+                  title={entry.pinned ? 'Bỏ gắn ★' : 'Chạm để gắn ★'}
+                  className={`rounded-lg p-2.5 border transition-colors cursor-pointer ${
+                    entry.pinned
+                      ? 'bg-amber-950/25 border-amber-500/60'
+                      : isNewest
+                        ? 'bg-stone-950 border-amber-600/50 shadow-sm hover:border-amber-500/70'
+                        : 'bg-stone-950/60 border-stone-800/70 hover:border-stone-700'
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">
@@ -97,15 +139,28 @@ export function LifeTimeline({
                       {age} tuổi
                     </span>
                     <span
-                      className={`px-1.5 py-0.5 rounded border text-[10px] font-medium ${style.badgeClass}`}
+                      className={`px-1.5 py-0.5 rounded border text-[10px] font-medium ${
+                        entry.isThought
+                          ? 'bg-sky-950/70 text-sky-200 border-sky-700/50'
+                          : style.badgeClass
+                      }`}
                     >
-                      {style.label}
+                      {entry.isThought ? 'Suy nghĩ' : style.label}
                     </span>
-                    {isNewest && (
-                      <span className="ml-auto text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
-                        Mới nhất
-                      </span>
-                    )}
+                    <span className="ml-auto flex items-center gap-1.5">
+                      {isNewest && (
+                        <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
+                          Mới nhất
+                        </span>
+                      )}
+                      <Star
+                        className={`w-3 h-3 transition ${
+                          entry.pinned
+                            ? 'fill-amber-400 text-amber-400'
+                            : 'text-stone-600 hover:text-amber-300'
+                        }`}
+                      />
+                    </span>
                   </div>
                   <p
                     className={`text-xs leading-relaxed ${
@@ -128,6 +183,7 @@ export function LifeTimeline({
             );
           })}
         </div>
+        )}
       </div>
     </div>
   );

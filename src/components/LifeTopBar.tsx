@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { Play, Pause, FastForward, RotateCcw } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Play, Pause, FastForward, RotateCcw, PenLine, SkipForward, Sparkles } from 'lucide-react';
+import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 import { ColorModeToggle } from './ColorModeToggle';
 
 interface StepButtonSpec {
@@ -41,6 +42,14 @@ export function LifeTopBar({
   extraSteps,
   onReset,
 }: LifeTopBarProps) {
+  const [showThoughtInput, setShowThoughtInput] = useState(false);
+  const [thoughtText, setThoughtText] = useState('');
+
+  const autoDecide = useActiveLifeStore((s) => s.autoDecide);
+  const toggleAutoDecide = useActiveLifeStore((s) => s.toggleAutoDecide);
+  const advanceToNextDecision = useActiveLifeStore((s) => s.advanceToNextDecision);
+  const addPlayerThought = useActiveLifeStore((s) => s.addPlayerThought);
+
   const monthIndex = Math.min(12, Math.floor(dayOfYear / 30) + 1);
   const isRunning = autoPlaySpeed > 0;
   const smoothProgressPct =
@@ -191,6 +200,51 @@ export function LifeTopBar({
               {spd}x
             </button>
           ))}
+
+          <div className="h-4 w-px bg-stone-700 mx-1 hidden sm:block" />
+
+          <button
+            type="button"
+            disabled={primaryStep.disabled}
+            onClick={() => {
+              onSetSpeed(0);
+              advanceToNextDecision();
+            }}
+            title="Tua nhanh tới sự kiện có lựa chọn tiếp theo"
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 disabled:opacity-50 text-stone-200 text-xs font-medium transition cursor-pointer"
+          >
+            <SkipForward className="w-3 h-3 text-amber-400" />
+            <span className="hidden md:inline">Tới quyết định tiếp theo »</span>
+            <span className="md:hidden">Tới quyết định »</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleAutoDecide}
+            title="Tự động chọn phương án phù hợp nhất khi gặp sự kiện"
+            className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition cursor-pointer ${
+              autoDecide
+                ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200'
+                : 'bg-stone-950/60 hover:bg-stone-800 border-stone-700 text-stone-300'
+            }`}
+          >
+            <Sparkles className="w-3 h-3" />
+            <span>Tự động quyết định</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowThoughtInput((v) => !v)}
+            title="Ghi một dòng tâm sự vào Ghi Chép Cuộc Đời"
+            className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition cursor-pointer ${
+              showThoughtInput
+                ? 'bg-sky-950/70 border-sky-500 text-sky-200'
+                : 'bg-stone-950/60 hover:bg-stone-800 border-stone-700 text-stone-300'
+            }`}
+          >
+            <PenLine className="w-3 h-3" />
+            <span>Ghi suy nghĩ</span>
+          </button>
         </div>
 
           <button
@@ -215,6 +269,37 @@ export function LifeTopBar({
             <div className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-progress-sweep" />
           )}
         </div>
+
+        {/* Inline Thought Input (1in8b style) */}
+        {showThoughtInput && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!thoughtText.trim()) return;
+              addPlayerThought(thoughtText);
+              setThoughtText('');
+              setShowThoughtInput(false);
+            }}
+            className="mt-2.5 flex items-center gap-2"
+          >
+            <input
+              type="text"
+              value={thoughtText}
+              onChange={(e) => setThoughtText(e.target.value)}
+              placeholder={`Ghi suy nghĩ ở tuổi ${ageYears}... (sẽ tự động gắn ★)`}
+              maxLength={180}
+              autoFocus
+              className="flex-1 px-3 py-1.5 rounded-lg bg-stone-950 border border-stone-700 text-xs text-stone-100 placeholder:text-stone-500 focus:outline-none focus:border-amber-500"
+            />
+            <button
+              type="submit"
+              disabled={!thoughtText.trim()}
+              className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-stone-950 font-bold text-xs cursor-pointer"
+            >
+              Lưu vào sử ký
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );

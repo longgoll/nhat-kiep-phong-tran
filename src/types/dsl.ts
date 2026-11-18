@@ -111,6 +111,7 @@ export interface EventOutcome {
 
 export interface EventChoice {
   label: string;
+  hint?: string;
   conditions?: ConditionSpec;
   outcomes: EventOutcome[];
 }
@@ -120,6 +121,7 @@ export interface GameEventDef {
   stage: 'infancy' | 'childhood' | 'adulthood' | 'any';
   severity: 'minor' | 'major';
   isMilestone?: boolean;
+  contextNote?: string;
   cooldownDays: number;
   oncePerLife?: boolean;
   title: string;

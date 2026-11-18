@@ -1,4 +1,4 @@
-import { RotateCcw, Skull, Award } from 'lucide-react';
+import { RotateCcw, Skull, Award, Star } from 'lucide-react';
 import {
   CartesianGrid,
   Line,
@@ -14,6 +14,7 @@ import { ORIGIN_METADATA } from '../engine/lifeInitializer';
 import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 import { useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
 import { ColorModeToggle } from './ColorModeToggle';
+import { LifeGrid } from './LifeGrid';
 
 function computeFinalTitle(ageYears: number, fame: number, originLabel: string): string {
   if (ageYears < 13) return 'Yểu mệnh thuở thiếu thời';
@@ -39,6 +40,7 @@ export function TombstoneView() {
     fame: m.fame,
     title: m.title,
   }));
+  const pinnedLogs = life.logs.filter((l) => l.pinned);
 
   const handleFinish = () => {
     recordCompletedLife(life, titleAwarded);
@@ -109,6 +111,72 @@ export function TombstoneView() {
                   <Line type="monotone" dataKey="fame" name="Thanh danh" stroke="#38bdf8" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* Complete Life Grid */}
+        <LifeGrid
+          ageYears={ageYears}
+          milestones={life.milestones}
+          yearlyHappiness={life.yearlyHappiness}
+          expectedLifespan={originMeta.expectedLifespan}
+          logs={life.logs}
+        />
+
+        {/* Pinned Logs & Thoughts */}
+        {pinnedLogs.length > 0 && (
+          <div className="space-y-2">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              Ký Ức Đã Gắn Sao ({pinnedLogs.length})
+            </h2>
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+              {pinnedLogs.map((entry, idx) => (
+                <div
+                  key={idx}
+                  className="p-2.5 rounded-lg bg-stone-950 border border-stone-800 text-xs flex items-start gap-2.5"
+                >
+                  <span className="font-mono text-[11px] font-bold text-amber-300 shrink-0">
+                    {Math.floor(entry.day / 360)}t
+                  </span>
+                  <span className="text-stone-200 leading-snug">{entry.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Cohort Peers Comparison */}
+        {life.cohortPeers && life.cohortPeers.length > 0 && (
+          <div className="space-y-2">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-400">
+              Đối Chiếu Người Đồng Niên
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {life.cohortPeers.map((peer) => {
+                const diedBefore = peer.deathAge !== undefined && peer.deathAge < ageYears;
+                return (
+                  <div
+                    key={peer.id}
+                    className="p-2.5 rounded-lg bg-stone-950/80 border border-stone-800 flex items-center justify-between gap-2 text-xs"
+                  >
+                    <div className="min-w-0">
+                      <div className="font-medium text-stone-200 truncate">{peer.name}</div>
+                      <div className="text-[10px] text-stone-500 truncate">{peer.originLabel}</div>
+                    </div>
+                    <span
+                      className={`text-[11px] shrink-0 ${
+                        diedBefore ? 'text-stone-400' : 'text-emerald-300'
+                      }`}
+                    >
+                      {peer.deathAge !== undefined
+                        ? `Thọ ${peer.deathAge} tuổi`
+                        : 'Vẫn còn sống'}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
