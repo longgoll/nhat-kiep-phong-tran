@@ -660,7 +660,7 @@
     "severity": "major",
     "cooldownDays": 99999,
     "oncePerLife": true,
-    "title": "Buổi Trưa Yến Tĩnh",
+    "title": "Buổi Trưa Yên Tĩnh",
     "conditions": {
       "min_age": 3,
       "max_age": 4
@@ -756,7 +756,12 @@
     "title": "Miếng Bánh Ngon Đầu Ngõ",
     "conditions": {
       "min_age": 4,
-      "max_age": 5
+      "max_age": 5,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ]
     },
     "weight": {
       "base": 65,

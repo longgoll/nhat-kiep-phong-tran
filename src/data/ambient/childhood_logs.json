@@ -68,7 +68,25 @@
     {
       "day": 900,
       "text": "Chỉ một nắm đất, vài hòn sỏi cũng đủ để bạn chơi đùa suốt buổi.",
-      "tone": "neutral"
+      "tone": "neutral",
+      "conditions": {
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu"
+        ]
+      }
+    },
+    {
+      "day": 900,
+      "text": "Ngồi giữa thềm son rợp bóng cây, bạn thích thú ngắm nhìn những món đồ chơi chạm khắc tinh xảo.",
+      "tone": "neutral",
+      "conditions": {
+        "origin_in": [
+          "quan_lai",
+          "hoang_toc"
+        ]
+      }
     },
     {
       "day": 990,
@@ -289,6 +307,11 @@
       "conditions": {
         "has_flags": [
           "mo_coi_cha"
+        ],
+        "origin_in": [
+          "ban_nong",
+          "thu_cong",
+          "dia_chu"
         ]
       }
     },

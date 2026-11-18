@@ -566,5 +566,136 @@
         ]
       }
     ]
+  },
+  {
+    "id": "evt_child_exp_hoang_toc_tai_phu_library",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Thái Phó Ra Đề Đối Khó",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": []
+    },
+    "description": "Trong buổi học tại Ngự thư phòng, Thái phó bất ngờ ra một vế đối hóc búa về đạo trị quốc trước mặt đông đủ các vị hoàng thân đồng niên.",
+    "choices": [
+      {
+        "label": "Suy nghĩ cẩn trọng rồi ứng đối trôi chảy (Cần Học vấn >= 15)",
+        "conditions": {
+          "min_education": 15
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thái phó vuốt râu gật gù tán thưởng tài ứng biến nhanh nhạy của bạn, ban thưởng nghiên mực Đoan Khê quý giá.",
+            "effects": {
+              "education": 5,
+              "fame": 6,
+              "happiness": 8,
+              "add_traits": [
+                "ham_hoc"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Khiêm tốn chắp tay thỉnh giáo Thái phó giảng giải thêm",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thái phó khen bạn biết người biết ta, không giấu dốt, tận tình chỉ bảo thêm nhiều điển tích sâu sắc.",
+            "effects": {
+              "education": 4,
+              "relationships": 4,
+              "happiness": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_exp_hoang_toc_secret_passage",
+    "stage": "childhood",
+    "severity": "minor",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lối Đi Bí Mật Sau Giả Sơn Ngự Hoa Viên",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "origin_in": [
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Trong lúc dạo chơi quanh hòn non bộ sau Ngự hoa viên, bạn tình cờ phát hiện một ngách đá khuất dẫn tới gian nhà kho cũ bỏ hoang từ tiền triều.",
+    "choices": [
+      {
+        "label": "Tò mò thám hiểm, lục tìm xem có bảo vật gì bên trong",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 55,
+              "modifiers": []
+            },
+            "resultText": "Bạn tìm thấy một chiếc hộp sơn mài chứa ngọc bội cổ và ít tiền đồng cũ!",
+            "effects": {
+              "copper": 150,
+              "happiness": 8
+            }
+          },
+          {
+            "weight": {
+              "base": 45,
+              "modifiers": []
+            },
+            "resultText": "Bên trong chỉ toàn sách binh pháp cũ phủ bụi, bạn lén mang một cuốn về phòng đọc ngấu nghiến.",
+            "effects": {
+              "martial": 3,
+              "education": 2,
+              "happiness": 5
+            }
+          }
+        ]
+      },
+      {
+        "label": "Không dám tự tiện bước vào, quay về báo với nhũ mẫu",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhũ mẫu khen bạn cẩn trọng giữ phép cung đình, dặn dò không nên lui tới nơi hoang vắng.",
+            "effects": {
+              "relationships": 3,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

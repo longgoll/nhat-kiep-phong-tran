@@ -184,6 +184,12 @@
     "conditions": {
       "min_age": 6,
       "max_age": 12,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ],
       "has_flags": [
         "mo_coi_cha"
       ]
@@ -441,6 +447,11 @@
     "conditions": {
       "min_age": 7,
       "max_age": 12,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ],
       "family_tier_in": [
         "tung_thieu"
       ],

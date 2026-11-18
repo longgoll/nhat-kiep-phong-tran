@@ -208,5 +208,15 @@
     "conditions": { "min_age": 16, "has_flags": ["bao_ke_giang_ho"] },
     "costs": { "stamina": 22 },
     "rewards": { "copper": 95, "martial": 0.6, "infamy": 0.8 }
+  },
+  {
+    "id": "act_chep_kinh_cung_dinh",
+    "name": "Chép kinh sách · Vẽ tranh thủy mặc",
+    "category": "study",
+    "allowedSlots": ["morning", "afternoon", "evening"],
+    "description": "Nhận chép kinh sử, viết liễn hoặc vẽ tranh thủy mặc bán kín qua người quen để có thu nhập thanh bạch.",
+    "conditions": { "min_age": 13, "min_education": 15, "missing_flags": ["bi_ep_lam_gia_no"] },
+    "costs": { "stamina": 18 },
+    "rewards": { "copper": 55, "education": 0.4, "fame": 0.1 }
   }
 ]

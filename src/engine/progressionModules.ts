@@ -1,4 +1,4 @@
-import { getAgeYears, type ActiveLifeState, type HousingTier, type WorldState } from '../types/activeLife';
+import { getAgeYears, type ActiveLifeState, type HousingTier, type OriginClass, type WorldState } from '../types/activeLife';
 import { appendLog, applyEffects } from './effectApplier';
 import { mulberry32Next } from './prng';
 
@@ -17,6 +17,9 @@ export interface PropertySpec {
   name: string;
   costCopper: number;
   seasonalIncomeCopper: number;
+  seasonalFame?: number;
+  seasonalRelationships?: number;
+  requiresOrigins?: OriginClass[];
   description: string;
 }
 
@@ -75,7 +78,55 @@ export const PROPERTY_CATALOG: PropertySpec[] = [
     name: 'Trang viên & Điền trang phát canh',
     costCopper: 45000,
     seasonalIncomeCopper: 7800,
+    seasonalFame: 1.5,
     description: 'Điền trang rộng lớn cho tá điền thuê canh tác, thu 7.800 đồng mỗi mùa.',
+  },
+  {
+    id: 'nghia_thuc_tu_vien',
+    name: 'Nghĩa thục & Tàng thư quán',
+    costCopper: 18000,
+    seasonalIncomeCopper: 600,
+    seasonalFame: 2.5,
+    seasonalRelationships: 1.0,
+    description: 'Mở thư quán bảo trợ sĩ tử, thu nhẹ 600đ nhưng tăng mạnh Thanh danh & Quan hệ mỗi mùa.',
+  },
+  {
+    id: 'y_quan_tu_thien',
+    name: 'Y quán tế thế',
+    costCopper: 24000,
+    seasonalIncomeCopper: 1200,
+    seasonalFame: 3.0,
+    seasonalRelationships: 1.5,
+    description: 'Lập y quán bốc thuốc cứu dân, thu 1.200đ cùng Thanh danh và Quan hệ bền vững mỗi mùa.',
+  },
+  {
+    id: 'thuong_hoi_lien_tinh',
+    name: 'Thương hội liên tỉnh',
+    costCopper: 30000,
+    seasonalIncomeCopper: 5200,
+    seasonalFame: 1.0,
+    seasonalRelationships: 2.0,
+    description: 'Hùn vốn lập thương hội buôn bán lớn, thu 5.200đ, mở rộng Quan hệ và Thanh danh mỗi mùa.',
+  },
+  {
+    id: 'tuu_lau_kinh_ky',
+    name: 'Tửu lâu Kinh kỳ',
+    costCopper: 36000,
+    seasonalIncomeCopper: 6000,
+    seasonalFame: 1.5,
+    seasonalRelationships: 2.5,
+    requiresOrigins: ['dia_chu', 'quan_lai', 'hoang_toc'],
+    description: 'Nơi văn nhân, quan lại và thương gia tụ hội, thu 6.000đ cùng Quan hệ & Thanh danh mỗi mùa.',
+  },
+  {
+    id: 'thai_ap_ton_that',
+    name: 'Thái ấp & Trang viên Tôn thất',
+    costCopper: 65000,
+    seasonalIncomeCopper: 11500,
+    seasonalFame: 3.5,
+    seasonalRelationships: 1.5,
+    requiresOrigins: ['hoang_toc', 'quan_lai'],
+    description: 'Thực ấp và điền trang lớn của bậc công hầu, thu 11.500đ cùng Thanh danh & Quan hệ mỗi mùa.',
   },
 ];
 
@@ -141,6 +192,25 @@ export function getPropertySeasonalIncome(
   }
   const tradeBonus = 1 + craftTrade * 0.01;
   return Math.round(prop.seasonalIncomeCopper * worldMult * tradeBonus);
+}
+
+export function getVisibleProperties(state: ActiveLifeState): PropertySpec[] {
+  return PROPERTY_CATALOG.filter(
+    (prop) =>
+      !prop.requiresOrigins ||
+      prop.requiresOrigins.includes(state.profile.originClass) ||
+      state.assets.properties.includes(prop.id),
+  );
+}
+
+export function getPropertySeasonalSocial(prop: PropertySpec): {
+  fame: number;
+  relationships: number;
+} {
+  return {
+    fame: prop.seasonalFame ?? 0,
+    relationships: prop.seasonalRelationships ?? 0,
+  };
 }
 
 export function toggleCrossDress(state: ActiveLifeState): ActiveLifeState {
@@ -380,8 +450,56 @@ export function appointOrPromoteOfficial(state: ActiveLifeState): ActiveLifeStat
   };
 }
 
+export function canGrantRoyalPrivilege(state: ActiveLifeState): { ok: boolean; reason?: string } {
+  if (state.profile.originClass !== 'hoang_toc') {
+    return { ok: false, reason: 'Chỉ dành cho thân thế Hoàng tộc' };
+  }
+  if (state.officialRank > 0) {
+    return { ok: false, reason: 'Đã có chức vị triều đình' };
+  }
+  if (state.flags.includes('thai_giam') || state.flags.includes('trong_hau_cung') || state.flags.includes('bi_truy_na')) {
+    return { ok: false, reason: 'Thân phận hiện tại không thể thụ phong ngoại triều' };
+  }
+  const age = getAgeYears(state.profile.totalDays);
+  if (age < 16) {
+    return { ok: false, reason: 'Cần đủ 16 tuổi để vào triều thụ phong' };
+  }
+  if (state.stats.education < 25 && state.stats.martial < 25 && state.stats.fame < 25) {
+    return { ok: false, reason: 'Cần Học thức, Võ nghệ hoặc Thanh danh >= 25' };
+  }
+  return { ok: true };
+}
+
+export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
+  if (!canGrantRoyalPrivilege(state).ok) return state;
+
+  const isHighMerit =
+    state.stats.fame >= 45 && (state.stats.education >= 50 || state.stats.martial >= 50);
+  const startRank = isHighMerit ? 3 : 2;
+  const roleName = OFFICIAL_RANKS[startRank];
+
+  const next = applyEffects(state, {
+    add_flags: ['dang_lam_quan', 'tap_am_hoang_toc'],
+    fame: 8,
+    happiness: 10,
+    milestone_title: `Thụ phong Hoàng thất: ${roleName}`,
+  });
+  return {
+    ...next,
+    officialRank: startRank,
+    profile: { ...next.profile, currentRole: roleName },
+    logs: appendLog(
+      next.logs,
+      next.profile.totalDays,
+      'event',
+      `Theo lệ Tập ấm Hoàng thất, Bệ hạ hạ chỉ thụ phong bạn làm ${roleName}!`,
+    ),
+  };
+}
+
 export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
   const COST = 50000;
+  if (state.profile.originClass === 'hoang_toc') return state;
   if (state.flags.includes('thai_giam') || state.flags.includes('trong_hau_cung')) return state;
   if (state.officialRank > 0 || state.assets.wealthCopper < COST) return state;
 

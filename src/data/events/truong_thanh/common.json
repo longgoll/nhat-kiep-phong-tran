@@ -6,7 +6,13 @@
     "cooldownDays": 210,
     "title": "Nhặt được tiền rơi",
     "conditions": {
-      "min_age": 13
+      "min_age": 13,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ]
     },
     "weight": {
       "base": 30,
@@ -86,7 +92,12 @@
     "title": "Hàng xóm biếu khoai",
     "conditions": {
       "min_age": 13,
-      "min_relationships": 45
+      "min_relationships": 45,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ]
     },
     "weight": {
       "base": 25,

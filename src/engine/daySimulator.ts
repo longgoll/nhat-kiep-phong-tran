@@ -17,7 +17,7 @@ import { calculateRicePrice, formatCopper } from './economy';
 import { appendLog, applyEffects } from './effectApplier';
 import { pickWeightedIndex } from './prng';
 import { resolveEventChoice } from './childhoodEngine';
-import { getPropertySeasonalIncome, PROPERTY_CATALOG } from './progressionModules';
+import { getPropertySeasonalIncome, getPropertySeasonalSocial, PROPERTY_CATALOG } from './progressionModules';
 import {
   applyAnnualGiftEtiquette,
   applySeasonalGoldAndInflation,
@@ -250,9 +250,22 @@ function canReceiveFamilySupport(state: ActiveLifeState): boolean {
  * while the character is still living at home (not moved out, not declined).
  */
 export function getFamilyCoveredLifestyleTier(state: ActiveLifeState): LifestyleTier | null {
-  if (!canReceiveFamilySupport(state) || !state.family) return null;
+  if (!state.family) return null;
 
   const { originClass } = state.profile;
+  // Hoàng thân thất thế ở Lãnh cung vẫn được cấp cơm rau tối thiểu và miễn phí bảo trì cung thất trước khi khai phủ riêng
+  if (
+    originClass === 'hoang_toc' &&
+    state.flags.includes('that_sung_cung_dinh') &&
+    !state.flags.includes('da_ra_o_rieng') &&
+    !state.flags.includes('da_khai_phu_hoang_toc') &&
+    state.npcs.some((n) => n.relation === 'parent' && n.isAlive)
+  ) {
+    return 'com_rau';
+  }
+
+  if (!canReceiveFamilySupport(state)) return null;
+
   const familyWealth = state.family.familyWealthCopper;
 
   if (originClass === 'ban_nong') return null;
@@ -483,25 +496,40 @@ export function advanceDays(
       if (aging.seasonalHealthDecay > 0) {
         state = applyEffects(state, { health: -aging.seasonalHealthDecay });
       }
-      // Passive income from owned properties (fluctuates with world state & craftTrade)
+      // Passive income & social prestige from owned properties (fluctuates with world state & craftTrade)
       if (state.assets.properties.length > 0) {
         let seasonalGain = 0;
+        let seasonalFame = 0;
+        let seasonalRelationships = 0;
         for (const propId of state.assets.properties) {
           const spec = PROPERTY_CATALOG.find((p) => p.id === propId);
           if (spec) {
             seasonalGain += getPropertySeasonalIncome(spec, state.world.worldState, state.stats.craftTrade);
+            const social = getPropertySeasonalSocial(spec);
+            seasonalFame += social.fame;
+            seasonalRelationships += social.relationships;
           }
         }
-        if (seasonalGain > 0) {
-          state = applyEffects(state, { copper: seasonalGain });
-          state = addLedger(state, { propertyIncomeCopper: seasonalGain });
+        if (seasonalGain > 0 || seasonalFame > 0 || seasonalRelationships > 0) {
+          state = applyEffects(state, {
+            copper: seasonalGain,
+            fame: seasonalFame > 0 ? Math.round(seasonalFame * 10) / 10 : undefined,
+            relationships: seasonalRelationships > 0 ? Math.round(seasonalRelationships * 10) / 10 : undefined,
+          });
+          if (seasonalGain > 0) {
+            state = addLedger(state, { propertyIncomeCopper: seasonalGain });
+          }
+          const extras: string[] = [];
+          if (seasonalGain > 0) extras.push(`+${seasonalGain} đồng`);
+          if (seasonalFame > 0) extras.push(`Thanh danh +${Math.round(seasonalFame * 10) / 10}`);
+          if (seasonalRelationships > 0) extras.push(`Quan hệ +${Math.round(seasonalRelationships * 10) / 10}`);
           state = {
             ...state,
             logs: appendLog(
               state.logs,
               nextTotalDays,
               'survival',
-              `Thu hoạch điền sản & cửa hiệu đầu mùa (${getWorldStateLabel(state.world.worldState)}): +${seasonalGain} đồng.`,
+              `Thu hoạch điền sản & sản nghiệp đầu mùa (${getWorldStateLabel(state.world.worldState)}): ${extras.join(' · ')}.`,
             ),
           };
         }

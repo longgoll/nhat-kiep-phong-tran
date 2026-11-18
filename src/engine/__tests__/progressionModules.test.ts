@@ -3,10 +3,13 @@ import { createNewLife } from '../lifeInitializer';
 import {
   buyOfficialTitle,
   buyProperty,
+  canGrantRoyalPrivilege,
   getExamEligibility,
   getPropertyMarketCost,
   getPropertySeasonalIncome,
   getRebellionSuccessChance,
+  getVisibleProperties,
+  grantRoyalPrivilege,
   PROPERTY_CATALOG,
   sellProperty,
   takeExam,
@@ -124,8 +127,53 @@ describe('Progression Modules (MVP 3)', () => {
       assets: { ...royal.assets, housing: 'phu_de' },
     };
     const rentStall = INSTANT_ADULT_ACTIONS.find((a) => a.id === 'inst_rent_market_stall')!;
+    const royalGreetings = INSTANT_ADULT_ACTIONS.find((a) => a.id === 'inst_royal_family_greetings')!;
+    const folkRemedy = INSTANT_ADULT_ACTIONS.find((a) => a.id === 'inst_folk_remedy')!;
     expect(isInstantActionVisible(royal, nobleBanquet)).toBe(true);
     expect(isInstantActionVisible(royal, rentStall)).toBe(false);
     expect(isInstantActionVisible(royal, rentRoom)).toBe(false);
+    expect(isInstantActionVisible(royal, royalGreetings)).toBe(true);
+    expect(isInstantActionVisible(royal, folkRemedy)).toBe(false);
+    expect(isInstantActionVisible(peasant, royalGreetings)).toBe(false);
+  });
+
+  it('supports royal privilege appointment, blocks Quyên quan for hoang_toc, and grants seasonal fame/relationships from properties', () => {
+    let royal = createNewLife(777);
+    royal = {
+      ...royal,
+      profile: { ...royal.profile, originClass: 'hoang_toc', totalDays: 18 * 360 + 89 },
+      world: { ...royal.world, season: 'spring' },
+      officialRank: 0,
+      flags: royal.flags.filter((f) => f !== 'thai_giam' && f !== 'trong_hau_cung'),
+      stats: { ...royal.stats, education: 40, fame: 30, relationships: 40 },
+      assets: { ...royal.assets, wealthCopper: 100000, rice: 100 },
+    };
+
+    // Royal cannot buy low-level official title (Quyên quan)
+    const afterBuyTitle = buyOfficialTitle(royal);
+    expect(afterBuyTitle.officialRank).toBe(0);
+
+    // Royal can be appointed via Tập ấm Hoàng thất
+    expect(canGrantRoyalPrivilege(royal).ok).toBe(true);
+    royal = grantRoyalPrivilege(royal);
+    expect(royal.officialRank).toBeGreaterThanOrEqual(2);
+    expect(royal.flags).toContain('tap_am_hoang_toc');
+
+    // Visible properties include Thái ấp Tôn thất for hoang_toc
+    expect(getVisibleProperties(royal).some((p) => p.id === 'thai_ap_ton_that')).toBe(true);
+
+    // Buying Nghĩa thục & Tàng thư quán grants seasonal fame & relationships on season transition
+    royal = buyProperty(royal, 'nghia_thuc_tu_vien');
+    const fameBefore = royal.stats.fame;
+    const relBefore = royal.stats.relationships;
+
+    const res = advanceDays(royal, 1, ACTIONS, EVENTS);
+    expect(res.state.world.season).toBe('summer');
+    expect(res.state.stats.fame).toBeGreaterThan(fameBefore);
+    expect(res.state.stats.relationships).toBeGreaterThan(relBefore);
+
+    // Wealth-gated social actions unlock when wealthy
+    const patronAction = INSTANT_ADULT_ACTIONS.find((a) => a.id === 'inst_patron_scholars')!;
+    expect(isInstantActionVisible(res.state, patronAction)).toBe(true);
   });
 });

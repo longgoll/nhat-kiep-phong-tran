@@ -9,6 +9,12 @@
     "conditions": {
       "min_age": 16,
       "max_age": 35,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ],
       "missing_flags": [
         "da_len_kinh_thanh"
       ]

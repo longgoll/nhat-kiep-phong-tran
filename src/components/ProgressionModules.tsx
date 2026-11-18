@@ -5,23 +5,27 @@ import {
   appointOrPromoteOfficial,
   buyOfficialTitle,
   buyProperty,
+  canGrantRoyalPrivilege,
   contributeRebellionTreasury,
   getExamEligibility,
   getHousingMarketCost,
   getPropertyMarketCost,
   getPropertySeasonalIncome,
+  getPropertySeasonalSocial,
   getRebellionSuccessChance,
+  getVisibleProperties,
+  grantRoyalPrivilege,
   HOUSING_ORDER,
   HOUSING_UPGRADES,
   launchRebellion,
   OFFICIAL_RANKS,
-  PROPERTY_CATALOG,
   recruitRebellionArmy,
   sellProperty,
   takeExam,
   toggleCrossDress,
   upgradeHousing,
 } from '../engine/progressionModules';
+import { getAgeYears } from '../types/activeLife';
 import { getWorldStateLabel } from '../engine/daySimulator';
 import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 
@@ -32,13 +36,20 @@ export function ProgressionModules() {
 
   if (!life) return null;
 
+  const ageYears = getAgeYears(life.profile.totalDays);
   const canExam = life.stats.education >= 10 || life.flags.includes('duoc_thay_do_quy');
   const canTrade = true;
   const canCourt =
     life.officialRank > 0 ||
     life.flags.includes('do_cu_nhan') ||
-    life.flags.includes('do_tien_si');
+    life.flags.includes('do_tien_si') ||
+    (life.profile.originClass === 'hoang_toc' &&
+      ageYears >= 16 &&
+      !life.flags.includes('thai_giam') &&
+      !life.flags.includes('trong_hau_cung'));
   const canRebel = life.stats.fame >= 70 || life.stats.infamy >= 70;
+  const royalPrivilege = canGrantRoyalPrivilege(life);
+  const visibleProperties = getVisibleProperties(life);
 
   if (!canExam && !canTrade && !canCourt && !canRebel) {
     return null;
@@ -188,10 +199,11 @@ export function ProgressionModules() {
                 Thời thế: {getWorldStateLabel(life.world.worldState)}
               </span>
             </div>
-            {PROPERTY_CATALOG.map((prop) => {
+            {visibleProperties.map((prop) => {
               const ownedCount = life.assets.properties.filter((id) => id === prop.id).length;
               const marketCost = getPropertyMarketCost(prop, life.world.worldState);
               const seasonIncome = getPropertySeasonalIncome(prop, life.world.worldState, life.stats.craftTrade);
+              const social = getPropertySeasonalSocial(prop);
               const sellValue = Math.round(marketCost * 0.7);
               return (
                 <div
@@ -208,7 +220,14 @@ export function ProgressionModules() {
                       )}
                     </div>
                     <div className="text-[11px] text-stone-400">
-                      {prop.description} · Thu mùa này: <span className="text-emerald-300 font-mono">+{formatCopper(seasonIncome)}</span>
+                      {prop.description} · Thu mùa này:{' '}
+                      <span className="text-emerald-300 font-mono">+{formatCopper(seasonIncome)}</span>
+                      {social.fame > 0 && (
+                        <span className="text-amber-300 font-mono"> · Thanh danh +{social.fame}</span>
+                      )}
+                      {social.relationships > 0 && (
+                        <span className="text-sky-300 font-mono"> · Quan hệ +{social.relationships}</span>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
@@ -263,7 +282,7 @@ export function ProgressionModules() {
             </div>
           </div>
 
-          {life.officialRank === 0 && (
+          {life.officialRank === 0 && life.profile.originClass !== 'hoang_toc' && (
             <div className="pt-2 border-t border-stone-800 flex items-center justify-between gap-2">
               <span className="text-stone-300">Quyên quan (Mua hàm Tri huyện bằng bạc)</span>
               <button
@@ -286,7 +305,22 @@ export function ProgressionModules() {
             Chức vị hiện tại:{' '}
             <strong className="text-sky-300">{OFFICIAL_RANKS[life.officialRank]}</strong>
           </div>
-          {life.officialRank < 5 && (
+          {life.officialRank === 0 && life.profile.originClass === 'hoang_toc' && (
+            <button
+              type="button"
+              disabled={!royalPrivilege.ok}
+              onClick={() => applyLifeMutation(grantRoyalPrivilege)}
+              className="w-full py-2 rounded bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-stone-950 font-bold cursor-pointer"
+            >
+              {royalPrivilege.ok
+                ? 'Thỉnh phong Tập ấm Hoàng thất (Vào triều nhậm chức)'
+                : `Thỉnh phong Tập ấm (${royalPrivilege.reason})`}
+            </button>
+          )}
+          {life.officialRank < 5 &&
+            (life.officialRank > 0 ||
+              life.flags.includes('do_cu_nhan') ||
+              life.flags.includes('do_tien_si')) && (
             <button
               type="button"
               disabled={

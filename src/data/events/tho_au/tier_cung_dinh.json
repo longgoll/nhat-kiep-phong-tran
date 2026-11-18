@@ -64,5 +64,83 @@
         ]
       }
     ]
+  },
+  {
+    "id": "evt_infant_share_cake_cung_dinh",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Đĩa Bánh Ngon Trong Phủ",
+    "conditions": {
+      "min_age": 4,
+      "max_age": 5,
+      "origin_in": [
+        "quan_lai",
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": []
+    },
+    "description": "Hôm nay phòng bếp dâng lên một đĩa bánh mật thơm lừng chia riêng cho bạn. Các anh chị em cùng phủ đang đứng cạnh nhìn đầy thích thú.",
+    "choices": [
+      {
+        "label": "Chia đôi đĩa bánh mời các anh chị em cùng thưởng thức",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Trưởng bối trong phủ mỉm cười hài lòng, khen bạn nhỏ tuổi mà đã biết giữ lễ hòa thuận. Tình cảm huynh đệ tỷ muội thêm gắn bó.",
+            "effects": {
+              "relationships": 6,
+              "happiness": 5,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": 10
+                }
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "giao_du"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ nguyên đĩa bánh mang về phòng dùng một mình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn thưởng thức trọn vẹn đĩa bánh ngọt ngào nhưng bị mẫu thân nhắc nhở nhẹ về phép tắc nhường nhịn.",
+            "effects": {
+              "health": 3,
+              "happiness": 4,
+              "npc_affinity": [
+                {
+                  "relation": "sibling",
+                  "delta": -6
+                }
+              ],
+              "add_traits": [
+                "tham_vong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

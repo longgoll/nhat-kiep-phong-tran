@@ -71,6 +71,7 @@ export interface InstantAdultActionDef {
   minMartial?: number;
   minCraftTrade?: number;
   minFame?: number;
+  minWealthCopper?: number;
   blockedWorldStates?: WorldState[];
   requiresWorldStates?: WorldState[];
   category?: 'medical' | 'social' | 'economic' | 'growth';
@@ -80,6 +81,7 @@ export interface InstantAdultActionDef {
   requiresLivingParent?: boolean;
   requiresFlag?: string;
   requiresOfficialOrNoble?: boolean;
+  requiresOrigins?: OriginClass[];
   excludeOrigins?: OriginClass[];
   effects: EffectSpec;
   levelUpHobby?: boolean;
@@ -87,7 +89,10 @@ export interface InstantAdultActionDef {
 }
 
 export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdultActionDef): boolean {
-  if (def.excludeOrigins && def.excludeOrigins.includes(state.profile.originClass) && state.officialRank === 0) {
+  if (def.requiresOrigins && !def.requiresOrigins.includes(state.profile.originClass)) {
+    return false;
+  }
+  if (def.excludeOrigins && def.excludeOrigins.includes(state.profile.originClass)) {
     return false;
   }
   if (def.requiresOfficialOrNoble) {
@@ -118,6 +123,9 @@ export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdult
     return false;
   }
   if (def.minFame !== undefined && state.stats.fame < def.minFame) {
+    return false;
+  }
+  if (def.minWealthCopper !== undefined && state.assets.wealthCopper < def.minWealthCopper) {
     return false;
   }
   if (def.requiresWorldStates && !def.requiresWorldStates.includes(state.world.worldState)) {
@@ -254,6 +262,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     subtitle: 'Sức khỏe +4 · Thể lực +10 (Giá rẻ cho dân thường)',
     costCopper: 25,
     cooldownDays: 90,
+    excludeOrigins: ['hoang_toc', 'quan_lai'],
     category: 'medical',
     effects: {
       health: 4,
@@ -282,6 +291,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     cooldownDays: 180,
     blockedWorldStates: ['chien_tranh'],
     requiresLivingFamily: true,
+    excludeOrigins: ['hoang_toc'],
     effects: {
       happiness: 7,
       relationships: 5,
@@ -298,6 +308,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     subtitle: 'Thanh danh +5 · Hạnh phúc +6 · Quan hệ +2',
     costCopper: 200,
     cooldownDays: 180,
+    excludeOrigins: ['hoang_toc'],
     effects: {
       fame: 5,
       happiness: 6,
@@ -324,6 +335,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     costCopper: 350,
     cooldownDays: 360,
     requiresNotHousing: 'gam_cau',
+    excludeOrigins: ['hoang_toc'],
     effects: {
       happiness: 8,
       relationships: 3,
@@ -546,6 +558,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     costCopper: 50,
     cooldownDays: 90,
     minEducation: 18,
+    excludeOrigins: ['hoang_toc', 'quan_lai'],
     category: 'economic',
     effects: {
       copper: 110,
@@ -563,6 +576,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     costCopper: 140,
     cooldownDays: 120,
     minCraftTrade: 10,
+    excludeOrigins: ['hoang_toc', 'quan_lai'],
     category: 'economic',
     effects: {
       copper: 220,
@@ -589,6 +603,160 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
       add_flags: ['khoi_nghiep_phuong_tho'],
     },
     logText: 'Bạn chung vốn cùng mấy tay thợ giỏi lập phường sản xuất đồ thủ công giao mối cho thương nhân, lợi nhuận rất khá.',
+  },
+  {
+    id: 'inst_royal_family_greetings',
+    title: 'Vấn an · Dâng lễ trưởng bối trong cung',
+    subtitle: 'Quan hệ +5 · Hạnh phúc +4 · Thân thiết người nhà +8',
+    costCopper: 350,
+    cooldownDays: 90,
+    requiresLivingFamily: true,
+    requiresOrigins: ['hoang_toc'],
+    category: 'social',
+    effects: {
+      relationships: 5,
+      happiness: 4,
+      npc_affinity: [
+        { relation: 'parent', delta: 8 },
+        { relation: 'sibling', delta: 6 },
+      ],
+    },
+    logText: 'Bạn chuẩn bị trà quý và lễ vật vào cung vấn an trưởng bối, giữ trọn lễ nghi hiếu đễ chốn Hoàng gia.',
+  },
+  {
+    id: 'inst_royal_garden_tour',
+    title: 'Du xuân vãn cảnh Hoàng tự · Ngự hoa viên',
+    subtitle: 'Hạnh phúc +8 · Quan hệ +6 · Thanh danh +3',
+    costCopper: 420,
+    cooldownDays: 180,
+    blockedWorldStates: ['chien_tranh'],
+    requiresLivingFamily: true,
+    requiresOrigins: ['hoang_toc'],
+    category: 'social',
+    effects: {
+      happiness: 8,
+      relationships: 6,
+      fame: 3,
+      npc_affinity: [
+        { relation: 'parent', delta: 8 },
+        { relation: 'sibling', delta: 8 },
+      ],
+    },
+    logText: 'Bạn cùng gia quyến dạo bước vãn cảnh Hoàng tự dâng hương cầu phúc, không khí thanh nhã ấm áp.',
+  },
+  {
+    id: 'inst_royal_palace_renovation',
+    title: 'Tu bổ, trang hoàng phủ đệ Tôn thất',
+    subtitle: 'Hạnh phúc +9 · Thanh danh +5 · Quan hệ +4',
+    costCopper: 900,
+    cooldownDays: 360,
+    requiresHousingIn: ['nha_gach', 'phu_de'],
+    requiresOrigins: ['hoang_toc'],
+    category: 'social',
+    effects: {
+      happiness: 9,
+      fame: 5,
+      relationships: 4,
+    },
+    logText: 'Bạn cho thợ khéo chạm trổ lại hoành phi, trồng thêm tùng trúc trong phủ đệ, uy nghi tôn thất thêm phần rạng rỡ.',
+  },
+  {
+    id: 'inst_royal_relief_granary',
+    title: 'Phát chẩn cứu tế bách tính · Lập y quán',
+    subtitle: 'Thanh danh +10 · Hạnh phúc +7 · Quan hệ +5',
+    costCopper: 750,
+    cooldownDays: 180,
+    requiresOrigins: ['hoang_toc'],
+    category: 'social',
+    effects: {
+      fame: 10,
+      happiness: 7,
+      relationships: 5,
+    },
+    logText: 'Bạn xuất bạc kho riêng mở điểm phát lương và bốc thuốc miễn phí cho dân nghèo Kinh kỳ, tiếng thơm lan truyền khắp nơi.',
+  },
+  {
+    id: 'inst_royal_imperial_collection',
+    title: 'Sưu tầm cổ thư · Bảo kiếm & Ngự trà',
+    subtitle: 'Nâng cấp Sở thích +1 Lv · Học thức +2 · Thanh danh +3',
+    costCopper: 480,
+    cooldownDays: 150,
+    requiresOrigins: ['hoang_toc'],
+    category: 'growth',
+    levelUpHobby: true,
+    effects: {
+      happiness: 7,
+      education: 2,
+      fame: 3,
+    },
+    logText: 'Bạn thỉnh về những bộ tàng thư quý hiếm và trà ngon tiến cung, thú vui tao nhã thêm phần tinh tế.',
+  },
+  {
+    id: 'inst_patron_scholars',
+    title: 'Bảo trợ Sĩ tử · Lập quỹ khuyến học',
+    subtitle: 'Thanh danh +8 · Quan hệ +6 · Học thức +2 (Tài sản ≥ 5.000đ)',
+    costCopper: 800,
+    cooldownDays: 180,
+    minWealthCopper: 5000,
+    category: 'social',
+    effects: {
+      fame: 8,
+      relationships: 6,
+      education: 2,
+      happiness: 5,
+    },
+    logText: 'Bạn xuất tiền lập quỹ khuyến học trợ cấp cho các sĩ tử nghèo, được giới nho lâm hết lời ca ngợi.',
+  },
+  {
+    id: 'inst_merchant_guild_alliance',
+    title: 'Mở yến kết giao Thương hội liên tỉnh',
+    subtitle: 'Quan hệ +10 · Thanh danh +6 · Thương tài +3 (Tài sản ≥ 8.000đ)',
+    costCopper: 1200,
+    cooldownDays: 150,
+    minWealthCopper: 8000,
+    minCraftTrade: 15,
+    excludeOrigins: ['hoang_toc'],
+    category: 'social',
+    effects: {
+      relationships: 10,
+      fame: 6,
+      craft_trade: 3,
+      happiness: 5,
+    },
+    logText: 'Bạn đặt tiệc lớn tại thương quán kết giao với các đại thương nhân tứ phương, mạng lưới làm ăn mở rộng vượt bậc.',
+  },
+  {
+    id: 'inst_recruit_retainers',
+    title: 'Chiêu mộ Môn khách · Kết giao hào kiệt',
+    subtitle: 'Thanh danh +10 · Quan hệ +10 · Võ nghệ +2 (Tài sản ≥ 10.000đ)',
+    costCopper: 1500,
+    cooldownDays: 180,
+    minAge: 18,
+    minWealthCopper: 10000,
+    category: 'social',
+    effects: {
+      fame: 10,
+      relationships: 10,
+      martial: 2,
+      happiness: 4,
+    },
+    logText: 'Bạn rộng cửa phủ đệ nuôi dưỡng môn khách và kết giao hào kiệt bốn phương, thanh thế ngày càng lừng lẫy.',
+  },
+  {
+    id: 'inst_grand_court_networking',
+    title: 'Mở đại yến phủ đệ · Giao hảo triều thần',
+    subtitle: 'Thanh danh +14 · Quan hệ +12 · Hạnh phúc +6 (Tài sản ≥ 15.000đ)',
+    costCopper: 2500,
+    cooldownDays: 180,
+    minWealthCopper: 15000,
+    requiresOfficialOrNoble: true,
+    category: 'social',
+    effects: {
+      fame: 14,
+      relationships: 12,
+      happiness: 6,
+    },
+    logText: 'Bạn mở đại yến xa hoa trong phủ đệ thết đãi các bậc công khanh và danh sĩ Kinh kỳ, uy tín trên triều đình tăng vọt.',
   },
 ];
 

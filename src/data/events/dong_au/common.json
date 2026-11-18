@@ -246,7 +246,7 @@
       "base": 50,
       "modifiers": []
     },
-    "description": "Anh chị em trong nhà lén lấy đồ ăn vặt ngoài bếp nhưng làm vỡ chiếc bát sành của mẹ. Cả đám đang cuống cuồng nhìn bạn.",
+    "description": "Anh chị em trong nhà lén lấy đồ ăn vặt ngoài bếp nhưng làm vỡ chiếc bát sứ của mẹ. Cả đám đang cuống cuồng nhìn bạn.",
     "choices": [
       {
         "label": "Đứng ra nhận lỗi thay để che chở cho anh chị em",
@@ -391,10 +391,10 @@
         }
       ]
     },
-    "description": "Do lao lực hoặc ăn uống kham khổ kéo dài, bạn gầy rộc hẳn đi và thường xuyên ho khan giữa đêm.",
+    "description": "Do thể trạng suy nhược hoặc ốm đau kéo dài, bạn gầy rộc hẳn đi và thường xuyên ho khan giữa đêm.",
     "choices": [
       {
-        "label": "Cha mẹ tạm gác việc, dốc tiền thuốc thang cho bạn nghỉ ngơi",
+        "label": "Cha mẹ lo lắng, vội mời thầy thuốc dốc tiền thuốc thang cho bạn nghỉ ngơi",
         "conditions": {},
         "outcomes": [
           {
@@ -449,7 +449,12 @@
     "conditions": {
       "min_age": 7,
       "max_age": 12,
-      "max_happiness": 35
+      "max_happiness": 35,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ]
     },
     "weight": {
       "base": 75,
@@ -478,6 +483,67 @@
       },
       {
         "label": "Tâm sự với bạn bè hoặc anh chị em thân thiết",
+        "conditions": {
+          "min_relationships": 45
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Những lời an ủi chân thành giúp bạn nhẹ lòng đi rất nhiều.",
+            "effects": {
+              "happiness": 20,
+              "relationships": 5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_low_happiness_rebel_cung_dinh",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Nỗi Ngột Ngạt Chốn Phủ Đệ",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "max_happiness": 35,
+      "origin_in": [
+        "quan_lai",
+        "hoang_toc"
+      ]
+    },
+    "weight": {
+      "base": 75,
+      "modifiers": []
+    },
+    "description": "Áp lực lễ nghi khắt khe, bài vở dồn dập hoặc sự lạnh lẽo chốn phủ đệ khiến bạn cảm thấy ngột ngạt, chỉ muốn trốn đi đâu thật xa.",
+    "choices": [
+      {
+        "label": "Ra góc khuất hoa viên ngồi khóc một trận rồi tự vực dậy tinh thần",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Gió mát hoa viên làm dịu lòng, bạn tự nhủ phải sống bản lĩnh để tự làm chủ vận mệnh mình.",
+            "effects": {
+              "happiness": 14,
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tâm sự với bạn đồng môn hoặc anh chị em thân thiết",
         "conditions": {
           "min_relationships": 45
         },

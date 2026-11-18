@@ -330,7 +330,12 @@
     "conditions": {
       "min_age": 8,
       "max_age": 12,
-      "min_health": 55
+      "min_health": 55,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ]
     },
     "costCopper": 0,
     "effects": {
@@ -370,7 +375,12 @@
     "conditions": {
       "min_age": 9,
       "max_age": 12,
-      "min_craft_trade": 8
+      "min_craft_trade": 8,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ]
     },
     "costCopper": 0,
     "effects": {
@@ -384,9 +394,9 @@
   },
   {
     "id": "ket_giao",
-    "name": "Kết giao bạn nối khố & dạo chơi",
+    "name": "Kết giao bạn đồng trang lứa & dạo chơi",
     "category": "Giao du",
-    "description": "Vui chơi cùng lũ trẻ đồng trang lứa, mở rộng quan hệ và giữ tinh thần sảng khoái.",
+    "description": "Vui chơi cùng bạn đồng trang lứa, mở rộng quan hệ và giữ tinh thần sảng khoái.",
     "conditions": {
       "min_age": 6,
       "max_age": 12

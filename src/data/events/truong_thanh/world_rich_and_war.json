@@ -244,6 +244,12 @@
     "title": "Chiến Họa Tràn Qua Vùng",
     "conditions": {
       "min_age": 16,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ],
       "world_state_in": [
         "chien_tranh"
       ]

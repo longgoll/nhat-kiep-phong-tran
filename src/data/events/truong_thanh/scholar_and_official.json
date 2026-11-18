@@ -86,6 +86,12 @@
     "conditions": {
       "min_age": 18,
       "max_age": 42,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ],
       "has_flags": [
         "do_cu_nhan"
       ],
@@ -170,6 +176,12 @@
     "title": "Lễ Vinh Quy Bái Tổ Rạng Danh Gia Tộc",
     "conditions": {
       "min_age": 18,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ],
       "has_any_flag": [
         "do_tien_si",
         "trang_nguyen",

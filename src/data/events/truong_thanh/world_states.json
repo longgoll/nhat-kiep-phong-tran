@@ -345,6 +345,12 @@
     "title": "Quân Lính Cướp Bóc Làng Xã",
     "conditions": {
       "min_age": 14,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ],
       "world_state_in": [
         "chien_tranh"
       ]
@@ -558,6 +564,12 @@
     "title": "Khan Hiếm Dược Liệu Giữa Cơn Dịch",
     "conditions": {
       "min_age": 15,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ],
       "world_state_in": [
         "dich_benh"
       ]
