@@ -55,6 +55,7 @@ import {
   getFeudalIncomeRankLabel,
   getFeudalTransportLabel,
   getPersonalPossessions,
+  getStatusLineParts,
   hasActiveLivelihood,
 } from '../engine/lifeStatus';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
@@ -255,6 +256,7 @@ export function AdultDashboard() {
   const incomeRankLabel = getFeudalIncomeRankLabel(annualIncomeCopper);
   const personalPossessions = getPersonalPossessions(life);
   const transportLabel = getFeudalTransportLabel(life);
+  const statusLine = getStatusLineParts(life);
   const hasJob = hasActiveLivelihood(life);
   const tierDots = life.family ? TIER_DOTS[life.family.familyLivingTier] ?? 1 : 1;
   const focusOptions = getLifeFocusOptions(life);
@@ -548,7 +550,7 @@ export function AdultDashboard() {
                       </div>
                       <button
                         type="button"
-                        onClick={() => openCareerModal('jobs')}
+                        onClick={() => performInstantAction('inst_job_hunt')}
                         className="inline-flex items-center gap-1 px-2 py-1 rounded bg-amber-600/20 hover:bg-amber-600/35 border border-amber-500/50 text-[11px] font-semibold text-amber-200 cursor-pointer"
                       >
                         <Briefcase className="w-3 h-3" /> Tìm việc ngay
@@ -703,6 +705,10 @@ export function AdultDashboard() {
 
             {/* Trọng tâm hiện tại (Life Focus) */}
             <div className="bg-stone-900/75 border border-stone-800 rounded-xl p-3.5 space-y-2">
+              <div className="text-xs text-stone-300 pb-2 border-b border-stone-800/80">
+                <span className="font-bold text-stone-100">{statusLine.primary}</span>{' '}
+                <span className="text-stone-400">· {statusLine.detail}</span>
+              </div>
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-300">
                   Trọng Tâm Hiện Tại
@@ -957,64 +963,25 @@ export function AdultDashboard() {
                   return (
                     <>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {!isInPrison && (
-                          <>
-                            {/* Tìm chỗ làm mới */}
-                            <button
-                              type="button"
-                              onClick={() => openCareerModal('jobs')}
-                              className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-emerald-700/50 hover:border-emerald-500 transition cursor-pointer space-y-1"
-                            >
-                              <div className="flex items-start justify-between gap-2">
-                                <span className="text-xs font-semibold text-emerald-200 leading-snug">
-                                  {hasJob ? 'Đổi chỗ làm mới' : 'Tìm chỗ làm mới'}
-                                </span>
-                                <span className="shrink-0 text-[11px] font-mono text-emerald-300">Miễn phí</span>
+                        {!isInPrison && (life.activeCareer || life.activeVenture) && (
+                          <button
+                            type="button"
+                            onClick={() => openCareerModal('current')}
+                            className="sm:col-span-2 text-left p-2.5 rounded-lg bg-emerald-950/30 hover:bg-emerald-950/50 border border-emerald-700/60 transition cursor-pointer flex items-center justify-between gap-3"
+                          >
+                            <div>
+                              <div className="text-xs font-semibold text-emerald-200">
+                                Công việc hiện tại:{' '}
+                                {life.activeCareer
+                                  ? CAREER_CATALOG.find((j) => j.id === life.activeCareer!.jobId)?.title
+                                  : VENTURE_CATALOG.find((v) => v.id === life.activeVenture!.ventureId)?.title}
                               </div>
                               <div className="text-[11px] text-stone-400">
-                                Xem các công việc phù hợp với học thức, tay nghề và mối quen hiện tại
+                                Bấm để học nâng cao chuyên môn, xin thăng tiến hoặc nghỉ việc
                               </div>
-                            </button>
-
-                            {/* Tìm hiểu việc khởi nghiệp */}
-                            <button
-                              type="button"
-                              onClick={() => openCareerModal('ventures')}
-                              className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-sky-700/50 hover:border-sky-500 transition cursor-pointer space-y-1"
-                            >
-                              <div className="flex items-start justify-between gap-2">
-                                <span className="text-xs font-semibold text-sky-200 leading-snug">
-                                  Tìm hiểu việc khởi nghiệp
-                                </span>
-                                <span className="shrink-0 text-[11px] font-mono text-sky-300">Miễn phí</span>
-                              </div>
-                              <div className="text-[11px] text-stone-400">
-                                Cân nhắc mô hình kinh doanh riêng vừa túi tiền &amp; tay nghề
-                              </div>
-                            </button>
-
-                            {/* Quản lý công việc hiện tại */}
-                            {(life.activeCareer || life.activeVenture) && (
-                              <button
-                                type="button"
-                                onClick={() => openCareerModal('current')}
-                                className="sm:col-span-2 text-left p-2.5 rounded-lg bg-emerald-950/30 hover:bg-emerald-950/50 border border-emerald-700/60 transition cursor-pointer flex items-center justify-between gap-3"
-                              >
-                                <div>
-                                  <div className="text-xs font-semibold text-emerald-200">
-                                    Công việc hiện tại:{' '}
-                                    {life.activeCareer
-                                      ? CAREER_CATALOG.find((j) => j.id === life.activeCareer!.jobId)?.title
-                                      : VENTURE_CATALOG.find((v) => v.id === life.activeVenture!.ventureId)?.title}
-                                  </div>
-                                  <div className="text-[11px] text-stone-400">
-                                    Bấm để xin thăng tiến, làm thêm ngoài giờ, tu nghiệp hoặc nghỉ việc
-                                  </div>
-                                </div>
-                                <span className="text-[11px] font-semibold text-emerald-300 shrink-0">Quản lý →</span>
-                              </button>
-                            )}
-                          </>
+                            </div>
+                            <span className="text-[11px] font-semibold text-emerald-300 shrink-0">Quản lý →</span>
+                          </button>
                         )}
 
                         {recommendedSpendActions.map(renderActionCard)}

@@ -656,8 +656,8 @@ export function advanceDays(
       return { state, daysSimulated, pausedReason: 'dead' };
     }
 
-    // 4. Roll random adulthood event (pacing cap: major event at most once per 25 days)
-    const MAJOR_EVENT_COOLDOWN_DAYS = 25;
+    // 4. Roll random adulthood event (1in8b planYear pacing: ~3-4 events/year, max ~2-3 major decisions/year)
+    const MAJOR_EVENT_COOLDOWN_DAYS = 90;
     const canRollMajor = nextTotalDays - (state.lastMajorEventDay ?? -9999) >= MAJOR_EVENT_COOLDOWN_DAYS;
     const eligibleEvents = eventsPool.filter((evt) => {
       if (evt.stage !== 'adulthood' && evt.stage !== 'any') return false;
@@ -670,8 +670,8 @@ export function advanceDays(
     });
 
     if (eligibleEvents.length > 0) {
-      // ~3% chance per day (~1 event per month on average) to avoid overwhelming modals
-      const triggerRoll = pickWeightedIndex(state.prngState, [3, 97]);
+      // ~1.2% chance per day (~4 events/year on average, matching 1in8b's 2-3 feed + 1-2 decisions/year)
+      const triggerRoll = pickWeightedIndex(state.prngState, [12, 988]);
       state = { ...state, prngState: triggerRoll.nextState };
 
       if (triggerRoll.index === 0) {

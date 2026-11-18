@@ -892,6 +892,34 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     },
     logText: 'Bạn cẩn thận viết lại đôi lời dặn dò hậu sự và phân chia gia sản nếu chẳng may bất trắc.',
   },
+  {
+    id: 'inst_job_hunt',
+    title: 'Tìm chỗ làm mới · Nghe ngóng cơ hội',
+    subtitle: 'Miễn phí · Hẹn 3 lời mời việc làm phù hợp ở kỳ quyết định tiếp theo (Chờ 1 năm)',
+    costCopper: 0,
+    cooldownDays: 360,
+    minAge: 18,
+    maxAge: 62,
+    category: 'growth',
+    effects: {
+      add_flags: ['cho_tim_viec_moi'],
+    },
+    logText: 'Bạn nhờ người quen dò hỏi khắp nơi để tìm một công việc phù hợp hơn với hoàn cảnh hiện tại.',
+  },
+  {
+    id: 'inst_biz_plan',
+    title: 'Tìm hiểu việc khởi nghiệp',
+    subtitle: 'Miễn phí · Lập kế hoạch mở cơ sở riêng phù hợp vốn liếng (Chờ 1 năm)',
+    costCopper: 0,
+    cooldownDays: 360,
+    minAge: 18,
+    maxAge: 65,
+    category: 'economic',
+    effects: {
+      add_flags: ['cho_khoi_nghiep'],
+    },
+    logText: 'Bạn đi khảo sát chợ búa, tính toán vốn liếng và tìm hiểu các mối hàng để chuẩn bị khởi nghiệp.',
+  },
 ];
 
 export function getEffectiveInstantActionCost(
@@ -1581,6 +1609,8 @@ export function rankInstantActions(
     if (act.id === 'inst_trade_course' && hasJob && age < 50) score += 7;
     if (act.id === 'inst_open_academy' && age >= 50) score += 7;
     if (act.id === 'inst_hire_child_tutor') score += 7;
+    if (act.id === 'inst_job_hunt' && (!hasJob || age <= 45)) score += !hasJob ? 10 : 6;
+    if (act.id === 'inst_biz_plan' && !state.activeVenture && state.assets.wealthCopper >= 500) score += 5;
 
     if (act.category === 'social') {
       if (state.stats.happiness < 45 || state.stats.relationships < 40) score += 7;

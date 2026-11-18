@@ -1,7 +1,15 @@
 import { getAgeYears, type ActiveLifeState } from '../types/activeLife';
 import type { GameEventDef } from '../types/dsl';
 import { formatCopper } from './economy';
-import { canPromoteCareer, applyForCareer, getRecommendedCareerOffers, promoteCareer, resignCareer } from './careerSystem';
+import {
+  applyForCareer,
+  canPromoteCareer,
+  getAvailableVentures,
+  getRecommendedCareerOffers,
+  promoteCareer,
+  resignCareer,
+  startVenture,
+} from './careerSystem';
 import { hasActiveLivelihood } from './lifeStatus';
 import { appendLog } from './effectApplier';
 import { sellProperty } from './progressionModules';
@@ -271,15 +279,17 @@ export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | 
     };
   }
 
-  // 5. DEC.job when unemployed (`seeking`) and not a student / homemaker / retired / prisoner
+  // 5. DEC.job when unemployed (`seeking`) OR explicitly hunting via Chi tiêu · đầu tư (`cho_tim_viec_moi`)
+  const wantsNewJob = state.flags.includes('cho_tim_viec_moi');
   if (
     age >= 18 &&
     !state.isStudent &&
-    !hasActiveLivelihood(state) &&
-    state.livelihoodStatus !== 'homemaker' &&
-    state.livelihoodStatus !== 'retired' &&
+    (wantsNewJob ||
+      (!hasActiveLivelihood(state) &&
+        state.livelihoodStatus !== 'homemaker' &&
+        state.livelihoodStatus !== 'retired')) &&
     state.livelihoodStatus !== 'prison' &&
-    totalDays - (state.eventCooldowns['dec_job_offers'] ?? -99999) >= 360
+    (wantsNewJob || totalDays - (state.eventCooldowns['dec_job_offers'] ?? -99999) >= 360)
   ) {
     const offers = getRecommendedCareerOffers(state, 3);
     if (offers.length > 0) {
@@ -288,9 +298,11 @@ export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | 
         stage: 'adulthood',
         severity: 'major',
         conditions: {},
-        title: 'Tìm kiếm sinh kế: 3 lời mời việc làm phù hợp',
+        title: wantsNewJob
+          ? 'Cơ hội mới: 3 lời mời việc làm phù hợp'
+          : 'Tìm kiếm sinh kế: 3 lời mời việc làm phù hợp',
         description:
-          'Bạn đang trong trạng thái tìm việc. Nhờ học vấn, tay nghề và các mối quen biết, hiện có 3 chỗ làm đang mở lời:',
+          'Nhờ học vấn, tay nghề và các mối quen biết, hiện có 3 chỗ làm đang mở lời với bạn:',
         cooldownDays: 360,
         weight: { base: 100 },
         choices: [
@@ -324,6 +336,54 @@ export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | 
                 weight: { base: 100 },
                 effects: { happiness: 2 },
                 resultText: 'Bạn chọn ở nhà thu vén việc gia đình.',
+              },
+            ],
+          },
+        ],
+      };
+    }
+  }
+
+  // 6. DEC.biz when triggered via Chi tiêu · đầu tư (`cho_khoi_nghiep`)
+  if (
+    age >= 18 &&
+    state.flags.includes('cho_khoi_nghiep') &&
+    state.livelihoodStatus !== 'prison'
+  ) {
+    const bizOffers = getAvailableVentures(state)
+      .filter((v) => !v.isCurrent && v.eligible)
+      .slice(0, 3);
+    if (bizOffers.length > 0) {
+      return {
+        id: 'dec_biz_offers',
+        stage: 'adulthood',
+        severity: 'major',
+        conditions: {},
+        title: 'Cơ hội lập nghiệp: 3 mô hình kinh doanh khả thi',
+        description:
+          'Sau khi thăm dò thị trường và cân nhắc vốn liếng, bạn thấy có thể mở một trong các cơ sở sau:',
+        cooldownDays: 360,
+        weight: { base: 100 },
+        choices: [
+          ...bizOffers.map((v) => ({
+            label: `Mở ${v.venture.title} (Vốn ${formatCopper(v.effectiveCapitalCopper)})`,
+            hint: `${v.hasSpinoffDiscount ? 'Giảm 30% vốn do đúng nghề · ' : ''}+${v.venture.baseDailyCopper}đ/buổi`,
+            outcomes: [
+              {
+                weight: { base: 100 },
+                effects: {},
+                resultText: `Bạn quyết định xuất vốn mở ${v.venture.title}.`,
+              },
+            ],
+          })),
+          {
+            label: 'Chưa vội khởi nghiệp lúc này',
+            hint: 'Giữ nguyên tiền mặt và công việc hiện tại',
+            outcomes: [
+              {
+                weight: { base: 100 },
+                effects: {},
+                resultText: 'Bạn quyết định tích lũy thêm vốn liếng và kinh nghiệm trước khi ra làm riêng.',
               },
             ],
           },
@@ -430,6 +490,7 @@ export function applyDynamicDecisionSideEffects(
     const offers = getRecommendedCareerOffers(state, 3);
     const next = {
       ...state,
+      flags: state.flags.filter((f) => f !== 'cho_tim_viec_moi'),
       eventCooldowns: { ...state.eventCooldowns, dec_job_offers: totalDays },
     };
     if (choiceIndex < offers.length) {
@@ -447,6 +508,26 @@ export function applyDynamicDecisionSideEffects(
     return {
       ...next,
       logs: appendLog(next.logs, totalDays, 'survival', 'Bạn tạm thời chưa nhận lời mời việc làm nào.'),
+    };
+  }
+
+  if (eventId === 'dec_biz_offers') {
+    const bizOffers = getAvailableVentures(state)
+      .filter((v) => !v.isCurrent && v.eligible)
+      .slice(0, 3);
+    const next = {
+      ...state,
+      flags: state.flags.filter((f) => f !== 'cho_khoi_nghiep'),
+      eventCooldowns: { ...state.eventCooldowns, dec_biz_offers: totalDays },
+    };
+    if (choiceIndex < bizOffers.length) {
+      const chosen = bizOffers[choiceIndex];
+      const started = startVenture(next, chosen.venture.id);
+      return { ...started, livelihoodStatus: 'venture' };
+    }
+    return {
+      ...next,
+      logs: appendLog(next.logs, totalDays, 'survival', 'Bạn tạm gác ý định khởi nghiệp lúc này.'),
     };
   }
 

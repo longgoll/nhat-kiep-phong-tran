@@ -564,4 +564,36 @@ describe('Core Engine (MVP 1)', () => {
     expect(dec?.id).toBe('dec_loan_heavy');
     expect(dec?.choices.some((c) => c.label.includes('Vay nóng lãi nặng'))).toBe(true);
   });
+
+  it('shows study year progress on profile and triggers 1in8b-style job/biz Decision Cards from Chi tiêu · đầu tư', () => {
+    const base = createNewLife(108);
+    const studentAt19 = {
+      ...base,
+      profile: { ...base.profile, totalDays: 19 * 360 },
+      eduLevel: 4,
+      isStudent: true,
+      major: 'Kinh sử · Chính trị',
+    };
+    expect(getEducationLabel(studentAt19)).toContain('Quốc Tử Giám (Kinh sử · Chính trị) · Năm 2/4');
+
+    const adult = {
+      ...base,
+      profile: { ...base.profile, totalDays: 24 * 360 },
+      assets: { ...base.assets, wealthCopper: 2000 },
+      stats: { ...base.stats, education: 20, craftTrade: 20 },
+    };
+    const huntRes = executeInstantAdultAction(adult, 'inst_job_hunt');
+    expect(huntRes.ok).toBe(true);
+    const jobDec = generateDynamicDecision(huntRes.state);
+    expect(jobDec?.id).toBe('dec_job_offers');
+
+    const homemaker = {
+      ...adult,
+      livelihoodStatus: 'homemaker' as const,
+    };
+    const bizRes = executeInstantAdultAction(homemaker, 'inst_biz_plan');
+    expect(bizRes.ok).toBe(true);
+    const bizDec = generateDynamicDecision(bizRes.state);
+    expect(bizDec?.id).toBe('dec_biz_offers');
+  });
 });

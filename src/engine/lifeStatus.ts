@@ -12,16 +12,37 @@ export function getEducationLabel(state: ActiveLifeState): string {
   if (state.flags.includes('do_cu_nhan')) return 'Cử nhân';
   if (state.flags.includes('do_tu_tai')) return 'Tú tài';
 
+  const age = getAgeYears(state.profile.totalDays);
+
+  let baseEduLabel: string | null = null;
   if (state.eduLevel !== undefined) {
     const majorSuffix = state.major ? ` (${state.major})` : '';
-    if (state.eduLevel >= 5) return `Hàn Lâm Viện${majorSuffix}`;
-    if (state.eduLevel === 4) return `Quốc Tử Giám${majorSuffix}`;
-    if (state.eduLevel === 3) return 'Huyện học';
-    if (state.eduLevel === 2) return 'Hương học';
-    if (state.eduLevel === 1) return 'Vỡ lòng · Thầy đồ';
+    if (state.eduLevel >= 5) baseEduLabel = `Hàn Lâm Viện${majorSuffix}`;
+    else if (state.eduLevel === 4) {
+      const yearNum = state.isStudent ? ` · Năm ${Math.min(4, Math.max(1, age - 17))}/4` : '';
+      baseEduLabel = `Quốc Tử Giám${majorSuffix}${yearNum}`;
+    } else if (state.eduLevel === 3) baseEduLabel = 'Huyện học';
+    else if (state.eduLevel === 2) baseEduLabel = 'Hương học';
+    else if (state.eduLevel === 1) baseEduLabel = 'Vỡ lòng · Thầy đồ';
   }
 
-  const age = getAgeYears(state.profile.totalDays);
+  const nightRem =
+    state.actionCooldowns?.inst_night_class !== undefined
+      ? Math.max(0, 360 - (state.profile.totalDays - state.actionCooldowns.inst_night_class))
+      : 0;
+  const tradeRem =
+    state.actionCooldowns?.inst_trade_course !== undefined
+      ? Math.max(0, 360 - (state.profile.totalDays - state.actionCooldowns.inst_trade_course))
+      : 0;
+  const activeStudyNote =
+    nightRem > 0
+      ? ` (Đang học bổ túc · còn ${nightRem} ngày)`
+      : tradeRem > 0
+        ? ` (Đang học nghề · còn ${tradeRem} ngày)`
+        : '';
+
+  if (baseEduLabel) return `${baseEduLabel}${activeStudyNote}`;
+
   if (age >= 6 && age < 13 && state.schedule.childhoodFocus === 'hoc_tap') {
     const isDeclined =
       state.family?.familyLivingTier === 'tung_thieu' ||
@@ -41,10 +62,10 @@ export function getEducationLabel(state: ActiveLifeState): string {
 
   const edu = state.stats.education;
   if (age < 6 && edu < 5) return 'Chưa đi học';
-  if (edu >= 30) return 'Thông hiểu kinh sử';
-  if (edu >= 15) return 'Biết chữ · Thư sinh';
-  if (edu >= 5) return 'Vỡ lòng · Học lỏm';
-  return 'Chưa biết chữ';
+  if (edu >= 30) return `Thông hiểu kinh sử${activeStudyNote}`;
+  if (edu >= 15) return `Biết chữ · Thư sinh${activeStudyNote}`;
+  if (edu >= 5) return `Vỡ lòng · Học lỏm${activeStudyNote}`;
+  return `Chưa biết chữ${activeStudyNote}`;
 }
 
 /**
@@ -174,4 +195,54 @@ export function getFeudalTransportLabel(state: ActiveLifeState): string {
     return 'Xe bò / Xe ngựa thuê · Đi làm mất nửa canh giờ';
   }
   return 'Đi bộ · Chân đất hoặc guốc mộc';
+}
+
+/**
+ * 1in8b-style `statusLine()` summary displayed above Annual Focus pills:
+ * e.g. "Chép kinh sách · năm thứ 2 · việc làm chính thức · Thăng Long"
+ */
+export function getStatusLineParts(state: ActiveLifeState): { primary: string; detail: string } {
+  const place = state.family?.birthPlace ?? 'Đại Việt';
+  const age = getAgeYears(state.profile.totalDays);
+
+  if (state.isStudent || state.livelihoodStatus === 'student') {
+    const yearNum = Math.min(4, Math.max(1, age - 17));
+    const major = state.major ? ` (${state.major})` : '';
+    return {
+      primary: `Năm thứ ${yearNum} Quốc Tử Giám${major}`,
+      detail: `Đang theo học · ${place}`,
+    };
+  }
+
+  if (state.officialRank > 0) {
+    const rankTitle = OFFICIAL_RANKS[state.officialRank] ?? 'Quan viên';
+    return {
+      primary: rankTitle,
+      detail: `quan chức triều đình · ${place}`,
+    };
+  }
+
+  if (state.activeCareer) {
+    const job = CAREER_CATALOG.find((j) => j.id === state.activeCareer!.jobId);
+    const jobYears = Math.max(1, Math.floor((state.profile.totalDays - state.activeCareer.startedDay) / 360) + 1);
+    const nature = job?.track === 'underworld' ? 'nghề tự do' : 'việc làm chính thức';
+    return {
+      primary: job?.title ?? getCurrentLivelihoodLabel(state),
+      detail: `năm thứ ${jobYears} · ${nature} · ${place}`,
+    };
+  }
+
+  if (state.activeVenture) {
+    const venture = VENTURE_CATALOG.find((v) => v.id === state.activeVenture!.ventureId);
+    const bizYears = Math.max(1, Math.floor((state.profile.totalDays - state.activeVenture.startedDay) / 360) + 1);
+    return {
+      primary: venture ? `Chủ ${venture.title}` : getCurrentLivelihoodLabel(state),
+      detail: `năm thứ ${bizYears} · tự kinh doanh · ${place}`,
+    };
+  }
+
+  return {
+    primary: getCurrentLivelihoodLabel(state),
+    detail: place,
+  };
 }
