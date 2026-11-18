@@ -16,6 +16,7 @@
 | 05 | [05-su-kien-va-dsl.md](file:///f:/Dev/product/game/pọ_01/docs/05-su-kien-va-dsl.md) | Event Engine 2 tầng, Condition DSL, Effect DSL & Schema chuẩn `actions`/`events` |
 | 06 | [06-ui-va-tang-kinh-cac.md](file:///f:/Dev/product/game/pọ_01/docs/06-ui-va-tang-kinh-cac.md) | Dashboard 3 cột, Bia Mộ Tổng Kết, Tàng Kinh Các (`legacy_archive`) |
 | 07 | [07-kien-truc-ky-thuat-va-roadmap.md](file:///f:/Dev/product/game/pọ_01/docs/07-kien-truc-ky-thuat-va-roadmap.md) | Tech Stack, TypeScript Interfaces chuẩn, Web Worker Protocol & Roadmap 4 MVP |
+| 08 | [1in8b-reference/README.md](file:///d:/HoangLong/Dev/nhat-kiep-phong-tran/docs/1in8b-reference/README.md) | Bộ tài liệu tham khảo chi tiết từ `1in8b.life/vi` (Học vấn, Nghề, Chi tiêu·Đầu tư, Sự kiện & Tử vong) |
 
 ---
 

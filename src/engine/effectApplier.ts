@@ -91,6 +91,9 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
     assets.properties.push(effects.add_property);
   }
 
+  let activeCareer = state.activeCareer;
+  let schedule = state.schedule;
+
   if (effects.add_flags) {
     for (const f of effects.add_flags) {
       if (!flags.includes(f)) flags.push(f);
@@ -141,12 +144,46 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
         };
       }
     }
+
+    // Sync special fate / servitude roles & clear civilian career
+    if (effects.add_flags.includes('bi_ep_lam_gia_no')) {
+      currentRole = 'Gia nô trừ nợ';
+      activeCareer = null;
+      flags = flags.filter((f) => !f.startsWith('career_'));
+      schedule = { ...schedule, morning: 'act_lam_gia_no', afternoon: 'act_lam_gia_no' };
+    } else if (effects.add_flags.includes('thai_giam')) {
+      currentRole = 'Thái giám nội đình';
+      activeCareer = null;
+      flags = flags.filter((f) => !f.startsWith('career_'));
+      schedule = { ...schedule, morning: 'act_hau_can_noi_dinh', afternoon: 'act_hau_can_noi_dinh' };
+    } else if (effects.add_flags.includes('trong_hau_cung')) {
+      currentRole = 'Cung nữ · Phi tần';
+      activeCareer = null;
+      flags = flags.filter((f) => !f.startsWith('career_'));
+      schedule = { ...schedule, morning: 'act_hau_can_noi_dinh', afternoon: 'act_hau_can_noi_dinh' };
+    } else if (effects.add_flags.includes('trong_quan_ngu')) {
+      currentRole = 'Binh sĩ tại ngũ';
+      activeCareer = null;
+      flags = flags.filter((f) => !f.startsWith('career_'));
+      schedule = { ...schedule, morning: 'act_tuan_tra_quan_ngu', afternoon: 'act_tuan_tra_quan_ngu' };
+    } else if (
+      effects.add_flags.includes('tung_o_do') &&
+      Math.floor(state.profile.totalDays / 360) < 13
+    ) {
+      currentRole = 'Đi ở đợ nhà địa chủ';
+    }
   }
-  let activeCommitment = state.activeCommitment;
   if (effects.remove_flags) {
     flags = flags.filter((f) => !effects.remove_flags!.includes(f));
-    if (effects.remove_flags.includes('trong_quan_ngu') && activeCommitment?.category === 'military') {
-      activeCommitment = null;
+    if (effects.remove_flags.includes('bi_ep_lam_gia_no') && currentRole === 'Gia nô trừ nợ') {
+      currentRole = 'Dân thường';
+      if (schedule.morning === 'act_lam_gia_no') schedule = { ...schedule, morning: 'act_nghi_ngoi' };
+      if (schedule.afternoon === 'act_lam_gia_no') schedule = { ...schedule, afternoon: 'act_nghi_ngoi' };
+    }
+    if (effects.remove_flags.includes('trong_quan_ngu') && currentRole === 'Binh sĩ tại ngũ') {
+      currentRole = 'Dân thường';
+      if (schedule.morning === 'act_tuan_tra_quan_ngu') schedule = { ...schedule, morning: 'act_nghi_ngoi' };
+      if (schedule.afternoon === 'act_tuan_tra_quan_ngu') schedule = { ...schedule, afternoon: 'act_nghi_ngoi' };
     }
   }
   if (effects.reset_official_rank) {
@@ -257,7 +294,8 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
     traits,
     interests,
     flags,
-    activeCommitment,
+    activeCareer,
+    schedule,
     npcs,
     delayedEvents,
     milestones,

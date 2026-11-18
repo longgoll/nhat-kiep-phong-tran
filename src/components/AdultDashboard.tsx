@@ -4,7 +4,6 @@ import {
   Smile,
   Users,
   BookOpen,
-  Zap,
   AlertCircle,
   RotateCcw,
   X,
@@ -13,14 +12,13 @@ import {
   User,
   CalendarClock,
   ScrollText,
+  Briefcase,
 } from 'lucide-react';
 import {
   getAgeYears,
   type GiftEtiquetteTier,
   type LifestyleTier,
-  type TimeSlot,
 } from '../types/activeLife';
-import { evaluateConditions } from '../engine/conditionEvaluator';
 import { formatCopper } from '../engine/economy';
 import {
   getDailyFixedExpenseSummary,
@@ -40,8 +38,9 @@ import {
   isInstantActionVisible,
   LIFE_FOCUS_OPTIONS,
 } from '../engine/adultLifeActions';
-import { ALL_ACTIONS, useActiveLifeStore } from '../stores/useActiveLifeStore';
-import { getPropertySeasonalIncome, OFFICIAL_RANKS, PROPERTY_CATALOG } from '../engine/progressionModules';
+import { useActiveLifeStore } from '../stores/useActiveLifeStore';
+import { getPropertySeasonalIncome, PROPERTY_CATALOG } from '../engine/progressionModules';
+import { getCurrentLivelihoodLabel, getEducationLabel } from '../engine/lifeStatus';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
 import { ProgressionModules } from './ProgressionModules';
 import { LegacyArchiveModal } from './LegacyArchiveModal';
@@ -53,15 +52,8 @@ import { LifeGrid } from './LifeGrid';
 import { LifeTimeline } from './LifeTimeline';
 import { LifeTopBar } from './LifeTopBar';
 import { StatExplainer } from './StatExplainer';
-import { ActiveCommitmentBanner } from './ActiveCommitmentBanner';
-import { LearningCommitmentModal } from './LearningCommitmentModal';
-
-const SLOT_LABELS: Record<TimeSlot, string> = {
-  morning: 'Buổi Sáng',
-  afternoon: 'Buổi Chiều',
-  evening: 'Buổi Tối',
-  night: 'Ban Đêm',
-};
+import { CareerModal } from './CareerModal';
+import { CAREER_CATALOG, VENTURE_CATALOG } from '../engine/careerSystem';
 
 const LIFESTYLE_OPTIONS: Array<{ value: LifestyleTier; label: string; desc: string }> = [
   { value: 'nhin_doi', label: 'Nhịn đói', desc: '0 gạo, 0đ (-1.8 SK, -1.2 HP/ngày)' },
@@ -120,7 +112,6 @@ export function AdultDashboard() {
   const autoPauseConfig = useActiveLifeStore((s) => s.autoPauseConfig);
 
   const advanceAdultDays = useActiveLifeStore((s) => s.advanceAdultDays);
-  const setSlotAction = useActiveLifeStore((s) => s.setSlotAction);
   const setLifestyle = useActiveLifeStore((s) => s.setLifestyle);
   const setLifeFocus = useActiveLifeStore((s) => s.setLifeFocus);
   const setGiftEtiquette = useActiveLifeStore((s) => s.setGiftEtiquette);
@@ -145,9 +136,15 @@ export function AdultDashboard() {
   const [autoPlaySpeed, setAutoPlaySpeed] = useState<0 | 1 | 2 | 4 | 8>(0);
   const [subMonthProgress, setSubMonthProgress] = useState<number>(0);
   const lastTickTimeRef = useRef<number>(0);
-  const [showScheduleDetails, setShowScheduleDetails] = useState(false);
   const [showLifestyleDetails, setShowLifestyleDetails] = useState(false);
-  const [isLearningModalOpen, setIsLearningModalOpen] = useState(false);
+  const [isCareerModalOpen, setIsCareerModalOpen] = useState(false);
+  const [careerModalTab, setCareerModalTab] = useState<'current' | 'jobs' | 'ventures'>('jobs');
+
+  const openCareerModal = (tab: 'current' | 'jobs' | 'ventures') => {
+    setCareerModalTab(tab);
+    setShowActionModal(false);
+    setIsCareerModalOpen(true);
+  };
 
   const isLifeAlive = life?.isAlive ?? false;
   const hasPendingEvent = Boolean(pendingEvent);
@@ -220,37 +217,8 @@ export function AdultDashboard() {
     })
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
-  const morningAct = ALL_ACTIONS.find((a) => a.id === life.schedule.morning);
-  const afternoonAct = ALL_ACTIONS.find((a) => a.id === life.schedule.afternoon);
-  const jobNames = Array.from(
-    new Set(
-      [morningAct, afternoonAct]
-        .filter((a) => a && a.id !== 'act_nghi_ngoi')
-        .map((a) => a!.name),
-    ),
-  );
-  const currentJobLabel =
-    life.officialRank > 0
-      ? `${OFFICIAL_RANKS[life.officialRank]} (Triều đình)`
-      : jobNames.length > 0
-        ? jobNames.join(' · ')
-        : 'Chưa làm việc';
-
-  const educationLabel = life.flags.includes('do_trang_nguyen')
-    ? 'Trạng nguyên'
-    : life.flags.includes('do_tien_si')
-      ? 'Tiến sĩ'
-      : life.flags.includes('do_cong_si')
-        ? 'Cống sĩ'
-        : life.flags.includes('do_cu_nhan')
-          ? 'Cử nhân'
-          : life.flags.includes('do_tu_tai')
-            ? 'Tú tài'
-            : life.stats.education >= 30
-              ? 'Thông hiểu kinh sử'
-              : life.stats.education >= 10
-                ? 'Đang học chữ'
-                : 'Chưa biết chữ nhiều';
+  const currentJobLabel = getCurrentLivelihoodLabel(life);
+  const educationLabel = getEducationLabel(life);
 
   const openActionModal = () => {
     setAutoPlaySpeed(0);
@@ -511,8 +479,17 @@ export function AdultDashboard() {
                       Nợ địa chủ (Đáo hạn sau 180 ngày • lãi 60%)
                     </div>
                   ) : (
-                    <div className="text-[11px] text-rose-400">
-                      Cạn tiền &amp; lương thực! Hãy làm thuê hoặc vay nóng.
+                    <div className="space-y-1.5">
+                      <div className="text-[11px] text-rose-400">
+                        Cạn tiền &amp; lương thực! Hãy tìm việc làm thuê hoặc vay nóng.
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setIsCareerModalOpen(true)}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded bg-amber-600/20 hover:bg-amber-600/35 border border-amber-500/50 text-[11px] font-semibold text-amber-200 cursor-pointer"
+                      >
+                        <Briefcase className="w-3 h-3" /> Tìm việc ngay
+                      </button>
                     </div>
                   )}
                 </div>
@@ -677,7 +654,7 @@ export function AdultDashboard() {
                 })}
               </div>
 
-              <div className="pt-1.5 border-t border-stone-800/80 flex items-center justify-between gap-2">
+              <div className="pt-1.5 border-t border-stone-800/80 flex flex-wrap items-center justify-between gap-2">
                 <button
                   type="button"
                   onClick={openActionModal}
@@ -688,15 +665,14 @@ export function AdultDashboard() {
                     {formatCopper(life.assets.wealthCopper)}
                   </span>
                 </button>
-                <span className="flex items-center gap-1 text-[11px] font-mono text-stone-400">
-                  <Zap className="w-3 h-3 text-amber-400" />
-                  {Math.round(life.stats.stamina)}/{life.stats.maxStamina}
+                <span className="text-[11px] text-stone-400 truncate max-w-[220px]">
+                  {life.activeCareer
+                    ? CAREER_CATALOG.find((j) => j.id === life.activeCareer!.jobId)?.title
+                    : life.activeVenture
+                      ? VENTURE_CATALOG.find((v) => v.id === life.activeVenture!.ventureId)?.title
+                      : ''}
                 </span>
               </div>
-              <ActiveCommitmentBanner
-                onOpenSelector={() => setIsLearningModalOpen(true)}
-                buttonLabel="Khóa học · Tòng quân"
-              />
             </div>
 
             {/* Ghi Chép Cuộc Đời (Timeline Hero) */}
@@ -829,7 +805,7 @@ export function AdultDashboard() {
                     Tiền mặt {formatCopper(life.assets.wealthCopper)}
                   </h2>
                   <span className="text-xs font-mono text-amber-300">
-                    Gạo: {life.assets.rice.toFixed(1)} đấu · Thể lực: {Math.round(life.stats.stamina)}/{life.stats.maxStamina}
+                    Gạo: {life.assets.rice.toFixed(1)} đấu
                   </span>
                 </div>
                 {(() => {
@@ -856,6 +832,61 @@ export function AdultDashboard() {
                   <span className="text-[10px] text-stone-400">Thực hiện ngay</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {/* Tìm chỗ làm mới (1in8b style) */}
+                  <button
+                    type="button"
+                    onClick={() => openCareerModal('jobs')}
+                    className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-emerald-700/50 hover:border-emerald-500 transition cursor-pointer space-y-1"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-xs font-semibold text-emerald-200 leading-snug">
+                        Tìm chỗ làm mới
+                      </span>
+                      <span className="shrink-0 text-[11px] font-mono text-emerald-300">Miễn phí</span>
+                    </div>
+                    <div className="text-[11px] text-stone-400">
+                      Xem các công việc phù hợp với học thức, tay nghề và mối quen hiện tại
+                    </div>
+                  </button>
+
+                  {/* Tìm hiểu việc khởi nghiệp (1in8b style) */}
+                  <button
+                    type="button"
+                    onClick={() => openCareerModal('ventures')}
+                    className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-sky-700/50 hover:border-sky-500 transition cursor-pointer space-y-1"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-xs font-semibold text-sky-200 leading-snug">
+                        Tìm hiểu việc khởi nghiệp
+                      </span>
+                      <span className="shrink-0 text-[11px] font-mono text-sky-300">Miễn phí</span>
+                    </div>
+                    <div className="text-[11px] text-stone-400">
+                      Cân nhắc mô hình kinh doanh riêng vừa túi tiền &amp; tay nghề
+                    </div>
+                  </button>
+
+                  {/* Quản lý công việc hiện tại (chỉ hiện khi đang làm nghề hoặc tự doanh) */}
+                  {(life.activeCareer || life.activeVenture) && (
+                    <button
+                      type="button"
+                      onClick={() => openCareerModal('current')}
+                      className="sm:col-span-2 text-left p-2.5 rounded-lg bg-emerald-950/30 hover:bg-emerald-950/50 border border-emerald-700/60 transition cursor-pointer flex items-center justify-between gap-3"
+                    >
+                      <div>
+                        <div className="text-xs font-semibold text-emerald-200">
+                          Công việc hiện tại:{' '}
+                          {life.activeCareer
+                            ? CAREER_CATALOG.find((j) => j.id === life.activeCareer!.jobId)?.title
+                            : VENTURE_CATALOG.find((v) => v.id === life.activeVenture!.ventureId)?.title}
+                        </div>
+                        <div className="text-[11px] text-stone-400">
+                          Bấm để xin thăng tiến, làm thêm ngoài giờ, tu nghiệp hoặc nghỉ việc
+                        </div>
+                      </div>
+                      <span className="text-[11px] font-semibold text-emerald-300 shrink-0">Quản lý →</span>
+                    </button>
+                  )}
                   {INSTANT_ADULT_ACTIONS.filter((act) => isInstantActionVisible(life, act)).map((act) => {
                     const cd = getInstantActionCooldownRemaining(life, act.id, act.cooldownDays);
                     const ageBlocked = act.minAge !== undefined && age < act.minAge;
@@ -996,61 +1027,6 @@ export function AdultDashboard() {
                           ))}
                         </select>
                       </div>
-                    </div>
-
-                    {/* 4 TimeSlots */}
-                    <div className="pt-2 border-t border-stone-800 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-stone-300">Lịch sinh hoạt 4 buổi</span>
-                        <button
-                          type="button"
-                          onClick={() => setShowScheduleDetails((v) => !v)}
-                          className="text-[11px] font-medium text-sky-400 hover:text-sky-300 cursor-pointer"
-                        >
-                          {showScheduleDetails ? 'Ẩn 4 buổi' : 'Mở 4 buổi'}
-                        </button>
-                      </div>
-                      {showScheduleDetails && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                          {(['morning', 'afternoon', 'evening', 'night'] as TimeSlot[]).map((slot) => {
-                            const slotActions = ALL_ACTIONS.filter(
-                              (a) => a.allowedSlots.includes(slot) && evaluateConditions(life, a.conditions),
-                            );
-                            const slotLockedByCommitment =
-                              life.activeCommitment?.lockedSlots.includes(slot) ?? false;
-                            return (
-                              <div key={slot} className="space-y-1">
-                                <label className="flex items-center justify-between text-[11px] font-medium text-stone-400">
-                                  <span>{SLOT_LABELS[slot]}</span>
-                                  {slotLockedByCommitment && (
-                                    <span className="text-[10px] text-sky-300">Khóa theo lộ trình</span>
-                                  )}
-                                </label>
-                                <select
-                                  value={
-                                    slotLockedByCommitment && life.activeCommitment?.dailyActionId
-                                      ? life.activeCommitment.dailyActionId
-                                      : life.schedule[slot]
-                                  }
-                                  disabled={slotLockedByCommitment}
-                                  onChange={(e) => setSlotAction(slot, e.target.value)}
-                                  className="w-full px-2.5 py-2 rounded-lg bg-stone-950 border border-stone-700 text-xs text-stone-100 focus:outline-none focus:border-amber-500 disabled:opacity-60 disabled:cursor-not-allowed"
-                                >
-                                  {slotActions.map((act) => (
-                                    <option key={act.id} value={act.id}>
-                                      {act.name}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                      <ActiveCommitmentBanner
-                        onOpenSelector={() => setIsLearningModalOpen(true)}
-                        buttonLabel="Chọn khóa học · Tòng quân"
-                      />
                     </div>
 
                     {/* Auto-Pause Toggles */}
@@ -1218,9 +1194,10 @@ export function AdultDashboard() {
       </nav>
 
       {showArchive && <LegacyArchiveModal onClose={() => setShowArchive(false)} />}
-      <LearningCommitmentModal
-        isOpen={isLearningModalOpen}
-        onClose={() => setIsLearningModalOpen(false)}
+      <CareerModal
+        isOpen={isCareerModalOpen}
+        onClose={() => setIsCareerModalOpen(false)}
+        initialTab={careerModalTab}
       />
     </div>
   );

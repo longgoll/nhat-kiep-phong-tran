@@ -13,7 +13,6 @@ import type {
   GameEventDef,
 } from '../types/dsl';
 import { computeWeight, evaluateConditions } from './conditionEvaluator';
-import { tickCommitmentDays } from './commitmentSystem';
 import { appendLog, applyEffects } from './effectApplier';
 import { ORIGIN_CORE_CONFIG } from './originConfigs';
 import { mulberry32Next, pickWeightedIndex } from './prng';
@@ -799,8 +798,6 @@ export function advanceChildhoodMonth(
       }
     }
   }
-
-  state = tickCommitmentDays(state, DAYS_PER_MONTH);
 
   return { state, pendingEvent: null };
 }

@@ -1,0 +1,296 @@
+[
+  {
+    "id": "evt_servitude_opportunity",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 270,
+    "title": "Thân Phận Gia Nô Trong Phủ Địa Chủ",
+    "conditions": {
+      "min_age": 13,
+      "has_flags": ["bi_ep_lam_gia_no"]
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": []
+    },
+    "description": "Những ngày làm gia nô gán nợ cơ cực nhưng cũng cho bạn dịp quan sát cách quản lý điền trang và sổ sách trong phủ lớn.",
+    "choices": [
+      {
+        "label": "Chăm chỉ làm lụng, xin chủ gia giảm hạn nợ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 55, "modifiers": [] },
+            "resultText": "Thấy bạn thật thà chịu khó, lão địa chủ gật đầu xóa phần nợ còn lại, trả lại tự do cho bạn sớm hơn dự định.",
+            "effects": {
+              "remove_flags": ["bi_ep_lam_gia_no"],
+              "happiness": 12,
+              "fame": 2,
+              "milestone_title": "Chuộc được tự do sau thời gian làm gia nô"
+            }
+          },
+          {
+            "weight": { "base": 45, "modifiers": [] },
+            "resultText": "Chủ nhà chưa chịu tha ngay nhưng nể tình siêng năng, thưởng cho bạn ít bạc lẻ và đỡ quát mắng hơn.",
+            "effects": {
+              "copper": 80,
+              "craft_trade": 2,
+              "health": -3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ban đêm lén học lỏm chữ nghĩa và cách tính sổ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Dưới ánh đèn dầu leo lét sau giờ dọn dẹp, bạn tự rèn được thêm chữ nghĩa và cách tính toán.",
+            "effects": {
+              "education": 3,
+              "craft_trade": 3,
+              "stamina": -10
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thừa đêm tối trốn khỏi phủ địa chủ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 70, "modifiers": [] },
+            "resultText": "Bạn trốn thoát khỏi cổng sau trong đêm mưa, lấy lại tự do nhưng mang tiếng bội ước.",
+            "effects": {
+              "remove_flags": ["bi_ep_lam_gia_no"],
+              "infamy": 6,
+              "fame": -4,
+              "happiness": 6
+            }
+          },
+          {
+            "weight": { "base": 30, "modifiers": [] },
+            "resultText": "Gia đinh tuần đêm phát hiện và bắt lại, bạn bị đánh đòn một trận nhớ đời.",
+            "effects": {
+              "health": -18,
+              "happiness": -10
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_career_trade_temptation",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Khoản Chênh Lệch Trong Sổ Sách",
+    "conditions": {
+      "min_age": 14,
+      "has_any_flag": [
+        "career_phu_ban_hang",
+        "career_chao_hang",
+        "career_chuong_quy",
+        "career_thu_lai"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Cuối tháng kiểm kê hàng hóa và sổ công nợ, bạn phát hiện một khoản chênh lệch khá lớn mà chủ hiệu chưa hề hay biết.",
+    "choices": [
+      {
+        "label": "Báo cáo trung thực với chủ hiệu",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Chủ hiệu rất hài lòng với sự liêm chính của bạn, thưởng thêm tiền công và tin tưởng giao nhiều việc hơn.",
+            "effects": {
+              "copper": 120,
+              "fame": 3,
+              "relationships": 3
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lách sổ bỏ túi riêng khoản tiền chênh",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 70, "modifiers": [] },
+            "resultText": "Bạn sửa sổ trót lọt, bỏ túi riêng một khoản bạc kha khá nhưng lòng không khỏi thấp thỏm.",
+            "effects": {
+              "copper": 260,
+              "infamy": 5,
+              "craft_trade": 1
+            }
+          },
+          {
+            "weight": { "base": 30, "modifiers": [] },
+            "resultText": "Chủ hiệu đối chiếu sổ gốc và phát hiện! Bạn bị khiển trách nặng nề và mất uy tín trong giới buôn bán.",
+            "effects": {
+              "fame": -6,
+              "infamy": 8,
+              "happiness": -8
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_career_scholar_patron",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Hương Thân Quý Mến Tài Học",
+    "conditions": {
+      "min_age": 14,
+      "has_any_flag": ["career_thay_do", "career_thay_lang"]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Một vị hương thân có tiếng trong vùng nghe danh bạn tận tụy với nghề, bèn mời đến phủ đàm đạo và biếu lễ hậu.",
+    "choices": [
+      {
+        "label": "Nhận lời đến đàm đạo và nhận lễ tạ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Cuộc trò chuyện tâm đầu ý hợp giúp tiếng tăm của bạn lan xa khắp huyện, lại có thêm khoản bạc trang trải.",
+            "effects": {
+              "copper": 180,
+              "fame": 4,
+              "relationships": 4,
+              "education": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_career_martial_incident",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Biến Cố Nơi Bến Bãi · Đường Tiêu",
+    "conditions": {
+      "min_age": 14,
+      "has_any_flag": [
+        "career_tuan_dem",
+        "career_bao_tieu",
+        "career_vo_su",
+        "career_tho_phu",
+        "career_tho_ca"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Giữa ca làm việc, một nhóm côn đồ say rượu kéo tới gây sự và đòi thu tiền bảo kê.",
+    "choices": [
+      {
+        "label": "Đứng ra trấn áp, bảo vệ tài sản của chủ",
+        "conditions": {
+          "min_martial": 12
+        },
+        "outcomes": [
+          {
+            "weight": { "base": 80, "modifiers": [] },
+            "resultText": "Bạn ra tay dứt khoát đánh đuổi đám côn đồ, được chủ thưởng hậu và anh em trong nghề nể phục.",
+            "effects": {
+              "copper": 160,
+              "martial": 2,
+              "fame": 4
+            }
+          },
+          {
+            "weight": { "base": 20, "modifiers": [] },
+            "resultText": "Đám côn đồ đông người khiến bạn bị thương nhẹ trước khi chúng bỏ chạy.",
+            "effects": {
+              "health": -10,
+              "copper": 100,
+              "fame": 2
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhẫn nhịn hòa giải cho êm chuyện",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn khéo léo nói lời mềm mỏng để tránh đổ máu, giữ được an toàn nhưng lòng hơi ấm ức.",
+            "effects": {
+              "happiness": -3,
+              "relationships": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_career_crisis_hardship",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 540,
+    "title": "Thời Cuộc Khó Khăn, Công Việc Bấp Bênh",
+    "conditions": {
+      "min_age": 15,
+      "world_state_in": ["mat_mua", "chien_tranh", "dich_benh"],
+      "has_any_flag": [
+        "career_phu_ban_hang",
+        "career_chao_hang",
+        "career_tho_phu",
+        "career_tuan_dem"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Thiên tai loạn lạc khiến việc làm ăn đình trệ, chủ hiệu phải cắt giảm bớt tiền công hoặc người làm.",
+    "choices": [
+      {
+        "label": "Chấp nhận giảm chút thu nhập để giữ chỗ làm",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn cắn răng chịu thiệt một chút để giữ công việc qua mùa khó khăn.",
+            "effects": {
+              "copper": -60,
+              "happiness": -4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Làm thêm cả buổi tối kiếm gạo đắp đổi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn xoay xở làm thêm việc vặt lúc tối muộn, kiếm thêm được ít gạo nhưng người mệt rã rời.",
+            "effects": {
+              "rice": 4,
+              "health": -5
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

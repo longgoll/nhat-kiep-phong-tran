@@ -59,6 +59,24 @@ export type BirthOrder = 'con_mot' | 'con_truong' | 'con_thu' | 'con_ut';
 export type FamilyLivingTier = 'tung_thieu' | 'du_an' | 'kha_gia' | 'sung_tuc' | 'hoang_gia';
 export type LifeFocusId = 'cong_danh' | 'can_bang' | 'gia_dinh' | 'suc_khoe' | 'tu_than' | 'so_thich';
 export type GiftEtiquetteTier = 'chu_dao' | 'tuy_kha_nang' | 'chi_den_chia_vui';
+export type CareerTrack = 'labor' | 'craft' | 'trade' | 'scholar' | 'martial' | 'underworld';
+
+export interface ActiveCareer {
+  jobId: string;
+  track: CareerTrack;
+  tier: number;
+  daysWorked: number;
+  startedDay: number;
+}
+
+export interface ActiveVenture {
+  ventureId: string;
+  track: CareerTrack;
+  level: number;
+  capitalInvested: number;
+  daysOperated: number;
+  startedDay: number;
+}
 
 export interface FamilyContext {
   fatherOccupation: string;
@@ -210,6 +228,9 @@ export interface ActiveLifeState {
   milestones: MilestoneRecord[];
   yearlyHappiness?: Record<number, number>;
   activeCommitment?: ActiveCommitment | null;
+  activeCareer?: ActiveCareer | null;
+  careerXp?: Partial<Record<CareerTrack, number>>;
+  activeVenture?: ActiveVenture | null;
   promptedLearningAges?: number[];
   logs: LogEntry[];
 }

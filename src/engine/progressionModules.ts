@@ -409,6 +409,21 @@ export function takeExam(state: ActiveLifeState, level: ExamLevel): ActiveLifeSt
   };
 }
 
+function applyOfficialScheduleAndClearCareer(state: ActiveLifeState): ActiveLifeState {
+  const cleanFlags = state.flags.filter((f) => !f.startsWith('career_') && !f.startsWith('venture_'));
+  return {
+    ...state,
+    flags: cleanFlags,
+    activeCareer: null,
+    activeVenture: null,
+    schedule: {
+      ...state.schedule,
+      morning: 'act_xu_an_cong_duong',
+      afternoon: 'act_xu_an_cong_duong',
+    },
+  };
+}
+
 export function appointOrPromoteOfficial(state: ActiveLifeState): ActiveLifeState {
   if (state.officialRank >= 5) return state;
 
@@ -418,11 +433,13 @@ export function appointOrPromoteOfficial(state: ActiveLifeState): ActiveLifeStat
 
     const startRank = state.flags.includes('do_tien_si') ? 2 : 1;
     const roleName = OFFICIAL_RANKS[startRank];
-    const next = applyEffects(state, {
-      add_flags: ['dang_lam_quan'],
-      fame: 10,
-      milestone_title: `Bổ nhiệm chức ${roleName}`,
-    });
+    const next = applyOfficialScheduleAndClearCareer(
+      applyEffects(state, {
+        add_flags: ['dang_lam_quan'],
+        fame: 10,
+        milestone_title: `Bổ nhiệm chức ${roleName}`,
+      }),
+    );
     return {
       ...next,
       officialRank: startRank,
@@ -478,12 +495,14 @@ export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
   const startRank = isHighMerit ? 3 : 2;
   const roleName = OFFICIAL_RANKS[startRank];
 
-  const next = applyEffects(state, {
-    add_flags: ['dang_lam_quan', 'tap_am_hoang_toc'],
-    fame: 8,
-    happiness: 10,
-    milestone_title: `Thụ phong Hoàng thất: ${roleName}`,
-  });
+  const next = applyOfficialScheduleAndClearCareer(
+    applyEffects(state, {
+      add_flags: ['dang_lam_quan', 'tap_am_hoang_toc'],
+      fame: 8,
+      happiness: 10,
+      milestone_title: `Thụ phong Hoàng thất: ${roleName}`,
+    }),
+  );
   return {
     ...next,
     officialRank: startRank,
@@ -503,12 +522,14 @@ export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
   if (state.flags.includes('thai_giam') || state.flags.includes('trong_hau_cung')) return state;
   if (state.officialRank > 0 || state.assets.wealthCopper < COST) return state;
 
-  const next = applyEffects(state, {
-    copper: -COST,
-    add_flags: ['dang_lam_quan', 'quyen_quan'],
-    infamy: 5,
-    milestone_title: 'Quyên quan mua chức Tri huyện',
-  });
+  const next = applyOfficialScheduleAndClearCareer(
+    applyEffects(state, {
+      copper: -COST,
+      add_flags: ['dang_lam_quan', 'quyen_quan'],
+      infamy: 5,
+      milestone_title: 'Quyên quan mua chức Tri huyện',
+    }),
+  );
   return {
     ...next,
     officialRank: 1,

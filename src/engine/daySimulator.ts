@@ -13,7 +13,7 @@ import {
 } from '../types/activeLife';
 import type { ActionDef, EffectSpec, GameEventDef } from '../types/dsl';
 import { computeWeight, evaluateConditions } from './conditionEvaluator';
-import { tickCommitmentDays } from './commitmentSystem';
+import { canPromoteCareer, getCareerIncomeMultiplier, promoteCareer, recordDailyCareerProgress } from './careerSystem';
 import { calculateRicePrice, formatCopper } from './economy';
 import { appendLog, applyEffects } from './effectApplier';
 import { pickWeightedIndex } from './prng';
@@ -141,18 +141,6 @@ function resolveSlotAction(
     if (serv && canExecuteAction(state, serv)) return serv;
   }
 
-  // Active timed commitment lock (e.g. study course, military enlistment, apprenticeship)
-  if (
-    state.activeCommitment &&
-    state.activeCommitment.lockedSlots.includes(slot) &&
-    state.activeCommitment.dailyActionId
-  ) {
-    const committedAction = actionsMap.get(state.activeCommitment.dailyActionId);
-    if (committedAction && canExecuteAction(state, committedAction)) {
-      return committedAction;
-    }
-  }
-
   const chosen = actionsMap.get(actionId);
   if (chosen && canExecuteAction(state, chosen)) {
     return chosen;
@@ -164,7 +152,6 @@ function resolveSlotAction(
 
 export function canExecuteAction(state: ActiveLifeState, action: ActionDef): boolean {
   if (!evaluateConditions(state, action.conditions)) return false;
-  if (action.costs.stamina && state.stats.stamina < action.costs.stamina) return false;
   if (action.costs.copper && state.assets.wealthCopper < action.costs.copper) return false;
   if (action.costs.rice && state.assets.rice < action.costs.rice) return false;
   return true;
@@ -174,6 +161,7 @@ function scaleActionRewards(
   state: ActiveLifeState,
   rewards: EffectSpec,
   category?: ActionDef['category'],
+  actionId?: string,
 ): EffectSpec {
   const age = getAgeYears(state.profile.totalDays);
   const { learningFactor } = getAgingProfile(age);
@@ -210,7 +198,8 @@ function scaleActionRewards(
     );
   }
   if (scaled.copper !== undefined && scaled.copper > 0) {
-    scaled.copper = Math.round(scaled.copper * workEfficiency * tradeMult * focusMod.copperMult);
+    const careerMult = actionId ? getCareerIncomeMultiplier(state, actionId) : 1.0;
+    scaled.copper = Math.round(scaled.copper * workEfficiency * tradeMult * focusMod.copperMult * careerMult);
   }
   if (scaled.rice !== undefined && scaled.rice > 0) {
     scaled.rice = Number((scaled.rice * workEfficiency).toFixed(2));
@@ -587,9 +576,11 @@ export function advanceDays(
 
     // 2. Execute 4 TimeSlots
     const slots: TimeSlot[] = ['morning', 'afternoon', 'evening', 'night'];
+    const executedActionIds: string[] = [];
     for (const slot of slots) {
       const action = resolveSlotAction(state, slot, actionsMap);
       if (action) {
+        executedActionIds.push(action.id);
         if (action.costs) {
           const negCosts: EffectSpec = {};
           if (action.costs.stamina) negCosts.stamina = -action.costs.stamina;
@@ -603,7 +594,7 @@ export function advanceDays(
           state = applyEffects(state, negCosts);
         }
 
-        const scaledRewards = scaleActionRewards(state, action.rewards, action.category);
+        const scaledRewards = scaleActionRewards(state, action.rewards, action.category, action.id);
         state = applyEffects(state, scaledRewards);
         if (scaledRewards.copper && scaledRewards.copper > 0) {
           state = addLedger(state, { workIncomeCopper: scaledRewards.copper });
@@ -625,6 +616,8 @@ export function advanceDays(
       daysSimulated += 1;
       return { state, daysSimulated, pausedReason: 'dead' };
     }
+
+    state = recordDailyCareerProgress(state, executedActionIds);
 
     // 3. Daily lifestyle consumption & LifeFocus passive tick
     state = applyDailyLifestyle(state);
@@ -648,7 +641,6 @@ export function advanceDays(
             : 0,
       });
     }
-    state = tickCommitmentDays(state, 1);
     daysSimulated += 1;
 
     if (!state.isAlive) {
@@ -731,6 +723,11 @@ export function advanceDays(
           `Tổng kết tuổi ${prevYear}: ${state.profile.currentRole} • Sức khỏe ${Math.round(state.stats.health)}%, Hạnh phúc ${roundedHappiness}%, Tài sản ${formatCopper(state.assets.wealthCopper)}.`,
         ),
       };
+
+      // Natural yearly career promotion (1in8b style) when requirements are met
+      if (state.activeCareer && canPromoteCareer(state).ok) {
+        state = promoteCareer(state);
+      }
     }
 
     // 5. Auto-Pause checks

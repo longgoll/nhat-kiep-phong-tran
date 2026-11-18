@@ -23,6 +23,7 @@ import {
   TRAIT_LABELS,
 } from '../engine/lifeInitializer';
 import { getChildhoodFocusOptions } from '../engine/childhoodEngine';
+import { getEducationLabel, getSpecialFateRole } from '../engine/lifeStatus';
 import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
 import { FeudalPortrait } from './FeudalPortrait';
@@ -33,8 +34,6 @@ import { LifeGrid } from './LifeGrid';
 import { LifeTimeline } from './LifeTimeline';
 import { LifeTopBar } from './LifeTopBar';
 import { StatExplainer } from './StatExplainer';
-import { ActiveCommitmentBanner } from './ActiveCommitmentBanner';
-import { LearningCommitmentModal } from './LearningCommitmentModal';
 
 const TIER_DOTS: Record<FamilyLivingTier, number> = {
   tung_thieu: 1,
@@ -87,13 +86,11 @@ export function ChildhoodView() {
 
   const [autoPlaySpeed, setAutoPlaySpeed] = useState<0 | 1 | 2 | 4 | 8>(0);
   const [subMonthProgress, setSubMonthProgress] = useState<number>(0);
-  const [isLearningModalOpen, setIsLearningModalOpen] = useState(false);
   const lastTickTimeRef = useRef<number>(0);
 
   const currentAge = life ? getAgeYears(life.profile.totalDays) : 0;
   const isLifeAlive = life?.isAlive ?? false;
   const hasPendingEvent = Boolean(pendingEvent);
-  const hasActiveCommitment = Boolean(life?.activeCommitment);
 
   useEffect(() => {
     if (autoPlaySpeed === 0) {
@@ -242,6 +239,16 @@ export function ChildhoodView() {
                         {FAMILY_TIER_LABELS[life.family.familyLivingTier]}
                       </span>
                     </div>
+                    <div className="flex justify-between gap-2">
+                      <span className="text-stone-500 shrink-0">Học vấn</span>
+                      <span className="text-emerald-300 font-medium text-right">{getEducationLabel(life)}</span>
+                    </div>
+                    {getSpecialFateRole(life) && (
+                      <div className="flex justify-between gap-2">
+                        <span className="text-stone-500 shrink-0">Thân phận</span>
+                        <span className="text-rose-300 font-medium text-right">{getSpecialFateRole(life)}</span>
+                      </div>
+                    )}
                     <div className="pt-1 text-stone-400 leading-snug">
                       <span className="text-stone-500">Hoàn cảnh: </span>
                       <span className="text-stone-200">{life.family.circumstanceLabel}</span>
@@ -390,11 +397,7 @@ export function ChildhoodView() {
                       Trọng Tâm Năm Nay
                     </h2>
                     <span className="text-[10px] text-stone-400">
-                      {isInfancy
-                        ? 'Thơ ấu (0–5 tuổi)'
-                        : hasActiveCommitment
-                          ? 'Đang khóa theo khóa học đã đăng ký'
-                          : 'Có thể đổi bất cứ lúc nào'}
+                      {isInfancy ? 'Thơ ấu (0–5 tuổi)' : 'Có thể đổi bất cứ lúc nào'}
                     </span>
                   </div>
 
@@ -410,18 +413,13 @@ export function ChildhoodView() {
                           <button
                             key={opt.id}
                             type="button"
-                            disabled={hasActiveCommitment}
                             onClick={() => setChildhoodFocus(opt.id)}
-                            title={
-                              hasActiveCommitment
-                                ? 'Đang theo khóa học có thời hạn, hãy hoàn thành hoặc bỏ dở trước khi đổi'
-                                : opt.description
-                            }
-                            className={`text-left px-2.5 py-1.5 rounded-lg border transition ${
+                            title={opt.description}
+                            className={`text-left px-2.5 py-1.5 rounded-lg border transition cursor-pointer ${
                               active
                                 ? 'bg-emerald-950/70 border-emerald-500 text-emerald-100'
                                 : 'bg-stone-950/60 border-stone-800 hover:border-stone-700 text-stone-300'
-                            } ${hasActiveCommitment ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                            }`}
                           >
                             <div className="text-[11px] font-semibold leading-tight">{opt.label}</div>
                             <div className="text-[10px] text-stone-400 leading-tight mt-0.5">
@@ -431,12 +429,6 @@ export function ChildhoodView() {
                         );
                       })}
                     </div>
-                  )}
-                  {!isInfancy && (
-                    <ActiveCommitmentBanner
-                      onOpenSelector={() => setIsLearningModalOpen(true)}
-                      buttonLabel="Đăng ký khóa học"
-                    />
                   )}
                 </>
               )}
@@ -530,10 +522,6 @@ export function ChildhoodView() {
           </div>
         </div>
       </div>
-      <LearningCommitmentModal
-        isOpen={isLearningModalOpen}
-        onClose={() => setIsLearningModalOpen(false)}
-      />
     </div>
   );
 }
