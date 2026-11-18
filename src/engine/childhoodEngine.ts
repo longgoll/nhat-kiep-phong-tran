@@ -32,7 +32,7 @@ export const CHILDHOOD_FOCUS_OPTIONS: ChildhoodFocusOption[] = [
     label: 'Học chữ · Kinh sử',
     effectHint: 'Học thức↑ · Hạnh phúc↑',
     description: 'Miệt mài đọc sách, luyện chữ và nghe giảng kinh sử để mở đường khoa cử.',
-    monthlyEffects: { education: 0.45, happiness: 0.15 },
+    monthlyEffects: { education: 0.25, happiness: 0.05 },
     interestOnBirthday: 'kinh_su',
   },
   {
@@ -40,21 +40,21 @@ export const CHILDHOOD_FOCUS_OPTIONS: ChildhoodFocusOption[] = [
     label: 'Bạn bè · Vui chơi',
     effectHint: 'Quan hệ↑ · Hạnh phúc↑',
     description: 'Chạy nhảy khắp xóm làng, kết thân với bạn đồng niên và giữ tâm hồn vui vẻ.',
-    monthlyEffects: { relationships: 0.45, happiness: 0.35 },
+    monthlyEffects: { relationships: 0.22, happiness: 0.14 },
   },
   {
     id: 'giup_nha',
     label: 'Phụ giúp gia đình',
     effectHint: 'Gia sản↑ · Gắn kết↑',
     description: 'Phụ cha mẹ việc đồng áng, buôn bán hoặc giữ nếp nhà để gia đình thêm khấm khá.',
-    monthlyEffects: { relationships: 0.25, craft_trade: 0.25, family_copper: 14 },
+    monthlyEffects: { relationships: 0.14, craft_trade: 0.15, family_copper: 12 },
   },
   {
     id: 'ren_vo',
     label: 'Rèn võ · Thể chất',
     effectHint: 'Sức khỏe↑ · Võ nghệ↑',
     description: 'Chạy bộ, tập quyền cước và rèn gân cốt từ nhỏ để thân thể cường tráng.',
-    monthlyEffects: { health: 0.35, martial: 0.45 },
+    monthlyEffects: { health: 0.16, martial: 0.28 },
     interestOnBirthday: 'vo_nghe',
   },
   {
@@ -62,7 +62,7 @@ export const CHILDHOOD_FOCUS_OPTIONS: ChildhoodFocusOption[] = [
     label: 'Thú vui · Sở thích',
     effectHint: 'Hạnh phúc↑ · Khéo tay↑',
     description: 'Dành thời gian cho những thú vui tao nhã, thư họa, đan lát hoặc ngắm cảnh.',
-    monthlyEffects: { happiness: 0.45, craft_trade: 0.25 },
+    monthlyEffects: { happiness: 0.18, craft_trade: 0.15 },
   },
 ];
 
@@ -346,7 +346,11 @@ export function advanceChildhoodMonth(
     },
   };
 
-  // Monthly stat progression
+  // Monthly stat progression (balanced with family tier & gentle equilibrium)
+  const tier = state.family?.familyLivingTier ?? 'du_an';
+  const happyBaseline =
+    tier === 'tung_thieu' ? 56 : tier === 'du_an' ? 63 : tier === 'kha_gia' ? 69 : tier === 'sung_tuc' ? 73 : 70;
+
   if (prevAge >= 6) {
     const focusId =
       state.schedule.childhoodFocus || ORIGIN_CORE_CONFIG[state.profile.originClass].defaultChildhoodFocus;
@@ -357,7 +361,22 @@ export function advanceChildhoodMonth(
       state = applyEffects(state, { add_interests: [focusOpt.interestOnBirthday] });
     }
   } else {
-    state = applyEffects(state, { health: 0.12, happiness: 0.15, relationships: 0.1 });
+    const healthGain = tier === 'tung_thieu' ? 0.02 : tier === 'du_an' ? 0.04 : 0.06;
+    const happyDrift =
+      state.stats.happiness < happyBaseline ? 0.08 : state.stats.happiness > happyBaseline + 12 ? -0.1 : 0.02;
+    state = applyEffects(state, {
+      health: healthGain,
+      happiness: happyDrift,
+      relationships: 0.04,
+    });
+  }
+
+  // Gentle mean reversion at extremes so stats don't stay pinned at 100%
+  if (state.stats.happiness > 84) {
+    state = applyEffects(state, { happiness: -0.15 });
+  }
+  if (state.stats.relationships > 86) {
+    state = applyEffects(state, { relationships: -0.1 });
   }
 
   if (isBirthday) {

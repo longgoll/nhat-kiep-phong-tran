@@ -49,6 +49,7 @@ import { HOUSING_NAMES } from './FamilyWealthCard';
 import { LifeGrid } from './LifeGrid';
 import { LifeTimeline } from './LifeTimeline';
 import { LifeTopBar } from './LifeTopBar';
+import { StatExplainer } from './StatExplainer';
 
 const SLOT_LABELS: Record<TimeSlot, string> = {
   morning: 'Buổi Sáng',
@@ -406,6 +407,8 @@ export function AdultDashboard() {
                 <div>Thanh danh: <span className="font-mono text-emerald-300">{life.stats.fame.toFixed(1)}</span></div>
                 <div>Uy thế: <span className="font-mono text-rose-300">{life.stats.infamy.toFixed(1)}</span></div>
               </div>
+
+              <StatExplainer />
             </div>
 
             {/* Tài sản & Thu chi (1in8b-style) */}

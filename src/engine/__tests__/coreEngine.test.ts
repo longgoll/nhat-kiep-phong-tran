@@ -56,7 +56,8 @@ describe('Core Engine (MVP 1)', () => {
     });
 
     expect(evaluateConditions(life, { min_education: 15, has_flags: ['duoc_thay_do_quy'] })).toBe(true);
-    expect(life.stats.relationships).toBe(relBefore + 2); // +20% of 10
+    expect(life.stats.relationships).toBeGreaterThan(relBefore);
+    expect(life.stats.relationships).toBeLessThanOrEqual(relBefore + 2);
 
     life = applyEffects(life, { kill_reason: 'Bạo bệnh qua đời' });
     expect(life.isAlive).toBe(false);

@@ -390,8 +390,20 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     relationships = Math.min(100, relationships + 4);
   }
   if (circ.id === 'hoa_thuan') {
-    relationships = Math.min(100, relationships + 8);
+    relationships = Math.min(86, relationships + 6);
   }
+
+  // Controlled natural birth variance (±5) so every life starts uniquely without maxing out
+  const varHealth = randomInt(prng, -5, 5);
+  prng = varHealth.nextState;
+  const varHappy = randomInt(prng, -5, 5);
+  prng = varHappy.nextState;
+  const varRel = randomInt(prng, -5, 5);
+  prng = varRel.nextState;
+
+  health = Math.max(40, Math.min(86, health + varHealth.value));
+  happiness = Math.max(38, Math.min(84, happiness + varHappy.value));
+  relationships = Math.max(35, Math.min(84, relationships + varRel.value));
 
   const isStartDeclined =
     initialFlags.includes('gia_toc_sa_sut') ||

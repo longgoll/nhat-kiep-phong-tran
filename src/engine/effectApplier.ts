@@ -8,6 +8,22 @@ function clamp(val: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, val));
 }
 
+/**
+ * Applies a delta to a 0-100 core stat with diminishing returns above 70
+ * (inspired by 1in8b.life: easy to recover when low, progressively harder to push past 70/80/90).
+ */
+export function applyStatDelta(current: number, delta: number): number {
+  if (delta <= 0) {
+    return clamp(Number((current + delta).toFixed(2)), 0, 100);
+  }
+  let mult = 1.0;
+  if (current >= 95) mult = 0.06;
+  else if (current >= 90) mult = 0.15;
+  else if (current >= 80) mult = 0.30;
+  else if (current >= 70) mult = 0.55;
+  return clamp(Number((current + delta * mult).toFixed(2)), 0, 100);
+}
+
 export function appendLog(
   logs: LogEntry[],
   day: number,
@@ -56,10 +72,10 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
   let isAlive = state.isAlive;
   let deathReason = state.deathReason;
 
-  if (effects.health !== undefined) stats.health = clamp(stats.health + effects.health, 0, 100);
-  if (effects.happiness !== undefined) stats.happiness = clamp(stats.happiness + effects.happiness, 0, 100);
-  if (effects.relationships !== undefined) stats.relationships = clamp(stats.relationships + effects.relationships, 0, 100);
-  if (effects.education !== undefined) stats.education = clamp(stats.education + effects.education, 0, 100);
+  if (effects.health !== undefined) stats.health = applyStatDelta(stats.health, effects.health);
+  if (effects.happiness !== undefined) stats.happiness = applyStatDelta(stats.happiness, effects.happiness);
+  if (effects.relationships !== undefined) stats.relationships = applyStatDelta(stats.relationships, effects.relationships);
+  if (effects.education !== undefined) stats.education = applyStatDelta(stats.education, effects.education);
   if (effects.stamina !== undefined) stats.stamina = clamp(stats.stamina + effects.stamina, 0, stats.maxStamina);
   if (effects.martial !== undefined) stats.martial = Math.max(0, stats.martial + effects.martial);
   if (effects.craft_trade !== undefined) stats.craftTrade = Math.max(0, stats.craftTrade + effects.craft_trade);
@@ -131,10 +147,10 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
         }
         return npc;
       });
-      // Sync 20% of NPC affinity delta to general relationships stat
+      // Sync 20% of NPC affinity delta to general relationships stat (with diminishing returns above 70)
       if (matched > 0) {
         const avgDelta = totalDelta / matched;
-        stats.relationships = clamp(Math.round(stats.relationships + avgDelta * 0.2), 0, 100);
+        stats.relationships = Math.round(applyStatDelta(stats.relationships, avgDelta * 0.2));
       }
     }
   }

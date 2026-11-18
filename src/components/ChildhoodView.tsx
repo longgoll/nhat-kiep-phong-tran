@@ -32,6 +32,7 @@ import { FamilyWealthCard } from './FamilyWealthCard';
 import { LifeGrid } from './LifeGrid';
 import { LifeTimeline } from './LifeTimeline';
 import { LifeTopBar } from './LifeTopBar';
+import { StatExplainer } from './StatExplainer';
 
 const TIER_DOTS: Record<FamilyLivingTier, number> = {
   tung_thieu: 1,
@@ -335,6 +336,8 @@ export function ChildhoodView() {
                   </div>
                 </div>
               )}
+
+              <StatExplainer />
             </div>
 
             {/* Gia Sản & Tài Chính (1in8b-style) */}
