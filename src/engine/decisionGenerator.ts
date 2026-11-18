@@ -256,6 +256,17 @@ export function generateDynamicDecision(state: ActiveLifeState): GameEventDef | 
             },
           ],
         },
+        {
+          label: 'Vay nóng lãi nặng để đảo nợ qua cơn bĩ cực',
+          hint: 'Nhận +400đ tiền mặt · Ác danh +2 · Nợ lãi nặng',
+          outcomes: [
+            {
+              weight: { base: 100 },
+              effects: { copper: 400, infamy: 2, happiness: -4, add_flags: ['dang_no_dia_chu'] },
+              resultText: 'Bạn cắn răng ký giấy vay nặng lãi lấy tiền xoay xở trước mắt, nhưng gánh nặng lãi mẹ đẻ lãi con sẽ đè nặng về sau.',
+            },
+          ],
+        },
       ],
     };
   }

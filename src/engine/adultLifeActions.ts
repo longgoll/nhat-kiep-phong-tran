@@ -1060,21 +1060,21 @@ export function getDailyFocusModifiers(focusId: string): {
       return {
         copperMult: 1.2,
         studyMartialMult: 1.0,
-        dailyEffects: { health: -0.02, relationships: -0.015 },
+        dailyEffects: { health: -0.01, relationships: -0.008 },
         dailyCopperCost: 0,
       };
     case 'gia_dinh':
       return {
         copperMult: 0.95,
         studyMartialMult: 1.0,
-        dailyEffects: { relationships: 0.1, happiness: 0.08 },
+        dailyEffects: { relationships: 0.014, happiness: 0.01 },
         dailyCopperCost: 0,
       };
     case 'suc_khoe':
       return {
         copperMult: 0.95,
         studyMartialMult: 1.0,
-        dailyEffects: { health: 0.12, stamina: 4 },
+        dailyEffects: { health: 0.014, stamina: 4 },
         dailyCopperCost: 1,
       };
     case 'tu_than':
@@ -1088,28 +1088,28 @@ export function getDailyFocusModifiers(focusId: string): {
       return {
         copperMult: 1.0,
         studyMartialMult: 1.0,
-        dailyEffects: { happiness: 0.1 },
+        dailyEffects: { happiness: 0.012 },
         dailyCopperCost: 0,
       };
     case 'nghi_ngoi':
       return {
         copperMult: 0.9,
         studyMartialMult: 0.95,
-        dailyEffects: { health: 0.08, happiness: 0.08, stamina: 5 },
+        dailyEffects: { health: 0.008, happiness: 0.008, stamina: 5 },
         dailyCopperCost: 0,
       };
     case 'hanh_thien':
       return {
         copperMult: 0.95,
         studyMartialMult: 1.0,
-        dailyEffects: { relationships: 0.08, happiness: 0.08 },
+        dailyEffects: { relationships: 0.012, happiness: 0.01 },
         dailyCopperCost: 0,
       };
     case 'lam_them':
       return {
         copperMult: 1.0,
         studyMartialMult: 0.95,
-        dailyEffects: { copper: 4, happiness: -0.02, relationships: 0.02 },
+        dailyEffects: { copper: 4, happiness: -0.004, relationships: 0.003 },
         dailyCopperCost: 0,
       };
     case 'can_bang':
@@ -1117,7 +1117,7 @@ export function getDailyFocusModifiers(focusId: string): {
       return {
         copperMult: 1.0,
         studyMartialMult: 1.05,
-        dailyEffects: { happiness: 0.02 },
+        dailyEffects: { health: 0.003, happiness: 0.004, relationships: 0.003 },
         dailyCopperCost: 0,
       };
   }

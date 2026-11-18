@@ -81,10 +81,10 @@ const TIER_DOTS: Record<FamilyLivingTier, number> = {
 
 const LIFESTYLE_OPTIONS: Array<{ value: LifestyleTier; label: string; desc: string }> = [
   { value: 'nhin_doi', label: 'Nhịn đói', desc: '0 gạo, 0đ (-1.8 SK, -1.2 HP/ngày)' },
-  { value: 'chao_loang', label: 'Cháo loãng', desc: '0.5 đấu gạo/ngày (-0.04 SK, -0.1 HP)' },
-  { value: 'com_rau', label: 'Cơm rau đạm bạc', desc: '1 đấu gạo + 5đ/ngày (+0.2 SK)' },
-  { value: 'thit_ca', label: 'Thịt cá đủ đầy', desc: '1.5 đấu gạo + 30đ/ngày (+1 SK, +1.5 HP)' },
-  { value: 'son_hao', label: 'Yến tiệc · Sơn hào', desc: '2 đấu gạo + 120đ/ngày (+1.5 SK, +2.5 HP, +0.15 Danh)' },
+  { value: 'chao_loang', label: 'Cháo loãng', desc: '0.5 đấu gạo/ngày (-0.04 SK, -0.05 HP)' },
+  { value: 'com_rau', label: 'Cơm rau đạm bạc', desc: '1 đấu gạo + 5đ/ngày (Giữ thể lực)' },
+  { value: 'thit_ca', label: 'Thịt cá đủ đầy', desc: '1.5 đấu gạo + 30đ/ngày (+5 SK, +7 HP/năm)' },
+  { value: 'son_hao', label: 'Yến tiệc · Sơn hào', desc: '2 đấu gạo + 120đ/ngày (+9 SK, +12 HP, +5 Danh/năm)' },
 ];
 
 const PAUSE_MESSAGES: Record<string, string> = {

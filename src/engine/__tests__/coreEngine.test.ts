@@ -552,4 +552,16 @@ describe('Core Engine (MVP 1)', () => {
     expect(prisonRanked.recommended.every((a) => a.prisonAllowed)).toBe(true);
     expect(prisonRanked.recommended.some((a) => a.id === 'inst_prison_letter')).toBe(true);
   });
+
+  it('includes loan-shark option in dec_loan_heavy when deeply in debt', () => {
+    const base = createNewLife(88);
+    const deepDebt = {
+      ...base,
+      profile: { ...base.profile, totalDays: 25 * 360 },
+      assets: { ...base.assets, wealthCopper: -800 },
+    };
+    const dec = generateDynamicDecision(deepDebt);
+    expect(dec?.id).toBe('dec_loan_heavy');
+    expect(dec?.choices.some((c) => c.label.includes('Vay nóng lãi nặng'))).toBe(true);
+  });
 });

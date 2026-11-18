@@ -26,6 +26,7 @@ import {
   applySeasonalGoldAndInflation,
   ensureValidLifeFocus,
   generateAnnualLifeFlavorLogs,
+  getCreditLimitCopper,
   getDailyFocusModifiers,
   runAnnualAutoActions,
 } from './adultLifeActions';
@@ -64,10 +65,10 @@ const LIFESTYLE_TABLE: Record<
   { rice: number; copper: number; stamina: number; health: number; happiness: number; fame?: number }
 > = {
   nhin_doi: { rice: 0, copper: 0, stamina: 0, health: -1.8, happiness: -1.2 },
-  chao_loang: { rice: 0.5, copper: 0, stamina: 5, health: -0.04, happiness: -0.1 },
-  com_rau: { rice: 1.0, copper: 5, stamina: 15, health: 0.2, happiness: 0 },
-  thit_ca: { rice: 1.5, copper: 30, stamina: 30, health: 1.0, happiness: 1.5 },
-  son_hao: { rice: 2.0, copper: 120, stamina: 40, health: 1.5, happiness: 2.5, fame: 0.15 },
+  chao_loang: { rice: 0.5, copper: 0, stamina: 5, health: -0.04, happiness: -0.05 },
+  com_rau: { rice: 1.0, copper: 5, stamina: 15, health: 0, happiness: 0 },
+  thit_ca: { rice: 1.5, copper: 30, stamina: 30, health: 0.015, happiness: 0.02 },
+  son_hao: { rice: 2.0, copper: 120, stamina: 40, health: 0.025, happiness: 0.035, fame: 0.015 },
 };
 
 const HOUSING_DAILY_UPKEEP: Record<HousingTier, number> = {
@@ -88,10 +89,10 @@ const HOUSING_SLEEP_RECOVERY: Record<
   HousingTier,
   { stamina: number; health: number; happiness: number }
 > = {
-  gam_cau: { stamina: 35, health: -0.12, happiness: 0 },
+  gam_cau: { stamina: 35, health: -0.08, happiness: -0.04 },
   nha_tranh: { stamina: 50, health: 0, happiness: 0 },
-  nha_gach: { stamina: 65, health: 0.5, happiness: 0 },
-  phu_de: { stamina: 80, health: 1.0, happiness: 0.5 },
+  nha_gach: { stamina: 65, health: 0.01, happiness: 0.005 },
+  phu_de: { stamina: 80, health: 0.02, happiness: 0.015 },
 };
 
 export function getAgingProfile(ageYears: number): {
@@ -781,6 +782,76 @@ export function advanceDays(
 
       state = generateAnnualLifeFlavorLogs(state);
       state = applyAnnualStatMeanReversion(state, newAge);
+
+      // 1in8b-style `tightY` / `bkYear`: track prolonged heavy debt and trigger bankruptcy relief at year 3
+      const creditLimit = getCreditLimitCopper(state);
+      const isDeepDebt =
+        state.assets.wealthCopper < -Math.max(500, Math.round(creditLimit * 0.85));
+      if (!isDeepDebt) {
+        if (
+          state.flags.includes('no_keo_dai_1') ||
+          state.flags.includes('no_keo_dai_2')
+        ) {
+          state = {
+            ...state,
+            flags: state.flags.filter((f) => f !== 'no_keo_dai_1' && f !== 'no_keo_dai_2'),
+          };
+        }
+      } else if (state.flags.includes('no_keo_dai_2')) {
+        const tierOrder: Array<NonNullable<ActiveLifeState['family']>['familyLivingTier']> = [
+          'tung_thieu',
+          'du_an',
+          'kha_gia',
+          'sung_tuc',
+          'hoang_gia',
+        ];
+        const nextTierIdx = state.family
+          ? Math.max(0, tierOrder.indexOf(state.family.familyLivingTier) - 1)
+          : 0;
+        const nextProps = state.assets.properties.slice(1);
+        const forgivenCash = Math.round(state.assets.wealthCopper * 0.4);
+        state = applyEffects(
+          {
+            ...state,
+            flags: state.flags.filter(
+              (f) => f !== 'no_keo_dai_1' && f !== 'no_keo_dai_2' && f !== 'dang_no_dia_chu',
+            ),
+            assets: {
+              ...state.assets,
+              wealthCopper: forgivenCash,
+              properties: nextProps,
+            },
+            family: state.family
+              ? { ...state.family, familyLivingTier: tierOrder[nextTierIdx] }
+              : undefined,
+            logs: appendLog(
+              state.logs,
+              nextTotalDays,
+              'warning',
+              'Vỡ nợ kéo dài 3 năm: Quan nha và chủ nợ tịch biên một phần gia sản, phần nợ còn lại được khoanh giảm 60% để bạn làm lại cuộc đời.',
+              { tone: 'negative' },
+            ),
+          },
+          { happiness: -8, fame: -5 },
+        );
+      } else if (state.flags.includes('no_keo_dai_1')) {
+        state = {
+          ...state,
+          flags: [...state.flags.filter((f) => f !== 'no_keo_dai_1'), 'no_keo_dai_2'],
+          logs: appendLog(
+            state.logs,
+            nextTotalDays,
+            'warning',
+            'Nợ nần kéo sang năm thứ 2 liên tiếp: Chủ nợ đã đánh tiếng siết gia sản nếu không sớm trả bớt.',
+            { tone: 'negative' },
+          ),
+        };
+      } else {
+        state = {
+          ...state,
+          flags: [...state.flags, 'no_keo_dai_1'],
+        };
+      }
       if ((state.focusTime?.cong_danh ?? 0) > DAYS_PER_YEAR * 0.6) {
         state = {
           ...state,
