@@ -2,12 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { ALL_ACTIONS, ALL_ADULTHOOD_EVENTS } from '../../data/registry';
 import {
   applyForCareer,
+  attemptApplyForCareer,
   canPromoteCareer,
   closeVenture,
   getAvailableCareers,
   getAvailableVentures,
+  getCareerAcceptanceChance,
+  getJobApplyCooldownRemaining,
   promoteCareer,
   startVenture,
+  trainCurrentCareerSkill,
   upgradeVenture,
 } from '../careerSystem';
 import { advanceDays, DEFAULT_AUTO_PAUSE_CONFIG } from '../daySimulator';
@@ -118,5 +122,25 @@ describe('Career & Venture System', () => {
 
     const jobs = getAvailableCareers(official);
     expect(jobs.every((c) => !c.eligible)).toBe(true);
+  });
+
+  it('applies criminal record penalty to job acceptance odds and supports in-job upskilling', () => {
+    const clean = createTeenLife('quan_lai');
+    const cleanOpt = getAvailableCareers(clean).find((c) => c.job.id === 'job_chep_kinh')!;
+    const criminal = { ...clean, flags: [...clean.flags, 'tung_o_tu'] };
+    const crimOpt = getAvailableCareers(criminal).find((c) => c.job.id === 'job_chep_kinh')!;
+
+    expect(getCareerAcceptanceChance(criminal, crimOpt)).toBeLessThan(
+      getCareerAcceptanceChance(clean, cleanOpt),
+    );
+
+    const appRes = attemptApplyForCareer(clean, 'job_chep_kinh');
+    if (!appRes.hired) {
+      expect(getJobApplyCooldownRemaining(appRes.state, 'job_chep_kinh')).toBe(90);
+    } else {
+      const upskilled = trainCurrentCareerSkill(appRes.state);
+      expect(upskilled.activeCareer?.daysWorked).toBe(45);
+      expect(upskilled.stats.education).toBeGreaterThan(appRes.state.stats.education);
+    }
   });
 });

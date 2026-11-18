@@ -5,6 +5,7 @@
     "severity": "major",
     "cooldownDays": 360,
     "title": "Nạn Đói Hoành Hành, Giá Gạo Tăng Vọt",
+    "contextNote": "Mỗi khi mất mùa kéo dài, giá lương thực thường tăng gấp 1.8×–2.2× so với năm thái bình; người tích trữ vàng hoặc gạo sớm ít chịu thiệt hại hơn.",
     "conditions": {
       "min_age": 14,
       "world_state_in": [
@@ -114,6 +115,7 @@
     "severity": "major",
     "cooldownDays": 420,
     "title": "Lệnh Tổng Động Viên Thời Chiến",
+    "contextNote": "Thời loạn lạc, đinh tráng thường bị trưng tập ra biên ải; nhà giàu có thể nộp tiền chuộc dịch hoặc tiến cử con em làm sĩ quan.",
     "conditions": {
       "min_age": 16,
       "max_age": 50,
@@ -449,6 +451,7 @@
     "severity": "major",
     "cooldownDays": 360,
     "title": "Dịch Bệnh Lan Tràn Khắp Phủ",
+    "contextNote": "Y học cổ truyền coi trọng cách ly nguồn bệnh và giữ gìn vệ sinh nguồn nước; sức khỏe dưới 60% làm tăng đáng kể nguy cơ lây nhiễm.",
     "conditions": {
       "min_age": 14,
       "world_state_in": [
@@ -671,6 +674,7 @@
     "severity": "major",
     "cooldownDays": 540,
     "title": "Triều Đình Ban Lệnh Tăng Thuế Thời Loạn",
+    "contextNote": "Thuế khóa nặng nề thời chiến thường đẩy nông dân vào cảnh vay nợ địa chủ hoặc bỏ làng phiêu tán.",
     "conditions": {
       "min_age": 16,
       "world_state_in": [

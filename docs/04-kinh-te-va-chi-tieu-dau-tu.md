@@ -1,39 +1,33 @@
-# 04 — Kinh Tế & Hộp Thoại "Chi Tiêu · Đầu Tư" (`shopRank`)
+# 04 — Kinh Tế, Đầu Tư & Hộp Thoại "Chi Tiêu · Đầu Tư" (`shopRank`)
+
+> Áp dụng 100% mô hình Tài chính & Hộp thoại 3 tầng của `1in8b.life/vi`.
 
 ---
 
-## 1. Hệ Thống Tiền Tệ & Nợ (`wealthCopper < 0`)
+## 1. Tài Chính Cuối Năm & Cơ Chế Nợ (`wealthCopper < 0`)
 
-- **Đơn vị chuẩn (SSOT):** `wealthCopper` (Tiền đồng).
-  - Quy đổi hiển thị: `1 Vàng = 10.000 Đồng`, `1 Bạc = 1.000 Đồng`.
-- **Hỗ trợ Nợ (Số âm) kiểu `1in8b`:**
-  - `formatCopper` hỗ trợ đầy đủ số âm (ví dụ `-1 Bạc 200 Đồng`).
-  - Khi `wealthCopper < 0` hoặc có cờ `dang_no_dia_chu`:
-    - Thẻ Tài chính đổi màu đỏ, hiển thị rõ mục **`Nợ`** thay vì giấu sau dấu `0`.
-    - Các phương án giải cứu (Tìm việc làm ngay, Bán điền sản, Vay nóng địa chủ) tự động được ưu tiên đẩy lên đầu bảng `Chi tiêu · Đầu tư`.
-- **Tài sản trú ẩn (`goldReserveCopper` & `rice`):**
-  - **Vàng tích trữ:** Không bị mất giá khi loạn lạc/mất mùa; có thể mua/bán quy đổi theo thời giá.
-  - **Gạo (`rice`, đơn vị: đấu):** Dùng cho sinh hoạt hàng ngày; giá lúa biến động theo mùa (`Mùa Hạ` đắt nhất, `Mùa Thu` rẻ nhất) và theo thời cuộc (`Chiến tranh` `×2.2`).
+- **Không trừ cơm áo từng ngày:** Bỏ việc trừ gạo/tiền lắt nhắt từng ngày gây kẹt vòng lặp `no_food`. Cuối mỗi năm tính gọn:
+  `Thu nhập năm (Lao động/Bổng lộc + Kinh doanh + Điền sản + Vợ/chồng + Con phụng dưỡng) − Sưu thuế − Sinh hoạt phí (theo mức sống & gia đình) → cộng/trừ vào wealthCopper`.
+- **Nợ (`wealthCopper < 0`):**
+  - `Tài sản ròng` và `Tiền mặt` đổi màu đỏ, hiển thị rõ mục **`Nợ`** (ví dụ `-1 Bạc 200 Đồng`).
+  - Khi nợ phình to, tự bật **`DEC.loan`** (*"Nợ đã phình to"*): xin gia đình cứu trợ (`Quan hệ↓`), bán điền sản/tài sản trả nợ, hoặc vay nặng lãi địa chủ.
 
 ---
 
 ## 2. Cấu Trúc 3 Tầng Của Hộp Thoại "Chi Tiêu · Đầu Tư"
 
-Thay thế danh sách đổ tràn lan cũ bằng cấu trúc **3 tầng gọn gàng của `1in8b`**:
-> Mở được từ 13+ tuổi (hoặc nút `Chi tiêu · Đầu tư` ở cột trái & trung tâm). **Thời gian tự động tạm dừng** khi mở hộp thoại.
+Mở được từ **6 tuổi trở lên** (tuổi `6–12` chỉ hiện các mục hợp tuổi như tặng quà cha mẹ, mua sách/đồ chơi sở thích; ẩn hoàn toàn mục `Lối sống` & `Đầu tư`). Thời gian tự động **tạm dừng** khi mở bảng này.
 
-### Tầng 1: Header Tài Chính
-- Hiển thị rõ: `Tiền mặt` (hoặc `Đang nợ` màu đỏ nếu âm), `Lương thực (Gạo)`, và `Chi cố định mỗi ngày` (hoặc *"Được gia đình chu cấp"* nếu đang sống chung và đủ điều kiện).
-
-### Tầng 2: `"Nên làm lúc này"` (`rankSpendActions` — Top 4–6 mục)
-Hệ thống chấm điểm từng hành động theo hoàn cảnh thực tế (`shopRank`) để chỉ đưa **4–6 việc hợp cảnh nhất** lên trên:
-- **Chưa có việc (`!activeCareer && !activeVenture && officialRank === 0`):** Đẩy **`Tìm chỗ làm mới`** lên hạng cao nhất.
-- **Đang nợ hoặc cạn tiền/gạo:** Đẩy **`Tìm chỗ làm mới`**, **`Bán điền sản / Vàng`** (nếu có), **`Vay nóng địa chủ`** lên đầu; hạ điểm các mục ăn chơi/tiêu tiền xa xỉ.
-- **Sức khỏe `< 55` hoặc Tuổi `≥ 50`:** Đẩy **`Khám thầy lang / Bốc thuốc bổ`** lên đầu.
-- **Hạnh phúc `< 45`:** Đẩy các mục giải trí, thăm hỏi, dạo phố lên đầu.
-- **Đủ học thức thi Khoa cử:** Đẩy lộ trình **`Ứng thí Khoa cử`** lên trên.
-- **Đủ tuổi & chưa kết hôn:** Đẩy **`Thành gia lập thất`** lên trên.
-
-### Tầng 3: `"Xem thêm (N)"` & `"Lối sống & Tự động"` (Thu gọn mặc định)
-- **`Xem thêm (N)`:** Chứa toàn bộ các hành động còn lại (Xã giao, Tu luyện, Đời sống, Khoa cử, Quan trường, Điền sản, Khởi nghĩa) — bấm để mở rộng khi cần.
-- **`Lối sống & Tự động`:** Chứa cài đặt Mức sống hàng ngày (`Nhịn đói` → `Sơn hào`), Tiền hiếu hỉ, Tự động mua gạo, Tự động dừng khi tua nhanh (`Sinh nhật`, `HP < 20%`, `Hết gạo`), và các hành động `Tự động hằng năm`.
+1. **Header Tài Chính:** Hiển thị `Tiền tiết kiệm` (hoặc `Nợ` màu đỏ nếu âm), `Thu nhập năm`, `Gạo dự trữ` và giải thích tài sản thanh khoản vs điền sản cố định.
+2. **`"Nên làm lúc này"` (`rankSpendActions` — Top 4–6 mục):**
+   - Chấm điểm từng mục theo hoàn cảnh thực tế:
+     - Đang `seeking` hoặc `Nợ`: đẩy **Tìm chỗ làm mới**, **Bán điền sản / Đổi vàng** lên đầu; trừ điểm các mục ăn chơi tốn kém.
+     - `Sức khỏe < 55` hoặc `Tuổi >= 50`: đẩy **Khám thầy lang / Bốc thuốc bổ** lên đầu.
+     - Đủ tuổi & chưa học xong: đẩy **Học lớp đêm thầy đồ (`ged`)** / **Thi Khoa cử** lên đầu.
+3. **`"Xem thêm (N)"` (Thu gọn mặc định):**
+   - **Tài sản sở hữu 1 lần (`ITEMS` cổ trang):** *Bút nghiên tốt*, *Áo gấm*, *Xe ngựa*, *Thư phòng*, *Nhà tranh / Nhà gạch / Phủ đệ*.
+   - **Các hành động khác:** Xã giao, Tu luyện, Gia thất/Con cái, Khoa cử/Quan trường, Mua bán Gạo/Vàng, Khởi nghiệp/Điền sản.
+4. **`"Lối sống & Đầu tư"` (Thu gọn mặc định, ẩn khi `< 15 tuổi`):**
+   - **Đầu tư tiền nhàn rỗi (`INV_KS` cổ trang):** *Giữ tiền mặt (0%)*, *Gửi tiền trang (~1.5%/năm)*, *Hùn vốn thương hội (~3.5%/năm)*, *Buôn chuyến đường dài (~5%/năm)*, *Quỹ điền sản (~4%/năm)*.
+   - **Lối sống:** Mức sống (`Nhịn đói` → `Sơn hào`), Tiền hiếu hỉ, Auto-Pause (Sinh nhật / Mốc tuổi `5, 15, 30, 50, 70` / HP `< 20%`), Tự động hằng năm.
+   - *(Khi ở trong tù: chỉ hiện `Gửi thư thăm gia đình` và `Viết di chúc`.)*

@@ -7,6 +7,7 @@ import {
 } from '../types/activeLife';
 import { formatCopper } from './economy';
 import { appendLog, applyEffects } from './effectApplier';
+import { mulberry32Next } from './prng';
 
 export const CAREER_TRACK_LABELS: Record<CareerTrack, string> = {
   labor: 'Nông lâm · Lao động',
@@ -495,7 +496,7 @@ export const VENTURE_CATALOG: VentureDef[] = [
     description: 'Tự mở lớp tư thục nhận học trò, tăng nhanh Học thức và Thanh danh.',
     minAge: 16,
     minEducation: 24,
-    relatedCareerIds: ['job_thay_do', 'job_gia_su_phu', 'job_chep_kinh'],
+    relatedCareerIds: ['job_thay_do', 'job_chep_kinh'],
   },
   {
     id: 'venture_xuong_nho',
@@ -525,7 +526,7 @@ export const VENTURE_CATALOG: VentureDef[] = [
     description: 'Mở tiệm thuốc riêng bắt mạch cứu người, danh lợi song toàn.',
     minAge: 16,
     minEducation: 26,
-    relatedCareerIds: ['job_phu_thuoc', 'job_thay_lang'],
+    relatedCareerIds: ['job_thay_lang'],
   },
 ];
 
@@ -877,10 +878,15 @@ export function resignCareer(state: ActiveLifeState): ActiveLifeState {
       }
     }
   }
+  const age = getAgeYears(state.profile.totalDays);
   return {
     ...state,
     flags: clearCareerFlags(state.flags),
     activeCareer: null,
+    profile: {
+      ...state.profile,
+      currentRole: state.officialRank === 0 ? (age >= 60 ? 'Nghỉ hưu' : 'Đang tìm việc') : state.profile.currentRole,
+    },
     schedule: nextSchedule,
     logs: appendLog(
       state.logs,
@@ -1014,10 +1020,15 @@ export function closeVenture(state: ActiveLifeState): ActiveLifeState {
     }
   }
   const nextState = applyEffects(state, { copper: refund });
+  const age = getAgeYears(nextState.profile.totalDays);
   return {
     ...nextState,
     flags: clearVentureFlags(nextState.flags),
     activeVenture: null,
+    profile: {
+      ...nextState.profile,
+      currentRole: nextState.officialRank === 0 ? (age >= 60 ? 'Nghỉ hưu' : 'Đang tìm việc') : nextState.profile.currentRole,
+    },
     schedule: nextSchedule,
     logs: appendLog(
       nextState.logs,
@@ -1094,4 +1105,152 @@ export function recordDailyCareerProgress(
   }
 
   return next;
+}
+
+const JOB_APPLY_COOLDOWN_DAYS = 90;
+const CAREER_UPSKILL_COST = 120;
+const CAREER_UPSKILL_COOLDOWN_DAYS = 180;
+
+export function getJobApplyCooldownRemaining(state: ActiveLifeState, jobId: string): number {
+  const lastDay = state.actionCooldowns?.[`job_apply_cd:${jobId}`];
+  if (lastDay === undefined) return 0;
+  return Math.max(0, JOB_APPLY_COOLDOWN_DAYS - (state.profile.totalDays - lastDay));
+}
+
+export function getCareerAcceptanceChance(
+  state: ActiveLifeState,
+  evaluated: EvaluatedCareerOption,
+): number {
+  const { job, unlockedVia } = evaluated;
+  let chance = job.tier === 1 ? 85 : job.tier === 2 ? 62 : 45;
+  chance += Math.round(Math.max(-10, Math.min(20, (state.stats.relationships - 50) * 0.4)));
+  if (unlockedVia) chance += 18;
+  if (state.schedule.lifeFocus === 'tu_than' || state.schedule.lifeFocus === 'cong_danh') {
+    chance += 8;
+  }
+  if (
+    state.flags.includes('tung_o_tu') &&
+    job.track !== 'underworld' &&
+    job.track !== 'labor'
+  ) {
+    chance -= 35;
+  }
+  return Math.max(15, Math.min(96, chance));
+}
+
+/**
+ * 1in8b-style job application: rolls acceptance probability based on tier,
+ * relationships, referral shortcut, focus, and criminal record (`tung_o_tu`).
+ */
+export function attemptApplyForCareer(
+  state: ActiveLifeState,
+  jobId: string,
+): { hired: boolean; state: ActiveLifeState; message: string } {
+  const job = CAREER_CATALOG.find((j) => j.id === jobId);
+  if (!job) {
+    return { hired: false, state, message: 'Không tìm thấy công việc này.' };
+  }
+  const evaluated = evaluateCareerOption(state, job);
+  if (!evaluated.eligible) {
+    return {
+      hired: false,
+      state,
+      message: evaluated.lockReason ?? 'Chưa đủ điều kiện ứng tuyển.',
+    };
+  }
+  const cd = getJobApplyCooldownRemaining(state, jobId);
+  if (cd > 0) {
+    return {
+      hired: false,
+      state,
+      message: `Mới bị từ chối gần đây, cần chờ ${cd} ngày nữa.`,
+    };
+  }
+
+  const chance = getCareerAcceptanceChance(state, evaluated);
+  const roll = mulberry32Next(state.prngState);
+  const nextState: ActiveLifeState = { ...state, prngState: roll.nextState };
+
+  if (roll.value * 100 < chance) {
+    const hiredState = applyForCareer(nextState, jobId);
+    return {
+      hired: true,
+      state: hiredState,
+      message: `Trúng tuyển «${job.title}» (${chance}% cơ hội).`,
+    };
+  }
+
+  const rejectedState: ActiveLifeState = {
+    ...nextState,
+    actionCooldowns: {
+      ...(nextState.actionCooldowns ?? {}),
+      [`job_apply_cd:${jobId}`]: nextState.profile.totalDays,
+    },
+    logs: appendLog(
+      nextState.logs,
+      nextState.profile.totalDays,
+      'event',
+      `Ứng tuyển «${job.title}» chưa thành công (tỷ lệ nhận ${chance}%). Hãy trau dồi thêm học thức, tay nghề hoặc quan hệ rồi thử lại sau 90 ngày.`,
+      { tone: 'negative' },
+    ),
+  };
+  return {
+    hired: false,
+    state: rejectedState,
+    message: `Chưa được nhận vào «${job.title}» (tỷ lệ ${chance}%). Chờ 90 ngày hoặc học thêm để tăng cơ hội!`,
+  };
+}
+
+export function getCareerUpskillCooldownRemaining(state: ActiveLifeState): number {
+  const lastDay = state.actionCooldowns?.career_upskill;
+  if (lastDay === undefined) return 0;
+  return Math.max(0, CAREER_UPSKILL_COOLDOWN_DAYS - (state.profile.totalDays - lastDay));
+}
+
+/**
+ * In-job upskilling ("Học nâng cao chuyên môn"): boosts the track's core stat
+ * and adds 45 daysWorked toward the next promotion.
+ */
+export function trainCurrentCareerSkill(state: ActiveLifeState): ActiveLifeState {
+  if (!state.activeCareer) return state;
+  if (state.assets.wealthCopper < CAREER_UPSKILL_COST) return state;
+  if (getCareerUpskillCooldownRemaining(state) > 0) return state;
+
+  const track = state.activeCareer.track;
+  const statDelta =
+    track === 'scholar'
+      ? { education: 4 }
+      : track === 'martial'
+        ? { martial: 4 }
+        : track === 'craft' || track === 'trade'
+          ? { craft_trade: 4 }
+          : track === 'underworld'
+            ? { infamy: 3, martial: 2 }
+            : { health: 2, craft_trade: 2 };
+
+  const updated = applyEffects(state, {
+    copper: -CAREER_UPSKILL_COST,
+    ...statDelta,
+  });
+
+  return {
+    ...updated,
+    activeCareer: updated.activeCareer
+      ? {
+          ...updated.activeCareer,
+          daysWorked: updated.activeCareer.daysWorked + 45,
+        }
+      : null,
+    actionCooldowns: {
+      ...(updated.actionCooldowns ?? {}),
+      career_upskill: updated.profile.totalDays,
+    },
+    logs: appendLog(
+      updated.logs,
+      updated.profile.totalDays,
+      'study',
+      'Bạn bỏ 120 đồng theo học nâng cao chuyên môn nghề nghiệp, tay nghề và thâm niên đều tăng tiến.',
+      { tone: 'positive' },
+    ),
+  };
 }

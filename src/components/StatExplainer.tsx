@@ -34,7 +34,7 @@ export function StatExplainer() {
             <strong className="text-stone-200">Quan hệ</strong> Gắn bó với gia đình, bằng hữu và nhân mạch. Ảnh hưởng đến hôn nhân, sự nâng đỡ và chia sẻ gia sản.
           </p>
           <p className="text-[10px] text-stone-500 italic">
-            Chỉ số cao giúp tăng xác suất thuận lợi, không quyết định tuyệt đối; từ ngưỡng 70 trở lên sẽ tăng chậm dần để giữ cân bằng tự nhiên.
+            Sức khỏe, Hạnh phúc và Quan hệ tự động cân bằng cuối năm về mức nền thực tế (theo tuổi, nếp sống, gia đình, nợ nần); riêng Học thức tăng chậm dần từ ngưỡng 70.
           </p>
         </div>
       )}

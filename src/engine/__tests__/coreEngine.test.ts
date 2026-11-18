@@ -2,13 +2,21 @@ import { describe, expect, it } from 'vitest';
 import { mulberry32Next } from '../prng';
 import { createNewLife } from '../lifeInitializer';
 import { evaluateConditions } from '../conditionEvaluator';
-import { applyEffects } from '../effectApplier';
+import { applyAnnualStatMeanReversion, applyEffects } from '../effectApplier';
+import { buildEndingSummary } from '../endingSummary';
 import { breakdownCopper, calculateRicePrice, formatCopper } from '../economy';
-import { getCohortPeerStatusLabel, getCurrentLivelihoodLabel } from '../lifeStatus';
-import { getLifeFocusOptions, INSTANT_ADULT_ACTIONS, rankInstantActions } from '../adultLifeActions';
+import { getCohortPeerStatusLabel, getCurrentLivelihoodLabel, getEducationLabel } from '../lifeStatus';
+import {
+  canAffordInstantAction,
+  ensureValidLifeFocus,
+  executeInstantAdultAction,
+  getLifeFocusOptions,
+  INSTANT_ADULT_ACTIONS,
+  rankInstantActions,
+} from '../adultLifeActions';
+import { applyDynamicDecisionSideEffects, generateDynamicDecision } from '../decisionGenerator';
 import {
   advanceChildhoodMonth,
-  advanceChildhoodYear,
   computeFamilyMonthlyNetCopper,
   getAvailableChildhoodActivities,
   resolveEventChoice,
@@ -72,13 +80,21 @@ describe('Core Engine (MVP 1)', () => {
     const events = ALL_CHILDHOOD_EVENTS;
 
     let life = createNewLife(777);
-    const step1 = advanceChildhoodYear(life, events);
-    expect(step1.pendingEvent?.id).toMatch(/^evt_milestone_thoi_noi/);
-    life = resolveEventChoice(step1.state, step1.pendingEvent!, 0).state;
-    expect(life.flags).toContain('thien_huong_but_long');
+    let thoiNoiTriggered = false;
+    for (let m = 0; m < 12; m += 1) {
+      const step = advanceChildhoodMonth(life, events);
+      life = step.state;
+      if (step.pendingEvent) {
+        if (step.pendingEvent.id.startsWith('evt_milestone_thoi_noi')) {
+          thoiNoiTriggered = true;
+        }
+        life = resolveEventChoice(life, step.pendingEvent, 0).state;
+      }
+    }
+    expect(thoiNoiTriggered).toBe(true);
 
-    for (let age = 2; age <= 13; age += 1) {
-      const res = advanceChildhoodYear(life, events);
+    for (let m = 12; m < 13 * 12; m += 1) {
+      const res = advanceChildhoodMonth(life, events);
       life = res.state;
       if (res.pendingEvent) {
         life = resolveEventChoice(life, res.pendingEvent, 0).state;
@@ -334,5 +350,206 @@ describe('Core Engine (MVP 1)', () => {
       expect(s10.isDead).toBe(false);
       expect(s10.text).toContain('Đang học chữ');
     }
+
+    // Verify wealthCopper can go negative (debt) via applyEffects
+    const indebted = applyEffects(
+      { ...base, assets: { ...base.assets, wealthCopper: 100 } },
+      { copper: -500 },
+    );
+    expect(indebted.assets.wealthCopper).toBe(-400);
+    expect(formatCopper(indebted.assets.wealthCopper)).toBe('-400 Đồng');
+  });
+
+  it('generates and resolves 1in8b dynamic decision cards (college, job offers, retirement, debt)', () => {
+    const base = createNewLife(77);
+
+    // 1. College decision at age 18
+    const at18 = {
+      ...base,
+      profile: { ...base.profile, totalDays: 18 * 360 },
+      eduLevel: 3,
+    };
+    const collegeDec = generateDynamicDecision(at18);
+    expect(collegeDec?.id).toBe('dec_college_18');
+    const enrolled = applyDynamicDecisionSideEffects(
+      { ...at18, flags: [...at18.flags, 'dec_college_done'] },
+      'dec_college_18',
+      0,
+    );
+    expect(enrolled.eduLevel).toBe(4);
+    expect(enrolled.isStudent).toBe(true);
+    expect(getEducationLabel(enrolled)).toContain('Quốc Tử Giám');
+    expect(getCurrentLivelihoodLabel(enrolled)).toBe('Đang theo học');
+
+    // 2. Job offers when unemployed & not student
+    const seeking = {
+      ...enrolled,
+      isStudent: false,
+      livelihoodStatus: 'seeking' as const,
+    };
+    const jobDec = generateDynamicDecision(seeking);
+    expect(jobDec?.id).toBe('dec_job_offers');
+    const hired = applyDynamicDecisionSideEffects(seeking, 'dec_job_offers', 0);
+    expect(hired.activeCareer).not.toBeNull();
+    expect(hired.livelihoodStatus).toBe('employed');
+
+    // 3. Heavy debt decision when wealthCopper < -300
+    const deepDebt = {
+      ...hired,
+      assets: { ...hired.assets, wealthCopper: -500 },
+    };
+    const loanDec = generateDynamicDecision(deepDebt);
+    expect(loanDec?.id).toBe('dec_loan_heavy');
+
+    // 4. Retirement decision at age 60
+    const at60 = {
+      ...hired,
+      profile: { ...hired.profile, totalDays: 60 * 360 },
+    };
+    const retireDec = generateDynamicDecision(at60);
+    expect(retireDec?.id).toBe('dec_retire_60');
+    const retired = applyDynamicDecisionSideEffects(at60, 'dec_retire_60', 0);
+    expect(retired.livelihoodStatus).toBe('retired');
+    expect(getCurrentLivelihoodLabel(retired)).toBe('Nghỉ hưu');
+  });
+
+  it('applies direct 0-100 deltas for health/happiness/relationships and annual mean-reversion', () => {
+    const base = createNewLife(99);
+    const highBase = {
+      ...base,
+      stats: {
+        ...base.stats,
+        health: 80,
+        happiness: 80,
+        relationships: 80,
+        education: 80,
+      },
+    };
+    const boosted = applyEffects(highBase, {
+      health: 5,
+      happiness: 5,
+      relationships: 5,
+      education: 5,
+    });
+    // Direct clamp for health, happiness, relationships; diminishing returns above 70 for education
+    expect(boosted.stats.health).toBe(85);
+    expect(boosted.stats.happiness).toBe(85);
+    expect(boosted.stats.relationships).toBe(85);
+    expect(boosted.stats.education).toBeCloseTo(81.5, 2);
+
+    // Annual mean-reversion pulls inflated health down at age 80, and pulls low relationships up with spouse
+    const aged = {
+      ...boosted,
+      stats: { ...boosted.stats, health: 95, relationships: 30, happiness: 90 },
+      npcs: [
+        ...boosted.npcs,
+        {
+          id: 'spouse_1',
+          name: 'Lan',
+          gender: 'female' as const,
+          relation: 'spouse' as const,
+          affinity: 60,
+          isAlive: true,
+          role: 'Thê tử',
+        },
+      ],
+    };
+    const reverted = applyAnnualStatMeanReversion(aged, 80);
+    expect(reverted.stats.health).toBeLessThan(95);
+    expect(reverted.stats.relationships).toBeGreaterThan(30);
+    expect(reverted.stats.happiness).toBeLessThan(90);
+  });
+
+  it('builds 1in8b-style ending summary with epitaph, last words, mourners, and happiest year', () => {
+    const base = createNewLife(123);
+    const deadLife = {
+      ...base,
+      isAlive: false,
+      deathReason: 'Tuổi cao sức yếu',
+      profile: { ...base.profile, totalDays: 72 * 360 },
+      yearlyHappiness: { 20: 65, 35: 88, 70: 72 },
+      npcs: [
+        ...base.npcs,
+        {
+          id: 'sp_1',
+          name: 'Thị Mai',
+          gender: 'female' as const,
+          relation: 'spouse' as const,
+          affinity: 80,
+          isAlive: true,
+          role: 'Thê tử',
+        },
+        {
+          id: 'ch_1',
+          name: 'Minh An',
+          gender: 'male' as const,
+          relation: 'child' as const,
+          affinity: 75,
+          isAlive: true,
+          role: 'Con trai',
+        },
+      ],
+    };
+    const summary = buildEndingSummary(deadLife);
+    expect(summary.ageYears).toBe(72);
+    expect(summary.epitaphLines.length).toBeGreaterThanOrEqual(3);
+    expect(summary.lastWords).not.toBeNull();
+    expect(summary.mourners.length).toBeGreaterThanOrEqual(2);
+    expect(summary.happiestYear).toEqual({ age: 35, score: 88 });
+    expect(summary.partnerCell).toContain('Thị Mai');
+    expect(summary.kidsCell).toContain('1 người con còn sống');
+  });
+
+  it('adapts life focus options by circumstance and auto-transitions invalid focus', () => {
+    const base = createNewLife(55);
+    const prisoner = {
+      ...base,
+      livelihoodStatus: 'prison' as const,
+      schedule: { ...base.schedule, lifeFocus: 'cong_danh' as const },
+    };
+    const prisonOpts = getLifeFocusOptions(prisoner);
+    expect(prisonOpts.some((o) => o.id === 'cong_danh')).toBe(false);
+    expect(prisonOpts.some((o) => o.id === 'nghi_ngoi')).toBe(true);
+
+    const fixed = ensureValidLifeFocus(prisoner);
+    expect(fixed.schedule.lifeFocus).toBe('can_bang');
+
+    const student = {
+      ...base,
+      isStudent: true,
+      livelihoodStatus: 'student' as const,
+    };
+    const studentOpts = getLifeFocusOptions(student);
+    expect(studentOpts.some((o) => o.id === 'lam_them')).toBe(true);
+  });
+
+  it('supports 1in8b-style creditOK, PRISON_SHOP filtering, and contextual study ranking', () => {
+    const base = createNewLife(77);
+    const poorAdult = {
+      ...base,
+      profile: { ...base.profile, totalDays: 20 * 360 },
+      stats: { ...base.stats, education: 10 },
+      assets: { ...base.assets, wealthCopper: 10 },
+    };
+    const nightClass = INSTANT_ADULT_ACTIONS.find((a) => a.id === 'inst_night_class')!;
+    const creditCheck = canAffordInstantAction(poorAdult, nightClass);
+    expect(creditCheck.canPay).toBe(true);
+    expect(creditCheck.onCredit).toBe(true);
+
+    const exec = executeInstantAdultAction(poorAdult, 'inst_night_class');
+    expect(exec.ok).toBe(true);
+    expect(exec.state.assets.wealthCopper).toBeLessThan(10);
+
+    const ranked = rankInstantActions(poorAdult);
+    expect(ranked.recommended.some((a) => a.id === 'inst_night_class')).toBe(true);
+
+    const prisoner = {
+      ...poorAdult,
+      livelihoodStatus: 'prison' as const,
+      flags: [...poorAdult.flags, 'dang_o_tu'],
+    };
+    const prisonRanked = rankInstantActions(prisoner);
+    expect(prisonRanked.recommended.every((a) => a.prisonAllowed)).toBe(true);
+    expect(prisonRanked.recommended.some((a) => a.id === 'inst_prison_letter')).toBe(true);
   });
 });

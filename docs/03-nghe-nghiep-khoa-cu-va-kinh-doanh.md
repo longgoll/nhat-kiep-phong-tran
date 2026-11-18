@@ -1,41 +1,40 @@
-# 03 — Nghề Nghiệp, Khoa Cử, Quan Trường & Khởi Nghiệp
+# 03 — Nghề Nghiệp (`JOBS`), Thăng Tiến, Hưu Trí & Kinh Doanh (`BIZ_K`)
+
+> Áp dụng 100% vòng đời nghề nghiệp và khởi nghiệp của `1in8b.life/vi` trong bối cảnh cổ trang.
 
 ---
 
-## 1. Hợp Nhất Hệ Thống Sinh Kế & Công Danh
+## 1. Trạng Thái Thân Phận Rõ Ràng (`livelihoodStatus`)
 
-Thay vì tách rời mơ hồ giữa `careerSystem` và `ProgressionModules`, toàn bộ sinh kế và con đường công danh được quy về **1 luồng thống nhất** hiển thị rõ trên Hồ sơ:
-
-### Các nhánh nghề nghiệp (`CareerTrack`)
-1. **Lao động (`labor`):** Phu khuân vác, tá điền, thợ cày, cai phu... (vào nghề không cần bằng cấp).
-2. **Thủ công (`craft`):** Thợ mộc, thợ rèn, thợ dệt, thợ gốm, đốc công xưởng... (cần `Thương tài`).
-3. **Thương nghiệp (`trade`):** Hàng rong, tiểu thương chợ huyện, thương nhân đường dài, đại thương...
-4. **Nho học · Quan trường (`scholar`):** Thư đồng, thầy đồ làng, thư lại nha môn, **Quan viên triều đình** (`officialRank 1–6`).
-5. **Võ bị · Quân ngũ (`martial`):** Tuần đinh, lính thú, đội trưởng, võ tướng...
-6. **Giang hồ (`underworld`):** Tiêu cục, tay sai, đầu lĩnh thảo khấu...
-
----
-
-## 2. Xin Việc, Thăng Tiến & Nghỉ Hưu (`CareerModal`)
-
-- **Gợi ý việc làm phù hợp (`getRecommendedCareerOffers`):**
-  - Tự động lọc và đề xuất **3–5 công việc** phù hợp nhất với Học vấn, Chỉ số chuyên môn và Xuất thân hiện tại (kèm mục *"Xem tất cả nghề"* cho người muốn tra cứu).
-  - Nếu có `activeCareer` hoặc `activeVenture`: Hồ sơ hiển thị tên nghề + bậc hiện tại; nếu không có (và không phải Quan viên / Gia nô / Tại ngũ), Hồ sơ hiển thị rõ **`Đang tìm việc`** (hoặc **`Nghỉ hưu`** nếu `>= 60 tuổi` và đã từng làm việc).
-- **Thu nhập & Thâm niên:**
-  - Mỗi nghề có thu nhập cơ bản theo buổi/tháng, tăng theo thâm niên (`daysWorked`), `Học thức`/`Thương tài`, và Trọng tâm (`Dồn sức công danh` `+25%`).
-  - **Thăng tiến tự nhiên cuối năm (`canPromoteCareer`):** Khi đủ số ngày làm việc và chỉ số yêu cầu, cuối năm tự động thăng bậc hoặc người chơi chủ động xin thăng chức trong `CareerModal`.
+Hồ sơ luôn hiển thị chính xác 1 trong các trạng thái:
+- **`student` (*Đang theo học*):** Khi đang học Tiểu học / Hương học / Huyện học / Quốc Tử Giám.
+- **`employed` (*Tên nghề / Phẩm hàm quan*):** Đang làm nghề hoặc làm quan triều đình (`officialRank 1–6`).
+- **`venture` (*Chủ cơ sở kinh doanh*):** Đang tự làm chủ tiệm/xưởng/tửu lầu.
+- **`seeking` (*Đang tìm việc*):** Khi chưa có việc, chưa nghỉ hưu, không đi học.
+- **`homemaker` (*Nội trợ · Lo việc nhà*):** Thu nhập `0`, sống nhờ thu nhập vợ/chồng hoặc gia sản.
+- **`retired` (*Nghỉ hưu*):** Quanh tuổi `60–65` trở đi, nhận bổng lộc hưu trí nếu đủ thâm niên.
+- **`prison` (*Trong tù*):** Tạm dừng học/việc cho tới khi mãn hạn hoặc được ân xá.
 
 ---
 
-## 3. Khoa Cử, Quan Trường, Điền Sản & Khởi Nghiệp
+## 2. Xin Việc, Lương, Thăng Tiến & Nghỉ Hưu qua Decision Card
 
-- **Khoa cử (Đường học vấn lên Quan trường):**
-  - Thi Hương (`Tú tài` / `Cử nhân`) → Thi Hội (`Cống sĩ` / `Tiến sĩ`) → Thi Đình (`Trạng nguyên`).
-  - Đỗ đạt cập nhật trực tiếp **Học vấn** trên Hồ sơ và mở khóa **Bổ nhiệm Quan viên** (`officialRank`: `1 Tri huyện` → `2 Tri phủ` → `3 Tuần phủ` → `4 Thượng thư` → `5 Tể tướng` → `6 Khai quốc`).
-  - Khi đã làm Quan (`officialRank >= 1`), Hồ sơ hiển thị chức quan là sinh kế chính và nhận bổng lộc triều đình.
-- **Khởi nghiệp & Điền sản (`VENTURES` & `PROPERTY_CATALOG`):**
-  - Mở tiệm buôn, xưởng thủ công, tửu lầu hoặc mua ruộng đất/nhà cho thuê (`Nhất mẫu ruộng tốt`, `Tiệm tạp hóa`, `Tửu lầu`, `Xưởng tơ lụa`...).
-  - Sinh lời theo mùa phụ thuộc `Thương tài` và `Thời cuộc` (`binh_on` lời đủ, `chien_tranh`/`mat_mua` giảm mạnh).
-  - Rủi ro phá sản hoặc biến cố kinh doanh khi gặp năm mất mùa/chiến tranh.
-- **Khởi nghĩa (`Rebellion`):**
-  - Khi `officialRank === 0` và đủ `Võ nghệ` + `Uy thế/Thanh danh`, có thể tụ nghĩa chiêu mộ binh mã, tích lũy quân lương để tranh đoạt thiên hạ (mục tiêu cuối game).
+### Xin việc (`DEC.job` & `jobOffers(3)`)
+- Khi nhân vật ở trạng thái `seeking` (vừa tốt nghiệp, vừa thôi việc, vừa ra tù, hoặc đủ tuổi lao động chưa có việc), hệ thống **tự bật Decision Card** đưa ra **3 lời mời việc làm** phù hợp với `eduLevel`, chuyên ngành (`major`), xuất thân và **người quen/đồng niên giới thiệu** (`viaDraw`).
+- Kèm 2 lựa chọn phụ: *Chờ công việc tốt hơn* (đợi 1 năm) hoặc *Ở nhà lo việc nhà* (`homemaker`).
+
+### Thuật toán lương & Thăng bậc hàng năm
+- Lương/thu nhập năm phụ thuộc bậc nghề, thâm niên (`daysWorked`, tăng nhanh 10 năm đầu, chậm dần năm 11–20), `Kiến thức`, và Trọng tâm năm (`Dồn sức` `+20%`, `Gia đình` `-10%`).
+
+### Thăng tiến (`DEC.rankup`), Nhảy việc (`DEC.jobchange`) & Nghỉ hưu (`DEC.retire`)
+- **Thăng tiến (`DEC.rankup`):** Khi đủ thâm niên và điều kiện ở nghề có nấc thang hoặc quan trường, tự bật Decision Card mời thăng chức.
+- **Nhảy việc (`DEC.jobchange`):** Kích hoạt bởi trọng tâm `Phát triển bản thân`, đề xuất việc mới thu nhập cao hơn (`≥ 1.05×`).
+- **Nghỉ hưu (`DEC.retire`):** Ở tuổi `60–65`, tự bật Decision Card *Nghỉ hưu*. Nếu từng làm quan hoặc nghề chính thức `≥ 10 năm`, nhận **lương hưu hằng năm** dựa trên thâm niên và mức thu nhập nền.
+
+---
+
+## 3. Kinh Doanh / Khởi Nghiệp (`BIZ_K`) & Điền Sản Cho Thuê
+
+- **Khởi nghiệp (`VENTURES`):** Quán trà, sạp chợ, thư quán, xưởng thủ công, y quán, tửu lầu... Nếu từng làm nghề liên quan (`relatedCareerIds`), được giảm `30%` vốn mở và tăng tỷ lệ thành công.
+- **Biến động & Phá sản hàng năm:** Thu nhập tự doanh dao động mỗi năm theo thị trường & thời cuộc (`±10%`); hàng năm kiểm tra xác suất phá sản (`2.5%–15%` tùy loại hình). Phá sản thì đóng cửa cơ sở, quay về `Đang tìm việc` và `Hạnh phúc -8`.
+- **Điền sản cho thuê (`PROPERTY_CATALOG`):** Ruộng tốt, sạp chợ, nhà cho thuê, tửu lầu... Bắt buộc trả tiền mặt, sinh lời ròng theo mùa/năm.

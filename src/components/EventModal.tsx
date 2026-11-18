@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { getAgeYears, type ActiveLifeState } from '../types/activeLife';
 import type { ConditionSpec, EventChoice } from '../types/dsl';
@@ -95,6 +95,10 @@ export function EventModal() {
   const chooseEventOption = useActiveLifeStore((s) => s.chooseEventOption);
   const toggleAutoDecide = useActiveLifeStore((s) => s.toggleAutoDecide);
   const [isDeferred, setIsDeferred] = useState(false);
+
+  useEffect(() => {
+    setIsDeferred(false);
+  }, [pendingEvent?.id]);
 
   if (!life || !pendingEvent) return null;
 

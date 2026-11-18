@@ -1,10 +1,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { ActiveLifeState, FallbackRule, GiftEtiquetteTier, LifestyleTier, TimeSlot } from '../types/activeLife';
-import type { ChildhoodActivityDef, GameEventDef } from '../types/dsl';
+import type {
+  ActiveLifeState,
+  FallbackRule,
+  GiftEtiquetteTier,
+  InvestmentChannel,
+  LifestyleTier,
+  TimeSlot,
+} from '../types/activeLife';
+import type { GameEventDef } from '../types/dsl';
 import { createNewLife } from '../engine/lifeInitializer';
 import { evaluateConditions } from '../engine/conditionEvaluator';
-import { advanceChildhoodMonth, advanceChildhoodYear, resolveEventChoice } from '../engine/childhoodEngine';
+import { advanceChildhoodMonth, resolveEventChoice } from '../engine/childhoodEngine';
+import { applyDynamicDecisionSideEffects } from '../engine/decisionGenerator';
 import {
   advanceDays,
   DEFAULT_AUTO_PAUSE_CONFIG,
@@ -53,7 +61,6 @@ interface ActiveLifeStore {
 
   startNewLife: (customSeed?: number) => void;
   confirmBirthCertificate: () => void;
-  stepChildhoodYear: (activity?: ChildhoodActivityDef) => void;
   stepChildhoodMonth: () => void;
   advanceToNextDecision: () => void;
   toggleAutoDecide: () => void;
@@ -69,6 +76,7 @@ interface ActiveLifeStore {
   setLifestyle: (tier: LifestyleTier) => void;
   setLifeFocus: (focusId: string) => void;
   setGiftEtiquette: (tier: GiftEtiquetteTier) => void;
+  setInvestmentChannel: (channel: InvestmentChannel) => void;
   toggleAutoAction: (actionId: string) => void;
   buyGold: (amountCopper: number) => void;
   sellGold: (amountCopper: number) => void;
@@ -153,18 +161,6 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
         set({ hasConfirmedBirthCertificate: true });
       },
 
-      stepChildhoodYear: (activity?: ChildhoodActivityDef) => {
-        const { life, pendingEvent } = get();
-        if (!life || !life.isAlive || pendingEvent) return;
-
-        const res = advanceChildhoodYear(life, ALL_CHILDHOOD_EVENTS, activity);
-        set({
-          life: res.state,
-          pendingEvent: res.pendingEvent,
-          lastEventResult: null,
-        });
-      },
-
       stepChildhoodMonth: () => {
         const { life, pendingEvent, autoDecide } = get();
         if (!life || !life.isAlive || pendingEvent) return;
@@ -188,7 +184,7 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
       },
 
       advanceToNextDecision: () => {
-        const { life, pendingEvent, isSimulating, autoPauseConfig } = get();
+        const { life, pendingEvent, isSimulating, autoPauseConfig, autoDecide } = get();
         if (!life || !life.isAlive || pendingEvent || isSimulating) return;
 
         const age = Math.floor(life.profile.totalDays / 360);
@@ -197,6 +193,16 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
           for (let m = 0; m < 72; m += 1) {
             const res = advanceChildhoodMonth(current, ALL_CHILDHOOD_EVENTS, CHILDHOOD_AMBIENT_DATA);
             current = res.state;
+            if (res.pendingEvent && autoDecide) {
+              const idx = pickAutoChoiceIndex(current, res.pendingEvent);
+              const resolved = resolveEventChoice(current, res.pendingEvent, idx);
+              current = resolved.state;
+              if (!current.isAlive || Math.floor(current.profile.totalDays / 360) >= 13) {
+                set({ life: current, pendingEvent: null, lastEventResult: `[Tự động chọn] ${resolved.resultText}` });
+                return;
+              }
+              continue;
+            }
             if (res.pendingEvent || !current.isAlive || Math.floor(current.profile.totalDays / 360) >= 13) {
               set({
                 life: current,
@@ -215,6 +221,18 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
         for (let chunk = 0; chunk < 36; chunk += 1) {
           const res = advanceDays(current, 30, ALL_ACTIONS, ALL_ADULTHOOD_EVENTS, autoPauseConfig);
           current = res.state;
+          if (res.pendingEvent && autoDecide) {
+            const idx = pickAutoChoiceIndex(current, res.pendingEvent);
+            const resolved = resolveEventChoice(current, res.pendingEvent, idx);
+            current = res.pendingEvent.id.startsWith('dec_')
+              ? applyDynamicDecisionSideEffects(resolved.state, res.pendingEvent.id, idx)
+              : resolved.state;
+            if (!current.isAlive) {
+              set({ life: current, pendingEvent: null, lastPauseReason: res.pausedReason ?? null, lastEventResult: `[Tự động chọn] ${resolved.resultText}` });
+              return;
+            }
+            continue;
+          }
           if (res.pendingEvent || res.pausedReason || !current.isAlive) {
             set({
               life: current,
@@ -285,50 +303,52 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
         const { life, pendingEvent, isSimulating, autoPauseConfig } = get();
         if (!life || !life.isAlive || pendingEvent || isSimulating) return;
 
+        const applyResult = (
+          resState: ActiveLifeState,
+          resPending: GameEventDef | null | undefined,
+          resPaused: AutoPauseReason | null | undefined,
+        ) => {
+          const { autoDecide } = get();
+          if (resPending && autoDecide) {
+            const idx = pickAutoChoiceIndex(resState, resPending);
+            const resolved = resolveEventChoice(resState, resPending, idx);
+            const finalState = resPending.id.startsWith('dec_')
+              ? applyDynamicDecisionSideEffects(resolved.state, resPending.id, idx)
+              : resolved.state;
+            set({
+              life: finalState,
+              pendingEvent: null,
+              lastPauseReason: resPaused ?? null,
+              lastEventResult: `[Tự động chọn] ${resolved.resultText}`,
+              isSimulating: false,
+            });
+            return;
+          }
+          set({
+            life: resState,
+            pendingEvent: resPending ?? null,
+            lastPauseReason: resPaused ?? null,
+            lastEventResult: null,
+            isSimulating: false,
+          });
+        };
+
         const worker = getWorker();
         if (!worker) {
           const res = advanceDays(life, days, ALL_ACTIONS, ALL_ADULTHOOD_EVENTS, autoPauseConfig);
-          set({
-            life: res.state,
-            pendingEvent: res.pendingEvent ?? null,
-            lastPauseReason: res.pausedReason ?? null,
-            lastEventResult: null,
-          });
+          applyResult(res.state, res.pendingEvent, res.pausedReason);
           return;
         }
 
         set({ isSimulating: true, lastPauseReason: null, lastEventResult: null });
         const runSyncFallback = () => {
           const res = advanceDays(life, days, ALL_ACTIONS, ALL_ADULTHOOD_EVENTS, autoPauseConfig);
-          set({
-            life: res.state,
-            pendingEvent: res.pendingEvent ?? null,
-            lastPauseReason: res.pausedReason ?? null,
-            isSimulating: false,
-          });
+          applyResult(res.state, res.pendingEvent, res.pausedReason);
         };
         worker.onmessage = (e: MessageEvent<WorkerResponse>) => {
           const msg = e.data;
           if (msg.type === 'SIMULATION_DONE') {
-            const { autoDecide } = get();
-            if (msg.pendingEvent && autoDecide) {
-              const idx = pickAutoChoiceIndex(msg.state, msg.pendingEvent);
-              const resolved = resolveEventChoice(msg.state, msg.pendingEvent, idx);
-              set({
-                life: resolved.state,
-                pendingEvent: null,
-                lastPauseReason: (msg.pausedReason as AutoPauseReason | undefined) ?? null,
-                lastEventResult: `[Tự động chọn] ${resolved.resultText}`,
-                isSimulating: false,
-              });
-              return;
-            }
-            set({
-              life: msg.state,
-              pendingEvent: msg.pendingEvent ?? null,
-              lastPauseReason: (msg.pausedReason as AutoPauseReason | undefined) ?? null,
-              isSimulating: false,
-            });
+            applyResult(msg.state, msg.pendingEvent, msg.pausedReason as AutoPauseReason | undefined);
           } else if (msg.type === 'SIMULATION_ERROR') {
             runSyncFallback();
           }
@@ -349,8 +369,11 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
         if (!life || !pendingEvent) return;
 
         const res = resolveEventChoice(life, pendingEvent, choiceIndex);
+        const finalState = pendingEvent.id.startsWith('dec_')
+          ? applyDynamicDecisionSideEffects(res.state, pendingEvent.id, choiceIndex)
+          : res.state;
         set({
-          life: res.state,
+          life: finalState,
           pendingEvent: null,
           lastEventResult: res.resultText,
         });
@@ -399,6 +422,17 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
           life: {
             ...life,
             schedule: { ...life.schedule, giftEtiquette: tier },
+          },
+        });
+      },
+
+      setInvestmentChannel: (channel) => {
+        const { life } = get();
+        if (!life) return;
+        set({
+          life: {
+            ...life,
+            investmentChannel: channel,
           },
         });
       },

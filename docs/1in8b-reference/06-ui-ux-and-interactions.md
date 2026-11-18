@@ -39,7 +39,10 @@
   - Danh sách **4 người đồng niên** (*"Những người sinh ra trong cùng một giây"*).
 
 ### C. Thanh Điều Khiển Trên Cùng (`#lifeview` Top Bar)
-- **Nút nhịp độ:** `Tạm dừng` (phím `Space`), các mức tốc độ `1×`, `2×`, `4×`, `8×`, `12×`, `16×` (phím tắt `1–6`).
+- **Nhịp độ & Thời gian 1 năm (`S.yearSec`, `tick(n)`):**
+  - Lúc sinh: `yearSec = clamp(paceMin * 60 / Math.max(D.e0, 60), 12, 120)` (`paceMin` = `30`, `60` mặc định, hoặc `90`). Với gói `1 giờ` và `e0 ≈ 69` → `S.yearSec ≈ 52 giây` (`1 năm ≈ 52 giây` ở `1×`).
+  - **Nút nhịp độ (`SPEEDS = [1, 2, 4, 8, 12, 16]`):** `Tạm dừng` (phím `Space`), các mức tốc độ `1×–16×` (phím tắt `1–6`). Dòng hiển thị `#ageYear` tính `Math.round(S.yearSec / S.speed)` (ví dụ `52 giây` ở `1×`, `3 giây` ở `16×`).
+  - Thanh tiến trình năm `#prog` lượng tử hóa 500 bước bằng `scaleX(round(t * 500) / 500)`.
 - **Nút tua thông minh:**
   - **`Tới quyết định tiếp theo`:** Nhảy thẳng qua các năm bình lặng đến Decision Card tiếp theo (giảm cảm giác chờ đợi).
   - **`Tự động quyết định`:** Tự động chọn phương án & trọng tâm sau đếm ngược ngắn.

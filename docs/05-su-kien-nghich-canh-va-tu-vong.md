@@ -1,41 +1,37 @@
-# 05 — Sự Kiện, Nghịch Cảnh, Gia Đình & Tử Vong
+# 05 — Sự Kiện, Tù Tội (`goPrison`), Gia Đình & Tử Vong (`deathProb`)
+
+> Áp dụng 100% cơ chế Sự kiện năm, Tù tội, Gia đình và Tử vong của `1in8b.life/vi`.
 
 ---
 
-## 1. Nhịp Độ Sự Kiện & Quyết Định (`EventModal`)
+## 1. Lịch Sự Kiện & Decision Modal (`Tạm gác lại`)
 
-- **Tuổi thơ (`0–12 tuổi`):** Mỗi năm chọn ngẫu nhiên 1–2 sự kiện định hình tính khí, sở thích và biến cố gia đình; xen kẽ dòng nhật ký đời sống nhẹ nhàng theo tháng (`childhood_logs`).
-- **Trưởng thành (`13+ tuổi`):**
-  - Sự kiện thường nhật (`minor`) tự động xử lý và ghi vào Nhật ký.
-  - Sự kiện lớn (`major` / `isMilestone`) tự động **tạm dừng thời gian** và bật `EventModal`, giới hạn giãn cách tối thiểu `25 ngày` giữa 2 quyết định lớn để tránh dồn dập.
-- **Thao tác trên `EventModal` (Chuẩn `1in8b`):**
-  - Hiển thị nhãn loại sự kiện (`Quyết định lớn` / `Bước ngoặt cuộc đời`), tuổi & niên hiệu hiện tại, nội dung, và hộp ghi chú bối cảnh (`contextNote`).
-  - Lựa chọn đánh số `1, 2, 3...` kèm dòng gợi ý tác động hoặc lý do bị khóa rõ ràng.
-  - **Nút `Tạm gác lại ▾`:** Thu gọn modal thành một thanh nổi gọn ở góc/trên màn hình, cho phép người chơi tự do xem lại **Hồ sơ**, **Tài sản**, **Nhật ký** trước khi bấm *"Mở lại quyết định"* để chọn.
-  - **Nút `Tự động quyết định`:** Bật chế độ tự chọn phương án tối ưu ngay trên modal.
+- Mỗi năm tung ra `2–3 sự kiện đời sống` ghi vào Nhật ký (xen kẽ ghi chú bối cảnh `contextNote`) và tối đa `1–2 quyết định lớn` (`EventModal`) để không dồn dập.
+- `EventModal` tự tạm dừng thời gian, có nút **`Tạm gác lại ▾`** (thu gọn thành thanh nổi để xem lại Hồ sơ/Tài sản/Nhật ký trước khi chọn) và **`Từ giờ để tự động quyết định`**.
 
 ---
 
-## 2. Nghịch Cảnh & Biến Cố Thời Cuộc
+## 2. Tội Phạm, Tù Tội & Ân Xá (`goPrison`, `DEC.parole`)
 
-- **Thời cuộc (`worldState`):** Luân chuyển theo triều đại giữa `Thái bình ổn định`, `Mất mùa đói kém`, `Dịch bệnh hoành hành`, `Chiến tranh loạn lạc` — tác động trực tiếp đến giá lúa, sinh hoạt phí và lợi nhuận buôn bán.
-- **Gia tộc sa sút / Thất sủng:** Tụt trực tiếp `Hoàn cảnh gia đình` trên Hồ sơ và cắt chu cấp.
-- **Thân phận đặc biệt:** `Đi ở đợ`, `Gia nô trừ nợ`, `Tại ngũ`, `Cung nữ / Thái giám` được hiển thị rõ ràng ở dòng Sinh kế trên Hồ sơ.
-
----
-
-## 3. Gia Đình, Hôn Nhân & Hậu Duệ
-
-- Người chơi có thể `Thành gia lập thất` (khi đủ tuổi & điều kiện) và `Sinh con nối dõi`.
-- Danh sách người thân (`FamilyLifeCard`) hiển thị quan hệ, tuổi tác (tự tăng theo năm), tình trạng sống/mất và độ thân thiết (`affinity`).
-- Con cái trưởng thành hoặc vợ/chồng giúp nâng đỡ tinh thần (`Quan hệ` nền) và chia sẻ biến cố gia tộc.
+- Kích hoạt khi `Tai tiếng (infamy)` quá cao hoặc phạm tội/dính án oan trong sự kiện:
+  - Giải thể cơ sở kinh doanh đang làm chủ, tạm dừng học/việc, chuyển trạng thái sang **`Trong tù`**, đặt `prisonUntil = age + years`, `Hạnh phúc -15`, `Quan hệ -10`.
+  - Khi đi qua nửa bản án, tự bật **`DEC.parole`** cho phép xin ân xá sớm (tỷ lệ thành công phụ thuộc cải tạo & gia đình bảo lãnh).
+  - Ra tù (trừ án oan) để lại tiền án (`record`), khóa một số nghề quan trường/chính thức cho tới khi chuộc lỗi (`atone`).
 
 ---
 
-## 4. Tử Vong, Bia Mộ & Tàng Kinh Các
+## 3. Gia Đình, Hôn Nhân & Tài Chính Hộ
 
-- **Điều kiện kết thúc:** `health <= 0`, tuổi già kiệt sức, đói khát kéo dài hoặc bị xử tử trong sự kiện.
-- **Màn hình Bia Mộ (`TombstoneView`):**
-  - Hiển thị nguyên nhân qua đời, tuổi thọ, danh hiệu tổng kết cuối đời (`end_...`).
-  - Toàn bộ **Bản đồ cuộc đời (`LifeGrid`)** và các cột mốc vàng son.
-  - Lưu snapshot kiếp sống vào **Tàng Kinh Các (`useLegacyArchiveStore`)** — thuần túy lưu trữ kỷ niệm & giao diện trang trí (Zero Meta-Buff).
+- Vợ/chồng còn sống đóng góp thu nhập hằng năm (giúp người chọn `Nội trợ` vẫn có nguồn sống).
+- Con nhỏ (`< 18t`) tốn chi phí nuôi ăn học hằng năm; con trưởng thành (`>= 22t`) gửi tiền phụng dưỡng cha mẹ già (`>= 60t`, đặc biệt khi không có lương hưu).
+- Tuổi của mọi NPC tự tăng mỗi năm cùng nhân vật chính.
+
+---
+
+## 4. Tử Vong (`deathProb`), Đường Cong Sống Sót & Tàng Kinh Các
+
+- **Xác suất tử vong (`deathProb`):**
+  - Lấy xác suất nền theo tuổi (`LT().q[age]`: thấp ở tuổi trẻ, tăng dần từ 55+, giới hạn tối đa 120–122 tuổi).
+  - Nhân với chênh lệch sức khỏe: `max(0.5, exp((expectedHealth - health) * 0.025))` và rủi ro thời cuộc (`Chiến tranh`, `Dịch bệnh`, `Mất mùa`).
+- **Màn hình qua đời (`TombstoneView`):**
+  - Hiển thị nguyên nhân mất, văn bia, toàn bộ **Bản đồ cuộc đời (`LifeGrid`)**, các cột mốc lớn và lưu vào **Tàng Kinh Các** (`Pure Cosmetic`, Zero Meta-Buff).

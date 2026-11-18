@@ -1,0 +1,240 @@
+[
+  {
+    "id": "evt_elder_grandkids_garden",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Quây quần bên cháu nhỏ dưới hiên",
+    "conditions": { "min_age": 60 },
+    "weight": { "base": 28, "modifiers": [] },
+    "description": "Buổi chiều nắng ấm, lũ trẻ trong nhà ríu rít chạy quanh gốc cau ngoài sân nghe bạn kể chuyện ngày xưa.",
+    "choices": [
+      {
+        "label": "Kể chuyện cho cháu nghe",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Tiếng cười giòn tan của con trẻ khiến tuổi xế chiều của bạn ấm áp lạ thường.",
+            "effects": { "happiness": 4, "relationships": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_memory_fade",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Quên trước quên sau",
+    "conditions": { "min_age": 65 },
+    "weight": { "base": 24, "modifiers": [] },
+    "description": "Gần đây bạn đôi khi quên mất vừa cất chìa khóa rương ở đâu hoặc nhầm tên người quen cũ.",
+    "choices": [
+      {
+        "label": "Tập ghi chép, đọc sách giữ trí nhớ",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn năng chép lại chuyện cũ và đọc kinh sử mỗi sáng để đầu óc luôn minh mẫn.",
+            "effects": { "education": 1, "happiness": -1 }
+          }
+        ]
+      },
+      {
+        "label": "Kệ thuận theo tuổi tác",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn mỉm cười cho qua, chỉ thấy hơi chạnh lòng vì dấu vết thời gian.",
+            "effects": { "happiness": -2, "health": -1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_wedding_anniversary",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 720,
+    "title": "Kỷ niệm ngày thành thân năm xưa",
+    "conditions": { "min_age": 55, "has_living_spouse": true },
+    "weight": { "base": 26, "modifiers": [] },
+    "description": "Lại một mùa trăng nữa trôi qua kể từ ngày bạn và người bạn đời kết tóc se duyên.",
+    "choices": [
+      {
+        "label": "Làm mâm cơm nhỏ ôn chuyện cũ",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Hai mái đầu bạc ngồi bên ấm trà nóng, nhắc lại bao sương gió đã cùng đi qua.",
+            "effects": {
+              "happiness": 4,
+              "relationships": 4,
+              "npc_affinity": [{ "relation": "spouse", "delta": 8 }]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_child_gift",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 420,
+    "title": "Con cái gửi lễ vật phụng dưỡng",
+    "conditions": { "min_age": 58, "min_living_children": 1 },
+    "weight": { "base": 26, "modifiers": [] },
+    "description": "Người con làm ăn xa nhờ người mang về một gói trà ngon, tấm lụa ấm và ít tiền biếu cha mẹ tuổi già.",
+    "choices": [
+      {
+        "label": "Nhận tấm lòng hiếu thảo",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn rưng rưng xúc động trước tấm lòng hiếu thuận của con cái.",
+            "effects": {
+              "happiness": 4,
+              "relationships": 3,
+              "copper": 180,
+              "npc_affinity": [{ "relation": "child", "delta": 6 }]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_temple_pilgrimage",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1080,
+    "title": "Hành hương cửa Phật cầu bình an",
+    "conditions": { "min_age": 60 },
+    "weight": { "base": 18, "modifiers": [] },
+    "description": "Các cụ cao niên trong làng rủ nhau lên chùa cổ trên núi lễ Phật đầu năm, cầu quốc thái dân an và gia đạo bình yên.",
+    "choices": [
+      {
+        "label": "Sắm lễ lên đường hành hương",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Tiếng chuông chùa vang vọng giữa sương mai khiến lòng bạn nhẹ bẫng, bao muộn phiền tan biến.",
+            "effects": { "copper": -120, "happiness": 7, "relationships": 4, "health": 2 }
+          }
+        ]
+      },
+      {
+        "label": "Thành tâm thắp hương tại gia",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn ở nhà thắp nén hương trước bàn thờ tổ tiên, giữ lòng thanh tịnh.",
+            "effects": { "happiness": 2, "health": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_village_scholarship",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1800,
+    "oncePerLife": true,
+    "title": "Lập quỹ đèn sách giúp sĩ tử nghèo",
+    "conditions": { "min_age": 60, "min_wealth": 800 },
+    "weight": { "base": 18, "modifiers": [] },
+    "description": "Nhìn lũ trẻ hiếu học trong hương thôn thiếu giấy bút, bạn nghĩ tới việc trích một phần tiền riêng lập quỹ khuyến học.",
+    "choices": [
+      {
+        "label": "Góp 500 đồng lập quỹ khuyến học",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Cả làng cảm kích tấm lòng vì hậu thế của bạn, tên tuổi được khắc ghi nơi đình làng.",
+            "effects": { "copper": -500, "fame": 8, "happiness": 6, "relationships": 5 }
+          }
+        ]
+      },
+      {
+        "label": "Giữ tiền phòng thân tuổi già",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn cân nhắc tuổi cao sức yếu cần giữ tiền thuốc thang nên đành khất lại.",
+            "effects": { "happiness": -1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_pass_craft",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "oncePerLife": true,
+    "title": "Truyền lại sở học cho hậu thế",
+    "conditions": { "min_age": 58 },
+    "weight": { "base": 18, "modifiers": [] },
+    "description": "Một đời tích lũy kinh nghiệm, bạn muốn tìm người tin cậy để truyền lại hết bí quyết nghề nghiệp và đạo làm người.",
+    "choices": [
+      {
+        "label": "Tận tâm truyền thụ hết sở học",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Nhìn lớp trẻ tiếp bước con đường mình từng đi, bạn mỉm cười mãn nguyện.",
+            "effects": { "happiness": 5, "relationships": 5, "fame": 4 }
+          }
+        ]
+      },
+      {
+        "label": "Viết thành tập gia huấn để lại",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn tỉ mỉ chép lại lời dặn dò tâm huyết vào cuốn gia phả của dòng họ.",
+            "effects": { "education": 2, "happiness": 3 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_elder_atone_past",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1800,
+    "oncePerLife": true,
+    "title": "Hàn gắn hiềm khích năm xưa",
+    "conditions": { "min_age": 62 },
+    "weight": { "base": 16, "modifiers": [] },
+    "description": "Nhớ lại một người thân quen cũ từng xảy ra bất hòa từ thuở trung niên, lòng bạn bỗng muốn buông bỏ mọi khúc mắc.",
+    "choices": [
+      {
+        "label": "Chủ động sang thăm, bỏ qua chuyện cũ",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Gặp lại nhau khi tóc đã bạc phơ, hai người cười xòa mọi chuyện năm xưa.",
+            "effects": { "relationships": 7, "happiness": 5 }
+          }
+        ]
+      },
+      {
+        "label": "Giữ im lặng cho qua",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn thở dài nhìn ra sân, tự nhủ chuyện cũ rồi cũng theo thời gian trôi đi.",
+            "effects": { "happiness": -2 }
+          }
+        ]
+      }
+    ]
+  }
+]

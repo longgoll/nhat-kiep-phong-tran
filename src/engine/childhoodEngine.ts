@@ -13,7 +13,7 @@ import type {
   GameEventDef,
 } from '../types/dsl';
 import { computeWeight, evaluateConditions } from './conditionEvaluator';
-import { appendLog, applyEffects } from './effectApplier';
+import { appendLog, applyAnnualStatMeanReversion, applyEffects } from './effectApplier';
 import { ORIGIN_CORE_CONFIG } from './originConfigs';
 import { mulberry32Next, pickWeightedIndex } from './prng';
 
@@ -240,144 +240,6 @@ export function getAvailableChildhoodActivities(
   return activities.filter(
     (act) => evaluateConditions(state, act.conditions) && familyFunds >= act.costCopper,
   );
-}
-
-/**
- * Advances 1 year (360 days) during Infancy (0-5) or Childhood (6-12).
- */
-export function advanceChildhoodYear(
-  inputState: ActiveLifeState,
-  eventsPool: GameEventDef[],
-  chosenActivity?: ChildhoodActivityDef,
-): StepYearResult {
-  if (!inputState.isAlive) {
-    return { state: inputState, pendingEvent: null };
-  }
-
-  let state: ActiveLifeState = {
-    ...inputState,
-    profile: {
-      ...inputState.profile,
-      totalDays: inputState.profile.totalDays + DAYS_PER_YEAR,
-    },
-    world: {
-      ...inputState.world,
-      yearInEra: inputState.world.yearInEra + 1,
-      season: getSeasonFromDays(inputState.profile.totalDays + DAYS_PER_YEAR),
-    },
-    schedule: {
-      ...inputState.schedule,
-      childhoodFocus: chosenActivity ? chosenActivity.id : inputState.schedule.childhoodFocus,
-    },
-  };
-
-  const newAge = getAgeYears(state.profile.totalDays);
-
-  // Apply chosen childhood activity (ages 6-12)
-  if (chosenActivity) {
-    if (chosenActivity.costCopper > 0) {
-      if (state.family) {
-        state = applyEffects(state, { family_copper: -chosenActivity.costCopper });
-      } else {
-        state = applyEffects(state, { copper: -chosenActivity.costCopper });
-      }
-    }
-    state = applyEffects(state, chosenActivity.effects);
-    state = {
-      ...state,
-      logs: appendLog(
-        state.logs,
-        state.profile.totalDays,
-        'childhood',
-        `Tuổi ${newAge}: Bạn chọn "${chosenActivity.name}".`,
-      ),
-    };
-  } else {
-    state = {
-      ...state,
-      logs: appendLog(
-        state.logs,
-        state.profile.totalDays,
-        'childhood',
-        `Tuổi ${newAge}: Bạn lớn lên từng ngày trong vòng tay gia đình.`,
-      ),
-    };
-  }
-
-  // Age 13 transition: Teenager independence milestone & starting capital split
-  if (newAge === 13) {
-    state = applyTeenTransition(state);
-    state = {
-      ...state,
-      yearlyHappiness: {
-        ...(state.yearlyHappiness ?? {}),
-        [newAge]: Math.round(state.stats.happiness),
-      },
-    };
-    return { state, pendingEvent: null };
-  }
-
-  const stage = newAge <= 5 ? 'infancy' : 'childhood';
-
-  // Check data-driven milestone events (e.g. Lễ Thôi Nôi at age 1, etc.)
-  const milestoneEvent = findEligibleMilestoneEvent(state, eventsPool, stage);
-  if (milestoneEvent) {
-    state = {
-      ...state,
-      eventCooldowns: {
-        ...state.eventCooldowns,
-        [milestoneEvent.id]: state.profile.totalDays,
-      },
-    };
-    return { state, pendingEvent: milestoneEvent };
-  }
-
-  // Roll eligible events for current age (excluding deterministic milestones)
-  const eligible = eventsPool.filter((evt) => {
-    if (evt.isMilestone) return false;
-    if (evt.stage !== stage && evt.stage !== 'any') return false;
-    if (evt.oncePerLife && state.eventCooldowns[evt.id] !== undefined) return false;
-    const lastDay = state.eventCooldowns[evt.id] ?? -99999;
-    if (state.profile.totalDays - lastDay < evt.cooldownDays) return false;
-    return evaluateConditions(state, evt.conditions);
-  });
-
-  if (eligible.length > 0) {
-    const weights = eligible.map((e) => computeWeight(state, e.weight));
-    const totalWeight = weights.reduce((s, w) => s + w, 0);
-    if (totalWeight > 0) {
-      const pick = pickWeightedIndex(state.prngState, weights);
-      state = { ...state, prngState: pick.nextState };
-      const pickedEvent = eligible[pick.index];
-
-      state = {
-        ...state,
-        eventCooldowns: {
-          ...state.eventCooldowns,
-          [pickedEvent.id]: state.profile.totalDays,
-        },
-      };
-
-      if (pickedEvent.severity === 'major') {
-        return { state, pendingEvent: pickedEvent };
-      }
-
-      // Minor event: auto-resolve choice 0
-      const resolved = resolveEventChoice(state, pickedEvent, 0);
-      state = resolved.state;
-    }
-  }
-
-  return {
-    state: {
-      ...state,
-      yearlyHappiness: {
-        ...(state.yearlyHappiness ?? {}),
-        [newAge]: Math.round(state.stats.happiness),
-      },
-    },
-    pendingEvent: null,
-  };
 }
 
 export function resolveEventChoice(
@@ -665,6 +527,7 @@ export function advanceChildhoodMonth(
   }
 
   if (isBirthday) {
+    state = applyAnnualStatMeanReversion(state, newAge);
     state = {
       ...state,
       yearlyHappiness: {

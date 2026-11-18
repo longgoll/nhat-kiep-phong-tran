@@ -18,12 +18,12 @@ import {
   getAgeYears,
   type FamilyLivingTier,
   type GiftEtiquetteTier,
+  type InvestmentChannel,
   type LifestyleTier,
 } from '../types/activeLife';
 import { formatCopper } from '../engine/economy';
 import {
   getDailyFixedExpenseSummary,
-  getDayInSeason,
   getSeasonLabel,
   getWorldStateLabel,
 } from '../engine/daySimulator';
@@ -35,14 +35,16 @@ import {
 } from '../engine/lifeInitializer';
 import {
   AUTO_ACTION_CANDIDATES,
+  canAffordInstantAction,
   canHaveChild,
   canMarrySpouse,
-  getEffectiveInstantActionCost,
+  getCreditLimitCopper,
   getInstantActionCooldownRemaining,
   getLifeFocusOptions,
   GIFT_ETIQUETTE_OPTIONS,
   INSTANT_ADULT_ACTIONS,
   rankInstantActions,
+  type InstantAdultActionDef,
 } from '../engine/adultLifeActions';
 import { useActiveLifeStore } from '../stores/useActiveLifeStore';
 import { getPropertySeasonalIncome, PROPERTY_CATALOG } from '../engine/progressionModules';
@@ -50,6 +52,9 @@ import {
   getCohortPeerStatusLabel,
   getCurrentLivelihoodLabel,
   getEducationLabel,
+  getFeudalIncomeRankLabel,
+  getFeudalTransportLabel,
+  getPersonalPossessions,
   hasActiveLivelihood,
 } from '../engine/lifeStatus';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
@@ -134,6 +139,7 @@ export function AdultDashboard() {
   const setLifestyle = useActiveLifeStore((s) => s.setLifestyle);
   const setLifeFocus = useActiveLifeStore((s) => s.setLifeFocus);
   const setGiftEtiquette = useActiveLifeStore((s) => s.setGiftEtiquette);
+  const setInvestmentChannel = useActiveLifeStore((s) => s.setInvestmentChannel);
   const toggleAutoAction = useActiveLifeStore((s) => s.toggleAutoAction);
   const marrySpouseAction = useActiveLifeStore((s) => s.marrySpouseAction);
   const haveChildAction = useActiveLifeStore((s) => s.haveChildAction);
@@ -142,6 +148,10 @@ export function AdultDashboard() {
   const setAutoPauseConfig = useActiveLifeStore((s) => s.setAutoPauseConfig);
   const clearPauseReason = useActiveLifeStore((s) => s.clearPauseReason);
   const takeEmergencyLoan = useActiveLifeStore((s) => s.takeEmergencyLoan);
+  const buyRice = useActiveLifeStore((s) => s.buyRice);
+  const sellRice = useActiveLifeStore((s) => s.sellRice);
+  const buyGold = useActiveLifeStore((s) => s.buyGold);
+  const sellGold = useActiveLifeStore((s) => s.sellGold);
   const exportSaveJson = useActiveLifeStore((s) => s.exportSaveJson);
   const resetLife = useActiveLifeStore((s) => s.resetLife);
   const activeTheme = useLegacyArchiveStore((s) => s.activeTheme);
@@ -152,7 +162,7 @@ export function AdultDashboard() {
   const [showArchive, setShowArchive] = useState(false);
   const [showActionModal, setShowActionModal] = useState(false);
   const [mobileTab, setMobileTab] = useState<'profile' | 'planner' | 'logs'>('planner');
-  const [autoPlaySpeed, setAutoPlaySpeed] = useState<0 | 1 | 2 | 4 | 8>(0);
+  const [autoPlaySpeed, setAutoPlaySpeed] = useState<0 | 1 | 2 | 4 | 8 | 12 | 16>(0);
   const [subMonthProgress, setSubMonthProgress] = useState<number>(0);
   const lastTickTimeRef = useRef<number>(0);
   const [showLifestyleDetails, setShowLifestyleDetails] = useState(false);
@@ -182,11 +192,13 @@ export function AdultDashboard() {
     }
     if (isSimulating) return;
 
-    const tickConfig: Record<1 | 2 | 4 | 8, { days: number; ms: number }> = {
-      1: { days: 30, ms: 900 },   // 1x: 1 tháng / nhịp
-      2: { days: 30, ms: 450 },   // 2x: 1 tháng / nhịp nhanh
-      4: { days: 30, ms: 225 },   // 4x: 1 tháng / nhịp rất nhanh
-      8: { days: 90, ms: 260 },   // 8x: nhảy từng mùa (3 tháng) liên tục
+    const tickConfig: Record<1 | 2 | 4 | 8 | 12 | 16, { days: number; ms: number }> = {
+      1: { days: 30, ms: 4333 },  // 1x: 1 năm ≈ 52 giây
+      2: { days: 30, ms: 2167 },  // 2x: 1 năm ≈ 26 giây
+      4: { days: 30, ms: 1083 },  // 4x: 1 năm ≈ 13 giây
+      8: { days: 30, ms: 542 },   // 8x: 1 năm ≈ 6.5 giây
+      12: { days: 30, ms: 361 },  // 12x: 1 năm ≈ 4.3 giây
+      16: { days: 30, ms: 271 },  // 16x: 1 năm ≈ 3 giây
     };
     const cfg = tickConfig[autoPlaySpeed];
     lastTickTimeRef.current = performance.now();
@@ -211,10 +223,11 @@ export function AdultDashboard() {
   if (!life) return null;
 
   const age = getAgeYears(life.profile.totalDays);
-  const dayInSeason = getDayInSeason(life.profile.totalDays);
   const originMeta = ORIGIN_METADATA[life.profile.originClass];
   const isBroke = life.assets.rice <= 0 && life.assets.wealthCopper < life.world.ricePriceInCopper;
   const isInDebt = life.flags.includes('dang_no_dia_chu');
+  const isInPrison = life.livelihoodStatus === 'prison' || life.flags.includes('dang_o_tu');
+  const creditLimitCopper = getCreditLimitCopper(life);
   const netWorthCopper =
     life.assets.wealthCopper +
     (life.assets.goldReserveCopper ?? 0) +
@@ -239,6 +252,9 @@ export function AdultDashboard() {
 
   const currentJobLabel = getCurrentLivelihoodLabel(life);
   const educationLabel = getEducationLabel(life);
+  const incomeRankLabel = getFeudalIncomeRankLabel(annualIncomeCopper);
+  const personalPossessions = getPersonalPossessions(life);
+  const transportLabel = getFeudalTransportLabel(life);
   const hasJob = hasActiveLivelihood(life);
   const tierDots = life.family ? TIER_DOTS[life.family.familyLivingTier] ?? 1 : 1;
   const focusOptions = getLifeFocusOptions(life);
@@ -276,40 +292,15 @@ export function AdultDashboard() {
           subMonthProgress={autoPlaySpeed > 0 ? subMonthProgress : 0}
           dynastyName={life.world.dynastyName}
           yearInEra={life.world.yearInEra}
-          seasonLabel={`${getSeasonLabel(life.world.season)} (Ngày ${dayInSeason}/90)`}
+          seasonLabel={getSeasonLabel(life.world.season)}
           seed={life.seed}
           autoPlaySpeed={autoPlaySpeed}
-          speedOptions={[1, 2, 4, 8]}
+          speedOptions={[1, 2, 4, 8, 12, 16]}
           onSetSpeed={(spd) => {
             if (spd > 0) clearPauseReason();
-            setAutoPlaySpeed(spd as 0 | 1 | 2 | 4 | 8);
+            setAutoPlaySpeed(spd as 0 | 1 | 2 | 4 | 8 | 12 | 16);
           }}
-          primaryStep={{
-            label: '+1 Tháng',
-            disabled: isSimulating,
-            onClick: () => {
-              setAutoPlaySpeed(0);
-              advanceAdultDays(30);
-            },
-          }}
-          extraSteps={[
-            {
-              label: '+4 Tháng',
-              disabled: isSimulating,
-              onClick: () => {
-                setAutoPlaySpeed(0);
-                advanceAdultDays(120);
-              },
-            },
-            {
-              label: '+1 Năm',
-              disabled: isSimulating,
-              onClick: () => {
-                setAutoPlaySpeed(0);
-                advanceAdultDays(360);
-              },
-            },
-          ]}
+          controlsDisabled={isSimulating || !life.isAlive}
           onReset={resetLife}
         />
 
@@ -493,7 +484,7 @@ export function AdultDashboard() {
                 <div>Võ nghệ: <span className="font-mono text-stone-200">{life.stats.martial.toFixed(1)}</span></div>
                 <div>Thương tài: <span className="font-mono text-stone-200">{life.stats.craftTrade.toFixed(1)}</span></div>
                 <div>Thanh danh: <span className="font-mono text-emerald-300">{life.stats.fame.toFixed(1)}</span></div>
-                <div>Uy thế: <span className="font-mono text-rose-300">{life.stats.infamy.toFixed(1)}</span></div>
+                <div>Tai tiếng: <span className="font-mono text-rose-300">{life.stats.infamy.toFixed(1)}</span></div>
               </div>
 
               <StatExplainer />
@@ -505,10 +496,14 @@ export function AdultDashboard() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <div className="text-[11px] text-stone-400">Tài sản ròng</div>
-                  <div className="text-lg sm:text-xl font-bold font-mono text-amber-100 leading-tight mt-0.5">
+                  <div
+                    className={`text-lg sm:text-xl font-bold font-mono leading-tight mt-0.5 ${
+                      netWorthCopper < 0 ? 'text-rose-400' : 'text-amber-100'
+                    }`}
+                  >
                     {formatCopper(netWorthCopper)}
                   </div>
-                  <div className="text-[11px] text-stone-500 mt-0.5">
+                  <div className={`text-[11px] mt-0.5 ${hasNegativeCash ? 'text-rose-400' : 'text-stone-500'}`}>
                     Tiền mặt: {formatCopper(life.assets.wealthCopper)}
                   </div>
                 </div>
@@ -527,13 +522,19 @@ export function AdultDashboard() {
                 </div>
               </div>
 
+              {/* Vị trí thu nhập */}
+              <div className="pt-2.5 border-t border-stone-800/80 text-xs">
+                <div className="text-[11px] text-stone-400">Vị trí thu nhập</div>
+                <div className="font-semibold text-stone-100 mt-0.5">{incomeRankLabel}</div>
+              </div>
+
               {/* Nợ */}
               {(isInDebt || isBroke || hasNegativeCash) && (
                 <div className="pt-2.5 border-t border-stone-800/80 space-y-1 text-xs">
-                  <div className="text-[11px] text-rose-400 font-semibold">Nợ &amp; Cảnh báo tài chính</div>
+                  <div className="text-[11px] text-stone-400">Nợ</div>
                   {hasNegativeCash && (
                     <div className="font-mono font-bold text-rose-400">
-                      Âm tiền mặt: {formatCopper(life.assets.wealthCopper)}
+                      {formatCopper(Math.abs(life.assets.wealthCopper))}
                     </div>
                   )}
                   {isInDebt ? (
@@ -630,6 +631,20 @@ export function AdultDashboard() {
                   ) : (
                     <div className="text-stone-500 mt-0.5">Chưa có điền sản hay nhà cho thuê</div>
                   )}
+                </div>
+                <div>
+                  <div className="text-[11px] text-stone-400">Những thứ bạn có</div>
+                  {personalPossessions.length > 0 ? (
+                    <div className="text-stone-200 font-medium mt-0.5">
+                      {personalPossessions.join(' · ')}
+                    </div>
+                  ) : (
+                    <div className="text-stone-500 mt-0.5">Chưa có tư trang đáng kể</div>
+                  )}
+                </div>
+                <div>
+                  <div className="text-[11px] text-stone-400">Phương tiện đi lại</div>
+                  <div className="text-stone-200 font-medium mt-0.5">{transportLabel}</div>
                 </div>
                 <div>
                   <div className="text-[11px] text-stone-400">Nơi ở &amp; Nếp sống</div>
@@ -869,6 +884,9 @@ export function AdultDashboard() {
                   <span className="text-xs font-mono text-amber-300">
                     Gạo: {life.assets.rice.toFixed(1)} đấu
                   </span>
+                  <span className="text-[11px] font-mono text-stone-400">
+                    Hạn mức vay: {formatCopper(creditLimitCopper)}
+                  </span>
                 </div>
                 {(() => {
                   const fixed = getDailyFixedExpenseSummary(life);
@@ -891,74 +909,21 @@ export function AdultDashboard() {
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-sky-300">
                     Nên làm lúc này
                   </h3>
-                  <span className="text-[10px] text-stone-400">Gợi ý theo hoàn cảnh</span>
+                  <span className="text-[10px] text-stone-400">
+                    {isInPrison ? 'Đang trong ngục (PRISON_SHOP)' : 'Gợi ý theo hoàn cảnh'}
+                  </span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {/* Tìm chỗ làm mới */}
-                  <button
-                    type="button"
-                    onClick={() => openCareerModal('jobs')}
-                    className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-emerald-700/50 hover:border-emerald-500 transition cursor-pointer space-y-1"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="text-xs font-semibold text-emerald-200 leading-snug">
-                        {hasJob ? 'Đổi chỗ làm mới' : 'Tìm chỗ làm mới'}
-                      </span>
-                      <span className="shrink-0 text-[11px] font-mono text-emerald-300">Miễn phí</span>
-                    </div>
-                    <div className="text-[11px] text-stone-400">
-                      Xem các công việc phù hợp với học thức, tay nghề và mối quen hiện tại
-                    </div>
-                  </button>
-
-                  {/* Tìm hiểu việc khởi nghiệp */}
-                  <button
-                    type="button"
-                    onClick={() => openCareerModal('ventures')}
-                    className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-sky-700/50 hover:border-sky-500 transition cursor-pointer space-y-1"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="text-xs font-semibold text-sky-200 leading-snug">
-                        Tìm hiểu việc khởi nghiệp
-                      </span>
-                      <span className="shrink-0 text-[11px] font-mono text-sky-300">Miễn phí</span>
-                    </div>
-                    <div className="text-[11px] text-stone-400">
-                      Cân nhắc mô hình kinh doanh riêng vừa túi tiền &amp; tay nghề
-                    </div>
-                  </button>
-
-                  {/* Quản lý công việc hiện tại */}
-                  {(life.activeCareer || life.activeVenture) && (
-                    <button
-                      type="button"
-                      onClick={() => openCareerModal('current')}
-                      className="sm:col-span-2 text-left p-2.5 rounded-lg bg-emerald-950/30 hover:bg-emerald-950/50 border border-emerald-700/60 transition cursor-pointer flex items-center justify-between gap-3"
-                    >
-                      <div>
-                        <div className="text-xs font-semibold text-emerald-200">
-                          Công việc hiện tại:{' '}
-                          {life.activeCareer
-                            ? CAREER_CATALOG.find((j) => j.id === life.activeCareer!.jobId)?.title
-                            : VENTURE_CATALOG.find((v) => v.id === life.activeVenture!.ventureId)?.title}
-                        </div>
-                        <div className="text-[11px] text-stone-400">
-                          Bấm để xin thăng tiến, làm thêm ngoài giờ, tu nghiệp hoặc nghỉ việc
-                        </div>
-                      </div>
-                      <span className="text-[11px] font-semibold text-emerald-300 shrink-0">Quản lý →</span>
-                    </button>
-                  )}
-
-                  {recommendedSpendActions.map((act) => {
+                {(() => {
+                  const renderActionCard = (act: InstantAdultActionDef) => {
                     const cd = getInstantActionCooldownRemaining(life, act.id, act.cooldownDays);
                     const ageBlocked = act.minAge !== undefined && age < act.minAge;
                     const maxAgeBlocked = act.maxAge !== undefined && age > act.maxAge;
                     const worldBlocked = act.blockedWorldStates?.includes(life.world.worldState) ?? false;
-                    const houseBlocked = act.requiresNotHousing !== undefined && life.assets.housing === act.requiresNotHousing;
-                    const effectiveCost = getEffectiveInstantActionCost(life, act);
-                    const cantAfford = life.assets.wealthCopper < effectiveCost;
-                    const disabled = cd > 0 || ageBlocked || maxAgeBlocked || worldBlocked || houseBlocked || cantAfford;
+                    const houseBlocked =
+                      act.requiresNotHousing !== undefined && life.assets.housing === act.requiresNotHousing;
+                    const { canPay, onCredit, effectiveCost } = canAffordInstantAction(life, act);
+                    const disabled =
+                      cd > 0 || ageBlocked || maxAgeBlocked || worldBlocked || houseBlocked || !canPay;
                     return (
                       <button
                         key={act.id}
@@ -970,10 +935,15 @@ export function AdultDashboard() {
                         <div className="flex items-start justify-between gap-2">
                           <span className="text-xs font-semibold text-stone-100 leading-snug">{act.title}</span>
                           <span className="shrink-0 text-[11px] font-mono text-amber-300">
-                            {effectiveCost}đ
+                            {effectiveCost === 0 ? 'Miễn phí' : `${effectiveCost}đ`}
                           </span>
                         </div>
                         <div className="text-[11px] text-stone-400">{act.subtitle}</div>
+                        {onCredit && !disabled && (
+                          <div className="text-[10px] text-amber-400 font-medium">
+                            Thiếu tiền mặt · Có thể vay để thực hiện
+                          </div>
+                        )}
                         {worldBlocked && (
                           <div className="text-[10px] text-rose-400 font-medium">Tạm khóa do thời cuộc loạn lạc</div>
                         )}
@@ -982,64 +952,98 @@ export function AdultDashboard() {
                         )}
                       </button>
                     );
-                  })}
-                </div>
-              </div>
+                  };
 
-              {/* Tier 3: Xem thêm (Collapsible by default - 1in8b pattern) */}
-              <div className="border border-stone-800 rounded-xl bg-stone-950/40">
-                <button
-                  type="button"
-                  onClick={() => setShowMoreSpendActions((v) => !v)}
-                  className="w-full flex items-center justify-between px-4 py-2.5 text-left cursor-pointer hover:bg-stone-900/60 transition rounded-xl"
-                >
-                  <span className="text-xs font-semibold text-stone-200">
-                    Xem thêm ({moreSpendActions.length + 2} mục · Gia thất · Khoa cử · Điền sản)
-                  </span>
-                  <span className="text-[11px] text-sky-400 font-medium">
-                    {showMoreSpendActions ? 'Thu gọn' : 'Mở rộng'}
-                  </span>
-                </button>
-
-                {showMoreSpendActions && (
-                  <div className="px-4 pb-4 pt-2 border-t border-stone-800 space-y-4">
-                    {moreSpendActions.length > 0 && (
+                  return (
+                    <>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {moreSpendActions.map((act) => {
-                          const cd = getInstantActionCooldownRemaining(life, act.id, act.cooldownDays);
-                          const ageBlocked = act.minAge !== undefined && age < act.minAge;
-                          const maxAgeBlocked = act.maxAge !== undefined && age > act.maxAge;
-                          const worldBlocked = act.blockedWorldStates?.includes(life.world.worldState) ?? false;
-                          const houseBlocked = act.requiresNotHousing !== undefined && life.assets.housing === act.requiresNotHousing;
-                          const effectiveCost = getEffectiveInstantActionCost(life, act);
-                          const cantAfford = life.assets.wealthCopper < effectiveCost;
-                          const disabled = cd > 0 || ageBlocked || maxAgeBlocked || worldBlocked || houseBlocked || cantAfford;
-                          return (
+                        {!isInPrison && (
+                          <>
+                            {/* Tìm chỗ làm mới */}
                             <button
-                              key={act.id}
                               type="button"
-                              disabled={disabled}
-                              onClick={() => performInstantAction(act.id)}
-                              className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-stone-800 hover:border-sky-600/60 disabled:opacity-45 disabled:cursor-not-allowed transition cursor-pointer space-y-1"
+                              onClick={() => openCareerModal('jobs')}
+                              className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-emerald-700/50 hover:border-emerald-500 transition cursor-pointer space-y-1"
                             >
                               <div className="flex items-start justify-between gap-2">
-                                <span className="text-xs font-semibold text-stone-100 leading-snug">{act.title}</span>
-                                <span className="shrink-0 text-[11px] font-mono text-amber-300">
-                                  {effectiveCost}đ
+                                <span className="text-xs font-semibold text-emerald-200 leading-snug">
+                                  {hasJob ? 'Đổi chỗ làm mới' : 'Tìm chỗ làm mới'}
                                 </span>
+                                <span className="shrink-0 text-[11px] font-mono text-emerald-300">Miễn phí</span>
                               </div>
-                              <div className="text-[11px] text-stone-400">{act.subtitle}</div>
-                              {worldBlocked && (
-                                <div className="text-[10px] text-rose-400 font-medium">Tạm khóa do thời cuộc loạn lạc</div>
-                              )}
-                              {cd > 0 && (
-                                <div className="text-[10px] text-sky-400 font-mono">Chờ {cd} ngày</div>
-                              )}
+                              <div className="text-[11px] text-stone-400">
+                                Xem các công việc phù hợp với học thức, tay nghề và mối quen hiện tại
+                              </div>
                             </button>
-                          );
-                        })}
+
+                            {/* Tìm hiểu việc khởi nghiệp */}
+                            <button
+                              type="button"
+                              onClick={() => openCareerModal('ventures')}
+                              className="text-left p-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800/70 border border-sky-700/50 hover:border-sky-500 transition cursor-pointer space-y-1"
+                            >
+                              <div className="flex items-start justify-between gap-2">
+                                <span className="text-xs font-semibold text-sky-200 leading-snug">
+                                  Tìm hiểu việc khởi nghiệp
+                                </span>
+                                <span className="shrink-0 text-[11px] font-mono text-sky-300">Miễn phí</span>
+                              </div>
+                              <div className="text-[11px] text-stone-400">
+                                Cân nhắc mô hình kinh doanh riêng vừa túi tiền &amp; tay nghề
+                              </div>
+                            </button>
+
+                            {/* Quản lý công việc hiện tại */}
+                            {(life.activeCareer || life.activeVenture) && (
+                              <button
+                                type="button"
+                                onClick={() => openCareerModal('current')}
+                                className="sm:col-span-2 text-left p-2.5 rounded-lg bg-emerald-950/30 hover:bg-emerald-950/50 border border-emerald-700/60 transition cursor-pointer flex items-center justify-between gap-3"
+                              >
+                                <div>
+                                  <div className="text-xs font-semibold text-emerald-200">
+                                    Công việc hiện tại:{' '}
+                                    {life.activeCareer
+                                      ? CAREER_CATALOG.find((j) => j.id === life.activeCareer!.jobId)?.title
+                                      : VENTURE_CATALOG.find((v) => v.id === life.activeVenture!.ventureId)?.title}
+                                  </div>
+                                  <div className="text-[11px] text-stone-400">
+                                    Bấm để xin thăng tiến, làm thêm ngoài giờ, tu nghiệp hoặc nghỉ việc
+                                  </div>
+                                </div>
+                                <span className="text-[11px] font-semibold text-emerald-300 shrink-0">Quản lý →</span>
+                              </button>
+                            )}
+                          </>
+                        )}
+
+                        {recommendedSpendActions.map(renderActionCard)}
                       </div>
-                    )}
+
+                      {!isInPrison && (
+                        <>
+                          {/* Tier 3: Xem thêm (Collapsible by default - 1in8b pattern) */}
+                          <div className="border border-stone-800 rounded-xl bg-stone-950/40 mt-4">
+                            <button
+                              type="button"
+                              onClick={() => setShowMoreSpendActions((v) => !v)}
+                              className="w-full flex items-center justify-between px-4 py-2.5 text-left cursor-pointer hover:bg-stone-900/60 transition rounded-xl"
+                            >
+                              <span className="text-xs font-semibold text-stone-200">
+                                Xem thêm ({moreSpendActions.length + 4} mục · Gạo &amp; Vàng · Gia thất · Khoa cử · Điền sản)
+                              </span>
+                              <span className="text-[11px] text-sky-400 font-medium">
+                                {showMoreSpendActions ? 'Thu gọn' : 'Mở rộng'}
+                              </span>
+                            </button>
+
+                            {showMoreSpendActions && (
+                              <div className="px-4 pb-4 pt-2 border-t border-stone-800 space-y-4">
+                                {moreSpendActions.length > 0 && (
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    {moreSpendActions.map(renderActionCard)}
+                                  </div>
+                                )}
 
                     {/* Gia thất & Con cái */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -1079,6 +1083,50 @@ export function AdultDashboard() {
                           </>
                         );
                       })()}
+                    </div>
+
+                    {/* Giao dịch Gạo & Vàng tích trữ */}
+                    <div className="p-3 rounded-lg bg-stone-950/60 border border-stone-800 space-y-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span className="font-semibold text-amber-200">Chợ Gạo &amp; Đổi Vàng tích trữ</span>
+                        <span className="font-mono text-[11px] text-stone-400">
+                          Giá lúa: {life.world.ricePriceInCopper}đ/đấu · Vàng giữ: {formatCopper(life.assets.goldReserveCopper ?? 0)}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-2 text-[11px]">
+                        <button
+                          type="button"
+                          disabled={life.assets.wealthCopper < life.world.ricePriceInCopper * 10}
+                          onClick={() => buyRice(10)}
+                          className="px-2.5 py-1 rounded bg-stone-900 hover:bg-stone-800 disabled:opacity-40 border border-stone-700 text-emerald-300 cursor-pointer"
+                        >
+                          Mua 10 đấu gạo (-{life.world.ricePriceInCopper * 10}đ)
+                        </button>
+                        <button
+                          type="button"
+                          disabled={life.assets.rice < 10}
+                          onClick={() => sellRice(10)}
+                          className="px-2.5 py-1 rounded bg-stone-900 hover:bg-stone-800 disabled:opacity-40 border border-stone-700 text-amber-300 cursor-pointer"
+                        >
+                          Bán 10 đấu gạo
+                        </button>
+                        <button
+                          type="button"
+                          disabled={life.assets.wealthCopper < 1000}
+                          onClick={() => buyGold(1000)}
+                          className="px-2.5 py-1 rounded bg-stone-900 hover:bg-stone-800 disabled:opacity-40 border border-stone-700 text-sky-300 cursor-pointer"
+                        >
+                          Tích 1 Bạc vàng
+                        </button>
+                        <button
+                          type="button"
+                          disabled={(life.assets.goldReserveCopper ?? 0) < 1000}
+                          onClick={() => sellGold(1000)}
+                          className="px-2.5 py-1 rounded bg-stone-900 hover:bg-stone-800 disabled:opacity-40 border border-stone-700 text-amber-200 cursor-pointer"
+                        >
+                          Đổi 1 Bạc ra tiền
+                        </button>
+                      </div>
                     </div>
 
                     {/* Sự nghiệp · Sản nghiệp */}
@@ -1146,6 +1194,23 @@ export function AdultDashboard() {
                           </option>
                         ))}
                       </select>
+
+                      <div>
+                        <label className="block text-[11px] font-medium text-stone-400 mb-1">
+                          Đầu tư tiền nhàn rỗi (Sinh lời hằng năm)
+                        </label>
+                        <select
+                          value={life.investmentChannel ?? 'cash'}
+                          onChange={(e) => setInvestmentChannel(e.target.value as InvestmentChannel)}
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-stone-950 border border-stone-700 text-xs text-stone-100"
+                        >
+                          <option value="cash">Giữ tiền mặt (0%/năm · Thanh khoản tuyệt đối)</option>
+                          <option value="bank">Gửi tiền trang (~1.5%/năm · An toàn)</option>
+                          <option value="guild">Hùn vốn thương hội (~3.5%/năm · Ổn định)</option>
+                          <option value="land_fund">Quỹ điền sản (~4.0%/năm · Dài hạn)</option>
+                          <option value="caravan">Buôn chuyến đường dài (-2% đến +9%/năm · Rủi ro)</option>
+                        </select>
+                      </div>
 
                       <div>
                         <label className="block text-[11px] font-medium text-stone-400 mb-1">
@@ -1231,6 +1296,12 @@ export function AdultDashboard() {
                     </div>
                   </div>
                 )}
+              </div>
+                        </>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
 

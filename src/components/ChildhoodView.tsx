@@ -6,7 +6,6 @@ import {
   BookOpen,
   Coins,
   Wheat,
-  RotateCcw,
   Swords,
   Hammer,
   Award,
@@ -75,16 +74,13 @@ export function ChildhoodView() {
   const life = useActiveLifeStore((s) => s.life);
   const pendingEvent = useActiveLifeStore((s) => s.pendingEvent);
   const lastEventResult = useActiveLifeStore((s) => s.lastEventResult);
-  const stepChildhoodMonth = useActiveLifeStore((s) => s.stepChildhoodMonth);
   const setChildhoodFocus = useActiveLifeStore((s) => s.setChildhoodFocus);
-  const clearLastEventResult = useActiveLifeStore((s) => s.clearLastEventResult);
   const resetLife = useActiveLifeStore((s) => s.resetLife);
-  const recordCompletedLife = useLegacyArchiveStore((s) => s.recordCompletedLife);
   const activeTheme = useLegacyArchiveStore((s) => s.activeTheme);
   const colorMode = useLegacyArchiveStore((s) => s.colorMode ?? 'dark');
   const themeClass = getThemeWrapperClass(activeTheme, colorMode);
 
-  const [autoPlaySpeed, setAutoPlaySpeed] = useState<0 | 1 | 2 | 4 | 8>(0);
+  const [autoPlaySpeed, setAutoPlaySpeed] = useState<0 | 1 | 2 | 4 | 8 | 12 | 16>(0);
   const [subMonthProgress, setSubMonthProgress] = useState<number>(0);
   const lastTickTimeRef = useRef<number>(0);
 
@@ -103,8 +99,8 @@ export function ChildhoodView() {
       return;
     }
 
-    // Unified 1in8b speed: 1x = 900ms/month (~10.8s/year), scaling down proportionally
-    const monthMs = 900 / autoPlaySpeed;
+    // Unified 1in8b speed: 1x = 52s/year (~4333ms/month), 16x ≈ 3s/year
+    const monthMs = (52000 / 12) / autoPlaySpeed;
     lastTickTimeRef.current = performance.now();
     let rafId = 0;
 
@@ -135,19 +131,6 @@ export function ChildhoodView() {
   const isTeenReady = age >= 13;
   const activeFocusId = life.schedule.childhoodFocus || 'giup_nha';
 
-  const handleAdvance = () => {
-    setAutoPlaySpeed(0);
-    clearLastEventResult();
-    stepChildhoodMonth();
-  };
-
-  const handleRestart = () => {
-    if (!life.isAlive) {
-      recordCompletedLife(life, 'Yểu mệnh thuở thiếu thời');
-    }
-    resetLife();
-  };
-
   const tierDots = life.family ? TIER_DOTS[life.family.familyLivingTier] ?? 1 : 1;
 
   return (
@@ -158,23 +141,14 @@ export function ChildhoodView() {
           ageYears={age}
           dayOfYear={dayOfYear}
           subMonthProgress={autoPlaySpeed > 0 ? subMonthProgress : 0}
-          isChildhood
           dynastyName={life.world.dynastyName}
           yearInEra={life.world.yearInEra}
           seasonLabel={getSeasonLabel(life.world.season)}
           seed={life.seed}
           autoPlaySpeed={autoPlaySpeed}
-          speedOptions={[1, 2, 4, 8]}
-          onSetSpeed={(spd) => setAutoPlaySpeed(spd as 0 | 1 | 2 | 4 | 8)}
-          primaryStep={{
-            label: !life.isAlive
-              ? 'Đã qua đời'
-              : isTeenReady
-                ? 'Đã thành niên'
-                : 'Tiếp (+1 tháng)',
-            onClick: handleAdvance,
-            disabled: !life.isAlive || isTeenReady,
-          }}
+          speedOptions={[1, 2, 4, 8, 12, 16]}
+          onSetSpeed={(spd) => setAutoPlaySpeed(spd as 0 | 1 | 2 | 4 | 8 | 12 | 16)}
+          controlsDisabled={!life.isAlive || isTeenReady}
           onReset={resetLife}
         />
 
@@ -316,9 +290,13 @@ export function ChildhoodView() {
                   <Hammer className="w-3.5 h-3.5 text-stone-400" />
                   <span>Thương tài: {life.stats.craftTrade}</span>
                 </div>
-                <div className="flex items-center gap-1.5 col-span-2">
+                <div className="flex items-center gap-1.5">
                   <Award className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Thanh danh: {life.stats.fame}</span>
+                  <span>Thanh danh: {life.stats.fame.toFixed(1)}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-rose-400 font-semibold">Tai tiếng:</span>
+                  <span className="font-mono text-rose-300">{life.stats.infamy.toFixed(1)}</span>
                 </div>
               </div>
 
@@ -372,21 +350,7 @@ export function ChildhoodView() {
 
             {/* Trọng Tâm Năm Nay (1in8b style, synced with AdultDashboard) */}
             <div className="bg-stone-900/75 border border-stone-800 rounded-xl p-3.5 space-y-2">
-              {!life.isAlive ? (
-                <div className="space-y-3 text-center py-2">
-                  <p className="text-rose-400 font-semibold text-sm">
-                    Kiếp này đã khép lại sớm: {life.deathReason}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleRestart}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-xs cursor-pointer"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    Lưu sử ký &amp; Đầu thai kiếp khác
-                  </button>
-                </div>
-              ) : isTeenReady ? (
+              {isTeenReady ? (
                 <div className="text-center py-2">
                   <p className="text-amber-300 font-semibold text-sm">Bạn đã bước sang tuổi 13 tự lập!</p>
                 </div>

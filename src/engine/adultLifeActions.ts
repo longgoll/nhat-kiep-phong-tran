@@ -59,6 +59,27 @@ export const LIFE_FOCUS_OPTIONS: LifeFocusOption[] = [
   },
 ];
 
+const EXTRA_FOCUS_OPTIONS: Record<'nghi_ngoi' | 'hanh_thien' | 'lam_them', LifeFocusOption> = {
+  nghi_ngoi: {
+    id: 'nghi_ngoi',
+    label: 'Nghỉ ngơi · Tĩnh dưỡng',
+    effectHint: 'Sức khỏe↑ · Hạnh phúc↑ · Thể lực↑',
+    description: 'Tạm gác lo toan, nghỉ ngơi tĩnh dưỡng để hồi phục tinh thần và khí huyết.',
+  },
+  hanh_thien: {
+    id: 'hanh_thien',
+    label: 'Lễ Phật · Hành thiện',
+    effectHint: 'Quan hệ↑ · Hạnh phúc↑ · Tích phúc',
+    description: 'Đi chùa lễ Phật, làm việc thiện và giữ tâm thanh tịnh giữa dòng đời.',
+  },
+  lam_them: {
+    id: 'lam_them',
+    label: 'Chép sách · Dạy kèm',
+    effectHint: 'Kiếm tiền lẻ↑ · Hạnh phúc↓ nhẹ',
+    description: 'Nhận chép thuê kinh sử hoặc dạy trẻ trong xóm để trang trải chi phí học hành.',
+  },
+};
+
 export interface InstantAdultActionDef {
   id: string;
   title: string;
@@ -72,13 +93,17 @@ export interface InstantAdultActionDef {
   minCraftTrade?: number;
   minFame?: number;
   minWealthCopper?: number;
+  maxEducation?: number;
   blockedWorldStates?: WorldState[];
   requiresWorldStates?: WorldState[];
   category?: 'medical' | 'social' | 'economic' | 'growth';
+  allowCredit?: boolean;
+  prisonAllowed?: boolean;
   requiresNotHousing?: HousingTier;
   requiresHousingIn?: HousingTier[];
   requiresLivingFamily?: boolean;
   requiresLivingParent?: boolean;
+  requiresLivingChild?: boolean;
   requiresFlag?: string;
   requiresOfficialOrNoble?: boolean;
   requiresOrigins?: OriginClass[];
@@ -89,6 +114,12 @@ export interface InstantAdultActionDef {
 }
 
 export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdultActionDef): boolean {
+  const isInPrison = state.livelihoodStatus === 'prison' || state.flags.includes('dang_o_tu');
+  if (isInPrison) {
+    if (!def.prisonAllowed) return false;
+  } else if (def.prisonAllowed) {
+    return false;
+  }
   if (def.requiresOrigins && !def.requiresOrigins.includes(state.profile.originClass)) {
     return false;
   }
@@ -115,6 +146,13 @@ export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdult
   }
   if (def.minEducation !== undefined && state.stats.education < def.minEducation) {
     return false;
+  }
+  if (def.maxEducation !== undefined && state.stats.education > def.maxEducation) {
+    return false;
+  }
+  if (def.requiresLivingChild) {
+    const hasChild = state.npcs.some((n) => n.relation === 'child' && n.isAlive);
+    if (!hasChild) return false;
   }
   if (def.minMartial !== undefined && state.stats.martial < def.minMartial) {
     return false;
@@ -758,12 +796,109 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     },
     logText: 'Bạn mở đại yến xa hoa trong phủ đệ thết đãi các bậc công khanh và danh sĩ Kinh kỳ, uy tín trên triều đình tăng vọt.',
   },
+  {
+    id: 'inst_night_class',
+    title: 'Theo lớp học đêm · Bổ túc kinh sử',
+    subtitle: 'Học thức +6 · Hạnh phúc +1 (Cho người chưa thông kinh sử, cho phép vay học phí)',
+    costCopper: 80,
+    cooldownDays: 360,
+    minAge: 16,
+    maxAge: 80,
+    maxEducation: 35,
+    category: 'growth',
+    allowCredit: true,
+    effects: {
+      education: 6,
+      happiness: 1,
+    },
+    logText: 'Ban ngày mưu sinh, tối về bạn chong đèn theo học lớp bổ túc của thầy đồ già để mở mang chữ nghĩa.',
+  },
+  {
+    id: 'inst_trade_course',
+    title: 'Học nghề · Rèn kỹ năng mưu sinh',
+    subtitle: 'Khéo tay +6 · Học thức +3 (Mở rộng cơ hội thăng tiến & buôn bán)',
+    costCopper: 150,
+    cooldownDays: 360,
+    minAge: 18,
+    maxAge: 55,
+    category: 'growth',
+    allowCredit: true,
+    effects: {
+      craft_trade: 6,
+      education: 3,
+    },
+    logText: 'Bạn bỏ tiền theo học thợ cả trong phường nghề, tay nghề và khả năng tính toán sổ sách tăng tiến rõ rệt.',
+  },
+  {
+    id: 'inst_open_academy',
+    title: 'Nghe giảng thư viện · Tuổi cao hiếu học',
+    subtitle: 'Học thức +5 · Hạnh phúc +4 (Dành cho người từ 50 tuổi trở lên)',
+    costCopper: 120,
+    cooldownDays: 360,
+    minAge: 50,
+    maxAge: 78,
+    category: 'growth',
+    effects: {
+      education: 5,
+      happiness: 4,
+    },
+    logText: 'Ở tuổi xế chiều, bạn vẫn đều đặn tới thư viện nghe các bậc túc nho giảng luận cổ kim, tinh thần thêm minh mẫn.',
+  },
+  {
+    id: 'inst_hire_child_tutor',
+    title: 'Mời thầy đồ dạy chữ cho con',
+    subtitle: 'Quan hệ +3 · Hạnh phúc +3 · Thân thiết con cái +6',
+    costCopper: 180,
+    cooldownDays: 360,
+    minAge: 24,
+    requiresLivingChild: true,
+    category: 'social',
+    allowCredit: true,
+    effects: {
+      relationships: 3,
+      happiness: 3,
+      npc_affinity: [{ relation: 'child', delta: 6 }],
+    },
+    logText: 'Bạn chắt chiu mời thầy đồ giỏi về kèm cặp chữ nghĩa cho con nhỏ, mong đời con khấm khá hơn.',
+  },
+  {
+    id: 'inst_prison_letter',
+    title: 'Nhờ cai ngục chuyển thư về gia đình',
+    subtitle: 'Quan hệ +3 · Hạnh phúc +3 (Trong ngục)',
+    costCopper: 40,
+    cooldownDays: 180,
+    prisonAllowed: true,
+    requiresLivingFamily: true,
+    category: 'social',
+    allowCredit: true,
+    effects: {
+      relationships: 3,
+      happiness: 3,
+    },
+    logText: 'Bạn nhờ người đưa lá thư nhắn nhủ bình an về cho gia đình nơi quê nhà.',
+  },
+  {
+    id: 'inst_prison_will',
+    title: 'Viết di chúc · Dặn dò hậu sự',
+    subtitle: 'Hạnh phúc +2 · An lòng nơi ngục tối',
+    costCopper: 0,
+    cooldownDays: 720,
+    minAge: 35,
+    prisonAllowed: true,
+    category: 'social',
+    effects: {
+      happiness: 2,
+      add_flags: ['da_lap_di_chuc'],
+    },
+    logText: 'Bạn cẩn thận viết lại đôi lời dặn dò hậu sự và phân chia gia sản nếu chẳng may bất trắc.',
+  },
 ];
 
 export function getEffectiveInstantActionCost(
   state: ActiveLifeState,
   def: InstantAdultActionDef,
 ): number {
+  if (def.costCopper <= 0) return 0;
   let mult = 1.0;
   const ws = state.world.worldState;
   if (ws === 'dich_benh') {
@@ -794,6 +929,32 @@ export function getInstantActionCooldownRemaining(
   return Math.max(0, cooldownDays - (state.profile.totalDays - lastDay));
 }
 
+export function getCreditLimitCopper(state: ActiveLifeState): number {
+  const housingCredit =
+    state.assets.housing === 'phu_de' ? 2000 : state.assets.housing === 'nha_gach' ? 600 : 100;
+  const propertyCredit = state.assets.properties.length * 800;
+  const rankCredit = state.officialRank * 500;
+  return Math.round(300 + housingCredit + propertyCredit + rankCredit);
+}
+
+/**
+ * 1in8b-style `creditOK`: checks whether an action can be paid in cash
+ * or bought on credit within the character's credit limit.
+ */
+export function canAffordInstantAction(
+  state: ActiveLifeState,
+  def: InstantAdultActionDef,
+): { canPay: boolean; onCredit: boolean; effectiveCost: number } {
+  const effectiveCost = getEffectiveInstantActionCost(state, def);
+  if (effectiveCost <= 0 || state.assets.wealthCopper >= effectiveCost) {
+    return { canPay: true, onCredit: false, effectiveCost };
+  }
+  const creditLimit = getCreditLimitCopper(state);
+  const canCredit =
+    Boolean(def.allowCredit) && state.assets.wealthCopper - effectiveCost >= -creditLimit;
+  return { canPay: canCredit, onCredit: canCredit, effectiveCost };
+}
+
 export function executeInstantAdultAction(
   inputState: ActiveLifeState,
   actionId: string,
@@ -817,13 +978,13 @@ export function executeInstantAdultAction(
     return { ok: false, state: inputState, message: 'Chưa có nhà riêng để sửa sang.' };
   }
 
-  const effectiveCost = getEffectiveInstantActionCost(inputState, def);
+  const { canPay, effectiveCost } = canAffordInstantAction(inputState, def);
   const remaining = getInstantActionCooldownRemaining(inputState, def.id, def.cooldownDays);
   if (remaining > 0) {
     return { ok: false, state: inputState, message: `Cần chờ thêm ${remaining} ngày nữa.` };
   }
-  if (inputState.assets.wealthCopper < effectiveCost) {
-    return { ok: false, state: inputState, message: 'Không đủ tiền đồng.' };
+  if (!canPay) {
+    return { ok: false, state: inputState, message: 'Không đủ tiền đồng hoặc vượt hạn mức vay.' };
   }
 
   const scaledEffects: EffectSpec = { ...def.effects };
@@ -928,6 +1089,27 @@ export function getDailyFocusModifiers(focusId: string): {
         copperMult: 1.0,
         studyMartialMult: 1.0,
         dailyEffects: { happiness: 0.1 },
+        dailyCopperCost: 0,
+      };
+    case 'nghi_ngoi':
+      return {
+        copperMult: 0.9,
+        studyMartialMult: 0.95,
+        dailyEffects: { health: 0.08, happiness: 0.08, stamina: 5 },
+        dailyCopperCost: 0,
+      };
+    case 'hanh_thien':
+      return {
+        copperMult: 0.95,
+        studyMartialMult: 1.0,
+        dailyEffects: { relationships: 0.08, happiness: 0.08 },
+        dailyCopperCost: 0,
+      };
+    case 'lam_them':
+      return {
+        copperMult: 1.0,
+        studyMartialMult: 0.95,
+        dailyEffects: { copper: 4, happiness: -0.02, relationships: 0.02 },
         dailyCopperCost: 0,
       };
     case 'can_bang':
@@ -1231,6 +1413,7 @@ export function haveChild(inputState: ActiveLifeState): ActiveLifeState {
   const childName = `${surname} ${cGender === 'male' ? 'Quang' : 'Ngọc'} ${pool[nPick.value]}`;
   const isFirst = inputState.npcs.filter((n) => n.relation === 'child').length === 0;
 
+  const parentAge = getAgeYears(inputState.profile.totalDays);
   const childNpc: NPC = {
     id: `npc_child_${inputState.profile.totalDays}`,
     name: childName,
@@ -1239,6 +1422,7 @@ export function haveChild(inputState: ActiveLifeState): ActiveLifeState {
     affinity: 75,
     isAlive: true,
     role: cGender === 'male' ? 'Con trai' : 'Con gái',
+    age: -parentAge,
   };
 
   let state = applyEffects(
@@ -1269,41 +1453,99 @@ export function haveChild(inputState: ActiveLifeState): ActiveLifeState {
  */
 export function getLifeFocusOptions(state: ActiveLifeState): LifeFocusOption[] {
   const age = getAgeYears(state.profile.totalDays);
+  const byId = (id: LifeFocusId): LifeFocusOption =>
+    LIFE_FOCUS_OPTIONS.find((o) => o.id === id) ??
+    EXTRA_FOCUS_OPTIONS[id as keyof typeof EXTRA_FOCUS_OPTIONS];
+
+  if (state.livelihoodStatus === 'prison' || state.flags.includes('dang_o_tu')) {
+    return [
+      byId('can_bang'),
+      { ...byId('suc_khoe'), label: 'Giữ gìn thân thể' },
+      { ...byId('nghi_ngoi'), label: 'Tĩnh tâm · Nghỉ ngơi' },
+      { ...byId('tu_than'), label: 'Ngẫm sự đời' },
+    ];
+  }
+
+  if (state.flags.includes('trong_quan_ngu')) {
+    return [
+      byId('can_bang'),
+      { ...byId('suc_khoe'), label: 'Thao luyện · Thể chất' },
+      { ...byId('gia_dinh'), label: 'Nhớ nhà · Thư từ gia đình' },
+      { ...byId('tu_than'), label: 'Rèn binh pháp · Võ nghệ' },
+    ];
+  }
+
+  if (state.isStudent || state.livelihoodStatus === 'student') {
+    return [
+      { ...byId('tu_than'), label: 'Đèn sách · Ôn thi' },
+      { ...byId('gia_dinh'), label: 'Đồng môn · Bằng hữu' },
+      byId('lam_them'),
+      byId('suc_khoe'),
+      byId('so_thich'),
+    ];
+  }
+
   const hasJob =
     state.officialRank > 0 ||
     Boolean(state.activeCareer) ||
-    Boolean(state.activeVenture) ||
-    state.flags.includes('trong_quan_ngu');
+    Boolean(state.activeVenture);
+
+  if (age >= 60 || state.livelihoodStatus === 'retired') {
+    const elderList: LifeFocusOption[] = [
+      ...(hasJob ? [byId('cong_danh')] : []),
+      { ...byId('gia_dinh'), label: 'Vui vầy con cháu' },
+      { ...byId('suc_khoe'), label: 'An dưỡng tuổi già' },
+      { ...byId('tu_than'), label: 'Đọc sách · Viết hồi ký' },
+      byId('hanh_thien'),
+      ...(!hasJob ? [byId('nghi_ngoi')] : []),
+      byId('so_thich'),
+    ];
+    return elderList;
+  }
 
   if (hasJob) {
     return LIFE_FOCUS_OPTIONS;
   }
 
-  if (age >= 60) {
-    return LIFE_FOCUS_OPTIONS.filter((opt) => opt.id !== 'cong_danh').map((opt) => {
-      if (opt.id === 'suc_khoe') {
-        return { ...opt, label: 'An dưỡng tuổi già' };
-      }
-      if (opt.id === 'gia_dinh') {
-        return { ...opt, label: 'Vui vầy con cháu' };
-      }
-      if (opt.id === 'tu_than') {
-        return { ...opt, label: 'Đọc sách · Viết hồi ký' };
-      }
-      return opt;
-    });
-  }
+  return [
+    byId('can_bang'),
+    byId('gia_dinh'),
+    byId('suc_khoe'),
+    {
+      ...byId('tu_than'),
+      label: 'Ôn luyện · Tìm cơ hội',
+      effectHint: 'Học thức & Võ nghệ↑ (+25%) · Chuẩn bị tiến thân',
+    },
+    byId('hanh_thien'),
+    byId('nghi_ngoi'),
+    byId('so_thich'),
+  ];
+}
 
-  return LIFE_FOCUS_OPTIONS.filter((opt) => opt.id !== 'cong_danh').map((opt) => {
-    if (opt.id === 'tu_than') {
-      return {
-        ...opt,
-        label: 'Ôn luyện · Tìm cơ hội',
-        effectHint: 'Học thức & Võ nghệ↑ (+25%) · Chuẩn bị tiến thân',
-      };
-    }
-    return opt;
-  });
+/**
+ * 1in8b-style `ensureFocus`: automatically transitions `schedule.lifeFocus`
+ * to a valid contextual option when the character changes life stage or circumstance.
+ */
+export function ensureValidLifeFocus(state: ActiveLifeState): ActiveLifeState {
+  const options = getLifeFocusOptions(state);
+  if (options.some((o) => o.id === state.schedule.lifeFocus)) {
+    return state;
+  }
+  const fallback = options.find((o) => o.id === 'can_bang') ?? options[0];
+  if (!fallback) return state;
+  return {
+    ...state,
+    schedule: {
+      ...state.schedule,
+      lifeFocus: fallback.id,
+    },
+    logs: appendLog(
+      state.logs,
+      state.profile.totalDays,
+      'survival',
+      `Chuyển trọng tâm năm sang «${fallback.label}» cho phù hợp hoàn cảnh hiện tại.`,
+    ),
+  };
 }
 
 /**
@@ -1313,31 +1555,37 @@ export function getLifeFocusOptions(state: ActiveLifeState): LifeFocusOption[] {
 export function rankInstantActions(
   state: ActiveLifeState,
   actions: InstantAdultActionDef[] = INSTANT_ADULT_ACTIONS,
-  maxRecommended = 4,
+  maxRecommended = 6,
 ): { recommended: InstantAdultActionDef[]; others: InstantAdultActionDef[] } {
   const age = getAgeYears(state.profile.totalDays);
   const visible = actions.filter((act) => isInstantActionVisible(state, act));
+  const hasJob =
+    state.officialRank > 0 || Boolean(state.activeCareer) || Boolean(state.activeVenture);
 
   const scored = visible.map((act) => {
     let score = 0;
-    const cost = getEffectiveInstantActionCost(state, act);
+    const { canPay, effectiveCost: cost } = canAffordInstantAction(state, act);
     const cd = getInstantActionCooldownRemaining(state, act.id, act.cooldownDays);
-    const canAfford = state.assets.wealthCopper >= cost;
     const isInDebt = state.assets.wealthCopper < 0 || state.flags.includes('dang_no_dia_chu');
 
     if (cd > 0) score -= 20;
-    if (!canAfford) score -= 10;
+    if (!canPay) score -= 10;
 
     if (act.category === 'medical') {
       if (state.stats.health < 55) score += 12;
-      else if (age >= 50) score += 6;
+      else if (age >= 50) score += 7;
       else score += 1;
     }
+
+    if (act.id === 'inst_night_class' && state.stats.education < 30) score += 9;
+    if (act.id === 'inst_trade_course' && hasJob && age < 50) score += 7;
+    if (act.id === 'inst_open_academy' && age >= 50) score += 7;
+    if (act.id === 'inst_hire_child_tutor') score += 7;
 
     if (act.category === 'social') {
       if (state.stats.happiness < 45 || state.stats.relationships < 40) score += 7;
       else score += 2;
-      if (isInDebt && cost > 0) score -= 4;
+      if (isInDebt && cost > 0) score -= 3;
     }
 
     if (act.category === 'growth') {
@@ -1347,7 +1595,7 @@ export function rankInstantActions(
     }
 
     if (act.category === 'economic') {
-      if (isInDebt && act.id.includes('sell')) score += 10;
+      if (isInDebt && act.id.includes('sell')) score += 12;
       else if (state.assets.wealthCopper > 2000) score += 4;
     }
 

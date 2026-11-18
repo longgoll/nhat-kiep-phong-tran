@@ -10,17 +10,21 @@ import { getAgeYears } from '../types/activeLife';
 import { formatCopper } from '../engine/economy';
 import { ORIGIN_METADATA } from '../engine/lifeInitializer';
 import {
-  applyForCareer,
+  attemptApplyForCareer,
   canPromoteCareer,
   CAREER_CATALOG,
   CAREER_TRACK_LABELS,
   closeVenture,
   getAvailableCareers,
   getAvailableVentures,
+  getCareerAcceptanceChance,
+  getCareerUpskillCooldownRemaining,
+  getJobApplyCooldownRemaining,
   getRecommendedCareerOffers,
   promoteCareer,
   resignCareer,
   startVenture,
+  trainCurrentCareerSkill,
   upgradeVenture,
   VENTURE_CATALOG,
 } from '../engine/careerSystem';
@@ -41,10 +45,12 @@ export function CareerModal({ isOpen, onClose, initialTab }: CareerModalProps) {
     initialTab ?? (hasCurrent ? 'current' : 'jobs'),
   );
   const [showAllJobs, setShowAllJobs] = useState(false);
+  const [jobFeedback, setJobFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isOpen && initialTab) {
-      setActiveTab(initialTab);
+    if (isOpen) {
+      setJobFeedback(null);
+      if (initialTab) setActiveTab(initialTab);
     }
   }, [isOpen, initialTab]);
 
@@ -185,6 +191,23 @@ export function CareerModal({ isOpen, onClose, initialTab }: CareerModalProps) {
                         Tách ra khởi nghiệp (-30% vốn)
                       </button>
                     )}
+
+                    {(() => {
+                      const upskillCd = getCareerUpskillCooldownRemaining(life);
+                      const canUpskill = upskillCd === 0 && life.assets.wealthCopper >= 120;
+                      return (
+                        <button
+                          type="button"
+                          disabled={!canUpskill}
+                          onClick={() => applyLifeMutation(trainCurrentCareerSkill)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-950/70 hover:bg-amber-900/70 disabled:bg-stone-800 disabled:text-stone-500 border border-amber-700/60 disabled:border-stone-700 text-amber-200 text-xs font-semibold cursor-pointer disabled:cursor-not-allowed"
+                        >
+                          {upskillCd > 0
+                            ? `Tu nghiệp chuyên môn (chờ ${upskillCd} ngày)`
+                            : 'Học nâng cao chuyên môn (120đ · +45 ngày thâm niên)'}
+                        </button>
+                      );
+                    })()}
                   </div>
                 </div>
               )}
@@ -242,20 +265,36 @@ export function CareerModal({ isOpen, onClose, initialTab }: CareerModalProps) {
                 </p>
               </div>
 
+              {jobFeedback && (
+                <div className="p-3 rounded-lg bg-rose-950/50 border border-rose-700/60 text-xs text-rose-200">
+                  {jobFeedback}
+                </div>
+              )}
+
               <div className="space-y-2">
-                {displayedJobs.map(({ job, eligible, unlockedVia, lockReason, isCurrent }, idx) => (
+                {displayedJobs.map((opt, idx) => {
+                  const { job, eligible, unlockedVia, lockReason, isCurrent } = opt;
+                  const cd = getJobApplyCooldownRemaining(life, job.id);
+                  const chance = eligible ? getCareerAcceptanceChance(life, opt) : 0;
+                  const disabled = !eligible || isCurrent || cd > 0;
+                  return (
                   <button
                     key={job.id}
                     type="button"
-                    disabled={!eligible || isCurrent}
+                    disabled={disabled}
                     onClick={() => {
-                      applyLifeMutation((s) => applyForCareer(s, job.id));
-                      onClose();
+                      const res = attemptApplyForCareer(life, job.id);
+                      applyLifeMutation(() => res.state);
+                      if (res.hired) {
+                        onClose();
+                      } else {
+                        setJobFeedback(res.message);
+                      }
                     }}
                     className={`w-full text-left p-3.5 rounded-xl border transition flex items-start gap-3 ${
                       isCurrent
                         ? 'bg-emerald-950/30 border-emerald-600/60'
-                        : eligible
+                        : !disabled
                           ? 'bg-stone-950/75 hover:bg-stone-800/80 border-stone-700 hover:border-amber-500/70 cursor-pointer'
                           : 'bg-stone-950/35 border-stone-800/70 opacity-55 cursor-not-allowed'
                     }`}
@@ -270,9 +309,16 @@ export function CareerModal({ isOpen, onClose, initialTab }: CareerModalProps) {
                           +{job.baseDailyCopper}đ/buổi{job.baseDailyRice ? ` + ${job.baseDailyRice} gạo` : ''}
                         </span>
                       </div>
-                      <div className="text-xs text-stone-400">
-                        {CAREER_TRACK_LABELS[job.track]}
-                        {unlockedVia ? ` · ${unlockedVia}` : ''}
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-stone-400">
+                        <span>
+                          {CAREER_TRACK_LABELS[job.track]}
+                          {unlockedVia ? ` · ${unlockedVia}` : ''}
+                        </span>
+                        {eligible && !isCurrent && (
+                          <span className={`font-mono text-[11px] ${cd > 0 ? 'text-rose-400' : 'text-amber-300'}`}>
+                            {cd > 0 ? `Chờ ${cd} ngày` : `Tỷ lệ nhận: ${chance}%`}
+                          </span>
+                        )}
                       </div>
                       {!eligible && lockReason && (
                         <div className="text-[11px] text-rose-300 flex items-center gap-1">
@@ -282,7 +328,8 @@ export function CareerModal({ isOpen, onClose, initialTab }: CareerModalProps) {
                       )}
                     </div>
                   </button>
-                ))}
+                  );
+                })}
 
                 <button
                   type="button"

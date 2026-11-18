@@ -1,73 +1,55 @@
-# 02 — Chỉ Số, Học Vấn & Trọng Tâm Năm (`LifeFocus`)
+# 02 — Chỉ Số, Học Vấn (`eduLevel 0–5`) & Trọng Tâm Năm (`focusTime`, `endYear`)
+
+> Áp dụng 100% cơ chế Học vấn & Trọng tâm năm của `1in8b.life/vi` trong bối cảnh cổ trang Đông Á.
 
 ---
 
-## 1. Hệ Thống Chỉ Số (4 Thanh Cốt Lõi + 4 Chỉ Số Chuyên Môn)
+## 1. Hệ Thống Chỉ Số (`0 – 100`)
 
 ### A. 4 Thanh Chỉ Số Cốt Lõi (`0 – 100`)
-Hiển thị đồng nhất ở cả Tuổi thơ (`0–12t`) và Trưởng thành (`13+t`):
-1. **Sức khỏe (`health`):** Quyết định nguy cơ ốm đau, tai nạn và xác suất tử vong. Dưới `20%` kích hoạt cảnh báo nguy kịch.
-2. **Hạnh phúc (`happiness`):** Phản ánh tinh thần; dưới `20%` làm giảm hiệu suất lao động/học tập (`-30%`). Được lưu lại cuối mỗi năm vào `yearlyHappiness` để tô màu **Bản đồ cuộc đời (`LifeGrid`)**.
-3. **Học thức (`education`):** Thước đo tri thức kinh sử & hiểu biết, là điều kiện mở khóa bậc học và thi Khoa cử.
-4. **Quan hệ (`relationships`):** Mạng lưới nhân mạch xã hội & gia đình; tăng cơ hội được tiến cử, giảm rủi ro bị chèn ép.
+1. **Sức khỏe (`health`):** Ảnh hưởng nguy cơ đổ bệnh và xác suất tử vong (`deathProb`). Dưới `20%` cảnh báo nguy kịch.
+2. **Hạnh phúc (`happiness`):** Lưu cuối mỗi năm vào `yearlyHappiness[age]` để tô màu **Bản đồ cuộc đời (`LifeGrid`)**.
+3. **Kiến thức / Học thức (`education`):** Là **phân vị tương đối so với bạn đồng trang lứa** (`0.5 – 99.9%`). Nếu không học gì trong độ tuổi đi học, phân vị sẽ tụt nhẹ do bạn đồng trang lứa vẫn tiến bộ.
+4. **Quan hệ (`relationships`):** Mạng lưới nhân mạch; có vợ/chồng còn sống cộng `+12` vào mức nền, mỗi con còn sống cộng `+4` (tối đa `+15`).
 
-### B. 4 Chỉ Số Chuyên Môn (`0 – 100`, hiển thị gọn)
-- **Võ nghệ (`martial`):** Phục vụ tòng quân, tự vệ, hành hiệp hoặc khởi nghĩa.
-- **Thương tài (`craftTrade`):** Tăng hiệu quả nghề thủ công, buôn bán và lợi nhuận điền sản/cơ sở kinh doanh.
-- **Thanh danh (`fame`):** Danh tiếng tốt trong vùng/triều đình, mở khóa kết giao danh sĩ và thăng quan.
-- **Tai tiếng (`infamy`):** Danh tiếng xấu (trộm cướp, tham ô, phạm pháp); cao quá dễ bị quan phủ truy bắt.
+### B. 4 Chỉ Số Chuyên Môn (`0 – 100`)
+- **Võ nghệ (`martial`)**, **Thương tài (`craftTrade`)**, **Thanh danh (`fame`)**, **Tai tiếng (`infamy`)**.
 
 ---
 
-## 2. Hệ Thống Học Vấn Thống Nhất
+## 2. Hệ Thống Học Vấn 6 Bậc (`eduLevel: 0–5` & `isStudent`)
 
-Thay thế việc đoán mò bằng thang bậc rõ ràng từ nhỏ đến lớn:
+Thay vì đoán bậc học từ điểm số, nhân vật có **trạng thái học vấn rõ ràng** theo mô hình `S.edu` của `1in8b`:
 
-| Bậc | Nhãn hiển thị | Điều kiện / Cách đạt |
-| :---: | :--- | :--- |
-| `0` | **Chưa biết chữ** | Mặc định từ 0–5 tuổi hoặc chưa từng tiếp xúc sách vở (`education < 5`) |
-| `1` | **Vỡ lòng · Học lỏm** | Tuổi `6–12` học lỏm / thầy đồ làng, hoặc `education >= 5` |
-| `2` | **Biết chữ · Thư sinh** | Theo học trường làng / tư thục, hoặc `education >= 15` |
-| `3` | **Thông hiểu kinh sử** | Nền tảng vững (`education >= 30`), đủ sức ứng thí Hương thí |
-| `4` | **Tú tài / Cử nhân** | Đỗ kỳ **Thi Hương** (`do_tu_tai` / `do_cu_nhan`) |
-| `5` | **Tiến sĩ / Trạng nguyên** | Đỗ kỳ **Thi Hội / Thi Đình** (`do_tien_si` / `do_trang_nguyen`) |
+| `eduLevel` | Bậc học (Cổ trang) | Độ tuổi chuẩn | Ghi chú |
+| :---: | :--- | :---: | :--- |
+| `0` | **Chưa đi học** | `0–5t` | Hình thành `Tính khí` (`trait`) quanh tuổi lên 5. |
+| `1` | **Vỡ lòng (Thầy đồ làng)** | `6–11t` | Có thể gián đoạn nếu nhà quá nghèo phải đi ở đợ. |
+| `2` | **Hương học (Trung học cơ sở)** | `12–14t` | Bị ảnh hưởng bởi `Hoàn cảnh gia đình (1/5–5/5)`. |
+| `3` | **Huyện học / Học nghề** | `15–17t` | Đủ nền tảng ứng thí **Tú tài (Thi Hương sơ khảo)**. |
+| `4` | **Quốc Tử Giám / Thư viện lớn** | `18–21t` | Chọn chuyên ngành (`major`): *Kinh sử · Chính trị*, *Y dược*, *Binh pháp*, *Thương toán*, *Luật hình*, *Văn chương*. |
+| `5` | **Hàn Lâm Viện (Tiến sĩ / Trạng nguyên)** | `22+t` | Đỗ **Thi Hội / Thi Đình**, mở khóa hàm quan cao cấp. |
 
-- **Học bổ túc khi trưởng thành:** Người xuất thân nghèo từng thất học vẫn có thể tự học ban đêm hoặc bái sư thông qua hành động trong **Chi tiêu · Đầu tư** để nâng `education` và dự thi Khoa cử khi đủ điều kiện.
-
----
-
-## 3. Trọng Tâm Hiện Tại (`LifeFocus`) Tự Đổi Theo Ngữ Cảnh
-
-Học trực tiếp từ cơ chế `S.focus` của `1in8b`: Người chơi chọn **1 Trọng tâm** dạng nút viên thuốc (pills) ngay trên màn hình chính và có thể đổi bất kỳ lúc nào. Danh sách Trọng tâm **tự động thay đổi theo hoàn cảnh thực tế**:
-
-### A. Tuổi thơ (`0–12 tuổi`)
-- **0–5 tuổi:** Chơi đùa tự nhiên, Nghe bà kể chuyện, Tập đi tập chạy (chủ yếu định hình Tính khí).
-- **6–12 tuổi:** `Học chữ · Nghe giảng` (`Học thức↑ Hạnh phúc↓`), `Vui chơi · Bạn bè` (`Quan hệ↑ Hạnh phúc↑`), `Giúp việc nhà` (`Kinh tế gia đình↑`), `Rèn luyện thân thể` (`Sức khỏe↑ Võ nghệ↑`), `Sở thích riêng` (tăng `hobbyLevels`).
-
-### B. Trưởng thành (`13+ tuổi`) — Tự đổi theo 3 trạng thái
-1. **Đang đi làm / Làm quan / Tự doanh (`hasLivelihood`):**
-   - `Dồn sức công danh` (`Thu nhập +25%`, thăng tiến nhanh hơn, `Hạnh phúc/Sức khỏe↓ nhẹ`)
-   - `Cân bằng cuộc sống` (Ổn định không hao tổn)
-   - `Chăm lo gia đình` (`Quan hệ↑`, `Thu nhập -10%`)
-   - `Giữ gìn sức khỏe` (`Sức khỏe↑`, giảm nguy cơ bệnh tật)
-   - `Tu thân · Đọc sách` (`Học thức/Võ/Thương↑ +25%`)
-   - `Theo đuổi sở thích` (`Hạnh phúc↑`, tăng cấp `hobbyLevels`)
-2. **Chưa có việc / Đang tìm việc (`!hasLivelihood && age < 60`):**
-   - Ẩn nút `Dồn sức công danh` (vì không có việc để dồn sức!), thay bằng **`Chuyên tâm tìm việc / Ôn thi`** (`Học thức↑`, tăng cơ hội tìm việc/khoa cử), cùng `Giữ gìn sức khỏe`, `Giao du kết bạn`, `Theo đuổi sở thích`, `Cân bằng`.
-3. **Tuổi già / Nghỉ hưu (`age >= 60 && !hasLivelihood`):**
-   - `An dưỡng tuổi già` (`Sức khỏe↑`, `Hạnh phúc↑`)
-   - `Vui vầy con cháu` (`Quan hệ↑`, `Hạnh phúc↑`)
-   - `Đọc sách · Viết hồi ký` (`Học thức↑`, `Thanh danh↑`)
-   - `Thú vui điền viên` (tăng `hobbyLevels`)
+### Thi Quốc Tử Giám, Thi Lại & Học Bổ Túc (`DEC.college`, `DEC.retake`, `DEC.adultedu`)
+- **Tuổi 18 (`DEC.college`):** Tự bật Decision Card xét tuyển/ứng thí vào Quốc Tử Giám hoặc Thư viện lớn dựa trên xác suất nền (`Hoàn cảnh gia đình` + `Kiến thức` + trọng tâm `Học tập`).
+- **Thi trượt & Thi lại (`DEC.retake`):** Nếu trượt, bật Decision Card *"Ứng thí lại?"* (tối đa 3 lần: dùi mài thêm 1 năm hoặc ra đời kiếm sống ngay).
+- **Học bổ túc khi trưởng thành (`ged` / `nightuni` / `openuni`):** Người bỏ học sớm (`eduLevel <= 2`) có thể mở `Chi tiêu · Đầu tư` chọn **Học lớp đêm thầy đồ** (`>= 16t`) để lấy bằng tương đương, mở lại đường lên Quốc Tử Giám hoặc xin việc bậc cao.
 
 ---
 
-## 4. Lão Hóa & Hồi Quy Cuối Năm
+## 3. Cơ Chế Trọng Tâm Năm (`lifeFocus` & `focusTime`, `endYear`)
 
-- **Lão hóa tự nhiên:**
-  - `<= 30 tuổi`: Thể lực tối đa `100`, không suy giảm sức khỏe theo tuổi.
-  - `31–45 tuổi`: Thể lực tối đa `85`, hao mòn nhẹ.
-  - `46–55 tuổi`: Thể lực tối đa `75`, hao mòn trung bình.
-  - `56–70 tuổi`: Thể lực tối đa `60`, hao mòn rõ rệt.
-  - `> 70 tuổi`: Thể lực tối đa `45`, suy giảm nhanh nếu không chọn trọng tâm `Giữ gìn sức khỏe` hoặc `An dưỡng tuổi già`.
-- **Tổng kết cuối năm (mỗi 360 ngày):** Lưu `yearlyHappiness[age]`, chốt sổ thu chi năm (`lastYear`), kiểm tra thăng tiến tự nhiên và ghi log tổng kết tuổi.
+### Danh sách Trọng tâm tự đổi theo 4 ngữ cảnh:
+1. **Đang đi học (`isStudent`):**
+   - `Học tập` (`Kiến thức↑ Hạnh phúc↓`), `Bạn bè · vui chơi` (`Quan hệ↑ Hạnh phúc↑`), `Giúp việc nhà` (`Gia đình↑`), `Thể thao · võ nghệ` (`Sức khỏe↑ Võ nghệ↑`), `Sở thích` (Quốc Tử Giám có thêm `Làm thêm`).
+2. **Đang đi làm / Làm quan / Tự doanh (`hasJob`):**
+   - `Dồn sức cho công việc` (`Thu nhập↑ Thăng tiến↑ Sức khỏe·Quan hệ↓`), `Cân bằng`, `Gia đình · bằng hữu`, `Chăm sóc sức khỏe`, `Phát triển bản thân` (`Kiến thức↑ Cơ hội nhảy việc↑`), `Sở thích`.
+3. **Đang tìm việc (`seeking`) / Nội trợ (`homemaker`):**
+   - `Tìm việc · ôn luyện`, `Nghỉ ngơi · dưỡng sức`, `Học hỏi · rèn trí não`, `Giao du · kết bạn`, `Sở thích`.
+4. **Nghỉ hưu (`retired`) / Trong tù (`prison`):**
+   - `An dưỡng tuổi già`, `Vui vầy con cháu`, `Đọc sách · viết hồi ký`, `Thú vui điền viên` (trong tù: `Cải tạo tốt`, `Rèn luyện thân thể`, `Đọc sách`).
+
+### Thuật toán tích lũy theo tỷ trọng & Hồi quy cuối năm (`endYear`)
+- Trong suốt năm, mỗi tháng/ngày trôi qua cộng dồn thời gian vào `focusTime[lifeFocus]`.
+- Cuối năm (`endYear`), tính tỷ trọng `p = focusTime[u] / sum(focusTime)` để cộng/trừ chỉ số tương ứng và tăng cấp `hobbyLevels`, sau đó reset `focusTime`.
+- **Hồi quy về mức nền (Mean-reversion):** Kéo `Sức khỏe`, `Hạnh phúc`, `Quan hệ` `15%` về mức nền thực tế (tính từ tuổi tác, tài sản/nợ, vợ/chồng, con cái, bệnh mãn tính).

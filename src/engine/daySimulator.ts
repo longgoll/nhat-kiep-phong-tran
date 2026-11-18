@@ -13,15 +13,18 @@ import {
 } from '../types/activeLife';
 import type { ActionDef, EffectSpec, GameEventDef } from '../types/dsl';
 import { computeWeight, evaluateConditions } from './conditionEvaluator';
-import { canPromoteCareer, getCareerIncomeMultiplier, promoteCareer, recordDailyCareerProgress } from './careerSystem';
+import { getCareerIncomeMultiplier, recordDailyCareerProgress } from './careerSystem';
 import { calculateRicePrice, formatCopper } from './economy';
-import { appendLog, applyEffects } from './effectApplier';
-import { pickWeightedIndex } from './prng';
+import { appendLog, applyAnnualStatMeanReversion, applyEffects } from './effectApplier';
+import { mulberry32Next, pickWeightedIndex } from './prng';
+import { getCurrentLivelihoodLabel, hasActiveLivelihood } from './lifeStatus';
+import { generateDynamicDecision } from './decisionGenerator';
 import { resolveEventChoice } from './childhoodEngine';
 import { getPropertySeasonalIncome, getPropertySeasonalSocial, PROPERTY_CATALOG } from './progressionModules';
 import {
   applyAnnualGiftEtiquette,
   applySeasonalGoldAndInflation,
+  ensureValidLifeFocus,
   generateAnnualLifeFlavorLogs,
   getDailyFocusModifiers,
   runAnnualAutoActions,
@@ -621,10 +624,15 @@ export function advanceDays(
 
     // 3. Daily lifestyle consumption & LifeFocus passive tick
     state = applyDailyLifestyle(state);
-    if (newAge >= 45 && state.isAlive) {
-      const ageDecay = newAge >= 75 ? -0.035 : newAge >= 60 ? -0.018 : -0.008;
-      state = applyEffects(state, { health: ageDecay });
-    }
+    state = ensureValidLifeFocus(state);
+    const activeFocusKey = state.schedule.lifeFocus || 'can_bang';
+    state = {
+      ...state,
+      focusTime: {
+        ...(state.focusTime ?? {}),
+        [activeFocusKey]: ((state.focusTime ?? {})[activeFocusKey] ?? 0) + 1,
+      },
+    };
     if (nextTotalDays % 30 === 0) {
       state = applyMonthlyFamilyAllowance(state, newAge);
     }
@@ -687,8 +695,50 @@ export function advanceDays(
       }
     }
 
-    // Annual birthday flavor logs, gift etiquette, auto-actions & hobby progression
+    // Annual birthday flavor logs, gift etiquette, auto-actions, mean-reversion & natural mortality (1in8b style)
     if (isBirthday) {
+      // Graduate from Quốc Tử Giám at age 22
+      if (newAge >= 22 && state.isStudent) {
+        state = {
+          ...state,
+          isStudent: false,
+          livelihoodStatus: hasActiveLivelihood(state) ? state.livelihoodStatus : 'seeking',
+          logs: appendLog(
+            state.logs,
+            nextTotalDays,
+            'study',
+            `Bạn đã hoàn thành chương trình học ở tuổi ${newAge}, chính thức bước vào đời lập nghiệp.`,
+            { tone: 'positive' },
+          ),
+        };
+      }
+
+      // Annual pension for retired officials / veteran workers
+      if (state.flags.includes('co_luong_huu') && state.livelihoodStatus === 'retired') {
+        const pension = state.officialRank > 0 ? 600 : 300;
+        state = applyEffects(state, { copper: pension });
+        state = addLedger(state, { propertyIncomeCopper: pension });
+      }
+
+      // Annual idle-cash investment return (1in8b INV_KS)
+      if (state.assets.wealthCopper > 0 && state.investmentChannel && state.investmentChannel !== 'cash') {
+        let rate = 0;
+        if (state.investmentChannel === 'bank') rate = 0.015;
+        else if (state.investmentChannel === 'guild') rate = 0.035;
+        else if (state.investmentChannel === 'land_fund') rate = 0.04;
+        else if (state.investmentChannel === 'caravan') {
+          const invRoll = mulberry32Next(state.prngState);
+          state = { ...state, prngState: invRoll.nextState };
+          rate = -0.02 + invRoll.value * 0.11; // -2% to +9%
+        }
+        const invGain = Math.round(state.assets.wealthCopper * rate);
+        if (invGain !== 0) {
+          state = applyEffects(state, { copper: invGain });
+          if (invGain > 0) state = addLedger(state, { propertyIncomeCopper: invGain });
+          else state = addLedger(state, { otherExpenseCopper: Math.abs(invGain) });
+        }
+      }
+
       const copperBeforeAnnual = state.assets.wealthCopper;
       state = applyAnnualGiftEtiquette(state);
       state = runAnnualAutoActions(state);
@@ -696,7 +746,53 @@ export function advanceDays(
       if (annualSpent > 0) {
         state = addLedger(state, { otherExpenseCopper: annualSpent });
       }
+
+      // Family household finances (spouse & children)
+      const hasSpouse = state.npcs.some((n) => n.relation === 'spouse' && n.isAlive);
+      const livingChildren = state.npcs.filter((n) => n.relation === 'child' && n.isAlive);
+      if (hasSpouse) {
+        const spouseIncome = state.profile.originClass === 'ban_nong' ? 90 : 180;
+        state = applyEffects(state, { copper: spouseIncome });
+        state = addLedger(state, { workIncomeCopper: spouseIncome });
+      }
+      for (const child of livingChildren) {
+        const childAge = (child.age ?? 0) + newAge;
+        if (childAge < 18) {
+          state = applyEffects(state, { copper: -60 });
+          state = addLedger(state, { livingExpenseCopper: 60 });
+        } else if (childAge >= 22 && newAge >= 60) {
+          state = applyEffects(state, { copper: 120 });
+          state = addLedger(state, { propertyIncomeCopper: 120 });
+        }
+      }
+
+      // 1in8b endYear mean-reversion toward realistic baseline
+      const expectedHealth = Math.max(25, 82 - Math.max(0, newAge - 30) * 0.7);
+      const baseHappiness =
+        52 +
+        (state.assets.wealthCopper < 0 ? -10 : state.assets.wealthCopper >= 5000 ? 6 : 0) +
+        (hasSpouse ? 6 : 0);
+      const baseRelationships = 45 + (hasSpouse ? 12 : 0) + Math.min(15, livingChildren.length * 4);
+      state = applyEffects(state, {
+        health: Number(((expectedHealth - state.stats.health) * 0.15).toFixed(2)),
+        happiness: Number(((baseHappiness - state.stats.happiness) * 0.15).toFixed(2)),
+        relationships: Number(((baseRelationships - state.stats.relationships) * 0.15).toFixed(2)),
+      });
+
       state = generateAnnualLifeFlavorLogs(state);
+      state = applyAnnualStatMeanReversion(state, newAge);
+      if ((state.focusTime?.cong_danh ?? 0) > DAYS_PER_YEAR * 0.6) {
+        state = {
+          ...state,
+          logs: appendLog(
+            state.logs,
+            nextTotalDays,
+            'warning',
+            'Năm qua bạn dồn quá nhiều sức cho công danh, thân tâm có phần kiệt quệ.',
+            { tone: 'negative' },
+          ),
+        };
+      }
       const prevYear = Math.max(0, newAge - 1);
       const roundedHappiness = Math.round(state.stats.happiness);
       const netWorthNow =
@@ -704,6 +800,7 @@ export function advanceDays(
         (state.assets.goldReserveCopper ?? 0) +
         Math.round(state.assets.rice * state.world.ricePriceInCopper);
       const completedLedger = state.finance?.currentYear ?? emptyLedger();
+      const livelihoodSummary = getCurrentLivelihoodLabel(state);
       state = {
         ...state,
         finance: {
@@ -711,6 +808,7 @@ export function advanceDays(
           lastYear: completedLedger,
           lastYearNetWorthCopper: netWorthNow,
         },
+        focusTime: {},
         yearlyHappiness: {
           ...(state.yearlyHappiness ?? {}),
           [prevYear]: state.yearlyHappiness?.[prevYear] ?? roundedHappiness,
@@ -720,13 +818,40 @@ export function advanceDays(
           state.logs,
           nextTotalDays,
           'survival',
-          `Tổng kết tuổi ${prevYear}: ${state.profile.currentRole} • Sức khỏe ${Math.round(state.stats.health)}%, Hạnh phúc ${roundedHappiness}%, Tài sản ${formatCopper(state.assets.wealthCopper)}.`,
+          `Tổng kết tuổi ${prevYear}: ${livelihoodSummary} • Sức khỏe ${Math.round(state.stats.health)}%, Hạnh phúc ${roundedHappiness}%, Tài sản ${formatCopper(state.assets.wealthCopper)}.`,
         ),
       };
 
-      // Natural yearly career promotion (1in8b style) when requirements are met
-      if (state.activeCareer && canPromoteCareer(state).ok) {
-        state = promoteCareer(state);
+      // 1in8b annual age-based mortality roll (natural lifespan cap at 120)
+      if (newAge >= 55 && state.isAlive) {
+        const baseDeathProb =
+          newAge >= 120
+            ? 1.0
+            : newAge >= 100
+              ? 0.35
+              : newAge >= 85
+                ? 0.14
+                : newAge >= 75
+                  ? 0.055
+                  : newAge >= 65
+                    ? 0.02
+                    : 0.005;
+        const healthMult = Math.max(0.5, Math.exp((expectedHealth - state.stats.health) * 0.025));
+        const finalProb = Math.min(1, baseDeathProb * healthMult);
+        const roll = mulberry32Next(state.prngState);
+        state = { ...state, prngState: roll.nextState };
+        if (roll.value < finalProb) {
+          const reason = 'Tuổi cao sức yếu, an nhiên qua đời';
+          state = {
+            ...state,
+            isAlive: false,
+            deathReason: reason,
+            logs: appendLog(state.logs, nextTotalDays, 'survival', `Qua đời ở tuổi ${newAge}: ${reason}.`, {
+              tone: 'negative',
+            }),
+          };
+          return { state, daysSimulated, pausedReason: 'dead' };
+        }
       }
     }
 
@@ -737,6 +862,15 @@ export function advanceDays(
         logs: appendLog(state.logs, nextTotalDays, 'survival', `Chúc mừng bạn bước sang tuổi ${newAge}.`),
       };
       return { state, daysSimulated, pausedReason: 'birthday' };
+    }
+
+    if (isBirthday) {
+      // 1in8b dynamic decision cards on annual milestones (college, job offers, rankup, retire, loan)
+      const dynDecision = generateDynamicDecision(state);
+      if (dynDecision) {
+        state = { ...state, lastMajorEventDay: nextTotalDays };
+        return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: dynDecision };
+      }
     }
 
     const isLowHealthNow = state.stats.health < 20;

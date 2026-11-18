@@ -35,10 +35,21 @@
 - **Đang đi làm:** `Dồn sức cho công việc` (`Thu nhập·Thăng tiến↑ Sức khỏe·Quan hệ↓`), `Cân bằng`, `Gia đình·bạn bè`, `Chăm sóc sức khỏe`, `Phát triển bản thân` (`Kiến thức↑ Lời mời chuyển việc↑`), `Sở thích`.
 - **Thất nghiệp (`seeking`) / Nghỉ hưu / Nội trợ:** `Nghỉ ngơi`, `Học hỏi·rèn trí não`, `Tôn giáo·tình nguyện`...
 
-### Thuật toán chia tỷ lệ thời gian (`endYear`)
-- Trong suốt năm, hệ thống cộng dồn thời gian thực tế vào `S.fT[focus]`.
+### Thuật toán chia tỷ lệ thời gian (`endYear`, `vi.84480ea9ca.js` v0.10.46)
+- Trong suốt năm, mỗi `tick(n)` cộng dồn `t = n * S.speed / S.yearSec` vào `S.fT[S.focus]`.
 - Cuối năm (`a = sum(S.fT)`):
-  - Với mỗi trọng tâm `u`, tỷ trọng `p = S.fT[u] / a`.
-  - Áp dụng thay đổi chỉ số theo tỷ trọng: `stat = clamp(stat + delta * p, 0, 100)`.
-  - Trọng tâm `Sở thích` / `Thể thao` cộng thêm `+1.2 * p * talK(id)` vào kỹ năng sở thích.
-- **Hồi quy về mức nền (Mean-reversion):** Cuối năm, `Sức khỏe`, `Hạnh phúc`, `Quan hệ` kéo dần (`12–25%`) về mức nền thực tế (tính từ tuổi tác, tài sản, nợ nần, vợ/chồng, con cái, bệnh mãn tính).
+  - Với mỗi trọng tâm `u`, tỷ trọng `p = S.fT[u] / a` (`S.focusW[u] = p`).
+  - Cộng vào `hl`, `h`, `so` (riêng `sm` xử lý qua `knowYear`):
+    `i[k] = clamp(i[k] + FOCUS[u].e[k] * p * (u === "health" && k === "hl" ? fitK(S.age) : 1), 0, 100)`
+    với `fitK(n) = n < 50 ? 1 : n < 65 ? 0.8 : n < 75 ? 0.6 : n < 85 ? 0.45 : 0.3`.
+  - Bảng `FOCUS[u].e`:
+    - `study`: `{sm: 5, h: -1, so: -1}` | `play`: `{so: 4, h: 4}` | `help`: `{so: 2, sm: -1}` | `sport`: `{hl: 4, h: 2, so: 1}` | `hobby`: `{h: 4}`
+    - `work`: `{hl: -3, h: -2, so: -2}` | `balance`: `{h: 1, hl: 1, so: 1}` | `family`: `{so: 5, h: 3}` | `health`: `{hl: 5, h: 1}` | `learn`: `{sm: 4, h: -1}`
+    - `faith`: `{so: 4, h: 3}` | `rest`: `{hl: 2, h: 2, sm: -1}` | `mind`: `{sm: 3, h: 1, so: 1}` | `parttime`: `{sm: -1, h: -1, so: 1}` | `career`: `{sm: 2, h: -2}`
+  - Trọng tâm `Sở thích` / `Thể thao` cộng thêm `+1.2 * p * talK(id)` vào kỹ năng sở thích, và mỗi sở thích cộng `d.h * 0.35 * p`, `d.hl * 0.3 * p`, `d.so * 0.3 * p`.
+
+### Hồi quy về mức nền (Mean-reversion trong `endYear`)
+Cuối năm, `Sức khỏe (hl)`, `Quan hệ (so)`, `Hạnh phúc (h)` kéo dần về mức nền thực tế (thay vì dùng diminishing returns thủ công):
+- **Sức khỏe (`hl`):** Kéo **25%** (`i.hl + (c - i.hl) * 0.25`, kẹp `[1, 100]`) về mức nền `c` tính từ `expHealth(age + 1)` (`<1: 72`, `<5: 80`, `<30: 90`, `<60: 90 - (n-30)*0.6`, `>=60: max(15, 72 - (n-60)*0.95)`) + `bikeFit()` + `dietFit()` + `(act ? 1.5 : 0)` + `(q - 3)*1.5` + `(focusW.health * 6 * fitK)` - hút thuốc (`6`) - bệnh mãn tính (`5/bệnh`) - tị nạn (`6`) - nợ nặng (`2`).
+- **Quan hệ (`so`):** Kéo **12%** (tăng tới `SO_UP = 0.25` khi giảm ở tuổi trưởng thành `s = clamp((t-14)/6, 0, 1)`) về mục tiêu `u = r - 8 * s`, với `r = 45 + (có vợ/chồng ? 12 : 0) + min(15, số_con * 4) + (mẹ còn sống ? 3 : 0) + (có sở thích ? 3 : 0) + (di cư ? -6 : 0) + (warm ? 2 : 0) + 1.5 * tal("wd")`.
+- **Hạnh phúc (`h`):** Kéo **22%** (tới `H_UP = 0.35` khi giảm hoặc `H_DN = 0.2` khi tăng ở tuổi trưởng thành) về mục tiêu `u = m - 12 * s`, với `m` tính từ nền quốc gia `28 + wh * 5.5`, phân vị thu nhập/gia cảnh, đóng góp từ `(so - 50)*0.25 + (hl - expHealth)*0.2`, nghề mơ ước (`+3`), trừ nợ nặng (`-6`) và tị nạn (`-10`).

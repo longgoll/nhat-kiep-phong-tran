@@ -6,6 +6,7 @@
     "cooldownDays": 99999,
     "oncePerLife": true,
     "title": "Cám Dỗ Mua Đề Trước Trường Thi",
+    "contextNote": "Khoa cử phong kiến coi gian lận trường thi là trọng tội; người mua đề nếu bị phát giác có thể bị tước bỏ tư cách ứng thí suốt đời.",
     "conditions": {
       "min_age": 15,
       "max_age": 36,

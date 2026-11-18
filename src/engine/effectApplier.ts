@@ -9,8 +9,16 @@ function clamp(val: number, min: number, max: number): number {
 }
 
 /**
+ * Applies a direct clamped delta to a 0-100 stat (1in8b-style for health, happiness, relationships,
+ * which are balanced long-term by annual mean-reversion toward the character's realistic baseline).
+ */
+export function applyDirectStatDelta(current: number, delta: number): number {
+  return clamp(Number((current + delta).toFixed(2)), 0, 100);
+}
+
+/**
  * Applies a delta to a 0-100 core stat with diminishing returns above 70
- * (inspired by 1in8b.life: easy to recover when low, progressively harder to push past 70/80/90).
+ * (used for cumulative mastery stats like education and craftTrade).
  */
 export function applyStatDelta(current: number, delta: number): number {
   if (delta <= 0) {
@@ -74,9 +82,9 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
   let isAlive = state.isAlive;
   let deathReason = state.deathReason;
 
-  if (effects.health !== undefined) stats.health = applyStatDelta(stats.health, effects.health);
-  if (effects.happiness !== undefined) stats.happiness = applyStatDelta(stats.happiness, effects.happiness);
-  if (effects.relationships !== undefined) stats.relationships = applyStatDelta(stats.relationships, effects.relationships);
+  if (effects.health !== undefined) stats.health = applyDirectStatDelta(stats.health, effects.health);
+  if (effects.happiness !== undefined) stats.happiness = applyDirectStatDelta(stats.happiness, effects.happiness);
+  if (effects.relationships !== undefined) stats.relationships = applyDirectStatDelta(stats.relationships, effects.relationships);
   if (effects.education !== undefined) stats.education = applyStatDelta(stats.education, effects.education);
   if (effects.stamina !== undefined) stats.stamina = clamp(stats.stamina + effects.stamina, 0, stats.maxStamina);
   if (effects.martial !== undefined) stats.martial = Math.max(0, stats.martial + effects.martial);
@@ -84,7 +92,7 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
   if (effects.fame !== undefined) stats.fame = Math.max(0, stats.fame + effects.fame);
   if (effects.infamy !== undefined) stats.infamy = Math.max(0, stats.infamy + effects.infamy);
 
-  if (effects.copper !== undefined) assets.wealthCopper = Math.max(0, assets.wealthCopper + effects.copper);
+  if (effects.copper !== undefined) assets.wealthCopper = Math.round(assets.wealthCopper + effects.copper);
   if (effects.rice !== undefined) assets.rice = Math.max(0, Number((assets.rice + effects.rice).toFixed(2)));
   if (effects.set_housing !== undefined) assets.housing = effects.set_housing;
   if (effects.add_property && !assets.properties.includes(effects.add_property)) {
@@ -299,5 +307,113 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
     npcs,
     delayedEvents,
     milestones,
+  };
+}
+
+export function getExpectedHealthBaseline(ageYears: number): number {
+  if (ageYears < 1) return 74;
+  if (ageYears < 5) return 80;
+  if (ageYears < 30) return 88;
+  if (ageYears < 60) return 88 - (ageYears - 30) * 0.6;
+  return Math.max(15, 70 - (ageYears - 60) * 0.95);
+}
+
+/**
+ * 1in8b-style annual mean-reversion: pulls health (25%), relationships (12-20%),
+ * and happiness (22%) toward the character's realistic baseline at each birthday.
+ */
+export function applyAnnualStatMeanReversion(state: ActiveLifeState, ageYears: number): ActiveLifeState {
+  const expHl = getExpectedHealthBaseline(ageYears);
+  const lifestyleHlBonus =
+    state.schedule.lifestyle === 'son_hao'
+      ? 3
+      : state.schedule.lifestyle === 'thit_ca'
+        ? 2
+        : state.schedule.lifestyle === 'chao_loang'
+          ? -4
+          : state.schedule.lifestyle === 'nhin_doi'
+            ? -10
+            : 0;
+  const housingHlBonus =
+    state.assets.housing === 'phu_de'
+      ? 3
+      : state.assets.housing === 'nha_gach'
+        ? 1.5
+        : state.assets.housing === 'gam_cau'
+          ? -5
+          : 0;
+  const healthTarget = clamp(
+    expHl +
+    lifestyleHlBonus +
+    housingHlBonus +
+    (state.flags.includes('dang_no_dia_chu') ? -3 : 0) +
+    (state.flags.includes('dang_o_tu') || state.livelihoodStatus === 'prison' ? -6 : 0) +
+    (state.flags.includes('benh_man_tinh') ? -5 : 0) +
+    (state.traits?.includes('khoe_manh') ? 2 : 0) +
+    (state.schedule.lifeFocus === 'suc_khoe' || state.schedule.lifeFocus === 'nghi_ngoi' ? 1.5 : 0),
+    5,
+    98,
+  );
+  const nextHealth = clamp(
+    Number((state.stats.health + (healthTarget - state.stats.health) * 0.25).toFixed(2)),
+    1,
+    100,
+  );
+
+  const hasLivingSpouse = state.npcs.some((n) => n.relation === 'spouse' && n.isAlive);
+  const livingChildren = state.npcs.filter((n) => n.relation === 'child' && n.isAlive).length;
+  const hasLivingParent = state.npcs.some((n) => n.relation === 'parent' && n.isAlive);
+  const relTarget = clamp(
+    45 +
+    (hasLivingSpouse ? 12 : 0) +
+    Math.min(15, livingChildren * 4) +
+    (hasLivingParent ? 3 : 0) +
+    ((state.interests?.length ?? 0) > 0 ? 3 : 0) +
+    (state.traits?.includes('nhan_hau') ? 2 : 0) +
+    (state.flags.includes('dang_o_tu') || state.livelihoodStatus === 'prison' ? -8 : 0),
+    10,
+    95,
+  );
+  const relRate = state.stats.relationships > relTarget ? 0.2 : 0.12;
+  const nextRelationships = clamp(
+    Number((state.stats.relationships + (relTarget - state.stats.relationships) * relRate).toFixed(2)),
+    0,
+    100,
+  );
+
+  const tierHappyBonus =
+    state.family?.familyLivingTier === 'hoang_gia'
+      ? 7
+      : state.family?.familyLivingTier === 'sung_tuc'
+        ? 5
+        : state.family?.familyLivingTier === 'kha_gia'
+          ? 2
+          : state.family?.familyLivingTier === 'tung_thieu'
+            ? -6
+            : -2;
+  const happyTarget = clamp(
+    55 +
+    tierHappyBonus +
+    (nextRelationships - 50) * 0.25 +
+    (nextHealth - expHl) * 0.2 +
+    (state.flags.includes('dang_no_dia_chu') ? -6 : state.assets.wealthCopper < 0 ? -3 : 0) +
+    (state.flags.includes('dang_o_tu') || state.livelihoodStatus === 'prison' ? -10 : 0),
+    5,
+    95,
+  );
+  const nextHappiness = clamp(
+    Number((state.stats.happiness + (happyTarget - state.stats.happiness) * 0.22).toFixed(2)),
+    0,
+    100,
+  );
+
+  return {
+    ...state,
+    stats: {
+      ...state.stats,
+      health: nextHealth,
+      relationships: nextRelationships,
+      happiness: nextHappiness,
+    },
   };
 }

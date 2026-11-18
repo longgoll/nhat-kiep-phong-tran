@@ -1,0 +1,394 @@
+[
+  {
+    "id": "evt_feed_adult_tet_market",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Chợ phiên đầu xuân",
+    "conditions": {
+      "min_age": 13,
+      "season_in": ["spring"]
+    },
+    "weight": { "base": 25, "modifiers": [] },
+    "description": "Phiên chợ đầu xuân rộn ràng tiếng trống hội và mùi bánh chưng, trầu cau.",
+    "choices": [
+      {
+        "label": "Dạo chợ",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn dạo quanh phiên chợ đầu xuân, lòng thấy thư thái trước cảnh người dân nô nức trẩy hội.",
+            "effects": { "happiness": 2, "relationships": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_summer_rain",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 270,
+    "title": "Cơn mưa rào giải nhiệt",
+    "conditions": {
+      "min_age": 13,
+      "season_in": ["summer"]
+    },
+    "weight": { "base": 25, "modifiers": [] },
+    "description": "Cơn mưa rào bất chợt giữa trưa hè làm dịu đi cái oi ả của nắng gắt.",
+    "choices": [
+      {
+        "label": "Nghỉ tay ngắm mưa",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Mưa rào đổ xuống mái hiên, không khí dịu mát hẳn lại giúp bạn tỉnh táo hơn.",
+            "effects": { "happiness": 1.5, "health": 0.5 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_autumn_harvest",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Hương cốm mùa thu",
+    "conditions": {
+      "min_age": 13,
+      "season_in": ["autumn"]
+    },
+    "weight": { "base": 25, "modifiers": [] },
+    "description": "Gió heo may thổi qua những cánh đồng lúa chín vàng ươm khắp vùng.",
+    "choices": [
+      {
+        "label": "Thưởng cốm mới",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Hương lúa mới và cốm xanh dịu nhẹ khiến lòng người thêm nhẹ nhõm giữa mùa thu.",
+            "effects": { "happiness": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_neighbor_tea",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 240,
+    "title": "Chén trà hàng xóm",
+    "conditions": { "min_age": 16 },
+    "weight": { "base": 22, "modifiers": [] },
+    "description": "Người láng giềng mang ấm trà mạn sang trò chuyện thế sự.",
+    "choices": [
+      {
+        "label": "Đàm đạo",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bên chén trà nóng, bạn nghe được nhiều tin tức buôn bán và chuyện triều đình từ hàng xóm.",
+            "effects": { "relationships": 2, "happiness": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_old_book",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 300,
+    "title": "Trang sách cũ dưới ánh đèn dầu",
+    "conditions": {
+      "min_age": 15,
+      "min_education": 10
+    },
+    "weight": { "base": 22, "modifiers": [] },
+    "description": "Bạn tình cờ đọc lại một quyển sách cổ bàn về phép trị quốc và giữ thân.",
+    "choices": [
+      {
+        "label": "Nghiền ngẫm",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Những lời dạy của cổ nhân giúp bạn ngộ ra thêm nhiều điều về nhân tình thế thái.",
+            "effects": { "education": 1.5, "happiness": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_trade_rumor",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 270,
+    "title": "Thương buôn ghé bến",
+    "conditions": {
+      "min_age": 16,
+      "min_craft_trade": 8
+    },
+    "weight": { "base": 20, "modifiers": [] },
+    "description": "Đoàn thuyền buôn từ miền xuôi ngược lên mang theo nhiều hàng hóa mới lạ.",
+    "choices": [
+      {
+        "label": "Học hỏi cách buôn",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn quan sát cách thương nhân định giá tơ lụa và gốm sứ, tích lũy thêm kinh nghiệm thương trường.",
+            "effects": { "craft_trade": 1.2, "copper": 25 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_temple_bell",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 320,
+    "title": "Tiếng chuông chùa chiều",
+    "conditions": { "min_age": 25 },
+    "weight": { "base": 20, "modifiers": [] },
+    "description": "Tiếng chuông chùa cổ ngân vang trong buổi chiều tà giữa khói hương trầm.",
+    "choices": [
+      {
+        "label": "Tĩnh tâm",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Lòng bạn lắng lại trước tiếng chuông chùa, mọi lo âu thường nhật tạm thời tan biến.",
+            "effects": { "happiness": 2.5, "health": 0.5 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_elder_joint_ache",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 240,
+    "title": "Trở trời đau nhức gân cốt",
+    "conditions": {
+      "min_age": 50,
+      "season_in": ["winter", "autumn"]
+    },
+    "weight": { "base": 24, "modifiers": [] },
+    "description": "Gió mùa về khiến khớp gối và lưng của bạn hơi ê ẩm.",
+    "choices": [
+      {
+        "label": "Xoa bóp giữ ấm",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Tuổi tác bắt đầu lên tiếng mỗi khi trở trời; bạn tự nhắc mình giữ ấm thân thể.",
+            "effects": { "health": -1.2, "happiness": -0.5 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_imperial_edict",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Bảng vàng yết thị nơi cổng phủ",
+    "conditions": { "min_age": 18 },
+    "weight": { "base": 18, "modifiers": [] },
+    "description": "Lính lệ dán bố cáo mới của triều đình về việc khuyến nông và giữ trị an.",
+    "choices": [
+      {
+        "label": "Đứng xem bố cáo",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn nắm bắt được chủ trương mới của triều đình về thuế má và đê điều năm nay.",
+            "effects": { "education": 0.6 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_village_feast",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 300,
+    "title": "Cỗ đình ngày giỗ tổ",
+    "conditions": { "min_age": 18 },
+    "weight": { "base": 20, "modifiers": [] },
+    "description": "Dân làng tụ họp tại đình làng làm lễ tế tổ và chia phần cỗ.",
+    "choices": [
+      {
+        "label": "Góp mặt chung vui",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Bạn góp mặt cùng hương lý tại đình làng, tình làng nghĩa xóm thêm gắn bó.",
+            "effects": { "relationships": 2, "fame": 0.5, "happiness": 1.5 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_morning_exercise",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 270,
+    "title": "Khí trời tinh sương",
+    "conditions": { "min_age": 15 },
+    "weight": { "base": 20, "modifiers": [] },
+    "description": "Bạn thức dậy từ lúc gà gáy, hít thở khí trời trong lành ngoài sân.",
+    "choices": [
+      {
+        "label": "Vận động nhẹ",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Vài đường quyền nhẹ buổi sáng giúp gân cốt dẻo dai và tinh thần sảng khoái.",
+            "effects": { "health": 1.2, "martial": 0.4 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_kind_deed",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 300,
+    "title": "Chỉ đường cho khách lỡ độ đường",
+    "conditions": { "min_age": 16 },
+    "weight": { "base": 20, "modifiers": [] },
+    "description": "Một lữ khách lạc đường hỏi thăm lối ra bến đò gần nhất.",
+    "choices": [
+      {
+        "label": "Tận tình chỉ dẫn",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Người lữ khách cảm kích chắp tay tạ ơn và tặng bạn vài quả ngọt mang theo.",
+            "effects": { "fame": 0.8, "happiness": 1.5 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_homesick_meal",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Nhớ bữa cơm quê nhà",
+    "conditions": { "min_age": 15, "max_age": 40 },
+    "weight": { "base": 22, "modifiers": [] },
+    "description": "Chiều muộn ngửi thấy mùi khói bếp thoang thoảng từ nhà bên, bạn bỗng nhớ quay quắt mâm cơm đạm bạc thuở nhỏ.",
+    "choices": [
+      {
+        "label": "Viết thư hỏi thăm gia đình",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Nỗi nhớ nhà tuy khiến lòng hơi chùng xuống nhưng lại nhắc bạn trân trọng người thân hơn.",
+            "effects": { "happiness": -2, "relationships": 2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_overwork_fatigue",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 320,
+    "title": "Mệt lả sau nhiều ngày bôn ba",
+    "conditions": { "min_age": 18, "max_age": 55 },
+    "weight": { "base": 20, "modifiers": [] },
+    "description": "Gối mỏi lưng đau sau nhiều ngày liền làm lụng không ngơi tay.",
+    "choices": [
+      {
+        "label": "Nghỉ sớm một đêm cho lại sức",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Thân thể vẫn còn ê ẩm nhưng một giấc ngủ sâu giúp bạn đỡ phần nào.",
+            "effects": { "health": -2, "happiness": -2 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_small_bonus",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 400,
+    "title": "Được thưởng thêm tiền trà nước",
+    "conditions": { "min_age": 18, "max_age": 59 },
+    "weight": { "base": 18, "modifiers": [] },
+    "description": "Nhờ làm việc chu đáo, người thuê hoặc bề trên vui vẻ thưởng thêm cho bạn chút tiền lẻ.",
+    "choices": [
+      {
+        "label": "Chắp tay cảm tạ",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Khoản tiền nhỏ nhưng khiến cả ngày làm việc của bạn trở nên nhẹ nhàng, phấn khởi.",
+            "effects": { "happiness": 3, "copper": 80 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_village_ceremony",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Giỗ chạp, hiếu hỉ họ hàng",
+    "conditions": { "min_age": 20, "max_age": 65, "min_wealth": 100 },
+    "weight": { "base": 22, "modifiers": [] },
+    "description": "Trong họ có việc giỗ chạp, mọi người cùng nhau góp chút lễ vật và tụ họp hỏi thăm sức khỏe.",
+    "choices": [
+      {
+        "label": "Góp lễ dự giỗ cùng họ hàng",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Dù tốn chút tiền bạc nhưng tình cảm họ hàng, làng xóm thêm phần gắn bó.",
+            "effects": { "copper": -60, "relationships": 3, "happiness": 1 }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_feed_adult_clear_autumn_sky",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 360,
+    "title": "Trời thu trong vắt, trăng thanh",
+    "conditions": { "min_age": 15, "season_in": ["autumn"] },
+    "weight": { "base": 24, "modifiers": [] },
+    "description": "Bầu trời mùa thu cao xanh, gió heo may thổi dịu mát khắp xóm làng.",
+    "choices": [
+      {
+        "label": "Ngồi hóng mát ngoài hiên",
+        "outcomes": [
+          {
+            "weight": { "base": 100, "modifiers": [] },
+            "resultText": "Không khí thanh bình khiến tâm trạng bạn thư thái lạ thường.",
+            "effects": { "happiness": 3, "health": 1 }
+          }
+        ]
+      }
+    ]
+  }
+]

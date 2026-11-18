@@ -7,6 +7,12 @@
 - Mỗi năm chỉ tung ra:
   - **2–3 sự kiện đời sống (`chooseFeed`):** Rải đều trong năm (`t ∈ [0.08, 0.94]`), nhiều dòng có kèm số liệu thống kê thực tế (`Dữ liệu ...`).
   - **Tối đa 2 quyết định lớn (`scheduledDecisions`):** Hôn nhân, bệnh tật, vay nợ, lời mời việc làm, cột mốc con cái, thiên tai, chiến tranh. Nếu dư sẽ tự động hoãn sang năm sau bằng cờ (`huntAt`, `bizPlanAt`, `meetAt`...).
+- **Cách cộng/trừ chỉ số trong sự kiện (`eff(n)`):**
+  - Với `Sức khỏe (hl)`, `Hạnh phúc (h)`, `Quan hệ (so)`: **cộng/trừ thẳng** rồi `clamp(t[i] + n[i], 0, 100)` (không có diminishing returns theo ngưỡng; cân bằng dài hạn do Mean-reversion cuối năm đảm nhiệm).
+  - Với `Kiến thức (sm)`: gọi `knowAdd(n.sm)` → `S.kE = clamp(S.kE + n.sm * 0.009, -1.4, 1.6)`, rồi quy đổi qua `100 * normCdf(kzOf())` (kẹp `[0.5, 99.9]`).
+  - **Biên độ chuẩn (`vi.84480ea9ca.js`):**
+    - `EVENTS` (sự kiện thường): `hl ∈ [-10, +6]` (median `-2`), `h ∈ [-20, +10]` (median `+2`), `sm ∈ [-3, +5]` (median `+2`), `so ∈ [-6, +8]` (median `+2`).
+    - `DEC` (quyết định): `hl ∈ [-14, +6]` (median `-2`), `h ∈ [-25, +15]` (phổ biến `±2..±8`), `sm ∈ [+2, +6]` (median `+2`), `so ∈ [-8, +8]` (median `+2`).
 
 ---
 

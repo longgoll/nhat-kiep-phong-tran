@@ -57,9 +57,27 @@ export interface LogEntry {
 
 export type BirthOrder = 'con_mot' | 'con_truong' | 'con_thu' | 'con_ut';
 export type FamilyLivingTier = 'tung_thieu' | 'du_an' | 'kha_gia' | 'sung_tuc' | 'hoang_gia';
-export type LifeFocusId = 'cong_danh' | 'can_bang' | 'gia_dinh' | 'suc_khoe' | 'tu_than' | 'so_thich';
+export type LifeFocusId =
+  | 'cong_danh'
+  | 'can_bang'
+  | 'gia_dinh'
+  | 'suc_khoe'
+  | 'tu_than'
+  | 'so_thich'
+  | 'nghi_ngoi'
+  | 'hanh_thien'
+  | 'lam_them';
 export type GiftEtiquetteTier = 'chu_dao' | 'tuy_kha_nang' | 'chi_den_chia_vui';
 export type CareerTrack = 'labor' | 'craft' | 'trade' | 'scholar' | 'martial' | 'underworld';
+export type LivelihoodStatus =
+  | 'student'
+  | 'employed'
+  | 'venture'
+  | 'seeking'
+  | 'homemaker'
+  | 'retired'
+  | 'prison';
+export type InvestmentChannel = 'cash' | 'bank' | 'guild' | 'caravan' | 'land_fund';
 
 export interface ActiveCareer {
   jobId: string;
@@ -102,45 +120,6 @@ export interface AnnualFinanceLedger {
   propertyIncomeCopper: number;
   livingExpenseCopper: number;
   otherExpenseCopper: number;
-}
-
-export interface ActiveCommitment {
-  id: string;
-  title: string;
-  category: 'study' | 'military' | 'craft' | 'work';
-  totalDays: number;
-  remainingDays: number;
-  lockedSlots: TimeSlot[];
-  dailyActionId?: string;
-  childhoodFocus?: string;
-  completionEffects?: {
-    education?: number;
-    martial?: number;
-    craft_trade?: number;
-    fame?: number;
-    relationships?: number;
-    happiness?: number;
-    copper?: number;
-    add_flags?: string[];
-    remove_flags?: string[];
-    add_interests?: string[];
-    milestone_title?: string;
-  };
-  completionMessage?: string;
-  passCondition?: {
-    stat: 'education' | 'martial' | 'craftTrade';
-    min: number;
-  };
-  failEffects?: {
-    happiness?: number;
-    fame?: number;
-  };
-  failMessage?: string;
-  abandonPenalty?: {
-    fame?: number;
-    happiness?: number;
-    remove_flags?: string[];
-  };
 }
 
 export interface ActiveLifeState {
@@ -227,10 +206,16 @@ export interface ActiveLifeState {
   lastMajorEventDay?: number;
   milestones: MilestoneRecord[];
   yearlyHappiness?: Record<number, number>;
-  activeCommitment?: ActiveCommitment | null;
   activeCareer?: ActiveCareer | null;
   careerXp?: Partial<Record<CareerTrack, number>>;
   activeVenture?: ActiveVenture | null;
+  eduLevel?: number; // 0: Chưa đi học, 1: Vỡ lòng, 2: Hương học, 3: Huyện học, 4: Quốc Tử Giám, 5: Hàn Lâm Viện
+  isStudent?: boolean;
+  major?: string;
+  livelihoodStatus?: LivelihoodStatus;
+  prisonUntilAge?: number;
+  investmentChannel?: InvestmentChannel;
+  focusTime?: Record<string, number>;
   promptedLearningAges?: number[];
   logs: LogEntry[];
 }
