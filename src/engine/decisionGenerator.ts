@@ -1,4 +1,4 @@
-import { getAgeYears, type ActiveLifeState } from '../types/activeLife';
+import { DAYS_PER_YEAR, getAgeYears, type ActiveLifeState } from '../types/activeLife';
 import type { GameEventDef } from '../types/dsl';
 import { formatCopper } from './economy';
 import {
@@ -13,7 +13,14 @@ import {
 } from './careerSystem';
 import { hasActiveLivelihood } from './lifeStatus';
 import { appendLog, applyEffects } from './effectApplier';
-import { OFFICIAL_RANKS, appointOrPromoteOfficial, sellProperty } from './progressionModules';
+import {
+  OFFICIAL_RANKS,
+  appointOrPromoteOfficial,
+  getExamEligibility,
+  sellProperty,
+  takeExam,
+  type ExamLevel,
+} from './progressionModules';
 
 export interface DecisionCandidate {
   id: string;
@@ -24,12 +31,44 @@ const DYNAMIC_DECISION_PRIORITIES: Array<{ id: string; priority: number }> = [
   { id: 'dec_loan_heavy', priority: 100 },
   { id: 'dec_college_18', priority: 90 },
   { id: 'dec_retire_60', priority: 85 },
+  { id: 'dec_exam_prompt', priority: 84 },
   { id: 'dec_official_appoint', priority: 82 },
   { id: 'dec_official_promote', priority: 78 },
   { id: 'dec_rankup', priority: 75 },
   { id: 'dec_job_offers', priority: 65 },
   { id: 'dec_biz_offers', priority: 55 },
 ];
+
+const EXAM_LABELS: Record<ExamLevel, { title: string; desc: string }> = {
+  huong: {
+    title: 'Kỳ Thi Hương Mùa Thu',
+    desc: 'Trường thi hương mở cửa vào Mùa Thu năm nay. Bạn đã đủ học lực và lộ phí để lều chõng ứng thí, tranh bảng Tú tài / Cử nhân.',
+  },
+  hoi: {
+    title: 'Kỳ Thi Hội Kinh Đô',
+    desc: 'Mùa Xuân đã tới, triều đình mở khoa Thi Hội tại kinh thành cho các Cử nhân. Đây là bước ngoặt để đỗ Cống sĩ.',
+  },
+  dinh: {
+    title: 'Điện Thí Thi Đình trước Ngự Tiền',
+    desc: 'Sau khi đỗ Cống sĩ, bạn đã đủ thực lực bước vào Điện thí Thi Đình để tranh danh hiệu Tiến sĩ hoặc Tam khôi.',
+  },
+};
+
+export function getEligibleExamLevelForPrompt(state: ActiveLifeState): ExamLevel | null {
+  const age = getAgeYears(state.profile.totalDays);
+  if (age < 13) return null;
+  const currentYear = Math.floor(state.profile.totalDays / DAYS_PER_YEAR);
+  for (const level of ['dinh', 'hoi', 'huong'] as const) {
+    const promptCooldown = state.eventCooldowns[`dec_exam_${level}`];
+    if (promptCooldown !== undefined && Math.floor(promptCooldown / DAYS_PER_YEAR) === currentYear) {
+      continue;
+    }
+    if (getExamEligibility(state, level).ok) {
+      return level;
+    }
+  }
+  return null;
+}
 
 /**
  * Collects all currently eligible dynamic decision candidates sorted by priority (highest first).
@@ -471,7 +510,7 @@ function generateDynamicDecisionInternal(
   const wantsNewJob = state.flags.includes('cho_tim_viec_moi');
   if (
     (!onlyId || onlyId === 'dec_job_offers') &&
-    age >= 18 &&
+    age >= 13 &&
     !state.isStudent &&
     !state.flags.includes('trong_hau_cung') &&
     !state.flags.includes('thai_giam') &&
@@ -539,7 +578,8 @@ function generateDynamicDecisionInternal(
   // 6. DEC.biz when triggered via Chi tiêu · đầu tư (`cho_khoi_nghiep`)
   if (
     (!onlyId || onlyId === 'dec_biz_offers') &&
-    age >= 18 &&
+    age >= 15 &&
+    !state.isStudent &&
     state.flags.includes('cho_khoi_nghiep') &&
     !state.flags.includes('trong_hau_cung') &&
     !state.flags.includes('thai_giam') &&
@@ -580,6 +620,50 @@ function generateDynamicDecisionInternal(
                 weight: { base: 100 },
                 effects: {},
                 resultText: 'Bạn quyết định tích lũy thêm vốn liếng và kinh nghiệm trước khi ra làm riêng.',
+              },
+            ],
+          },
+        ],
+      };
+    }
+  }
+
+  // 7. DEC.exam_prompt when eligible for Thi Hương / Thi Hội / Thi Đình
+  if (!onlyId || onlyId === 'dec_exam_prompt') {
+    const examLevel = getEligibleExamLevelForPrompt(state);
+    if (examLevel) {
+      const elig = getExamEligibility(state, examLevel);
+      const labelMeta = EXAM_LABELS[examLevel];
+      const costText = elig.cost > 0 ? formatCopper(elig.cost) : 'Miễn lộ phí';
+      return {
+        id: 'dec_exam_prompt',
+        stage: 'adulthood',
+        severity: 'major',
+        conditions: {},
+        title: `Khoa cử: ${labelMeta.title}`,
+        description: labelMeta.desc,
+        cooldownDays: 360,
+        weight: { base: 100 },
+        choices: [
+          {
+            label: `Ứng thí ngay (${costText})`,
+            hint: 'Bước vào trường thi kỳ này · Mỗi năm chỉ được dự thi 1 lần',
+            outcomes: [
+              {
+                weight: { base: 100 },
+                effects: {},
+                resultText: 'Bạn thu xếp hành trang bước vào trường thi.',
+              },
+            ],
+          },
+          {
+            label: 'Chưa dự thi kỳ này · Dùi mài thêm',
+            hint: 'Giữ lại lộ phí · Có thể tự đăng ký lại trong mục Khoa cử nếu vẫn còn mùa thi',
+            outcomes: [
+              {
+                weight: { base: 100 },
+                effects: {},
+                resultText: 'Bạn quyết định tích lũy thêm học vấn trước khi ứng thí.',
               },
             ],
           },
@@ -767,6 +851,22 @@ export function applyDynamicDecisionSideEffects(
     return {
       ...next,
       logs: appendLog(next.logs, totalDays, 'survival', 'Bạn tạm gác ý định khởi nghiệp lúc này.'),
+    };
+  }
+
+  if (eventId === 'dec_exam_prompt') {
+    const examLevel = getEligibleExamLevelForPrompt(state);
+    if (!examLevel) return state;
+    const next = {
+      ...state,
+      eventCooldowns: { ...state.eventCooldowns, [`dec_exam_${examLevel}`]: totalDays },
+    };
+    if (choiceIndex === 0) {
+      return takeExam(next, examLevel);
+    }
+    return {
+      ...next,
+      logs: appendLog(next.logs, totalDays, 'study', 'Bạn quyết định tạm gác kỳ thi năm nay để dùi mài thêm.'),
     };
   }
 

@@ -189,6 +189,7 @@ describe('Day Simulator (MVP 2)', () => {
     life = {
       ...life,
       profile: { ...life.profile, originClass: 'ban_nong', totalDays: 13 * 360 + 334 },
+      livelihoodStatus: 'homemaker',
       assets: { ...life.assets, rice: 0, wealthCopper: 0 },
       schedule: {
         ...life.schedule,

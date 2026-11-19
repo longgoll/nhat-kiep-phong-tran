@@ -5,6 +5,7 @@ import {
   appointOrPromoteOfficial,
   buyOfficialTitle,
   buyProperty,
+  canBuyOfficialTitle,
   canGrantRoyalPrivilege,
   contributeRebellionTreasury,
   getExamEligibility,
@@ -37,7 +38,12 @@ export function ProgressionModules() {
   if (!life) return null;
 
   const ageYears = getAgeYears(life.profile.totalDays);
-  const canExam = life.stats.education >= 10 || life.flags.includes('duoc_thay_do_quy');
+  const canExam =
+    life.stats.education >= 10 ||
+    life.stats.martial >= 15 ||
+    life.flags.includes('duoc_thay_do_quy') ||
+    life.flags.includes('do_cu_nhan') ||
+    life.flags.includes('do_cong_si');
   const canTrade = true;
   const canCourt =
     life.officialRank > 0 ||
@@ -282,19 +288,27 @@ export function ProgressionModules() {
             </div>
           </div>
 
-          {life.officialRank === 0 && life.profile.originClass !== 'hoang_toc' && (
-            <div className="pt-2 border-t border-stone-800 flex items-center justify-between gap-2">
-              <span className="text-stone-300">Quyên quan (Mua hàm Tri huyện bằng bạc)</span>
-              <button
-                type="button"
-                disabled={life.assets.wealthCopper < 50000}
-                onClick={() => applyLifeMutation(buyOfficialTitle)}
-                className="px-3 py-1.5 rounded bg-amber-600 text-stone-950 font-bold disabled:opacity-40 cursor-pointer"
-              >
-                5 Vàng (50.000đ)
-              </button>
-            </div>
-          )}
+          {life.officialRank === 0 && life.profile.originClass !== 'hoang_toc' && (() => {
+            const buyTitleElig = canBuyOfficialTitle(life);
+            return (
+              <div className="pt-2 border-t border-stone-800 flex items-center justify-between gap-2">
+                <div>
+                  <div className="text-stone-300">Quyên quan (Mua hàm Tri huyện bằng bạc)</div>
+                  {!buyTitleElig.ok && buyTitleElig.reason && (
+                    <div className="text-[11px] text-stone-500">{buyTitleElig.reason}</div>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  disabled={!buyTitleElig.ok}
+                  onClick={() => applyLifeMutation(buyOfficialTitle)}
+                  className="px-3 py-1.5 rounded bg-amber-600 text-stone-950 font-bold disabled:opacity-40 cursor-pointer shrink-0"
+                >
+                  5 Vàng (50.000đ)
+                </button>
+              </div>
+            );
+          })()}
         </div>
       )}
 

@@ -1,4 +1,11 @@
-import { getAgeYears, type ActiveLifeState, type HousingTier, type OriginClass, type WorldState } from '../types/activeLife';
+import {
+  DAYS_PER_YEAR,
+  getAgeYears,
+  type ActiveLifeState,
+  type HousingTier,
+  type OriginClass,
+  type WorldState,
+} from '../types/activeLife';
 import { appendLog, applyEffects } from './effectApplier';
 import { mulberry32Next } from './prng';
 
@@ -40,7 +47,7 @@ export const PROPERTY_CATALOG: PropertySpec[] = [
   },
   {
     id: 'ki_ot_cho_thue',
-    name: 'Ki-ốt sạp chợ cho thuê',
+    name: 'Sạp chợ phiên cho thuê',
     costCopper: 6000,
     seasonalIncomeCopper: 320,
     description: 'Cho tiểu thương thuê sạp buôn bán ngoài chợ phiên, thu 320 đồng/mùa.',
@@ -240,6 +247,13 @@ export function getExamEligibility(
   level: ExamLevel,
 ): { ok: boolean; reason?: string; cost: number } {
   const age = getAgeYears(state.profile.totalDays);
+  const currentYear = Math.floor(state.profile.totalDays / DAYS_PER_YEAR);
+  if (state.livelihoodStatus === 'prison' || state.flags.includes('dang_o_tu')) {
+    return { ok: false, reason: 'Đang chịu án tù, không thể dự khoa cử', cost: 0 };
+  }
+  if (state.flags.includes('bi_ep_lam_gia_no')) {
+    return { ok: false, reason: 'Thân phận gia nô không thể dự khoa cử', cost: 0 };
+  }
   if (state.flags.includes('bi_truy_na')) {
     return { ok: false, reason: 'Đang bị triều đình truy nã', cost: 0 };
   }
@@ -252,6 +266,21 @@ export function getExamEligibility(
     state.flags.includes('nu_quan_dac_xa');
   if (!canAttendAsFemale) {
     return { ok: false, reason: 'Nữ giới cần cải nam trang để dự thi', cost: 0 };
+  }
+
+  const lastAttemptDay = state.eventCooldowns[`exam_${level}`];
+  if (lastAttemptDay !== undefined && Math.floor(lastAttemptDay / DAYS_PER_YEAR) === currentYear) {
+    const retryHint =
+      level === 'huong'
+        ? 'Năm nay bạn đã dự Thi Hương rồi, hãy đợi kỳ thi sau'
+        : level === 'hoi'
+          ? 'Năm nay bạn đã dự Thi Hội rồi, hãy đợi Mùa Xuân năm sau'
+          : 'Năm nay bạn đã dự Thi Đình rồi';
+    return {
+      ok: false,
+      reason: retryHint,
+      cost: level === 'huong' ? 200 : level === 'hoi' ? 1000 : 0,
+    };
   }
 
   if (level === 'huong') {
@@ -278,8 +307,8 @@ export function getExamEligibility(
     if (state.flags.includes('do_cong_si')) {
       return { ok: false, reason: 'Đã đỗ Cống sĩ', cost: 1000 };
     }
-    if (state.world.season !== 'spring') {
-      return { ok: false, reason: 'Thi Hội mở vào Mùa Xuân', cost: 1000 };
+    if (state.world.season !== 'spring' || age % 3 !== 1) {
+      return { ok: false, reason: 'Thi Hội mở vào Mùa Xuân năm sau kỳ Thi Hương (16, 19, 22... tuổi)', cost: 1000 };
     }
     if (state.stats.education < 55 && state.stats.martial < 60) {
       return { ok: false, reason: 'Cần Học thức >= 55 (hoặc Võ nghệ >= 60)', cost: 1000 };
@@ -297,6 +326,9 @@ export function getExamEligibility(
   if (state.flags.includes('do_tien_si')) {
     return { ok: false, reason: 'Đã đỗ Tiến sĩ', cost: 0 };
   }
+  if (age % 3 !== 1 || (state.world.season !== 'spring' && state.world.season !== 'summer')) {
+    return { ok: false, reason: 'Thi Đình mở vào Mùa Xuân–Hạ cùng kỳ Thi Hội (16, 19, 22... tuổi)', cost: 0 };
+  }
   if (state.stats.education < 75 && state.stats.martial < 80) {
     return { ok: false, reason: 'Cần Học thức >= 75 (hoặc Võ nghệ >= 80)', cost: 0 };
   }
@@ -309,7 +341,14 @@ export function takeExam(state: ActiveLifeState, level: ExamLevel): ActiveLifeSt
 
   let next = applyEffects(state, { copper: -elig.cost });
   const roll = mulberry32Next(next.prngState);
-  next = { ...next, prngState: roll.nextState };
+  next = {
+    ...next,
+    prngState: roll.nextState,
+    eventCooldowns: {
+      ...next.eventCooldowns,
+      [`exam_${level}`]: next.profile.totalDays,
+    },
+  };
 
   const skill = Math.max(next.stats.education, next.stats.martial);
   const scholarBonus =
@@ -523,22 +562,47 @@ export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
   };
 }
 
-export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
+export function canBuyOfficialTitle(state: ActiveLifeState): { ok: boolean; reason?: string; cost: number } {
   const COST = 50000;
-  if (state.profile.originClass === 'hoang_toc') return state;
+  const age = getAgeYears(state.profile.totalDays);
+  if (state.profile.originClass === 'hoang_toc') {
+    return { ok: false, reason: 'Hoàng tộc dùng lệ Tập ấm, không cần quyên quan', cost: COST };
+  }
   if (
     state.profile.gender === 'female' &&
     !state.flags.includes('nu_cai_nam_trang') &&
     !state.flags.includes('nu_quan_dac_xa')
   ) {
-    return state;
+    return { ok: false, reason: 'Nữ giới cần cải nam trang hoặc có đặc xá mới được bổ quan', cost: COST };
   }
-  if (state.flags.includes('thai_giam') || state.flags.includes('trong_hau_cung')) return state;
-  if (state.officialRank > 0 || state.assets.wealthCopper < COST) return state;
+  if (state.flags.includes('thai_giam') || state.flags.includes('trong_hau_cung')) {
+    return { ok: false, reason: 'Thân phận nội đình không thể quyên quan ngoại triều', cost: COST };
+  }
+  if (state.livelihoodStatus === 'prison' || state.flags.includes('dang_o_tu')) {
+    return { ok: false, reason: 'Đang chịu án tù không thể quyên quan', cost: COST };
+  }
+  if (state.officialRank > 0) {
+    return { ok: false, reason: 'Đã có phẩm hàm triều đình', cost: COST };
+  }
+  if (age < 18) {
+    return { ok: false, reason: 'Cần đủ 18 tuổi mới được bổ làm Tri huyện', cost: COST };
+  }
+  if (state.stats.education < 15) {
+    return { ok: false, reason: 'Cần Học thức ≥ 15 (biết đọc viết công văn)', cost: COST };
+  }
+  if (state.assets.wealthCopper < COST) {
+    return { ok: false, reason: 'Cần 5 Vàng (50.000đ)', cost: COST };
+  }
+  return { ok: true, cost: COST };
+}
+
+export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
+  const elig = canBuyOfficialTitle(state);
+  if (!elig.ok) return state;
 
   const next = applyOfficialScheduleAndClearCareer(
     applyEffects(state, {
-      copper: -COST,
+      copper: -elig.cost,
       add_flags: ['dang_lam_quan', 'quyen_quan'],
       infamy: 5,
       milestone_title: 'Quyên quan mua chức Tri huyện',
@@ -552,9 +616,16 @@ export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
   };
 }
 
+export function getMaxPropertyLimit(originClass: OriginClass): number {
+  return originClass === 'dia_chu' || originClass === 'quan_lai' || originClass === 'hoang_toc' ? 12 : 8;
+}
+
 export function buyProperty(state: ActiveLifeState, propertyId: string): ActiveLifeState {
   const spec = PROPERTY_CATALOG.find((p) => p.id === propertyId);
   if (!spec) return state;
+  if (state.assets.properties.length >= getMaxPropertyLimit(state.profile.originClass)) {
+    return state;
+  }
   const cost = getPropertyMarketCost(spec, state.world.worldState);
   if (state.assets.wealthCopper < cost) return state;
 

@@ -724,6 +724,34 @@ export function advanceDays(
       return { state, daysSimulated, pausedReason: 'dead' };
     }
 
+    // Graduate from Quốc Tử Giám / Academy at age 22 (run before planYear & major event early returns)
+    if (newAge >= 22 && state.isStudent) {
+      const graduatedHasLivelihood = hasActiveLivelihood(state);
+      const isStudentRole =
+        state.profile.currentRole === 'Giám sinh Quốc Tử Giám' ||
+        state.profile.currentRole === 'Học trò Thư viện lớn' ||
+        state.profile.currentRole === 'Võ sinh Võ học đường';
+      state = {
+        ...state,
+        isStudent: false,
+        livelihoodStatus: graduatedHasLivelihood ? 'employed' : 'seeking',
+        profile: {
+          ...state.profile,
+          currentRole:
+            !graduatedHasLivelihood && state.officialRank === 0 && isStudentRole
+              ? 'Đã tốt nghiệp'
+              : state.profile.currentRole,
+        },
+        logs: appendLog(
+          state.logs,
+          nextTotalDays,
+          'study',
+          `Bạn đã hoàn thành chương trình học ở tuổi ${newAge}, chính thức bước vào đời lập nghiệp.`,
+          { tone: 'positive' },
+        ),
+      };
+    }
+
     // 4. 1in8b Annual Event & Decision Scheduler (`planYear` + `scheduledDecisions`)
     if (newAge >= 13 && state.yearPlan?.yearAge !== newAge) {
       state = planYear(state, eventsPool);
@@ -743,6 +771,13 @@ export function advanceDays(
         state = { ...state, lastMajorEventDay: nextTotalDays };
         return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: immediateBiz };
       }
+    }
+
+    // Seasonal/contextual Khoa cử prompt when eligible and not yet prompted this year
+    const examPrompt = buildDynamicDecisionById(state, 'dec_exam_prompt');
+    if (examPrompt) {
+      state = { ...state, lastMajorEventDay: nextTotalDays };
+      return { state, daysSimulated, pausedReason: 'major_event', pendingEvent: examPrompt };
     }
 
     // Due scheduled decision from this year's planYear
@@ -769,34 +804,6 @@ export function advanceDays(
 
     // Annual birthday flavor logs, gift etiquette, auto-actions, mean-reversion & natural mortality (1in8b style)
     if (isBirthday) {
-      // Graduate from Quốc Tử Giám at age 22
-      if (newAge >= 22 && state.isStudent) {
-        const graduatedHasLivelihood = hasActiveLivelihood(state);
-        const isStudentRole =
-          state.profile.currentRole === 'Giám sinh Quốc Tử Giám' ||
-          state.profile.currentRole === 'Học trò Thư viện lớn' ||
-          state.profile.currentRole === 'Võ sinh Võ học đường';
-        state = {
-          ...state,
-          isStudent: false,
-          livelihoodStatus: graduatedHasLivelihood ? 'employed' : 'seeking',
-          profile: {
-            ...state.profile,
-            currentRole:
-              !graduatedHasLivelihood && state.officialRank === 0 && isStudentRole
-                ? 'Đã tốt nghiệp'
-                : state.profile.currentRole,
-          },
-          logs: appendLog(
-            state.logs,
-            nextTotalDays,
-            'study',
-            `Bạn đã hoàn thành chương trình học ở tuổi ${newAge}, chính thức bước vào đời lập nghiệp.`,
-            { tone: 'positive' },
-          ),
-        };
-      }
-
       // Annual pension for retired officials / veteran workers
       if (state.flags.includes('co_luong_huu') && state.livelihoodStatus === 'retired') {
         const pension = state.officialRank > 0 ? 600 : 300;

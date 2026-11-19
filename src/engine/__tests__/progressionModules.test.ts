@@ -16,9 +16,9 @@ import {
   toggleCrossDress,
   upgradeHousing,
 } from '../progressionModules';
-import { INSTANT_ADULT_ACTIONS, isInstantActionVisible } from '../adultLifeActions';
+import { INSTANT_ADULT_ACTIONS, canMarrySpouse, executeInstantAdultAction, isInstantActionVisible } from '../adultLifeActions';
 import { advanceDays } from '../daySimulator';
-import { buildDynamicDecisionById } from '../decisionGenerator';
+import { applyDynamicDecisionSideEffects, buildDynamicDecisionById } from '../decisionGenerator';
 import { evaluateConditions } from '../conditionEvaluator';
 import { isEventContextuallyAllowed } from '../yearPlanner';
 import { ALL_ACTIONS as ACTIONS, ALL_ADULTHOOD_EVENTS as EVENTS } from '../../data/registry';
@@ -45,6 +45,54 @@ describe('Progression Modules (MVP 3)', () => {
 
     life = takeExam(life, 'huong');
     expect(life.assets.wealthCopper).toBe(800);
+    // Cannot retake Thi Huong in the same year after passing/failing
+    expect(getExamEligibility(life, 'huong').ok).toBe(false);
+  });
+
+  it('prevents retaking an exam in the same year and surfaces dec_exam_prompt when eligible', () => {
+    let life = createNewLife(556);
+    life = {
+      ...life,
+      profile: {
+        ...life.profile,
+        gender: 'male',
+        totalDays: 15 * 360 + 180, // 15 tuổi, đầu Mùa Thu
+      },
+      world: { ...life.world, season: 'autumn' },
+      stats: { ...life.stats, education: 30 },
+      assets: { ...life.assets, wealthCopper: 1000 },
+    };
+
+    const prompt = buildDynamicDecisionById(life, 'dec_exam_prompt');
+    expect(prompt?.id).toBe('dec_exam_prompt');
+    expect(prompt?.choices.length).toBe(2);
+
+    // Deferring exam sets cooldown for the year without deducting copper
+    const deferred = applyDynamicDecisionSideEffects(life, 'dec_exam_prompt', 1);
+    expect(deferred.assets.wealthCopper).toBe(1000);
+    expect(buildDynamicDecisionById(deferred, 'dec_exam_prompt')).toBeNull();
+
+    // Taking exam directly deducts cost and blocks another attempt in the same year
+    const taken = applyDynamicDecisionSideEffects(life, 'dec_exam_prompt', 0);
+    expect(taken.assets.wealthCopper).toBe(800);
+    expect(getExamEligibility(taken, 'huong').ok).toBe(false);
+    expect(buildDynamicDecisionById(taken, 'dec_exam_prompt')).toBeNull();
+  });
+
+  it('allows non-student 13+ characters to hunt for formal jobs', () => {
+    const base = createNewLife(557);
+    const teenWorker = {
+      ...base,
+      profile: { ...base.profile, totalDays: 13 * 360 + 5 },
+      isStudent: false,
+      livelihoodStatus: 'seeking' as const,
+    };
+    const huntRes = executeInstantAdultAction(teenWorker, 'inst_job_hunt');
+    expect(huntRes.ok).toBe(true);
+    expect(buildDynamicDecisionById(huntRes.state, 'dec_job_offers')?.id).toBe('dec_job_offers');
+
+    const teenStudent = { ...teenWorker, isStudent: true, livelihoodStatus: 'student' as const };
+    expect(executeInstantAdultAction(teenStudent, 'inst_job_hunt').ok).toBe(false);
   });
 
   it('earns seasonal passive income from owned properties and supports Quyên quan', () => {
@@ -53,12 +101,17 @@ describe('Progression Modules (MVP 3)', () => {
       ...life,
       profile: { ...life.profile, gender: 'male', totalDays: 20 * 360 + 89 }, // 1 ngày trước sang Hạ
       world: { ...life.world, season: 'spring' },
+      stats: { ...life.stats, education: 0 },
       assets: { ...life.assets, wealthCopper: 60000, rice: 100 },
     };
 
     life = buyProperty(life, 'ruong_tu');
     expect(life.assets.properties).toContain('ruong_tu');
 
+    // Illiterate character cannot buy official title
+    expect(buyOfficialTitle(life).officialRank).toBe(0);
+
+    life = { ...life, stats: { ...life.stats, education: 20 } };
     life = buyOfficialTitle(life);
     expect(life.officialRank).toBe(1);
     expect(life.flags).toContain('quyen_quan');
@@ -67,6 +120,43 @@ describe('Progression Modules (MVP 3)', () => {
     expect(res.state.world.season).toBe('summer');
     // Should have received seasonal income (+420 copper)
     expect(res.state.assets.wealthCopper).toBeGreaterThan(60000 - 3000 - 50000);
+  });
+
+  it('enforces feudal marriage ages (15 female / 16 male), origin dowry, and 3-year Hoi/Dinh exam cycle', () => {
+    const base = createNewLife(777);
+    const poorGirl15 = {
+      ...base,
+      profile: { ...base.profile, gender: 'female' as const, originClass: 'ban_nong' as const, totalDays: 15 * 360 },
+      assets: { ...base.assets, wealthCopper: 150 },
+      flags: base.flags.filter((f) => f !== 'nu_cai_nam_trang'),
+    };
+    expect(canMarrySpouse(poorGirl15)).toEqual({ ok: true, cost: 120 });
+
+    const royalBoy15 = {
+      ...base,
+      profile: { ...base.profile, gender: 'male' as const, originClass: 'hoang_toc' as const, totalDays: 15 * 360 },
+      assets: { ...base.assets, wealthCopper: 6000 },
+      flags: base.flags.filter((f) => f !== 'gia_toc_sa_sut' && f !== 'that_sung_cung_dinh'),
+    };
+    expect(canMarrySpouse(royalBoy15).ok).toBe(false);
+    const royalBoy16 = {
+      ...royalBoy15,
+      profile: { ...royalBoy15.profile, totalDays: 16 * 360 },
+    };
+    expect(canMarrySpouse(royalBoy16)).toEqual({ ok: true, cost: 5000 });
+
+    // Thi Hoi opens in Spring of age % 3 === 1 (e.g. 16), not 17
+    const cuNhan17 = {
+      ...base,
+      profile: { ...base.profile, gender: 'male' as const, totalDays: 17 * 360 },
+      world: { ...base.world, season: 'spring' as const },
+      stats: { ...base.stats, education: 80 },
+      assets: { ...base.assets, wealthCopper: 5000 },
+      flags: [...base.flags, 'do_cu_nhan'],
+    };
+    expect(getExamEligibility(cuNhan17, 'hoi').ok).toBe(false);
+    const cuNhan16 = { ...cuNhan17, profile: { ...cuNhan17.profile, totalDays: 16 * 360 } };
+    expect(getExamEligibility(cuNhan16, 'hoi').ok).toBe(true);
   });
 
   it('computes rebellion success chance based on worldState and pillars', () => {

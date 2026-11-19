@@ -9,6 +9,7 @@ import {
   type WorldState,
 } from '../types/activeLife';
 import type { EffectSpec } from '../types/dsl';
+import { formatCopper } from './economy';
 import { appendLog, applyEffects } from './effectApplier';
 import { mulberry32Next } from './prng';
 import { INTEREST_LABELS } from './lifeInitializer';
@@ -149,6 +150,17 @@ export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdult
   if (def.id === 'inst_ask_family_money') {
     if (state.flags.includes('trong_hau_cung')) return false;
     if ((state.family?.familyWealthCopper ?? 0) < 60) return false;
+  }
+  if (def.id === 'inst_job_hunt' || def.id === 'inst_biz_plan') {
+    if (
+      state.isStudent ||
+      state.livelihoodStatus === 'student' ||
+      state.flags.includes('trong_hau_cung') ||
+      state.flags.includes('thai_giam') ||
+      state.flags.includes('bi_ep_lam_gia_no')
+    ) {
+      return false;
+    }
   }
   if (def.requiresLivingParent) {
     const hasParent = state.npcs.some((n) => n.relation === 'parent' && n.isAlive);
@@ -942,7 +954,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     subtitle: 'Miễn phí · Hẹn 3 lời mời việc làm phù hợp ở kỳ quyết định tiếp theo (Chờ 1 năm)',
     costCopper: 0,
     cooldownDays: 360,
-    minAge: 18,
+    minAge: 13,
     maxAge: 62,
     category: 'growth',
     effects: {
@@ -956,7 +968,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     subtitle: 'Miễn phí · Lập kế hoạch mở cơ sở riêng phù hợp vốn liếng (Chờ 1 năm)',
     costCopper: 0,
     cooldownDays: 360,
-    minAge: 18,
+    minAge: 15,
     maxAge: 65,
     category: 'economic',
     effects: {
@@ -1577,26 +1589,45 @@ export function runAnnualAutoActions(inputState: ActiveLifeState): ActiveLifeSta
   return state;
 }
 
-export function canMarrySpouse(state: ActiveLifeState): { ok: boolean; reason?: string } {
+const MARRIAGE_DOWRY_BY_ORIGIN: Record<OriginClass, number> = {
+  ban_nong: 120,
+  thu_cong: 300,
+  dia_chu: 1000,
+  quan_lai: 2500,
+  hoang_toc: 5000,
+};
+
+export function getMarriageRequirements(state: ActiveLifeState): { minAge: number; cost: number } {
+  const minAge = state.profile.gender === 'female' ? 15 : 16;
+  const baseCost = MARRIAGE_DOWRY_BY_ORIGIN[state.profile.originClass];
+  const isDeclined =
+    state.flags.includes('gia_toc_sa_sut') || state.flags.includes('that_sung_cung_dinh');
+  const cost = isDeclined ? Math.max(120, Math.round(baseCost * 0.5)) : baseCost;
+  return { minAge, cost };
+}
+
+export function canMarrySpouse(state: ActiveLifeState): { ok: boolean; reason?: string; cost: number } {
+  const { minAge, cost } = getMarriageRequirements(state);
   if (state.livelihoodStatus === 'prison' || state.flags.includes('dang_o_tu')) {
-    return { ok: false, reason: 'Đang trong lao ngục không thể thành hôn' };
+    return { ok: false, reason: 'Đang trong lao ngục không thể thành hôn', cost };
   }
-  if (state.flags.includes('bi_truy_na')) return { ok: false, reason: 'Đang bị truy nã không thể công khai thành hôn' };
-  if (state.flags.includes('thai_giam')) return { ok: false, reason: 'Thân phận thái giám không thể thành hôn' };
-  if (state.flags.includes('trong_hau_cung')) return { ok: false, reason: 'Đang mang thân phận hậu cung' };
+  if (state.flags.includes('bi_truy_na')) return { ok: false, reason: 'Đang bị truy nã không thể công khai thành hôn', cost };
+  if (state.flags.includes('thai_giam')) return { ok: false, reason: 'Thân phận thái giám không thể thành hôn', cost };
+  if (state.flags.includes('trong_hau_cung')) return { ok: false, reason: 'Đang mang thân phận hậu cung', cost };
   if (state.flags.includes('nu_cai_nam_trang') && !state.flags.includes('nu_quan_dac_xa')) {
-    return { ok: false, reason: 'Đang cải nam trang ẩn thân phận, không thể công khai thành hôn' };
+    return { ok: false, reason: 'Đang cải nam trang ẩn thân phận, không thể công khai thành hôn', cost };
   }
   const age = getAgeYears(state.profile.totalDays);
-  if (age < 18) return { ok: false, reason: 'Cần đủ 18 tuổi' };
+  if (age < minAge) return { ok: false, reason: `Cần đủ ${minAge} tuổi`, cost };
   const hasSpouse = state.npcs.some((n) => n.relation === 'spouse' && n.isAlive);
-  if (hasSpouse) return { ok: false, reason: 'Đã thành gia thất' };
-  if (state.assets.wealthCopper < 300) return { ok: false, reason: 'Cần 300đ sính lễ' };
-  return { ok: true };
+  if (hasSpouse) return { ok: false, reason: 'Đã thành gia thất', cost };
+  if (state.assets.wealthCopper < cost) return { ok: false, reason: `Cần ${formatCopper(cost)} sính lễ`, cost };
+  return { ok: true, cost };
 }
 
 export function marrySpouse(inputState: ActiveLifeState): ActiveLifeState {
-  if (!canMarrySpouse(inputState).ok) return inputState;
+  const elig = canMarrySpouse(inputState);
+  if (!elig.ok) return inputState;
   const spouseGender = inputState.profile.gender === 'male' ? 'female' : 'male';
   const surnames = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Vũ', 'Đặng'];
   const given = spouseGender === 'female' ? ['Lan', 'Huệ', 'Mai', 'Ngọc', 'Thảo', 'Liên'] : ['Minh', 'Tuấn', 'Hùng', 'Quân', 'Đức', 'Phúc'];
@@ -1621,7 +1652,7 @@ export function marrySpouse(inputState: ActiveLifeState): ActiveLifeState {
       npcs: [...inputState.npcs, spouseNpc],
     },
     {
-      copper: -300,
+      copper: -elig.cost,
       happiness: 14,
       relationships: 8,
       add_flags: ['da_ket_hon'],

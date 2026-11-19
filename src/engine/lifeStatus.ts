@@ -36,7 +36,7 @@ export function getEducationLabel(state: ActiveLifeState): string {
       : 0;
   const activeStudyNote =
     nightRem > 0
-      ? ` (Đang học bổ túc · còn ${nightRem} ngày)`
+      ? ` (Đang theo lớp đêm thầy đồ · còn ${nightRem} ngày)`
       : tradeRem > 0
         ? ` (Đang học nghề · còn ${tradeRem} ngày)`
         : '';
@@ -52,7 +52,7 @@ export function getEducationLabel(state: ActiveLifeState): string {
       return 'Đang tự học · Học lỏm';
     }
     if (state.profile.originClass === 'hoang_toc' && !isDeclined) {
-      return 'Đang học Quốc Tử Giám';
+      return 'Đang học Tôn Nhân Phủ';
     }
     if (state.profile.originClass === 'quan_lai' && !isDeclined) {
       return 'Đang theo học gia sư';

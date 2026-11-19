@@ -1142,7 +1142,7 @@ export function AdultDashboard() {
                             >
                               <div className="flex justify-between text-xs font-semibold text-rose-200">
                                 <span>Thành gia lập thất</span>
-                                <span className="font-mono text-amber-300">300đ</span>
+                                <span className="font-mono text-amber-300">{formatCopper(m.cost)}</span>
                               </div>
                               <div className="text-[10px] text-stone-400 mt-0.5">
                                 {m.ok ? 'Cưới vợ / gả chồng, +14 Hạnh phúc' : m.reason}

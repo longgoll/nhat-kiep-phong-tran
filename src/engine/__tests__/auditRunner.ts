@@ -363,6 +363,10 @@ function pickChoice(state: ActiveLifeState, event: GameEventDef, arch: Archetype
   ) {
     return pool[0];
   }
+  if (event.id === 'dec_exam_prompt') {
+    if (arch.tryExams && pool.includes(0)) return 0;
+    return pool.includes(1) ? 1 : pool[0];
+  }
   if (event.id === 'dec_retire_60') {
     const preferred = arch.focus === 'lam_them' ? 1 : 0;
     return pool.includes(preferred) ? preferred : pool[0];
