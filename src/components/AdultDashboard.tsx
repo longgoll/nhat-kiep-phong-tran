@@ -35,6 +35,11 @@ import {
   TRAIT_LABELS,
 } from '../engine/lifeInitializer';
 import {
+  getOfficialResidenceLabel,
+  getOfficialShortPostingPlace,
+  isOfficialPostedAway,
+} from '../engine/officialSystem';
+import {
   AUTO_ACTION_CANDIDATES,
   canAffordInstantAction,
   canHaveChild,
@@ -390,6 +395,14 @@ export function AdultDashboard() {
                       <span className="text-stone-200 text-right">{life.family.birthPlace}</span>
                     </div>
                   )}
+                  {life.official && isOfficialPostedAway(life) && (
+                    <div className="flex justify-between gap-2">
+                      <span className="text-stone-500 shrink-0">Nhiệm sở</span>
+                      <span className="text-sky-300 font-medium text-right">
+                        {getOfficialShortPostingPlace(life.official.track, life.official.posting)}
+                      </span>
+                    </div>
+                  )}
                   {life.family && (
                     <div className="flex justify-between gap-2">
                       <span className="text-stone-500 shrink-0">Thứ bậc</span>
@@ -673,7 +686,9 @@ export function AdultDashboard() {
                 <div>
                   <div className="text-[11px] text-stone-400">Nơi ở &amp; Nếp sống</div>
                   <div className="text-stone-200 font-medium mt-0.5">
-                    {HOUSING_NAMES[life.assets.housing] ?? life.assets.housing} • {activeLifestyleLabel}
+                    {(isOfficialPostedAway(life)
+                      ? getOfficialResidenceLabel(life)
+                      : HOUSING_NAMES[life.assets.housing] ?? life.assets.housing)} • {activeLifestyleLabel}
                   </div>
                 </div>
                 {life.family && (
@@ -786,6 +801,8 @@ export function AdultDashboard() {
               npcs={life.npcs}
               flags={life.flags}
               family={life.family}
+              officialRank={life.officialRank}
+              official={life.official}
             />
 
             {/* Trọng tâm hiện tại (Life Focus) */}

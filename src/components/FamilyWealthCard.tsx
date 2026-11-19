@@ -2,6 +2,11 @@ import type { ActiveLifeState, FamilyLivingTier } from '../types/activeLife';
 import { computeFamilyMonthlyNetCopper } from '../engine/childhoodEngine';
 import { formatCopper } from '../engine/economy';
 import { FAMILY_TIER_LABELS, getHousingDisplayLabel } from '../engine/lifeInitializer';
+import {
+  getOfficialResidenceLabel,
+  getOfficialShortPostingPlace,
+  isOfficialPostedAway,
+} from '../engine/officialSystem';
 
 export const HOUSING_NAMES: Record<string, string> = {
   gam_cau: 'Gầm cầu / Mái hiên tạm',
@@ -53,6 +58,15 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
           <div className="text-[11px] text-stone-500 mt-0.5 leading-snug">
             {(() => {
               if (life.flags.includes('tung_o_do')) return 'Đang đi ở đợ nhà địa chủ';
+              if (life.official && isOfficialPostedAway(life)) {
+                const place = getOfficialShortPostingPlace(life.official.track, life.official.posting);
+                return life.official.familyAccompanied
+                  ? `Đang sống cùng gia quyến tại ${place}`
+                  : `Tạm xa gia đình · Đang nhậm chức tại ${place}`;
+              }
+              if (life.flags.includes('da_ra_o_rieng') || life.flags.includes('da_khai_phu_hoang_toc')) {
+                return 'Đã tách hộ lập phủ riêng';
+              }
               const fAlive =
                 !life.flags.includes('mo_coi_cha') &&
                 life.npcs.some((n) => n.id === 'npc_father' && n.isAlive);
@@ -180,14 +194,16 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
         <div className="flex items-center justify-between gap-2">
           <span className="text-stone-500">Nơi ở hiện tại</span>
           <span className="text-stone-200 font-medium text-right">
-            {getHousingDisplayLabel({
-              housing: life.assets.housing,
-              originClass: life.profile.originClass,
-              gender: life.profile.gender,
-              ageYears: Math.floor(life.profile.totalDays / 360),
-              flags: life.flags,
-              family: life.family,
-            })}
+            {isOfficialPostedAway(life)
+              ? getOfficialResidenceLabel(life)
+              : getHousingDisplayLabel({
+                  housing: life.assets.housing,
+                  originClass: life.profile.originClass,
+                  gender: life.profile.gender,
+                  ageYears: Math.floor(life.profile.totalDays / 360),
+                  flags: life.flags,
+                  family: life.family,
+                })}
           </span>
         </div>
         {personalRice > 0 && (

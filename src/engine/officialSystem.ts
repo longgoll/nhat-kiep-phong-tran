@@ -244,6 +244,54 @@ export function getOfficialPostingLabel(track: OfficialTrack, posting: OfficialP
   return POSTING_LABELS[posting];
 }
 
+const CAPITAL_PLACE_KEYWORDS = ['kinh thành', 'tràng an', 'thăng long', 'tử cấm thành'];
+
+/**
+ * Checks whether the assigned official posting is right in the character's hometown/capital
+ * so they do not have to leave their family estate to take office.
+ */
+export function isHomePostingAtBirthPlace(
+  birthPlace: string | undefined,
+  posting: OfficialPosting,
+): boolean {
+  if (posting !== 'kinh_do' || !birthPlace) return false;
+  const normalized = birthPlace.toLowerCase();
+  return CAPITAL_PLACE_KEYWORDS.some((kw) => normalized.includes(kw));
+}
+
+export function isOfficialPostedAway(
+  state: Pick<ActiveLifeState, 'officialRank' | 'official' | 'family'>,
+): boolean {
+  if (state.officialRank <= 0 || !state.official) return false;
+  return !isHomePostingAtBirthPlace(state.family?.birthPlace, state.official.posting);
+}
+
+export function getOfficialShortPostingPlace(
+  track: OfficialTrack,
+  posting: OfficialPosting,
+): string {
+  if (posting === 'kinh_do') return 'Kinh thành';
+  if (posting === 'dong_bang') return 'Phủ huyện Đồng bằng';
+  if (posting === 'song_nuoc') return 'Vùng Sông nước';
+  return track === 'vo' ? 'Doanh trại Biên ải' : 'Biên ải / Sơn cước';
+}
+
+export function getOfficialResidenceLabel(
+  state: Pick<ActiveLifeState, 'officialRank' | 'official'>,
+): string {
+  if (state.officialRank <= 0 || !state.official) return '';
+  const { track, posting, rank } = state.official;
+  if (track === 'vo' && posting === 'bien_ai') {
+    return rank >= 6 ? 'Tướng phủ Tiền tuyến' : 'Doanh trại Biên ải';
+  }
+  if (track === 'hoan_quan') {
+    return rank >= 6 ? 'Phủ Nội giám Kinh thành' : 'Nội đình Công đường';
+  }
+  if (rank >= 7) return 'Dinh thự Đại thần';
+  if (rank >= 4) return 'Phủ nha Quan viên';
+  return 'Tư thất Nha môn';
+}
+
 export const FACTION_LABELS: Record<OfficialFaction, string> = {
   chua_dung_phe: 'Trung lập (Chưa đứng phe)',
   thanh_luu: 'Phe Thanh lưu (Sĩ phu)',

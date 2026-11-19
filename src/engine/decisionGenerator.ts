@@ -25,6 +25,7 @@ import {
   createOfficialProfile,
   getOfficialRankSpec,
   getOfficialTitle,
+  isHomePostingAtBirthPlace,
   setOfficialFamilyAccompany,
 } from './officialSystem';
 
@@ -1032,17 +1033,26 @@ export function applyDynamicDecisionSideEffects(
       const track = stamped.stats.martial > stamped.stats.education + 12 ? 'vo' : 'van';
       const { profile: offProfile, nextPrng } = createOfficialProfile(stamped, track, 1, false);
       const title = getOfficialTitle(1, track);
+      const addFlags = ['dang_lam_quan'];
+      if (
+        !isHomePostingAtBirthPlace(stamped.family?.birthPlace, offProfile.posting) &&
+        !stamped.flags.includes('da_ra_o_rieng')
+      ) {
+        addFlags.push('da_ra_o_rieng');
+      }
       const next = applyEffects(
         { ...stamped, prngState: nextPrng },
         {
           official_rank_delta: 1,
-          add_flags: ['dang_lam_quan'],
+          add_flags: addFlags,
           fame: 8,
           milestone_title: `Được tiến cử nhậm chức ${title}`,
         },
       );
       return {
         ...next,
+        isStudent: false,
+        livelihoodStatus: 'employed',
         official: offProfile,
         profile: { ...next.profile, currentRole: title },
       };

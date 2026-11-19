@@ -1,6 +1,11 @@
-import type { FamilyContext, Gender, HousingTier, NPC, OriginClass, Season, WorldState } from '../types/activeLife';
+import type { FamilyContext, Gender, HousingTier, NPC, OfficialProfile, OriginClass, Season, WorldState } from '../types/activeLife';
 import { getSeasonLabel, getWorldStateLabel } from '../engine/daySimulator';
 import { getHousingDisplayLabel } from '../engine/lifeInitializer';
+import {
+  getOfficialResidenceLabel,
+  getOfficialShortPostingPlace,
+  isOfficialPostedAway,
+} from '../engine/officialSystem';
 
 interface FeudalSceneBannerProps {
   housing: HousingTier;
@@ -13,6 +18,8 @@ interface FeudalSceneBannerProps {
   npcs?: NPC[];
   flags?: string[];
   family?: FamilyContext;
+  officialRank?: number;
+  official?: OfficialProfile;
 }
 
 const SKY_BY_SEASON: Record<Season, { from: string; to: string; accent: string }> = {
@@ -132,7 +139,9 @@ function buildHouseholdDisplay(
   housing: HousingTier,
   birthPlace?: string,
   flags: string[] = [],
-  family?: FamilyContext
+  family?: FamilyContext,
+  officialRank = 0,
+  official?: OfficialProfile
 ): {
   members: SceneMember[];
   primaryLine: string;
@@ -158,6 +167,11 @@ function buildHouseholdDisplay(
     hoang_toc: { robe: '#b91c1c', trim: '#fbbf24' },
   };
   const pStyle = playerRobeByOrigin[originClass];
+
+  const postedAway = isOfficialPostedAway({ officialRank, official, family });
+  const hasSeparatedFromParents =
+    postedAway || flags.includes('da_ra_o_rieng') || flags.includes('da_khai_phu_hoang_toc');
+  const showSpouseAndChildren = !postedAway || Boolean(official?.familyAccompanied);
 
   // Decide who stands in the family portrait
   if (isChildhood) {
@@ -206,29 +220,31 @@ function buildHouseholdDisplay(
       trimColor: pStyle.trim,
       isPlayer: true,
     });
-    spouses.slice(0, 1).forEach((sp) => {
-      const spAge = sp.age !== undefined ? sp.age + ageYears : ageYears;
-      members.push({
-        id: sp.id,
-        label: sp.name,
-        age: spAge,
-        gender: sp.gender,
-        robeColor: sp.gender === 'male' ? '#334155' : '#be123c',
-        trimColor: '#fde68a',
+    if (showSpouseAndChildren) {
+      spouses.slice(0, 1).forEach((sp) => {
+        const spAge = sp.age !== undefined ? sp.age + ageYears : ageYears;
+        members.push({
+          id: sp.id,
+          label: sp.name,
+          age: spAge,
+          gender: sp.gender,
+          robeColor: sp.gender === 'male' ? '#334155' : '#be123c',
+          trimColor: '#fde68a',
+        });
       });
-    });
-    children.slice(0, 4).forEach((ch) => {
-      const chAge = ch.age !== undefined ? ch.age + ageYears : 1;
-      members.push({
-        id: ch.id,
-        label: ch.name,
-        age: chAge,
-        gender: ch.gender,
-        robeColor: ch.gender === 'male' ? '#0f766e' : '#db2777',
-        trimColor: '#fef3c7',
+      children.slice(0, 4).forEach((ch) => {
+        const chAge = ch.age !== undefined ? ch.age + ageYears : 1;
+        members.push({
+          id: ch.id,
+          label: ch.name,
+          age: chAge,
+          gender: ch.gender,
+          robeColor: ch.gender === 'male' ? '#0f766e' : '#db2777',
+          trimColor: '#fef3c7',
+        });
       });
-    });
-    if (spouses.length === 0 && children.length === 0 && ageYears < 22) {
+    }
+    if (!hasSeparatedFromParents && spouses.length === 0 && children.length === 0 && ageYears < 22) {
       parents.slice(0, 2).forEach((p) => {
         const pAge = p.age !== undefined ? p.age + ageYears : 45;
         members.push({
@@ -255,42 +271,54 @@ function buildHouseholdDisplay(
     else if (hasMother) livingParts.push('mẹ');
     if (siblings.length > 0) livingParts.push(`${siblings.length} anh chị em`);
   } else {
-    if (spouses.length > 0) {
-      livingParts.push(spouses[0].gender === 'male' ? 'phu quân' : 'thê tử');
+    if (showSpouseAndChildren) {
+      if (spouses.length > 0) {
+        livingParts.push(spouses[0].gender === 'male' ? 'phu quân' : 'thê tử');
+      }
+      if (children.length > 0) {
+        livingParts.push(`${children.length} con`);
+      }
     }
-    if (children.length > 0) {
-      livingParts.push(`${children.length} con`);
-    }
-    if (livingParts.length === 0 && ageYears < 22 && parents.length > 0) {
+    if (!hasSeparatedFromParents && livingParts.length === 0 && ageYears < 22 && parents.length > 0) {
       livingParts.push(isColdPalace ? 'mẫu phi' : 'cha mẹ');
     }
   }
 
-  const livingText =
-    livingParts.length > 0
+  const livingText = postedAway
+    ? livingParts.length > 0
+      ? `cùng ${livingParts.join(' và ')} tại phủ nha`
+      : `độc cư tại nhiệm sở${spouses.length > 0 || children.length > 0 || parents.length > 0 ? ' (gia quyến ở quê)' : ''}`
+    : livingParts.length > 0
       ? `sống cùng ${livingParts.join(' và ')}`
       : isChildhood
         ? 'tự lập sớm'
-        : 'sống tự lập';
+        : hasSeparatedFromParents
+          ? 'tự lập tại phủ riêng'
+          : 'sống tự lập';
 
   const displayPlace =
-    originClass === 'hoang_toc' && flags.includes('da_khai_phu_hoang_toc')
-      ? 'Kinh thành'
-      : birthPlace;
-  const housingLabel = getHousingDisplayLabel({
-    housing,
-    originClass,
-    gender,
-    ageYears,
-    flags,
-    family,
-  });
+    postedAway && official
+      ? getOfficialShortPostingPlace(official.track, official.posting)
+      : originClass === 'hoang_toc' && flags.includes('da_khai_phu_hoang_toc')
+        ? 'Kinh thành'
+        : birthPlace;
+  const housingLabel =
+    postedAway && official
+      ? getOfficialResidenceLabel({ officialRank, official })
+      : getHousingDisplayLabel({
+          housing,
+          originClass,
+          gender,
+          ageYears,
+          flags,
+          family,
+        });
   const primaryParts = [displayPlace, housingLabel, livingText].filter(Boolean);
   const primaryLine = primaryParts.join(' · ');
 
   // Secondary info line (1in8b style): Bạn, X tuổi · Mẹ, Y tuổi · Cha, Z tuổi · ...
   const ageSummary: string[] = [`Bạn, ${ageYears} tuổi`];
-  if (isChildhood || (spouses.length === 0 && children.length === 0 && ageYears < 22)) {
+  if (isChildhood || (!hasSeparatedFromParents && spouses.length === 0 && children.length === 0 && ageYears < 22)) {
     const mother =
       parents.find((p) => p.gender === 'female' && p.role.toLowerCase().includes('mẹ ruột')) ??
       parents.find(
@@ -355,6 +383,8 @@ export function FeudalSceneBanner({
   npcs = [],
   flags = [],
   family,
+  officialRank = 0,
+  official,
 }: FeudalSceneBannerProps) {
   const sky = SKY_BY_SEASON[season];
   const { members, primaryLine, secondaryLine } = buildHouseholdDisplay(
@@ -365,7 +395,9 @@ export function FeudalSceneBanner({
     housing,
     birthPlace,
     flags,
-    family
+    family,
+    officialRank,
+    official
   );
 
   const startX = 188;

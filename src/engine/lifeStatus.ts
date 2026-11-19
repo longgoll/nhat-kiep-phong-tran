@@ -1,6 +1,6 @@
 import { getAgeYears, type ActiveLifeState, type CohortPeer } from '../types/activeLife';
 import { CAREER_CATALOG, VENTURE_CATALOG } from './careerSystem';
-import { POSTING_LABELS, getOfficialGradeAndTitle } from './officialSystem';
+import { getOfficialGradeAndTitle, getOfficialShortPostingPlace, isOfficialPostedAway } from './officialSystem';
 
 /**
  * Unified 1in8b-style education ladder from childhood to adulthood.
@@ -221,21 +221,25 @@ export function getStatusLineParts(state: ActiveLifeState): { primary: string; d
   const place = state.family?.birthPlace ?? 'Đại Việt';
   const age = getAgeYears(state.profile.totalDays);
 
+  if (state.officialRank > 0) {
+    const rankTitle = getOfficialGradeAndTitle(state);
+    const postedAway = isOfficialPostedAway(state);
+    const postingPlace = state.official
+      ? getOfficialShortPostingPlace(state.official.track, state.official.posting)
+      : place;
+    const residenceNote = postedAway ? 'đã tới nhiệm sở' : 'tại quê nhà / Kinh thành';
+    return {
+      primary: rankTitle,
+      detail: `quan chức triều đình · ${postingPlace} (${residenceNote})`,
+    };
+  }
+
   if (state.isStudent || state.livelihoodStatus === 'student') {
     const yearNum = Math.min(4, Math.max(1, age - 17));
     const major = state.major ? ` (${state.major})` : '';
     return {
       primary: `Năm thứ ${yearNum} Quốc Tử Giám${major}`,
       detail: `Đang theo học · ${place}`,
-    };
-  }
-
-  if (state.officialRank > 0) {
-    const rankTitle = getOfficialGradeAndTitle(state);
-    const posting = state.official ? POSTING_LABELS[state.official.posting] : place;
-    return {
-      primary: rankTitle,
-      detail: `quan chức triều đình · ${posting}`,
     };
   }
 

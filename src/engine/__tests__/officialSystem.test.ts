@@ -24,6 +24,8 @@ import {
   donateDisasterReliefAsOfficial,
   equipMilitaryGear,
   evaluateKhaoKhoa,
+  isHomePostingAtBirthPlace,
+  isOfficialPostedAway,
   manageOfficialStaff,
   rewardMilitaryTroops,
   sendSeasonalSuperiorGift,
@@ -31,6 +33,7 @@ import {
   triggerDingYouLeave,
   triggerKimCachTongNhung,
 } from '../officialSystem';
+import { getStatusLineParts } from '../lifeStatus';
 import { DAYS_PER_YEAR } from '../../types/activeLife';
 
 function makeAdultLife(origin: 'ban_nong' | 'thu_cong' | 'dia_chu' | 'quan_lai' | 'hoang_toc' = 'quan_lai', seed = 101) {
@@ -266,5 +269,37 @@ describe('Feudal Official System (Văn · Võ · Hoạn Quan & Luật Triều Đ
     const lenKinhEvt = ALL_EVENTS.find((e) => e.id === 'evt_chain_len_kinh_1');
     expect(lenKinhEvt).toBeDefined();
     expect(isEventContextuallyAllowed(off, lenKinhEvt!)).toBe(false);
+  });
+
+  it('clears student status on appointment and distinguishes home capital vs distant posting', () => {
+    const base = makeAdultLife('quan_lai', 202);
+    const student = {
+      ...base,
+      isStudent: true,
+      livelihoodStatus: 'student' as const,
+      eduLevel: 4,
+      major: 'Kinh sử - Chính trị',
+      flags: ['do_tu_tai'],
+      family: { ...base.family!, birthPlace: 'Phố quan lại Tràng An' },
+    };
+
+    const off = appointOrPromoteOfficial(student);
+    expect(off.officialRank).toBe(1);
+    expect(off.isStudent).toBe(false);
+    expect(off.livelihoodStatus).toBe('employed');
+
+    const statusLine = getStatusLineParts(off);
+    expect(statusLine.primary).toContain('Cửu phẩm');
+    expect(statusLine.detail).toContain('quan chức triều đình');
+
+    // Home posting check: Tràng An + kinh_do is at home, local postings are posted away
+    expect(isHomePostingAtBirthPlace('Phố quan lại Tràng An', 'kinh_do')).toBe(true);
+    expect(isHomePostingAtBirthPlace('Phố quan lại Tràng An', 'dong_bang')).toBe(false);
+    expect(isHomePostingAtBirthPlace('Làng quê đồng bằng Bắc Bộ', 'kinh_do')).toBe(false);
+
+    if (off.official && off.official.posting !== 'kinh_do') {
+      expect(isOfficialPostedAway(off)).toBe(true);
+      expect(off.flags).toContain('da_ra_o_rieng');
+    }
   });
 });

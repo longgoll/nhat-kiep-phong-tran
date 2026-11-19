@@ -39,9 +39,12 @@ import {
   getOfficialMonthlyUpkeepCopper,
   getOfficialPostingLabel,
   getOfficialRankSpec,
+  getOfficialResidenceLabel,
+  isOfficialPostedAway,
   manageOfficialStaff,
   rewardMilitaryTroops,
   sendSeasonalSuperiorGift,
+  setOfficialFamilyAccompany,
   bribeForEarlyPromotion,
 } from '../engine/officialSystem';
 import { getAgeYears } from '../types/activeLife';
@@ -380,8 +383,10 @@ export function ProgressionModules() {
             {life.official && (
               <span className="text-[11px] text-stone-400">
                 {getOfficialPostingLabel(life.official.track, life.official.posting)} ·{' '}
-                {life.official.familyAccompanied ? 'Cùng gia quyến tại phủ' : 'Gia quyến ở quê'} ·{' '}
-                {FACTION_LABELS[life.official.faction]}
+                {isOfficialPostedAway(life)
+                  ? `${getOfficialResidenceLabel(life)} · ${life.official.familyAccompanied ? 'Cùng gia quyến tại phủ' : 'Gia quyến ở quê'}`
+                  : 'Nhậm chức tại quê nhà / Kinh thành (Không phải đi xa)'}{' '}
+                · {FACTION_LABELS[life.official.faction]}
               </span>
             )}
           </div>
@@ -465,6 +470,18 @@ export function ProgressionModules() {
                       <span className="px-2 py-1 rounded bg-emerald-950/60 border border-emerald-800 text-emerald-300">
                         {isVo ? 'Đã có Mạc liêu hỗ trợ' : 'Đã có Sư gia hỗ trợ'}
                       </span>
+                    )}
+                    {isOfficialPostedAway(life) && !(isVo && off.posting === 'bien_ai') && (
+                      <button
+                        type="button"
+                        disabled={!off.familyAccompanied && life.assets.wealthCopper < life.officialRank * 600}
+                        onClick={() => applyLifeMutation((s) => setOfficialFamilyAccompany(s, !off.familyAccompanied))}
+                        className="px-2 py-1 rounded bg-amber-950/70 hover:bg-amber-900/70 border border-amber-700/50 text-amber-200 disabled:opacity-40 cursor-pointer"
+                      >
+                        {off.familyAccompanied
+                          ? 'Đưa gia quyến về quê giữ từ đường'
+                          : `Đón gia quyến lên phủ (-${formatCopper(life.officialRank * 600)})`}
+                      </button>
                     )}
                   </div>
                 </div>

@@ -16,6 +16,7 @@ import {
   createOfficialProfile,
   evaluateKhaoKhoa,
   getOfficialTitle,
+  isHomePostingAtBirthPlace,
 } from './officialSystem';
 
 export const OFFICIAL_RANKS = [
@@ -473,12 +474,22 @@ export function takeExam(state: ActiveLifeState, level: ExamLevel): ActiveLifeSt
 function applyOfficialScheduleAndClearCareer(
   state: ActiveLifeState,
   track: 'van' | 'vo' | 'hoan_quan' = 'van',
+  posting?: 'kinh_do' | 'dong_bang' | 'song_nuoc' | 'bien_ai',
 ): ActiveLifeState {
   const cleanFlags = state.flags.filter((f) => !f.startsWith('career_') && !f.startsWith('venture_'));
+  if (
+    posting &&
+    !isHomePostingAtBirthPlace(state.family?.birthPlace, posting) &&
+    !cleanFlags.includes('da_ra_o_rieng')
+  ) {
+    cleanFlags.push('da_ra_o_rieng');
+  }
   const officialAction = track === 'vo' ? 'act_quan_vo_thao_luyen' : 'act_xu_an_cong_duong';
   return {
     ...state,
     flags: cleanFlags,
+    isStudent: false,
+    livelihoodStatus: 'employed',
     activeCareer: null,
     activeVenture: null,
     schedule: {
@@ -525,6 +536,7 @@ export function appointOrPromoteOfficial(state: ActiveLifeState): ActiveLifeStat
 
     const { profile: offProfile, nextPrng } = createOfficialProfile(state, track, startRank, false);
     const roleName = getOfficialTitle(startRank, track);
+    const atHome = isHomePostingAtBirthPlace(state.family?.birthPlace, offProfile.posting);
     const next = applyOfficialScheduleAndClearCareer(
       applyEffects(
         { ...state, prngState: nextPrng },
@@ -536,6 +548,7 @@ export function appointOrPromoteOfficial(state: ActiveLifeState): ActiveLifeStat
         },
       ),
       track,
+      offProfile.posting,
     );
     return {
       ...next,
@@ -546,7 +559,9 @@ export function appointOrPromoteOfficial(state: ActiveLifeState): ActiveLifeStat
         next.logs,
         next.profile.totalDays,
         'event',
-        `Triều đình hạ chỉ bổ nhiệm bạn làm ${roleName} (Nhiệm sở: ${POSTING_LABELS[offProfile.posting]}).`,
+        atHome
+          ? `Triều đình hạ chỉ bổ nhiệm bạn làm ${roleName} (Nhiệm sở ngay tại ${POSTING_LABELS[offProfile.posting]}, không phải đi xa nhậm chức).`
+          : `Triều đình hạ chỉ bổ nhiệm bạn làm ${roleName}. Bạn thu xếp hành trang tới ${POSTING_LABELS[offProfile.posting]} nhận chức và mở phủ nha riêng.`,
       ),
     };
   }
@@ -591,6 +606,7 @@ export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
   const { profile: offProfile, nextPrng } = createOfficialProfile(state, track, startRank, false);
   const roleName = getOfficialTitle(startRank, track);
 
+  const atHome = isHomePostingAtBirthPlace(state.family?.birthPlace, offProfile.posting);
   const next = applyOfficialScheduleAndClearCareer(
     applyEffects(
       { ...state, prngState: nextPrng },
@@ -602,6 +618,7 @@ export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
       },
     ),
     track,
+    offProfile.posting,
   );
   return {
     ...next,
@@ -612,7 +629,9 @@ export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
       next.logs,
       next.profile.totalDays,
       'event',
-      `Theo lệ Tập ấm Hoàng thất, Bệ hạ hạ chỉ thụ phong bạn làm ${roleName}!`,
+      atHome
+        ? `Theo lệ Tập ấm Hoàng thất, Bệ hạ hạ chỉ thụ phong bạn làm ${roleName} tại ${POSTING_LABELS[offProfile.posting]}!`
+        : `Theo lệ Tập ấm Hoàng thất, Bệ hạ hạ chỉ thụ phong bạn làm ${roleName}, điều tới ${POSTING_LABELS[offProfile.posting]} mở phủ nhậm chức!`,
     ),
   };
 }
@@ -666,6 +685,8 @@ export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
         milestone_title: 'Quyên quan mua Cửu phẩm hư hàm',
       },
     ),
+    'van',
+    offProfile.posting,
   );
   return {
     ...next,

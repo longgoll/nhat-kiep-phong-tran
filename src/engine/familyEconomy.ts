@@ -2,6 +2,7 @@ import type { ActiveLifeState, OriginClass } from '../types/activeLife';
 import { formatCopper } from './economy';
 import { appendLog, applyEffects } from './effectApplier';
 import { getParentMonthlyIncome } from './lifeInitializer';
+import { isOfficialPostedAway } from './officialSystem';
 
 export interface FamilyCashflowBreakdown {
   fatherIncome: number;
@@ -53,7 +54,11 @@ export function computeFamilyMonthlyNetCopper(state: ActiveLifeState): FamilyCas
       (n.relation === 'parent' || n.relation === 'sibling') &&
       !(origin === 'hoang_toc' && (n.id.startsWith('npc_concubine_') || n.id === 'npc_grandmother')),
   ).length;
-  const mouthsToFeed = 1 + livingFamilyMembers;
+  const livingAway =
+    state.flags.includes('da_ra_o_rieng') ||
+    state.flags.includes('da_khai_phu_hoang_toc') ||
+    isOfficialPostedAway(state);
+  const mouthsToFeed = livingAway ? Math.max(1, livingFamilyMembers) : 1 + livingFamilyMembers;
 
   const worldState = state.world.worldState;
   const isAgrarianOrigin = origin === 'ban_nong' || origin === 'dia_chu';
