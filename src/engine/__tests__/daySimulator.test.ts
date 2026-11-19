@@ -422,4 +422,24 @@ describe('Day Simulator (MVP 2)', () => {
     expect(sawSuccess).toBe(true);
     expect(sawFail).toBe(true);
   });
+
+  it('covers minimal chao_loang meals for indentured servants (bi_ep_lam_gia_no) so they do not starve while working unpaid', () => {
+    const raw = createNewLife(950);
+    const servant = {
+      ...raw,
+      profile: { ...raw.profile, originClass: 'ban_nong' as const, totalDays: 14 * 360 },
+      assets: { ...raw.assets, wealthCopper: 0, rice: 0 },
+      flags: [...raw.flags, 'bi_ep_lam_gia_no', 'gia_dinh_mac_no'],
+    };
+
+    expect(getFamilyCoveredLifestyleTier(servant)).toBe('chao_loang');
+    const res = advanceDays(servant, 90, ACTIONS, [], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: true,
+    });
+    expect(res.state.isAlive).toBe(true);
+    expect(res.pausedReason).not.toBe('no_food');
+  });
 });

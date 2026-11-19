@@ -733,9 +733,15 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
     quan_lai: 250,
     hoang_toc: 300,
   };
+  const wasIndentured = inputState.flags.includes('tung_o_do');
+  const continueServitude =
+    wasIndentured &&
+    (inputState.family?.familyLivingTier === 'tung_thieu' ||
+      inputState.flags.includes('gia_dinh_mac_no'));
+
   const rawGrant = Math.round(familyWealth * keepRatio);
   const cappedGrant = Math.min(maxGrantByOrigin[originClass], rawGrant);
-  const familyGrantCopper = Math.max(15, Math.min(familyWealth, cappedGrant));
+  const familyGrantCopper = continueServitude ? 0 : Math.max(15, Math.min(familyWealth, cappedGrant));
   const nextFamilyWealth = Math.max(0, familyWealth - familyGrantCopper);
   const personalCopper = inputState.assets.wealthCopper + familyGrantCopper;
   const baseRiceByOrigin: Record<ActiveLifeState['profile']['originClass'], number> = {
@@ -801,12 +807,6 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
       fallbackRules: starterFallbackRules,
     },
   };
-
-  const wasIndentured = inputState.flags.includes('tung_o_do');
-  const continueServitude =
-    wasIndentured &&
-    (inputState.family?.familyLivingTier === 'tung_thieu' ||
-      inputState.flags.includes('gia_dinh_mac_no'));
 
   const transitionAddFlags = ['da_truong_thanh_13'];
   const transitionRemoveFlags: string[] = [];

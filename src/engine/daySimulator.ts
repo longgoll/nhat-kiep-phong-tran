@@ -266,6 +266,10 @@ function canReceiveFamilySupport(state: ActiveLifeState): boolean {
  * while the character is still living at home (not moved out).
  */
 export function getFamilyCoveredLifestyleTier(state: ActiveLifeState): LifestyleTier | null {
+  // Gia nô trừ nợ được nhà địa chủ nuôi cơm cháo tối thiểu tại phủ chủ (không tự bỏ tiền mua gạo)
+  if (state.flags.includes('bi_ep_lam_gia_no')) {
+    return 'chao_loang';
+  }
   if (!state.family) return null;
 
   const { originClass } = state.profile;
