@@ -63,9 +63,9 @@ describe('Economy, Food & Stipend Integrity Audit', () => {
       const maxExpectedAt13: Record<OriginClass, number> = {
         ban_nong: 120,
         thu_cong: 350,
-        dia_chu: 1350,
-        quan_lai: 2800,
-        hoang_toc: 6500,
+        dia_chu: 1650,
+        quan_lai: 3200,
+        hoang_toc: 8500,
       };
       expect(life.assets.wealthCopper).toBeLessThanOrEqual(maxExpectedAt13[origin]);
       expect(life.assets.rice).toBeLessThanOrEqual(50);

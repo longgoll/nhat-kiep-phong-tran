@@ -39,7 +39,7 @@ export function formatCopper(totalCopper: number): string {
   const sign = totalCopper < 0 ? '-' : '';
   const { gold, silver, copper } = breakdownCopper(totalCopper);
   const parts: string[] = [];
-  if (gold > 0) parts.push(`${gold} Vàng`);
+  if (gold > 0) parts.push(`${gold >= 1000 ? gold.toLocaleString('vi-VN') : gold} Vàng`);
   if (silver > 0) parts.push(`${silver} Bạc`);
   if (copper > 0 || parts.length === 0) parts.push(`${copper} Đồng`);
   return `${sign}${parts.join(' ')}`;

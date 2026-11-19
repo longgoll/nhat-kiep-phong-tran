@@ -154,17 +154,17 @@ export const FATHER_OCCUPATIONS: Record<OriginClass, OccupationSpec[]> = {
     { id: 'tho_gom', label: 'Thợ gốm làng nghề', monthlyIncome: 70, bonusStats: { craftTrade: 5 } },
   ],
   dia_chu: [
-    { id: 'dien_chu', label: 'Điền chủ nhiều ruộng đất', monthlyIncome: 460, bonusStats: { fame: 3 } },
-    { id: 'hao_phu', label: 'Hào phú buôn muối & tơ lụa', monthlyIncome: 620, wealthMult: 1.25, bonusStats: { craftTrade: 6, fame: 2 } },
-    { id: 'chu_duoc_phong', label: 'Chủ hiệu thuốc bắc lớn', monthlyIncome: 520, bonusStats: { education: 4, craftTrade: 4 } },
+    { id: 'dien_chu', label: 'Điền chủ nhiều ruộng đất', monthlyIncome: 3500, bonusStats: { fame: 3 } },
+    { id: 'hao_phu', label: 'Hào phú buôn muối & tơ lụa', monthlyIncome: 5200, wealthMult: 1.25, bonusStats: { craftTrade: 6, fame: 2 } },
+    { id: 'chu_duoc_phong', label: 'Chủ hiệu thuốc bắc lớn', monthlyIncome: 4200, bonusStats: { education: 4, craftTrade: 4 } },
   ],
   quan_lai: [
-    { id: 'quan_van', label: 'Quan văn thanh liêm', monthlyIncome: 1400, wealthMult: 0.8, bonusStats: { education: 8, fame: 5 } },
-    { id: 'quan_vo', label: 'Quan võ trấn ải', monthlyIncome: 1800, wealthMult: 0.9, bonusStats: { martial: 8, fame: 4 } },
-    { id: 'tham_quan', label: 'Quan phủ nhiều mưu mẹo', monthlyIncome: 2600, wealthMult: 1.35, bonusStats: { craftTrade: 5, fame: 1 } },
+    { id: 'quan_van', label: 'Quan văn thanh liêm', monthlyIncome: 12000, wealthMult: 0.8, bonusStats: { education: 8, fame: 5 } },
+    { id: 'quan_vo', label: 'Quan võ trấn ải', monthlyIncome: 16000, wealthMult: 0.9, bonusStats: { martial: 8, fame: 4 } },
+    { id: 'tham_quan', label: 'Quan phủ nhiều mưu mẹo', monthlyIncome: 25000, wealthMult: 1.35, bonusStats: { craftTrade: 5, fame: 1 } },
   ],
   hoang_toc: [
-    { id: 'hoang_de', label: 'Hoàng thượng trị vì', monthlyIncome: 8000, bonusStats: { fame: 10, education: 5 } },
+    { id: 'hoang_de', label: 'Hoàng thượng trị vì', monthlyIncome: 80000, bonusStats: { fame: 10, education: 5 } },
   ],
 };
 
@@ -180,14 +180,14 @@ export const MOTHER_OCCUPATIONS: Record<OriginClass, OccupationSpec[]> = {
     { id: 'det_lua', label: 'Dệt lụa truyền thống', monthlyIncome: 30 },
   ],
   dia_chu: [
-    { id: 'quan_gia_noi_tro', label: 'Quản lý điền trang & gia nhân', monthlyIncome: 140 },
-    { id: 'tieu_thu', label: 'Tiểu thư khuê các', monthlyIncome: 80 },
+    { id: 'quan_gia_noi_tro', label: 'Quản lý điền trang & gia nhân', monthlyIncome: 1200 },
+    { id: 'tieu_thu', label: 'Tiểu thư khuê các', monthlyIncome: 600 },
   ],
   quan_lai: [
-    { id: 'phu_nhan', label: 'Phu nhân phủ quan', monthlyIncome: 220 },
+    { id: 'phu_nhan', label: 'Phu nhân phủ quan', monthlyIncome: 2000 },
   ],
   hoang_toc: [
-    { id: 'hoang_hau_phi_tan', label: 'Hoàng hậu / Phi tần', monthlyIncome: 1500 },
+    { id: 'hoang_hau_phi_tan', label: 'Hoàng hậu / Phi tần', monthlyIncome: 15000 },
   ],
 };
 
@@ -202,11 +202,11 @@ export function getParentMonthlyIncome(
   const fList = FATHER_OCCUPATIONS[originClass] ?? [];
   const mList = MOTHER_OCCUPATIONS[originClass] ?? [];
   const extraFatherIncome: Record<string, number> = {
-    quan_vuong: 4500,
+    quan_vuong: 42000,
     tien_de: 0,
   };
   const extraMotherIncome: Record<string, number> = {
-    vuong_phi: 900,
+    vuong_phi: 8000,
   };
   const fSpec = fList.find((o) => o.id === fatherOccId) ?? fList[0];
   const mSpec = mList.find((o) => o.id === motherOccId) ?? mList[0];

@@ -24,7 +24,7 @@ export interface OriginCoreConfig {
 
 export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
   ban_nong: {
-    wealthRange: [40, 150],
+    wealthRange: [30, 180],
     baseStats: {
       health: 70,
       happiness: 62,
@@ -45,7 +45,7 @@ export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
     },
   },
   thu_cong: {
-    wealthRange: [800, 2200],
+    wealthRange: [800, 2800],
     baseStats: {
       health: 68,
       happiness: 64,
@@ -66,7 +66,7 @@ export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
     },
   },
   dia_chu: {
-    wealthRange: [15000, 40000],
+    wealthRange: [120000, 480000],
     baseStats: {
       health: 68,
       happiness: 66,
@@ -87,7 +87,7 @@ export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
     },
   },
   quan_lai: {
-    wealthRange: [45000, 110000],
+    wealthRange: [450000, 1600000],
     baseStats: {
       health: 65,
       happiness: 64,
@@ -108,7 +108,7 @@ export const ORIGIN_CORE_CONFIG: Record<OriginClass, OriginCoreConfig> = {
     },
   },
   hoang_toc: {
-    wealthRange: [500000, 1200000],
+    wealthRange: [3000000, 12000000],
     baseStats: {
       health: 58,
       happiness: 62,

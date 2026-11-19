@@ -113,8 +113,8 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
   const circ = circList[circPick.value];
 
   if (circ.isTonThat) {
-    fatherOcc = { id: 'quan_vuong', label: 'Quận vương Tôn thất', monthlyIncome: 4500 };
-    motherOcc = { id: 'vuong_phi', label: 'Vương phi', monthlyIncome: 900 };
+    fatherOcc = { id: 'quan_vuong', label: 'Quận vương Tôn thất', monthlyIncome: 42000 };
+    motherOcc = { id: 'vuong_phi', label: 'Vương phi', monthlyIncome: 8000 };
   } else if (originClass === 'hoang_toc' && circ.fatherAlive === false) {
     fatherOcc = { id: 'tien_de', label: 'Tiên đế quá cố', monthlyIncome: 0 };
   }

@@ -17,9 +17,9 @@ export interface FamilyCashflowBreakdown {
 const PER_MOUTH_COST_BY_ORIGIN: Record<OriginClass, number> = {
   ban_nong: 4,
   thu_cong: 11,
-  dia_chu: 55,
-  quan_lai: 140,
-  hoang_toc: 500,
+  dia_chu: 280,
+  quan_lai: 900,
+  hoang_toc: 3500,
 };
 
 /**
@@ -73,7 +73,7 @@ export function computeFamilyMonthlyNetCopper(state: ActiveLifeState): FamilyCas
   // Upkeep for wealthier estates to prevent runaway inflation during childhood
   const familyWealth = state.family?.familyWealthCopper ?? 0;
   if (origin === 'dia_chu' || origin === 'quan_lai' || origin === 'hoang_toc') {
-    expense += Math.round(familyWealth * 0.0012);
+    expense += Math.round(familyWealth * 0.0005);
   }
 
   if (state.flags.includes('that_sung_cung_dinh')) {
