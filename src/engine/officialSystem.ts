@@ -235,6 +235,15 @@ export const POSTING_LABELS: Record<OfficialPosting, string> = {
   bien_ai: 'Biên ải / Sơn cước (Gian khổ)',
 };
 
+export function getOfficialPostingLabel(track: OfficialTrack, posting: OfficialPosting): string {
+  if (track === 'vo') {
+    if (posting === 'kinh_do') return 'Cấm quân / Ngự lâm Kinh thành';
+    if (posting === 'bien_ai') return 'Doanh trại Biên ải / Tiền tuyến (Cấm mang gia quyến)';
+    return 'Trấn thủ Phủ thành / Đồn ải nội địa';
+  }
+  return POSTING_LABELS[posting];
+}
+
 export const FACTION_LABELS: Record<OfficialFaction, string> = {
   chua_dung_phe: 'Trung lập (Chưa đứng phe)',
   thanh_luu: 'Phe Thanh lưu (Sĩ phu)',
@@ -448,11 +457,14 @@ export function evaluateKhaoKhoa(state: ActiveLifeState): ActiveLifeState {
 
   const relevantSkill = off.track === 'vo' ? state.stats.martial : state.stats.education;
   const advisorBonus = off.hasAdvisor ? 8 : 0;
+  // Bảo cử (Patronage): from Ngũ phẩm (5) upward, lacking faction & relationships penalizes review
+  const patronagePenalty = nextRank >= 5 && off.faction === 'chua_dung_phe' && state.stats.relationships < 55 ? 18 : 0;
   const score =
     off.merit +
     Math.max(-20, Math.min(25, Math.round(off.publicTrust * 0.25))) +
     Math.round(off.imperialFavor * 0.4) +
     advisorBonus -
+    patronagePenalty -
     Math.round(off.scandalRisk * 0.8);
 
   const canPromoteByStats =
@@ -504,10 +516,42 @@ export function evaluateKhaoKhoa(state: ActiveLifeState): ActiveLifeState {
     };
   }
 
-  // Thượng khảo -> Promote!
+  // Thượng khảo -> Check Khuyết vị (Vacancy Gate) for Tam phẩm (7) .. Nhất phẩm (9)
   if (canPromoteByStats && score >= nextSpec.minMeritRequired + 15) {
+    let workingPrng = state.prngState;
+    if (nextRank >= 7) {
+      const baseVacancy = nextRank === 7 ? 0.65 : nextRank === 8 ? 0.45 : 0.25;
+      const favorBonus = off.imperialFavor >= 80 ? 0.15 : 0;
+      const factionBonus = off.faction !== 'chua_dung_phe' ? 0.12 : 0;
+      const warBonus = state.world.worldState === 'chien_tranh' ? 0.15 : 0;
+      const vacancyChance = Math.min(0.9, baseVacancy + favorBonus + factionBonus + warBonus);
+      const vacancyRoll = mulberry32Next(workingPrng);
+      workingPrng = vacancyRoll.nextState;
+      if (vacancyRoll.value > vacancyChance) {
+        const bonusCopper = off.rank * 800;
+        const next = applyEffects(
+          { ...state, prngState: workingPrng },
+          { copper: bonusCopper, fame: 5 },
+        );
+        return {
+          ...next,
+          official: {
+            ...off,
+            lastReviewDay: next.profile.totalDays,
+            imperialFavor: Math.min(100, off.imperialFavor + 3),
+          },
+          logs: appendLog(
+            next.logs,
+            next.profile.totalDays,
+            'event',
+            `Khảo khóa đạt Thượng khảo nhưng triều đình chưa có khuyết vị ${nextSpec.gradeLabel}! Bạn được Gia hàm thưởng ${bonusCopper}đ và đợi kỳ sau.`,
+          ),
+        };
+      }
+    }
+
     const newTitle = nextSpec.titles[off.track];
-    const { posting, nextPrng } = pickPostingByAvoidance(nextRank, off.track, state.prngState);
+    const { posting, nextPrng } = pickPostingByAvoidance(nextRank, off.track, workingPrng);
     const next = applyEffects(
       { ...state, prngState: nextPrng },
       {
@@ -532,7 +576,7 @@ export function evaluateKhaoKhoa(state: ActiveLifeState): ActiveLifeState {
         next.logs,
         next.profile.totalDays,
         'event',
-        `Khảo khóa đạt Thượng khảo! Triều đình thăng bạn lên ${nextSpec.gradeLabel} · ${newTitle} (Nhiệm sở: ${POSTING_LABELS[posting]}).`,
+        `Khảo khóa đạt Thượng khảo! Triều đình bổ bạn vào khuyết vị ${nextSpec.gradeLabel} · ${newTitle} (Nhiệm sở: ${getOfficialPostingLabel(off.track, posting)}).`,
       ),
     };
   }
@@ -728,6 +772,71 @@ export function triggerDingYouLeave(state: ActiveLifeState): ActiveLifeState {
       next.profile.totalDays,
       'event',
       'Theo lễ chế Đinh ưu, quan Văn phải giao ấn từ quan về quê chịu tang 3 năm trước khi phục chức.',
+    ),
+  };
+}
+
+export function triggerKimCachTongNhung(state: ActiveLifeState): ActiveLifeState {
+  if (!state.official || state.official.track !== 'vo' || state.officialRank <= 0) return state;
+  const next = applyEffects(state, {
+    happiness: -15,
+    imperial_favor: 5,
+    merit: 4,
+    fame: 6,
+  });
+  return {
+    ...next,
+    logs: appendLog(
+      next.logs,
+      next.profile.totalDays,
+      'event',
+      'Song thân qua đời nơi quê nhà, nhưng bạn đang giữ trọng trách quân vụ ngoài biên ải, đành tuân lệnh "Kim cách tòng nhung" nén đau thương giữ vững phòng tuyến (+5 Thánh sủng, +4 Quân công).',
+    ),
+  };
+}
+
+export function rewardMilitaryTroops(state: ActiveLifeState): ActiveLifeState {
+  if (!state.official || state.official.track !== 'vo' || state.officialRank <= 0) return state;
+  const cost = Math.max(1500, state.officialRank * 1200);
+  if (state.assets.wealthCopper < cost) return state;
+  const next = applyEffects(state, {
+    copper: -cost,
+    fame: 6,
+    happiness: 4,
+  });
+  return {
+    ...next,
+    official: {
+      ...state.official,
+      publicTrust: Math.min(100, state.official.publicTrust + 12),
+      merit: state.official.merit + 6,
+      imperialFavor: Math.min(100, state.official.imperialFavor + 3),
+    },
+    logs: appendLog(
+      next.logs,
+      next.profile.totalDays,
+      'event',
+      `Xuất tiền túi khao thưởng quân sĩ dưới trướng (-${cost}đ, Quân tâm +12, Quân công +6).`,
+    ),
+  };
+}
+
+export function equipMilitaryGear(state: ActiveLifeState): ActiveLifeState {
+  if (!state.official || state.official.track !== 'vo' || state.officialRank <= 0) return state;
+  const cost = Math.max(2000, state.officialRank * 1500);
+  if (state.assets.wealthCopper < cost) return state;
+  const next = applyEffects(state, {
+    copper: -cost,
+    martial: 3,
+    merit: 4,
+  });
+  return {
+    ...next,
+    logs: appendLog(
+      next.logs,
+      next.profile.totalDays,
+      'event',
+      `Sắm thêm chiến mã và giáp trụ tinh nhuệ cho quân doanh (-${cost}đ, Võ nghệ +3, Quân công +4).`,
     ),
   };
 }

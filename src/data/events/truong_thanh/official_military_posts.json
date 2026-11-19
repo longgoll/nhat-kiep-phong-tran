@@ -247,5 +247,113 @@
         ]
       }
     ]
+  },
+  {
+    "id": "evt_official_vo_campaign_1",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "official_tracks": ["vo"],
+      "min_official_rank": 2
+    },
+    "title": "Bố Trận Quân Sự: Trinh Sát & Chọn Thế Trận",
+    "description": "Thám mã báo tin một đội quân phản loạn đang tiến qua hẻm núi Hắc Phong để tập kích kho lương. Bạn chỉ huy bố trí thế trận thế nào?",
+    "cooldownDays": 1080,
+    "weight": { "base": 18 },
+    "choices": [
+      {
+        "label": "Mai phục hai bên sườn núi, cắt đứt đường lui rồi hỏa công",
+        "hint": "Tốn 500đ quân phí · Chiến thuật hiểm (Mở bước 2 sau 5 ngày)",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": -500,
+              "merit": 4,
+              "schedule_delayed": [
+                { "event_id": "evt_official_vo_campaign_2", "delay_days": 5 }
+              ]
+            },
+            "resultText": "Bạn cho quân bí mật leo lên sườn núi Hắc Phong giăng bẫy, chờ địch lọt vào ổ phục kích."
+          }
+        ]
+      },
+      {
+        "label": "Dàn trận chính diện nghênh địch ngay ngoài cửa ải",
+        "hint": "Đánh trực diện: Dễ hao tổn quân sĩ nhưng nhanh gọn",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                { "conditions": { "min_martial": 60 }, "addWeight": 25 }
+              ]
+            },
+            "effects": {
+              "merit": 8,
+              "fame": 8,
+              "health": -5
+            },
+            "resultText": "Bạn xung phong phá trận địch, đẩy lui quân phản loạn nhưng bản thân bị xây xát nhẹ."
+          },
+          {
+            "weight": { "base": 40 },
+            "effects": {
+              "health": -15,
+              "merit": 2,
+              "imperial_favor": -4
+            },
+            "resultText": "Địch đánh liều tử chiến khiến quân ta thương vong khá nặng trước khi rút lui."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_vo_campaign_2",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "official_tracks": ["vo"],
+      "min_official_rank": 1
+    },
+    "title": "Kết Cục Trận Hắc Phong: Xử Lý Tù Binh & Chiến Lợi Phẩm",
+    "description": "Quân địch lọt vào hỏa công tan tác hoàn toàn! Bạn bắt sống hơn năm mươi tù binh cùng nhiều chiến mã và bạc quân nhu.",
+    "cooldownDays": 0,
+    "weight": { "base": 0 },
+    "choices": [
+      {
+        "label": "Giải toàn bộ tù binh và chiến lợi phẩm về Bộ Binh lập đại công",
+        "hint": "Quân công +12 · Thánh sủng +10 · Thanh danh +12",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "merit": 12,
+              "imperial_favor": 10,
+              "fame": 12
+            },
+            "resultText": "Bộ Binh dâng biểu khen ngợi tài dụng binh như thần của bạn lên Hoàng đế!"
+          }
+        ]
+      },
+      {
+        "label": "Giấu bớt chiến lợi phẩm (+3.500đ) và thu nạp tù binh khỏe mạnh làm thân tín",
+        "hint": "+3.500đ · Quân công +5 · Hiềm nghi +10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": 3500,
+              "merit": 5,
+              "scandal_risk": 10
+            },
+            "resultText": "Bạc chiến lợi phẩm chảy vào túi riêng, còn đám hàng binh trở thành cánh tay đắc lực của bạn."
+          }
+        ]
+      }
+    ]
   }
 ]

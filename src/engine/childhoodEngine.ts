@@ -21,7 +21,7 @@ import {
   type FamilyCashflowBreakdown,
 } from './familyEconomy';
 import { ORIGIN_CORE_CONFIG } from './originConfigs';
-import { triggerDingYouLeave } from './officialSystem';
+import { triggerDingYouLeave, triggerKimCachTongNhung } from './officialSystem';
 import { mulberry32Next, pickWeightedIndex } from './prng';
 
 export { computeFamilyMonthlyNetCopper, type FamilyCashflowBreakdown };
@@ -393,11 +393,17 @@ export function resolveEventChoice(
   }
   if (
     livingParentsAfter < livingParentsBefore &&
-    nextState.official?.track === 'van' &&
     nextState.officialRank > 0 &&
-    nextState.world.worldState !== 'chien_tranh'
+    nextState.official
   ) {
-    nextState = triggerDingYouLeave(nextState);
+    if (nextState.official.track === 'van' && nextState.world.worldState !== 'chien_tranh') {
+      nextState = triggerDingYouLeave(nextState);
+    } else if (
+      nextState.official.track === 'vo' &&
+      (nextState.official.posting === 'bien_ai' || nextState.world.worldState === 'chien_tranh')
+    ) {
+      nextState = triggerKimCachTongNhung(nextState);
+    }
   }
 
   return { state: nextState, resultText: outcome.resultText };

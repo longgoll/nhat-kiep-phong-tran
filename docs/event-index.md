@@ -2,7 +2,7 @@
 
 > File tự động sinh bởi `npm run gen:index` (`scripts/gen-event-index.mjs`). AI đọc file này để tra cứu toàn bộ ID, file, cờ (`flags`) và tránh đọc hàng chục file JSON lớn.
 
-- **Tổng số file:** 73 | **Tổng số sự kiện:** 342 | **Tổng số flags:** 93
+- **Tổng số file:** 73 | **Tổng số sự kiện:** 344 | **Tổng số flags:** 93
 
 ## 1. Từ Điển Flags Đang Hoạt Động
 | Flag | Được gắn/gỡ bởi | Được kiểm tra bởi (samples) |
@@ -364,6 +364,8 @@
 | `evt_official_vo_bandit_campaign` | Xuất Binh Tiễu Trừ Sơn Tặc Cướp Lương | adulthood | major | 1080 | all | `truong_thanh/official_military_posts.json` |
 | `evt_official_vo_border_defense` | Kỵ Binh Địch Tập Kích Cửa Ải Trọng Yếu | adulthood | major | 1440 | all | `truong_thanh/official_military_posts.json` |
 | `evt_official_vo_troop_mutiny` | Binh Sĩ Bất Mãn Vì Nghi Ngờ Ăn Chặn Quân Lương | adulthood | major | 1080 | all | `truong_thanh/official_military_posts.json` |
+| `evt_official_vo_campaign_1` | Bố Trận Quân Sự: Trinh Sát & Chọn Thế Trận | adulthood | major | 1080 | all | `truong_thanh/official_military_posts.json` |
+| `evt_official_vo_campaign_2` | Kết Cục Trận Hắc Phong: Xử Lý Tù Binh & Chiến Lợi Phẩm | adulthood | major | 0 | all | `truong_thanh/official_military_posts.json` |
 | `evt_ban_nong_land_reclaim` | Khai Khẩn Đất Hoang Ven Bãi Bồi | adulthood | major | 1440 | ban_nong | `truong_thanh/origin_ban_nong_and_tiers.json` |
 | `evt_ban_nong_village_elder_council` | Đình Làng Bàn Cử Chức Sắc Hương Lý | adulthood | major | 1800 | ban_nong, thu_cong | `truong_thanh/origin_ban_nong_and_tiers.json` |
 | `evt_tier_binh_dan_seasonal_fair` | Hội Vật & Phiên Chợ Đầu Xuân | adulthood | major | 1080 | ban_nong, thu_cong | `truong_thanh/origin_ban_nong_and_tiers.json` |

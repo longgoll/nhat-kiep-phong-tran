@@ -271,6 +271,31 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
       if (official) {
         official.rank = officialRank;
         official.title = currentRole;
+      } else {
+        const inferredTrack = flags.includes('thai_giam')
+          ? 'hoan_quan'
+          : flags.includes('trong_quan_ngu')
+            ? 'vo'
+            : 'van';
+        official = {
+          track: inferredTrack,
+          rank: officialRank,
+          title: rankNamesByTrack[inferredTrack][officialRank] ?? currentRole,
+          posting: inferredTrack === 'vo' ? 'bien_ai' : 'dong_bang',
+          tenureStartDay: state.profile.totalDays,
+          lastReviewDay: state.profile.totalDays,
+          merit: 15,
+          publicTrust: 10,
+          imperialFavor: 15,
+          scandalRisk: 0,
+          faction: inferredTrack === 'hoan_quan' ? 'yem_dang' : 'chua_dung_phe',
+          familyAccompanied: false,
+          maidsCount: 0,
+          guardsCount: 0,
+          hasAdvisor: false,
+          proxyBusinessIds: [],
+        };
+        currentRole = official.title;
       }
     }
   }

@@ -460,8 +460,12 @@ export function takeExam(state: ActiveLifeState, level: ExamLevel): ActiveLifeSt
   };
 }
 
-function applyOfficialScheduleAndClearCareer(state: ActiveLifeState): ActiveLifeState {
+function applyOfficialScheduleAndClearCareer(
+  state: ActiveLifeState,
+  track: 'van' | 'vo' | 'hoan_quan' = 'van',
+): ActiveLifeState {
   const cleanFlags = state.flags.filter((f) => !f.startsWith('career_') && !f.startsWith('venture_'));
+  const officialAction = track === 'vo' ? 'act_quan_vo_thao_luyen' : 'act_xu_an_cong_duong';
   return {
     ...state,
     flags: cleanFlags,
@@ -469,8 +473,8 @@ function applyOfficialScheduleAndClearCareer(state: ActiveLifeState): ActiveLife
     activeVenture: null,
     schedule: {
       ...state.schedule,
-      morning: 'act_xu_an_cong_duong',
-      afternoon: 'act_xu_an_cong_duong',
+      morning: officialAction,
+      afternoon: officialAction,
     },
   };
 }
@@ -521,6 +525,7 @@ export function appointOrPromoteOfficial(state: ActiveLifeState): ActiveLifeStat
           milestone_title: `Bổ nhiệm ${roleName}`,
         },
       ),
+      track,
     );
     return {
       ...next,
@@ -586,6 +591,7 @@ export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
         milestone_title: `Thụ phong Hoàng thất: ${roleName}`,
       },
     ),
+    track,
   );
   return {
     ...next,

@@ -221,6 +221,9 @@ function scaleActionRewards(
     if (actionId === 'act_xu_an_cong_duong') {
       scaled.merit = Number((0.25 * workEfficiency).toFixed(2));
       scaled.public_trust = Number((0.15 * workEfficiency).toFixed(2));
+    } else if (actionId === 'act_quan_vo_thao_luyen') {
+      scaled.merit = Number((0.3 * workEfficiency).toFixed(2));
+      scaled.public_trust = Number((0.1 * workEfficiency).toFixed(2));
     } else if (actionId === 'act_tham_o_nhan_hoi_lo') {
       scaled.scandal_risk = Number((0.35 * workEfficiency).toFixed(2));
       scaled.public_trust = -0.25;

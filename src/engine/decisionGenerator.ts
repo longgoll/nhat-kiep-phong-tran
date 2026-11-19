@@ -36,6 +36,7 @@ export interface DecisionCandidate {
 const DYNAMIC_DECISION_PRIORITIES: Array<{ id: string; priority: number }> = [
   { id: 'dec_loan_heavy', priority: 100 },
   { id: 'dec_official_censor_audit', priority: 95 },
+  { id: 'dec_official_cong_cao_chan_chu', priority: 92 },
   { id: 'dec_college_18', priority: 90 },
   { id: 'dec_retire_60', priority: 85 },
   { id: 'dec_exam_prompt', priority: 84 },
@@ -410,7 +411,7 @@ function generateDynamicDecisionInternal(
     };
   }
 
-  // 2d. DEC.official_family_move: An bài gia quyến khi nhậm chức xa (Hồi Tỵ)
+  // 2d. DEC.official_family_move: An bài gia quyến khi nhậm chức xa (Phân biệt Văn vs Võ)
   const hasSpouseOrChild = state.npcs.some((n) => (n.relation === 'spouse' || n.relation === 'child') && n.isAlive);
   if (
     (!onlyId || onlyId === 'dec_official_family_move') &&
@@ -421,25 +422,65 @@ function generateDynamicDecisionInternal(
     hasSpouseOrChild &&
     state.eventCooldowns['dec_official_family_move'] === undefined
   ) {
+    const isMilitaryFrontline = state.official.track === 'vo' && state.official.posting === 'bien_ai';
+    if (isMilitaryFrontline) {
+      const supportCopper = Math.max(800, state.officialRank * 600);
+      return {
+        id: 'dec_official_family_move',
+        stage: 'adulthood',
+        severity: 'major',
+        conditions: {},
+        title: 'Quân Lệnh Biên Ải: An bài Gia quyến Nơi Hậu Phương',
+        description: `Bạn được điều ra doanh trại Biên ải tiền tuyến. Theo quân kỷ, tướng sĩ không được mang gia quyến ra chiến trường. Bạn thu xếp cho vợ con ở quê thế nào?`,
+        cooldownDays: 99999,
+        weight: { base: 100 },
+        choices: [
+          {
+            label: `Gửi ${supportCopper}đ bổng lộc & lễ vật về quê nhờ họ hàng chăm nom`,
+            hint: `-${supportCopper}đ · Giữ vững Quan hệ +5 & Hạnh phúc +2`,
+            outcomes: [
+              {
+                weight: { base: 100 },
+                effects: { copper: -supportCopper, relationships: 5, happiness: 2 },
+                resultText: 'Bạn gửi bạc và thư nhà về quê dặn dò gia quyến yên tâm ở hậu phương.',
+              },
+            ],
+          },
+          {
+            label: 'Dặn gia quyến tự giữ nếp nhà, dồn toàn tâm cho quân vụ',
+            hint: 'Tiết kiệm bạc · Quân công +3 · Hạnh phúc -4',
+            outcomes: [
+              {
+                weight: { base: 100 },
+                effects: { merit: 3, happiness: -4 },
+                resultText: 'Bạn nén nỗi nhớ nhà, toàn tâm toàn ý lo việc phòng thủ biên cương.',
+              },
+            ],
+          },
+        ],
+      };
+    }
+
     const movingCost = state.officialRank * 600;
+    const residenceLabel = state.official.track === 'vo' ? 'Tướng phủ' : 'phủ nha';
     return {
       id: 'dec_official_family_move',
       stage: 'adulthood',
       severity: 'major',
       conditions: {},
       title: 'Luật Hồi Tỵ: An bài Gia quyến khi Nhậm chức xa',
-      description: `Theo luật Hồi Tỵ, bạn được điều đi trấn nhậm xa nguyên quán. Bạn định đưa vợ/con theo lên phủ nha hay để gia quyến ở lại quê nhà?`,
+      description: `Bạn được điều đi trấn nhậm xa nguyên quán. Bạn định đón vợ/con lên ${residenceLabel} cùng ở hay để gia quyến ở lại quê nhà?`,
       cooldownDays: 99999,
       weight: { base: 100 },
       choices: [
         {
-          label: `Đưa gia quyến cùng lên phủ nha nhậm chức (-${movingCost}đ lộ phí)`,
-          hint: 'Giữ trọn Hạnh phúc & Quan hệ · Vợ/chồng nghỉ nghề cũ để quản gia · Tốn thêm tiền phủ đệ',
+          label: `Đưa gia quyến cùng lên ${residenceLabel} nhậm chức (-${movingCost}đ lộ phí)`,
+          hint: `Giữ trọn Hạnh phúc & Quan hệ · Vợ/chồng nghỉ nghề cũ để quản gia · Tốn thêm tiền phủ đệ`,
           outcomes: [
             {
               weight: { base: 100 },
               effects: {},
-              resultText: 'Bạn thu xếp xe ngựa đưa gia quyến cùng lên phủ nha nhậm chức.',
+              resultText: `Bạn thu xếp xe ngựa đưa gia quyến cùng lên ${residenceLabel} nhậm chức.`,
             },
           ],
         },
@@ -528,6 +569,66 @@ function generateDynamicDecisionInternal(
                 happiness: -30,
               },
               resultText: 'Gặp đúng Ngự sử Thanh lưu! Hối lộ bất thành, bạn bị cách chức và tịch biên gia sản!',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  // 2f. DEC.official_cong_cao_chan_chu: Công cao chấn chủ ở Nhị–Nhất phẩm
+  if (
+    (!onlyId || onlyId === 'dec_official_cong_cao_chan_chu') &&
+    state.officialRank >= 8 &&
+    state.official &&
+    (state.stats.fame >= 400 || (state.rebellion?.armyPower ?? 0) >= 40) &&
+    state.official.imperialFavor < 60 &&
+    totalDays - (state.eventCooldowns['dec_official_cong_cao_chan_chu'] ?? -99999) >= 1080
+  ) {
+    const tributeCopper = 20000;
+    return {
+      id: 'dec_official_cong_cao_chan_chu',
+      stage: 'adulthood',
+      severity: 'major',
+      isMilestone: true,
+      conditions: {},
+      title: 'Thánh Ý Khó Lường: Nỗi Lo "Công Cao Chấn Chủ"',
+      description: `Uy danh của bạn đã vang dội thiên hạ trong khi Thánh sủng chỉ ở mức ${Math.round(state.official.imperialFavor)}/100. Hoàng đế bắt đầu e ngại quyền thế của bạn quá lớn!`,
+      cooldownDays: 1080,
+      weight: { base: 100 },
+      choices: [
+        {
+          label: `Tự dâng sớ xin giao bớt thực quyền và quyên 20.000đ khao quân/đắp đê tỏ lòng trung`,
+          hint: '-20.000đ · Thánh sủng +20 · Hiềm nghi -15 · An toàn',
+          outcomes: [
+            {
+              weight: { base: 100 },
+              effects: {
+                copper: -tributeCopper,
+                imperial_favor: 20,
+                scandal_risk: -15,
+              },
+              resultText: 'Hoàng đế hài lòng trước sự khiêm nhường của bạn, tạm xóa bỏ nghi kỵ.',
+            },
+          ],
+        },
+        {
+          label: 'Cương quyết giữ vững thực quyền và binh mã, không chịu nhún nhường',
+          hint: 'Rủi ro cực cao: Bị Hoàng đế tước quyền, giáng chức hoặc ép Trí sĩ!',
+          outcomes: [
+            {
+              weight: { base: 35 },
+              effects: { fame: 15, imperial_favor: -10 },
+              resultText: 'Bạn cứng rắn giữ vững thế trận triều đường, nhưng mối nghi kỵ với Hoàng đế càng sâu sắc.',
+            },
+            {
+              weight: { base: 65 },
+              effects: {
+                official_rank_delta: -2,
+                imperial_favor: -20,
+                happiness: -15,
+              },
+              resultText: 'Thánh chỉ giáng xuống bất ngờ: bạn bị tước bớt binh quyền và giáng liền 2 phẩm!',
             },
           ],
         },
@@ -935,6 +1036,9 @@ export function applyDynamicDecisionSideEffects(
       ...state,
       eventCooldowns: { ...state.eventCooldowns, dec_official_family_move: totalDays },
     };
+    if (stamped.official?.track === 'vo' && stamped.official.posting === 'bien_ai') {
+      return stamped;
+    }
     return setOfficialFamilyAccompany(stamped, choiceIndex === 0);
   }
 
@@ -942,6 +1046,13 @@ export function applyDynamicDecisionSideEffects(
     return {
       ...state,
       eventCooldowns: { ...state.eventCooldowns, dec_official_censor_audit: totalDays },
+    };
+  }
+
+  if (eventId === 'dec_official_cong_cao_chan_chu') {
+    return {
+      ...state,
+      eventCooldowns: { ...state.eventCooldowns, dec_official_cong_cao_chan_chu: totalDays },
     };
   }
 

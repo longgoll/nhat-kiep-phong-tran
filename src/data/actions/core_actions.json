@@ -368,6 +368,30 @@
     }
   },
   {
+    "id": "act_quan_vo_thao_luyen",
+    "name": "Thao luyện binh mã & Tuần phòng quân doanh",
+    "category": "official",
+    "allowedSlots": [
+      "morning",
+      "afternoon"
+    ],
+    "description": "Điểm binh, diễn tập trận đồ và tuần tra phòng tuyến. Tăng Quân công, Võ nghệ và Thanh danh.",
+    "conditions": {
+      "min_age": 16,
+      "has_flags": [
+        "dang_lam_quan"
+      ]
+    },
+    "costs": {
+      "stamina": 24
+    },
+    "rewards": {
+      "copper": 140,
+      "martial": 0.08,
+      "fame": 0.06
+    }
+  },
+  {
     "id": "act_tham_o_nhan_hoi_lo",
     "name": "Cấu kết phe phái & vòi tiền hối lộ",
     "category": "official",

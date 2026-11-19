@@ -14,11 +14,14 @@ import {
   checkHousingTiemLe,
   checkOfficialPropertyRule,
   donateDisasterReliefAsOfficial,
+  equipMilitaryGear,
   evaluateKhaoKhoa,
   manageOfficialStaff,
+  rewardMilitaryTroops,
   sendSeasonalSuperiorGift,
   setOfficialFamilyAccompany,
   triggerDingYouLeave,
+  triggerKimCachTongNhung,
 } from '../officialSystem';
 import { DAYS_PER_YEAR } from '../../types/activeLife';
 
@@ -175,5 +178,28 @@ describe('Feudal Official System (Văn · Võ · Hoạn Quan & Luật Triều Đ
     expect(off.officialRank).toBe(5);
     expect(off.official?.track).toBe('van');
     expect(launchRebellion(off).isAlive).toBeDefined();
+  });
+
+  it('assigns act_quan_vo_thao_luyen for Quan Võ, supports military gear/troops, and Kim cách tòng nhung', () => {
+    const voBase = {
+      ...makeAdultLife('ban_nong'),
+      flags: ['trong_quan_ngu'],
+      stats: { ...makeAdultLife('ban_nong').stats, martial: 75, education: 30, fame: 100 },
+    };
+    let vo = appointOrPromoteOfficial(voBase);
+    expect(vo.official?.track).toBe('vo');
+    expect(vo.schedule.morning).toBe('act_quan_vo_thao_luyen');
+
+    const meritBefore = vo.official?.merit ?? 0;
+    vo = rewardMilitaryTroops(vo);
+    expect(vo.official?.merit).toBeGreaterThan(meritBefore);
+
+    const martialBefore = vo.stats.martial;
+    vo = equipMilitaryGear(vo);
+    expect(vo.stats.martial).toBeGreaterThan(martialBefore);
+
+    const mourningVo = triggerKimCachTongNhung(vo);
+    expect(mourningVo.officialRank).toBe(vo.officialRank);
+    expect(mourningVo.official?.imperialFavor).toBeGreaterThan(vo.official?.imperialFavor ?? 0);
   });
 });
