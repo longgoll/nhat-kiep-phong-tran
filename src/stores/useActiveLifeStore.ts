@@ -1,32 +1,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type {
-  ActiveLifeState,
-  FallbackRule,
-  GiftEtiquetteTier,
-  InvestmentChannel,
-  LifestyleTier,
-  TimeSlot,
-} from '../types/activeLife';
+import type { ActiveLifeState } from '../types/activeLife';
 import type { GameEventDef } from '../types/dsl';
 import { createNewLife } from '../engine/lifeInitializer';
-import { evaluateConditions } from '../engine/conditionEvaluator';
 import { advanceChildhoodMonth, resolveEventChoice } from '../engine/childhoodEngine';
 import { applyDynamicDecisionSideEffects } from '../engine/decisionGenerator';
 import {
   advanceDays,
   DEFAULT_AUTO_PAUSE_CONFIG,
-  type AutoPauseConfig,
   type AutoPauseReason,
 } from '../engine/daySimulator';
-import { appendLog, applyEffects } from '../engine/effectApplier';
-import {
-  buyGoldReserve,
-  executeInstantAdultAction,
-  haveChild,
-  marrySpouse,
-  sellGoldReserve,
-} from '../engine/adultLifeActions';
 import {
   ALL_ACTIONS,
   ALL_ADULTHOOD_EVENTS,
@@ -35,105 +18,12 @@ import {
   CHILDHOOD_AMBIENT_DATA,
 } from '../data/registry';
 import type { WorkerResponse } from '../workers/simulation.worker';
+import type { ActiveLifeStore } from './activeLife/types';
+import { getWorker, pickAutoChoiceIndex } from './activeLife/workerBridge';
+import { createScheduleAndEconomyActions } from './activeLife/scheduleAndEconomyActions';
 
 export { ALL_ACTIONS, CHILDHOOD_ACTIVITIES };
-
-let simWorker: Worker | null = null;
-function getWorker(): Worker | null {
-  if (typeof Worker === 'undefined') return null;
-  if (!simWorker) {
-    simWorker = new Worker(new URL('../workers/simulation.worker.ts', import.meta.url), {
-      type: 'module',
-    });
-  }
-  return simWorker;
-}
-
-interface ActiveLifeStore {
-  life: ActiveLifeState | null;
-  pendingEvent: GameEventDef | null;
-  lastEventResult: string | null;
-  isSimulating: boolean;
-  hasConfirmedBirthCertificate: boolean;
-  autoPauseConfig: AutoPauseConfig;
-  lastPauseReason: AutoPauseReason | null;
-  autoDecide: boolean;
-  autoPlaySpeed: 0 | 1 | 2 | 4 | 8 | 12 | 16;
-
-  startNewLife: (customSeed?: number) => void;
-  setAutoPlaySpeed: (speed: 0 | 1 | 2 | 4 | 8 | 12 | 16) => void;
-  confirmBirthCertificate: () => void;
-  stepChildhoodMonth: () => void;
-  advanceToNextDecision: () => void;
-  toggleAutoDecide: () => void;
-  togglePinLog: (logIndex: number) => void;
-  addPlayerThought: (text: string) => void;
-  setChildhoodFocus: (focusId: string) => void;
-  advanceAdultDays: (days: number) => void;
-  chooseEventOption: (choiceIndex: number) => void;
-  clearLastEventResult: () => void;
-  clearPauseReason: () => void;
-
-  setSlotAction: (slot: TimeSlot, actionId: string) => void;
-  setLifestyle: (tier: LifestyleTier) => void;
-  setLifeFocus: (focusId: string) => void;
-  setGiftEtiquette: (tier: GiftEtiquetteTier) => void;
-  setInvestmentChannel: (channel: InvestmentChannel) => void;
-  toggleAutoAction: (actionId: string) => void;
-  buyGold: (amountCopper: number) => void;
-  sellGold: (amountCopper: number) => void;
-  marrySpouseAction: () => void;
-  haveChildAction: () => void;
-  performInstantAction: (actionId: string) => void;
-  setAutoBuyRice: (enabled: boolean) => void;
-  setAutoPauseConfig: (patch: Partial<AutoPauseConfig>) => void;
-  addFallbackRule: (rule: FallbackRule) => void;
-  removeFallbackRule: (id: string) => void;
-  buyRice: (amount: number) => void;
-  sellRice: (amount: number) => void;
-  takeEmergencyLoan: () => void;
-  applyLifeMutation: (mutator: (life: ActiveLifeState) => ActiveLifeState) => void;
-  exportSaveJson: () => string | null;
-  importSaveJson: (raw: string) => { ok: boolean; error?: string };
-  resetLife: () => void;
-}
-
-function pickAutoChoiceIndex(life: ActiveLifeState, event: GameEventDef): number {
-  let bestIdx = 0;
-  let bestScore = -Infinity;
-
-  event.choices.forEach((choice, idx) => {
-    if (!evaluateConditions(life, choice.conditions)) return;
-    let avgScore = 0;
-    let totalWeight = 0;
-    for (const out of choice.outcomes) {
-      const w = Math.max(1, out.weight.base);
-      const e = out.effects;
-      let score =
-        (e.health ?? 0) * 1.5 +
-        (e.happiness ?? 0) * 1.1 +
-        (e.relationships ?? 0) * 1.0 +
-        (e.education ?? 0) * 1.2 +
-        (e.martial ?? 0) * 0.9 +
-        (e.craft_trade ?? 0) * 0.9 +
-        (e.fame ?? 0) * 0.8 +
-        (e.copper ?? 0) * 0.02 +
-        (e.family_copper ?? 0) * 0.02 +
-        (e.rice ?? 0) * 0.3 -
-        (e.infamy ?? 0) * 1.2;
-      if (e.kill_reason) score -= 500;
-      avgScore += score * w;
-      totalWeight += w;
-    }
-    const finalScore = totalWeight > 0 ? avgScore / totalWeight : 0;
-    if (finalScore > bestScore) {
-      bestScore = finalScore;
-      bestIdx = idx;
-    }
-  });
-
-  return bestIdx;
-}
+export type { ActiveLifeStore };
 
 export const useActiveLifeStore = create<ActiveLifeStore>()(
   persist(
@@ -143,7 +33,7 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
       lastEventResult: null,
       isSimulating: false,
       hasConfirmedBirthCertificate: true,
-      autoPauseConfig: DEFAULT_AUTO_PAUSE_CONFIG,
+      autoPauseConfig: { ...DEFAULT_AUTO_PAUSE_CONFIG },
       lastPauseReason: null,
       autoDecide: false,
       autoPlaySpeed: 0,
@@ -393,209 +283,7 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
       clearLastEventResult: () => set({ lastEventResult: null }),
       clearPauseReason: () => set({ lastPauseReason: null }),
 
-      setSlotAction: (slot, actionId) => {
-        const { life } = get();
-        if (!life) return;
-        set({
-          life: {
-            ...life,
-            schedule: { ...life.schedule, [slot]: actionId },
-          },
-        });
-      },
-
-      setLifestyle: (tier) => {
-        const { life } = get();
-        if (!life) return;
-        set({
-          life: {
-            ...life,
-            schedule: { ...life.schedule, lifestyle: tier },
-          },
-        });
-      },
-
-      setLifeFocus: (focusId) => {
-        const { life } = get();
-        if (!life) return;
-        set({
-          life: {
-            ...life,
-            schedule: { ...life.schedule, lifeFocus: focusId },
-          },
-        });
-      },
-
-      setGiftEtiquette: (tier) => {
-        const { life } = get();
-        if (!life) return;
-        set({
-          life: {
-            ...life,
-            schedule: { ...life.schedule, giftEtiquette: tier },
-          },
-        });
-      },
-
-      setInvestmentChannel: (channel) => {
-        const { life } = get();
-        if (!life) return;
-        set({
-          life: {
-            ...life,
-            investmentChannel: channel,
-          },
-        });
-      },
-
-      toggleAutoAction: (actionId) => {
-        const { life } = get();
-        if (!life) return;
-        const curr = life.autoActions ?? [];
-        const next = curr.includes(actionId)
-          ? curr.filter((id) => id !== actionId)
-          : [...curr, actionId];
-        set({
-          life: {
-            ...life,
-            autoActions: next,
-          },
-        });
-      },
-
-      buyGold: (amountCopper) => {
-        const { life } = get();
-        if (!life || !life.isAlive) return;
-        set({ life: buyGoldReserve(life, amountCopper) });
-      },
-
-      sellGold: (amountCopper) => {
-        const { life } = get();
-        if (!life || !life.isAlive) return;
-        set({ life: sellGoldReserve(life, amountCopper) });
-      },
-
-      marrySpouseAction: () => {
-        const { life } = get();
-        if (!life || !life.isAlive) return;
-        set({ life: marrySpouse(life) });
-      },
-
-      haveChildAction: () => {
-        const { life } = get();
-        if (!life || !life.isAlive) return;
-        set({ life: haveChild(life) });
-      },
-
-      performInstantAction: (actionId) => {
-        const { life } = get();
-        if (!life || !life.isAlive) return;
-        const res = executeInstantAdultAction(life, actionId);
-        if (res.ok) {
-          set({
-            life: res.state,
-            lastEventResult: res.message,
-          });
-        }
-      },
-
-      setAutoBuyRice: (enabled) => {
-        const { life } = get();
-        if (!life) return;
-        set({
-          life: {
-            ...life,
-            schedule: { ...life.schedule, autoBuyRice: enabled },
-          },
-        });
-      },
-
-      setAutoPauseConfig: (patch) => {
-        set((s) => ({ autoPauseConfig: { ...s.autoPauseConfig, ...patch } }));
-      },
-
-      addFallbackRule: (rule) => {
-        const { life } = get();
-        if (!life) return;
-        set({
-          life: {
-            ...life,
-            schedule: {
-              ...life.schedule,
-              fallbackRules: [...life.schedule.fallbackRules, rule],
-            },
-          },
-        });
-      },
-
-      removeFallbackRule: (id) => {
-        const { life } = get();
-        if (!life) return;
-        set({
-          life: {
-            ...life,
-            schedule: {
-              ...life.schedule,
-              fallbackRules: life.schedule.fallbackRules.filter((r) => r.id !== id),
-            },
-          },
-        });
-      },
-
-      buyRice: (amount) => {
-        const { life } = get();
-        if (!life || amount <= 0) return;
-        const cost = amount * life.world.ricePriceInCopper;
-        if (life.assets.wealthCopper < cost) return;
-        const next = applyEffects(life, { copper: -cost, rice: amount });
-        set({
-          life: {
-            ...next,
-            logs: appendLog(next.logs, next.profile.totalDays, 'survival', `Mua ${amount} đấu gạo với giá ${cost} đồng.`),
-          },
-        });
-      },
-
-      sellRice: (amount) => {
-        const { life } = get();
-        if (!life || amount <= 0 || life.assets.rice < amount) return;
-        const gain = amount * life.world.ricePriceInCopper;
-        const next = applyEffects(life, { copper: gain, rice: -amount });
-        set({
-          life: {
-            ...next,
-            logs: appendLog(next.logs, next.profile.totalDays, 'survival', `Bán ${amount} đấu gạo thu về ${gain} đồng.`),
-          },
-        });
-      },
-
-      takeEmergencyLoan: () => {
-        const { life } = get();
-        if (!life || life.flags.includes('dang_no_dia_chu')) return;
-        const next = applyEffects(life, {
-          copper: 500,
-          rice: 5,
-          add_flags: ['dang_no_dia_chu'],
-          schedule_delayed: [{ event_id: 'evt_debt_collection_01', delay_days: 180 }],
-        });
-        set({
-          life: {
-            ...next,
-            logs: appendLog(
-              next.logs,
-              next.profile.totalDays,
-              'warning',
-              'Vay nóng địa chủ 500 đồng và 5 đấu gạo. Sau 180 ngày phải trả đủ 800 đồng!',
-            ),
-          },
-        });
-      },
-
-      applyLifeMutation: (mutator) => {
-        const { life } = get();
-        if (!life || !life.isAlive) return;
-        set({ life: mutator(life) });
-      },
+      ...createScheduleAndEconomyActions(set, get),
 
       exportSaveJson: () => {
         const { life } = get();

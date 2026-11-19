@@ -9,7 +9,10 @@
     "preview": "vite preview",
     "test": "vitest run",
     "audit:1000": "vitest run --config vitest.audit.config.ts",
-    "gen:index": "node scripts/gen-event-index.mjs"
+    "gen:event-index": "node scripts/gen-event-index.mjs",
+    "gen:code-index": "node scripts/gen-code-index.mjs",
+    "gen:index": "node scripts/gen-event-index.mjs && node scripts/gen-code-index.mjs",
+    "check:sizes": "node scripts/check-file-sizes.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.511.0",
