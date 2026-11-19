@@ -93,7 +93,7 @@
           {
             "weight": { "base": 100 },
             "resultText": "Nhờ lão nội thị nâng đỡ, bạn nắm được nhiều đầu mối quan trọng trong cung cấm.",
-            "effects": { "relationships": 12, "education": 4, "copper": 250 }
+            "effects": { "relationships": 7, "education": 4, "copper": 250 }
           }
         ]
       },

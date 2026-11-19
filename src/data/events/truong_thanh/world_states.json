@@ -42,8 +42,8 @@
               "rice": -5,
               "copper": -150,
               "fame": 15,
-              "relationships": 12,
-              "happiness": 12,
+              "relationships": 8,
+              "happiness": 8,
               "add_traits": [
                 "trong_nghia"
               ],
@@ -150,7 +150,7 @@
             "effects": {
               "education": 4,
               "fame": 15,
-              "relationships": 12,
+              "relationships": 8,
               "copper": 180,
               "stamina": -25,
               "happiness": 10,
@@ -269,8 +269,8 @@
             "effects": {
               "copper": -350,
               "fame": 14,
-              "relationships": 10,
-              "happiness": 12
+              "relationships": 7,
+              "happiness": 8
             }
           }
         ]

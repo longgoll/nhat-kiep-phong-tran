@@ -211,7 +211,7 @@
             "effects": {
               "copper": -300,
               "fame": 15,
-              "relationships": 12,
+              "relationships": 8,
               "happiness": 8
             }
           }

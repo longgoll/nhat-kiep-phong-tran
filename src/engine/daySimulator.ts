@@ -68,8 +68,8 @@ const LIFESTYLE_TABLE: Record<
   nhin_doi: { rice: 0, copper: 0, stamina: 0, health: -1.8, happiness: -1.2 },
   chao_loang: { rice: 0.5, copper: 0, stamina: 5, health: -0.04, happiness: -0.05 },
   com_rau: { rice: 1.0, copper: 5, stamina: 15, health: 0, happiness: 0 },
-  thit_ca: { rice: 1.5, copper: 30, stamina: 30, health: 0.015, happiness: 0.02 },
-  son_hao: { rice: 2.0, copper: 120, stamina: 40, health: 0.025, happiness: 0.035, fame: 0.015 },
+  thit_ca: { rice: 1.5, copper: 30, stamina: 30, health: 0.015, happiness: 0.012 },
+  son_hao: { rice: 2.0, copper: 120, stamina: 40, health: 0.025, happiness: 0.02, fame: 0.015 },
 };
 
 const HOUSING_DAILY_UPKEEP: Record<HousingTier, number> = {
@@ -92,8 +92,8 @@ const HOUSING_SLEEP_RECOVERY: Record<
 > = {
   gam_cau: { stamina: 35, health: -0.08, happiness: -0.04 },
   nha_tranh: { stamina: 50, health: 0, happiness: 0 },
-  nha_gach: { stamina: 65, health: 0.01, happiness: 0.005 },
-  phu_de: { stamina: 80, health: 0.02, happiness: 0.015 },
+  nha_gach: { stamina: 65, health: 0.01, happiness: 0.003 },
+  phu_de: { stamina: 80, health: 0.02, happiness: 0.008 },
 };
 
 export function getAgingProfile(ageYears: number): {
@@ -833,19 +833,7 @@ export function advanceDays(
         }
       }
 
-      // 1in8b endYear mean-reversion toward realistic baseline
       const expectedHealth = Math.max(25, 82 - Math.max(0, newAge - 30) * 0.7);
-      const baseHappiness =
-        52 +
-        (state.assets.wealthCopper < 0 ? -10 : state.assets.wealthCopper >= 5000 ? 6 : 0) +
-        (hasSpouse ? 6 : 0);
-      const baseRelationships = 45 + (hasSpouse ? 12 : 0) + Math.min(15, livingChildren.length * 4);
-      state = applyEffects(state, {
-        health: Number(((expectedHealth - state.stats.health) * 0.15).toFixed(2)),
-        happiness: Number(((baseHappiness - state.stats.happiness) * 0.15).toFixed(2)),
-        relationships: Number(((baseRelationships - state.stats.relationships) * 0.15).toFixed(2)),
-      });
-
       state = generateAnnualLifeFlavorLogs(state);
       state = applyAnnualStatMeanReversion(state, newAge);
 
