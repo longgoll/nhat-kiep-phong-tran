@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { createNewLife } from '../lifeInitializer';
-import { advanceDays } from '../daySimulator';
+import { advanceDays, getFamilyCoveredLifestyleTier } from '../daySimulator';
 import {
   buyGoldReserve,
   executeInstantAdultAction,
+  getAskFamilyMoneyProfile,
   haveChild,
   marrySpouse,
   sellGoldReserve,
@@ -366,5 +367,59 @@ describe('Day Simulator (MVP 2)', () => {
       pauseOnNoFood: false,
     });
     expect(after90.state.logs.some((l) => l.text.includes('hết hạn 90 ngày thuê sạp chợ'))).toBe(true);
+  });
+
+  it('prevents starvation when living at home with family wealth and supports inst_ask_family_money with chance', () => {
+    const raw = createNewLife(909);
+    const livingAtHome = {
+      ...raw,
+      profile: { ...raw.profile, originClass: 'ban_nong' as const, totalDays: 19 * 360 },
+      assets: { ...raw.assets, wealthCopper: 60, rice: 0 },
+      flags: raw.flags.filter((f) => f !== 'da_ra_o_rieng'),
+      npcs: raw.npcs.map((n) => (n.id === 'npc_mother' ? { ...n, isAlive: true } : n)),
+      family: {
+        ...raw.family!,
+        familyWealthCopper: 1311,
+      },
+    };
+
+    // Living at home with 1311đ family wealth should still cover basic meals even at age 19
+    expect(getFamilyCoveredLifestyleTier(livingAtHome)).not.toBeNull();
+    const afterYear = advanceDays(livingAtHome, 90, ACTIONS, [], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: true,
+    });
+    expect(afterYear.state.isAlive).toBe(true);
+    expect(afterYear.pausedReason).not.toBe('no_food');
+
+    // Ask family money profile & PRNG outcomes
+    const profile = getAskFamilyMoneyProfile(livingAtHome);
+    expect(profile.canAsk).toBe(true);
+    expect(profile.chancePct).toBeGreaterThanOrEqual(10);
+    expect(profile.chancePct).toBeLessThanOrEqual(85);
+    expect(profile.amount).toBeGreaterThanOrEqual(30);
+
+    let sawSuccess = false;
+    let sawFail = false;
+    for (let s = 1; s <= 30; s++) {
+      const res = executeInstantAdultAction(
+        { ...livingAtHome, prngState: s * 97 },
+        'inst_ask_family_money',
+      );
+      expect(res.ok).toBe(true);
+      if (res.state.assets.wealthCopper > livingAtHome.assets.wealthCopper) {
+        sawSuccess = true;
+        expect(res.state.family!.familyWealthCopper).toBe(
+          livingAtHome.family.familyWealthCopper - profile.amount,
+        );
+      } else {
+        sawFail = true;
+        expect(res.state.family!.familyWealthCopper).toBe(livingAtHome.family.familyWealthCopper);
+      }
+    }
+    expect(sawSuccess).toBe(true);
+    expect(sawFail).toBe(true);
   });
 });

@@ -143,6 +143,10 @@ export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdult
   if (def.requiresHousingIn && !def.requiresHousingIn.includes(state.assets.housing)) {
     return false;
   }
+  if (def.id === 'inst_ask_family_money') {
+    if (state.flags.includes('trong_hau_cung')) return false;
+    if ((state.family?.familyWealthCopper ?? 0) < 60) return false;
+  }
   if (def.requiresLivingParent) {
     const hasParent = state.npcs.some((n) => n.relation === 'parent' && n.isAlive);
     if (!hasParent) return false;
@@ -260,6 +264,17 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
       stamina: -15,
     },
     logText: 'Bạn thuê tạm một góc sạp chợ phiên bán hàng khô và vải vóc, xoay vòng vốn thu được chút lãi.',
+  },
+  {
+    id: 'inst_ask_family_money',
+    title: 'Xin tiền gia đình hỗ trợ',
+    subtitle: 'Nhận 30–400đ từ gia sản gốc · Có tỷ lệ thành công theo thân thiết & gia cảnh',
+    costCopper: 0,
+    cooldownDays: 90,
+    requiresLivingParent: true,
+    category: 'economic',
+    effects: {},
+    logText: 'Bạn mở lời xin gia đình hỗ trợ thêm chút tiền tiêu.',
   },
   {
     id: 'inst_send_parents_money',
@@ -992,6 +1007,43 @@ export function canAffordInstantAction(
   return { canPay: canCredit, onCredit: canCredit, effectiveCost };
 }
 
+export function getAskFamilyMoneyProfile(state: ActiveLifeState): {
+  chancePct: number;
+  amount: number;
+  canAsk: boolean;
+} {
+  const familyWealth = state.family?.familyWealthCopper ?? 0;
+  const livingParents = state.npcs.filter((n) => n.relation === 'parent' && n.isAlive);
+  if (!state.family || livingParents.length === 0 || familyWealth < 60) {
+    return { chancePct: 0, amount: 0, canAsk: false };
+  }
+
+  const avgParentAffinity =
+    livingParents.reduce((sum, p) => sum + p.affinity, 0) / livingParents.length;
+  const age = getAgeYears(state.profile.totalDays);
+  const tier = state.family.familyLivingTier;
+
+  let chance = 45;
+  chance += Math.round((avgParentAffinity - 50) * 0.5);
+  if (tier === 'hoang_gia' || tier === 'sung_tuc') chance += 15;
+  else if (tier === 'kha_gia') chance += 8;
+  else if (tier === 'tung_thieu') chance -= 15;
+
+  if (age <= 18) chance += 10;
+  else if (age >= 25) chance -= 15;
+
+  if (state.isStudent) chance += 10;
+  if (state.assets.wealthCopper >= 500) chance -= 15;
+  if (state.flags.includes('da_ra_o_rieng')) chance -= 15;
+  if (state.flags.includes('gia_dinh_mac_no')) chance -= 10;
+
+  const chancePct = Math.max(10, Math.min(85, chance));
+  const rawAmount = Math.round(familyWealth * 0.08);
+  const amount = Math.max(30, Math.min(400, Math.min(Math.floor(familyWealth * 0.25), rawAmount)));
+
+  return { chancePct, amount, canAsk: amount > 0 };
+}
+
 export function executeInstantAdultAction(
   inputState: ActiveLifeState,
   actionId: string,
@@ -1028,7 +1080,27 @@ export function executeInstantAdultAction(
   let customLogText = def.logText;
   let nextPrngState = inputState.prngState;
 
-  if (def.id === 'inst_rent_land_season') {
+  if (def.id === 'inst_ask_family_money') {
+    const profile = getAskFamilyMoneyProfile(inputState);
+    if (!profile.canAsk) {
+      return { ok: false, state: inputState, message: 'Gia đình hiện không đủ điều kiện để hỗ trợ.' };
+    }
+    const roll = mulberry32Next(nextPrngState);
+    nextPrngState = roll.nextState;
+    const succeeded = roll.value < profile.chancePct / 100;
+    if (succeeded) {
+      scaledEffects.copper = profile.amount;
+      scaledEffects.family_copper = -profile.amount;
+      scaledEffects.happiness = 3;
+      scaledEffects.npc_affinity = [{ relation: 'parent', delta: -2 }];
+      customLogText = `Bạn ngỏ lời xin gia đình hỗ trợ tiền tiêu (tỷ lệ ${profile.chancePct}%). Người nhà ưng thuận trích ${profile.amount}đ từ gia sản cho bạn`;
+    } else {
+      scaledEffects.copper = 0;
+      scaledEffects.happiness = -3;
+      scaledEffects.npc_affinity = [{ relation: 'parent', delta: -4 }];
+      customLogText = `Bạn ngỏ lời xin gia đình hỗ trợ (tỷ lệ ${profile.chancePct}%) nhưng bị từ chối khéo, khuyên nên tự lực cánh sinh`;
+    }
+  } else if (def.id === 'inst_rent_land_season') {
     const roll = mulberry32Next(nextPrngState);
     nextPrngState = roll.nextState;
     const ws = inputState.world.worldState;
@@ -1163,7 +1235,7 @@ export function executeInstantAdultAction(
       state.logs,
       state.profile.totalDays,
       'survival',
-      `${customLogText}${extraLog} (-${effectiveCost}đ)`,
+      `${customLogText}${extraLog}${effectiveCost > 0 ? ` (-${effectiveCost}đ)` : ''}`,
     ),
   };
 

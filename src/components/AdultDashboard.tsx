@@ -39,6 +39,7 @@ import {
   canAffordInstantAction,
   canHaveChild,
   canMarrySpouse,
+  getAskFamilyMoneyProfile,
   getCreditLimitCopper,
   getInstantActionCooldownRemaining,
   getLifeFocusOptions,
@@ -676,37 +677,55 @@ export function AdultDashboard() {
                         {formatCopper(life.family.familyWealthCopper)}
                       </span>
                     </div>
-                    {familyCashflow && (
-                      <div className="rounded bg-stone-950/60 border border-stone-800/70 p-1.5 space-y-0.5 text-[10px]">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-stone-400 truncate">
-                            Cha ({life.family.fatherOccupationLabel ?? 'Không rõ'})
-                          </span>
-                          <span className="font-mono text-emerald-400 shrink-0">
-                            +{formatCopper(familyCashflow.fatherIncome)}/tháng
-                          </span>
+                    {familyCashflow && (() => {
+                      const fatherDead =
+                        life.flags.includes('mo_coi_cha') ||
+                        !life.npcs.some((n) => n.id === 'npc_father' && n.isAlive);
+                      const motherDead =
+                        life.flags.includes('mo_coi_me') ||
+                        !life.npcs.some((n) => n.id === 'npc_mother' && n.isAlive);
+                      return (
+                        <div className="rounded bg-stone-950/60 border border-stone-800/70 p-1.5 space-y-0.5 text-[10px]">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-stone-400 truncate">
+                              Cha ({life.family!.fatherOccupationLabel ?? 'Không rõ'}){fatherDead ? ' · Đã mất' : ''}
+                            </span>
+                            <span className={`font-mono shrink-0 ${fatherDead ? 'text-stone-500' : 'text-emerald-400'}`}>
+                              {fatherDead ? '0đ' : `+${formatCopper(familyCashflow.fatherIncome)}/tháng`}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-stone-400 truncate">
+                              Mẹ ({life.family!.motherOccupationLabel ?? 'Nội trợ'}){motherDead ? ' · Đã mất' : ''}
+                            </span>
+                            <span className={`font-mono shrink-0 ${motherDead ? 'text-stone-500' : 'text-emerald-400'}`}>
+                              {motherDead
+                                ? '0đ'
+                                : familyCashflow.motherIncome > 0
+                                  ? `+${formatCopper(familyCashflow.motherIncome)}/tháng`
+                                  : 'Nội trợ (0đ)'}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
+                            <span className="text-stone-400">
+                              Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu)
+                              {familyCashflow.foodSelfSufficient ? ' · Tự túc gạo' : ''}
+                            </span>
+                            <span className="font-mono text-rose-400 shrink-0">
+                              -{formatCopper(familyCashflow.expense)}/tháng
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
+                            <span className="text-stone-400">Tích lũy ròng</span>
+                            <span className={`font-mono font-semibold shrink-0 ${familyCashflow.net >= 0 ? 'text-amber-300' : 'text-rose-400'}`}>
+                              {familyCashflow.net >= 0 ? '+' : ''}
+                              {formatCopper(familyCashflow.net)}/tháng ({familyCashflow.net >= 0 ? '+' : ''}
+                              {formatCopper(familyCashflow.net * 12)}/năm)
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-stone-400 truncate">
-                            Mẹ ({life.family.motherOccupationLabel ?? 'Nội trợ'})
-                          </span>
-                          <span className="font-mono text-emerald-400 shrink-0">
-                            {familyCashflow.motherIncome > 0
-                              ? `+${formatCopper(familyCashflow.motherIncome)}/tháng`
-                              : 'Nội trợ (0đ)'}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
-                          <span className="text-stone-400">
-                            Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu)
-                            {familyCashflow.foodSelfSufficient ? ' · Tự túc gạo' : ''}
-                          </span>
-                          <span className="font-mono text-rose-400 shrink-0">
-                            -{formatCopper(familyCashflow.expense)}/tháng
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                      );
+                    })()}
                     {life.family.familyAssetsSummary && life.family.familyAssetsSummary.length > 0 && (
                       <div className="flex flex-wrap gap-1 pt-0.5">
                         {life.family.familyAssetsSummary.map((item, idx) => (
@@ -1014,6 +1033,11 @@ export function AdultDashboard() {
                     const { canPay, onCredit, effectiveCost } = canAffordInstantAction(life, act);
                     const disabled =
                       cd > 0 || ageBlocked || maxAgeBlocked || worldBlocked || houseBlocked || !canPay;
+                    const askProfile =
+                      act.id === 'inst_ask_family_money' ? getAskFamilyMoneyProfile(life) : null;
+                    const displaySubtitle = askProfile
+                      ? `Xin khoảng ${formatCopper(askProfile.amount)} từ gia sản · Tỷ lệ thành công: ${askProfile.chancePct}%`
+                      : act.subtitle;
                     return (
                       <button
                         key={act.id}
@@ -1028,7 +1052,7 @@ export function AdultDashboard() {
                             {effectiveCost === 0 ? 'Miễn phí' : `${effectiveCost}đ`}
                           </span>
                         </div>
-                        <div className="text-[11px] text-stone-400">{act.subtitle}</div>
+                        <div className="text-[11px] text-stone-400">{displaySubtitle}</div>
                         {onCredit && !disabled && (
                           <div className="text-[10px] text-amber-400 font-medium">
                             Thiếu tiền mặt · Có thể vay để thực hiện

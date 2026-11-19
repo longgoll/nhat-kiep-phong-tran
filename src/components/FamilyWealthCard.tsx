@@ -90,37 +90,55 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
             </span>
           </div>
 
-          {familyCashflow && (
-            <div className="rounded-lg bg-stone-950/60 border border-stone-800/70 p-2 space-y-1 text-[11px]">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-stone-400 truncate">
-                  Cha ({family.fatherOccupationLabel ?? 'Không rõ'})
-                </span>
-                <span className="font-mono text-emerald-300 shrink-0">
-                  +{formatCopper(familyCashflow.fatherIncome)}/tháng
-                </span>
+          {familyCashflow && (() => {
+            const fatherDead =
+              life.flags.includes('mo_coi_cha') ||
+              !life.npcs.some((n) => n.id === 'npc_father' && n.isAlive);
+            const motherDead =
+              life.flags.includes('mo_coi_me') ||
+              !life.npcs.some((n) => n.id === 'npc_mother' && n.isAlive);
+            return (
+              <div className="rounded-lg bg-stone-950/60 border border-stone-800/70 p-2 space-y-1 text-[11px]">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-stone-400 truncate">
+                    Cha ({family.fatherOccupationLabel ?? 'Không rõ'}){fatherDead ? ' · Đã mất' : ''}
+                  </span>
+                  <span className={`font-mono shrink-0 ${fatherDead ? 'text-stone-500' : 'text-emerald-300'}`}>
+                    {fatherDead ? '0đ' : `+${formatCopper(familyCashflow.fatherIncome)}/tháng`}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-stone-400 truncate">
+                    Mẹ ({family.motherOccupationLabel ?? 'Nội trợ'}){motherDead ? ' · Đã mất' : ''}
+                  </span>
+                  <span className={`font-mono shrink-0 ${motherDead ? 'text-stone-500' : 'text-emerald-300'}`}>
+                    {motherDead
+                      ? '0đ'
+                      : familyCashflow.motherIncome > 0
+                        ? `+${formatCopper(familyCashflow.motherIncome)}/tháng`
+                        : 'Nội trợ (0đ)'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
+                  <span className="text-stone-400">
+                    Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu)
+                    {familyCashflow.foodSelfSufficient ? ' · Tự túc gạo' : ''}
+                  </span>
+                  <span className="font-mono text-rose-300 shrink-0">
+                    -{formatCopper(familyCashflow.expense)}/tháng
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
+                  <span className="text-stone-400">Tích lũy ròng</span>
+                  <span className={`font-mono font-semibold shrink-0 ${familyCashflow.net >= 0 ? 'text-amber-300' : 'text-rose-300'}`}>
+                    {familyCashflow.net >= 0 ? '+' : ''}
+                    {formatCopper(familyCashflow.net)}/tháng ({familyCashflow.net >= 0 ? '+' : ''}
+                    {formatCopper(familyCashflow.net * 12)}/năm)
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-stone-400 truncate">
-                  Mẹ ({family.motherOccupationLabel ?? 'Nội trợ'})
-                </span>
-                <span className="font-mono text-emerald-300 shrink-0">
-                  {familyCashflow.motherIncome > 0
-                    ? `+${formatCopper(familyCashflow.motherIncome)}/tháng`
-                    : 'Nội trợ (0đ)'}
-                </span>
-              </div>
-              <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
-                <span className="text-stone-400">
-                  Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu)
-                  {familyCashflow.foodSelfSufficient ? ' · Tự túc gạo' : ''}
-                </span>
-                <span className="font-mono text-rose-300 shrink-0">
-                  -{formatCopper(familyCashflow.expense)}/tháng
-                </span>
-              </div>
-            </div>
-          )}
+            );
+          })()}
 
           {family.familyAssetsSummary && family.familyAssetsSummary.length > 0 && (
             <div className="space-y-1">

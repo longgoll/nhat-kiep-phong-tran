@@ -22,6 +22,7 @@ import { buildDynamicDecisionById } from './decisionGenerator';
 import { isEventContextuallyAllowed, planYear } from './yearPlanner';
 import { resolveEventChoice } from './childhoodEngine';
 import { getPropertySeasonalIncome, getPropertySeasonalSocial, PROPERTY_CATALOG } from './progressionModules';
+import { computeFamilyMonthlyNetCopper } from './familyEconomy';
 import {
   applyAnnualGiftEtiquette,
   applySeasonalGoldAndInflation,
@@ -247,15 +248,22 @@ const LIFESTYLE_ORDER: LifestyleTier[] = ['son_hao', 'thit_ca', 'com_rau', 'chao
 function canReceiveFamilySupport(state: ActiveLifeState): boolean {
   if (!state.family) return false;
   if (state.flags.includes('da_ra_o_rieng')) return false;
-  if (state.flags.includes('gia_toc_sa_sut') || state.flags.includes('that_sung_cung_dinh')) {
+  if (state.flags.includes('that_sung_cung_dinh')) {
     return false;
+  }
+  if (state.flags.includes('gia_toc_sa_sut')) {
+    // Even if declined, a household with some remaining wealth & living parent still shares basic meals
+    return (
+      (state.family?.familyWealthCopper ?? 0) >= 150 &&
+      state.npcs.some((n) => n.relation === 'parent' && n.isAlive)
+    );
   }
   return state.npcs.some((n) => n.relation === 'parent' && n.isAlive);
 }
 
 /**
  * Determines the highest lifestyle tier covered by the family household
- * while the character is still living at home (not moved out, not declined).
+ * while the character is still living at home (not moved out).
  */
 export function getFamilyCoveredLifestyleTier(state: ActiveLifeState): LifestyleTier | null {
   if (!state.family) return null;
@@ -275,14 +283,21 @@ export function getFamilyCoveredLifestyleTier(state: ActiveLifeState): Lifestyle
   if (!canReceiveFamilySupport(state)) return null;
 
   const familyWealth = state.family.familyWealthCopper;
+  const ageYears = getAgeYears(state.profile.totalDays);
+
+  if (state.flags.includes('gia_toc_sa_sut')) {
+    return familyWealth >= 400 ? 'com_rau' : 'chao_loang';
+  }
 
   if (originClass === 'ban_nong') {
-    const ageYears = getAgeYears(state.profile.totalDays);
-    return ageYears < 18 ? 'chao_loang' : null;
+    if (familyWealth >= 600 && state.world.worldState !== 'mat_mua') return 'com_rau';
+    if (familyWealth >= 120 || ageYears < 18) return 'chao_loang';
+    return null;
   }
   if (originClass === 'thu_cong') {
     if (familyWealth >= 300) return 'com_rau';
-    return getAgeYears(state.profile.totalDays) < 18 ? 'chao_loang' : null;
+    if (familyWealth >= 120 || ageYears < 18) return 'chao_loang';
+    return null;
   }
   if (originClass === 'dia_chu') {
     return familyWealth >= 3000 ? 'thit_ca' : 'com_rau';
@@ -674,6 +689,16 @@ export function advanceDays(
       },
     };
     if (nextTotalDays % 30 === 0) {
+      if (
+        state.family &&
+        !state.flags.includes('da_ra_o_rieng') &&
+        state.npcs.some((n) => n.relation === 'parent' && n.isAlive)
+      ) {
+        const familyCashflow = computeFamilyMonthlyNetCopper(state);
+        if (familyCashflow.net !== 0) {
+          state = applyEffects(state, { family_copper: familyCashflow.net });
+        }
+      }
       state = applyMonthlyFamilyAllowance(state, newAge);
     }
     const focusMod = getDailyFocusModifiers(state.schedule.lifeFocus);
