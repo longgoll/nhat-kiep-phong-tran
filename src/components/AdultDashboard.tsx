@@ -166,6 +166,7 @@ export function AdultDashboard() {
   const [showNpcModal, setShowNpcModal] = useState(false);
   const [showArchive, setShowArchive] = useState(false);
   const [showActionModal, setShowActionModal] = useState(false);
+  const [showProgressionModal, setShowProgressionModal] = useState(false);
   const [mobileTab, setMobileTab] = useState<'profile' | 'planner' | 'logs'>('planner');
   const autoPlaySpeed = useActiveLifeStore((s) => s.autoPlaySpeed);
   const setAutoPlaySpeed = useActiveLifeStore((s) => s.setAutoPlaySpeed);
@@ -179,6 +180,7 @@ export function AdultDashboard() {
   const openCareerModal = (tab: 'current' | 'jobs' | 'ventures') => {
     setCareerModalTab(tab);
     setShowActionModal(false);
+    setShowProgressionModal(false);
     setIsCareerModalOpen(true);
   };
 
@@ -292,6 +294,11 @@ export function AdultDashboard() {
   const openActionModal = () => {
     setAutoPlaySpeed(0);
     setShowActionModal(true);
+  };
+
+  const openProgressionModal = () => {
+    setAutoPlaySpeed(0);
+    setShowProgressionModal(true);
   };
 
   const handleExportSave = () => {
@@ -747,13 +754,22 @@ export function AdultDashboard() {
                 )}
               </div>
 
-              <button
-                type="button"
-                onClick={openActionModal}
-                className="w-full py-2 px-3 rounded-lg bg-stone-950/70 hover:bg-stone-800 border border-stone-700 text-xs font-semibold text-stone-100 transition cursor-pointer"
-              >
-                Chi tiêu · Đầu tư
-              </button>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={openActionModal}
+                  className="w-full py-2 px-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800 border border-stone-700 text-xs font-semibold text-stone-100 transition cursor-pointer"
+                >
+                  Chi tiêu · Đầu tư
+                </button>
+                <button
+                  type="button"
+                  onClick={openProgressionModal}
+                  className="w-full py-2 px-2.5 rounded-lg bg-stone-950/70 hover:bg-stone-800 border border-amber-700/50 text-xs font-semibold text-amber-200 transition cursor-pointer"
+                >
+                  Sự nghiệp · Sản nghiệp
+                </button>
+              </div>
             </div>
           </div>
 
@@ -846,16 +862,25 @@ export function AdultDashboard() {
               </div>
 
               <div className="pt-1.5 border-t border-stone-800/80 flex flex-wrap items-center justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={openActionModal}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stone-950 hover:bg-stone-800 border border-stone-700 hover:border-amber-500/60 text-xs font-semibold text-amber-200 transition cursor-pointer"
-                >
-                  <span>Chi tiêu · Đầu tư</span>
-                  <span className={`text-[10px] font-mono ${hasNegativeCash ? 'text-rose-400' : 'text-stone-400'}`}>
-                    {formatCopper(life.assets.wealthCopper)}
-                  </span>
-                </button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={openActionModal}
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-stone-950 hover:bg-stone-800 border border-stone-700 hover:border-amber-500/60 text-xs font-semibold text-amber-200 transition cursor-pointer"
+                  >
+                    <span>Chi tiêu · Đầu tư</span>
+                    <span className={`text-[10px] font-mono ${hasNegativeCash ? 'text-rose-400' : 'text-stone-400'}`}>
+                      {formatCopper(life.assets.wealthCopper)}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={openProgressionModal}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-950 hover:bg-stone-800 border border-stone-700 hover:border-sky-500/60 text-xs font-semibold text-sky-200 transition cursor-pointer"
+                  >
+                    <span>Sự nghiệp · Sản nghiệp</span>
+                  </button>
+                </div>
                 <span className="text-[11px] text-stone-400 truncate max-w-[220px]">
                   {life.activeCareer
                     ? CAREER_CATALOG.find((j) => j.id === life.activeCareer!.jobId)?.title
@@ -962,6 +987,35 @@ export function AdultDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Sự Nghiệp · Sản Nghiệp Modal */}
+      {showProgressionModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-3 sm:p-4"
+          onClick={() => setShowProgressionModal(false)}
+        >
+          <div
+            className="max-w-2xl w-full max-h-[88vh] bg-stone-900 border border-stone-700 rounded-xl flex flex-col overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-3 border-b border-stone-800 bg-stone-950/60">
+              <span className="text-xs font-semibold uppercase tracking-wider text-sky-300">
+                Sự Nghiệp · Sản Nghiệp
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowProgressionModal(false)}
+                className="inline-flex items-center gap-1 text-xs font-medium text-stone-300 hover:text-stone-100 cursor-pointer"
+              >
+                Đóng <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-4 sm:p-5 overflow-y-auto">
+              <ProgressionModules />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Chi tiêu · Đầu tư Modal (1in8b 3-tier structure) */}
       {showActionModal && (
@@ -1112,7 +1166,7 @@ export function AdultDashboard() {
                               className="w-full flex items-center justify-between px-4 py-2.5 text-left cursor-pointer hover:bg-stone-900/60 transition rounded-xl"
                             >
                               <span className="text-xs font-semibold text-stone-200">
-                                Xem thêm ({moreSpendActions.length + 4} mục · Gạo &amp; Vàng · Gia thất · Khoa cử · Điền sản)
+                                Xem thêm ({moreSpendActions.length + 2} mục · Gạo &amp; Vàng · Gia thất · Vay nóng)
                               </span>
                               <span className="text-[11px] text-sky-400 font-medium">
                                 {showMoreSpendActions ? 'Thu gọn' : 'Mở rộng'}
@@ -1210,9 +1264,6 @@ export function AdultDashboard() {
                         </button>
                       </div>
                     </div>
-
-                    {/* Sự nghiệp · Sản nghiệp */}
-                    <ProgressionModules />
 
                     {/* Vay nóng địa chủ (khi túng quẫn) */}
                     <div className="pt-2 border-t border-stone-800 flex items-center justify-between gap-3">

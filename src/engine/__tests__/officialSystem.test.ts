@@ -4,11 +4,17 @@ import {
   appointOrPromoteOfficial,
   buyOfficialTitle,
   buyProperty,
+  getExamEligibility,
+  getVisibleProperties,
   grantRoyalPrivilege,
   launchRebellion,
   recruitRebellionArmy,
   upgradeHousing,
 } from '../progressionModules';
+import { getEligibleExamLevelForPrompt } from '../decisionGenerator';
+import { INSTANT_ADULT_ACTIONS, isInstantActionVisible } from '../adultLifeActions';
+import { isEventContextuallyAllowed } from '../yearPlanner';
+import { ALL_EVENTS } from '../../data/registry';
 import {
   bribeForEarlyPromotion,
   canBribeForPromotion,
@@ -227,5 +233,38 @@ describe('Feudal Official System (Văn · Võ · Hoạn Quan & Luật Triều Đ
       official: { ...halfTenureReady.official!, rank: 5, isHanhHam: true },
     };
     expect(canBribeForPromotion(hanhHam5).ok).toBe(false);
+  });
+
+  it('blocks exams, civilian rent/commerce actions, commercial property listings, and len-kinh chain for active officials', () => {
+    const cuNhan = { ...makeAdultLife('ban_nong'), flags: ['do_cu_nhan'] };
+    const off = appointOrPromoteOfficial(cuNhan);
+    expect(off.officialRank).toBe(2);
+
+    // 1. Active officials cannot take exams or get dec_exam_prompt
+    expect(getExamEligibility(off, 'hoi').ok).toBe(false);
+    expect(getEligibleExamLevelForPrompt(off)).toBeNull();
+
+    // 2. Active officials do not see commercial properties unless already owned
+    const visibleProps = getVisibleProperties(off);
+    expect(visibleProps.some((p) => p.id === 'thuyen_buon')).toBe(false);
+    expect(visibleProps.some((p) => p.id === 'ruong_tu')).toBe(true);
+
+    // 3. Active officials do not see civilian rent/job-hunt/biz-plan actions in Chi tiêu · Đầu tư
+    const blockedActionIds = new Set([
+      'inst_job_hunt',
+      'inst_biz_plan',
+      'inst_rent_room',
+      'inst_rent_land_season',
+      'inst_rent_market_stall',
+      'inst_night_class',
+      'inst_trade_course',
+    ]);
+    const visibleActions = INSTANT_ADULT_ACTIONS.filter((a) => isInstantActionVisible(off, a));
+    expect(visibleActions.some((a) => blockedActionIds.has(a.id))).toBe(false);
+
+    // 4. evt_chain_len_kinh_1 is blocked for active officials
+    const lenKinhEvt = ALL_EVENTS.find((e) => e.id === 'evt_chain_len_kinh_1');
+    expect(lenKinhEvt).toBeDefined();
+    expect(isEventContextuallyAllowed(off, lenKinhEvt!)).toBe(false);
   });
 });

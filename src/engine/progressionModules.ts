@@ -9,6 +9,7 @@ import {
 import { appendLog, applyEffects } from './effectApplier';
 import { mulberry32Next } from './prng';
 import {
+  COMMERCIAL_PROPERTY_IDS,
   POSTING_LABELS,
   checkHousingTiemLe,
   checkOfficialPropertyRule,
@@ -214,12 +215,14 @@ export function getPropertySeasonalIncome(
 }
 
 export function getVisibleProperties(state: ActiveLifeState): PropertySpec[] {
-  return PROPERTY_CATALOG.filter(
-    (prop) =>
-      !prop.requiresOrigins ||
-      prop.requiresOrigins.includes(state.profile.originClass) ||
-      state.assets.properties.includes(prop.id),
-  );
+  return PROPERTY_CATALOG.filter((prop) => {
+    const owned = state.assets.properties.includes(prop.id);
+    if (owned) return true;
+    if (state.officialRank > 0 && COMMERCIAL_PROPERTY_IDS.has(prop.id)) {
+      return false;
+    }
+    return !prop.requiresOrigins || prop.requiresOrigins.includes(state.profile.originClass);
+  });
 }
 
 export function getPropertySeasonalSocial(prop: PropertySpec): {
@@ -271,6 +274,9 @@ export function getExamEligibility(
   }
   if (state.flags.includes('thai_giam') || state.flags.includes('trong_hau_cung')) {
     return { ok: false, reason: 'Thân phận nội đình không thể dự khoa cử ngoại triều', cost: 0 };
+  }
+  if (state.officialRank > 0) {
+    return { ok: false, reason: 'Quan viên đương chức thăng tiến qua Khảo khóa 3 năm, không dự thi Khoa cử', cost: 0 };
   }
   const canAttendAsFemale =
     state.profile.gender === 'male' ||
@@ -342,8 +348,8 @@ export function getExamEligibility(
   if (state.flags.includes('do_tien_si')) {
     return { ok: false, reason: 'Đã đỗ Tiến sĩ', cost: 0 };
   }
-  if (age % 3 !== 1 || (state.world.season !== 'spring' && state.world.season !== 'summer')) {
-    return { ok: false, reason: 'Thi Đình mở vào Mùa Xuân–Hạ cùng kỳ Thi Hội (16, 19, 22... tuổi)', cost: 0 };
+  if (age % 3 !== 1 || state.world.season !== 'summer') {
+    return { ok: false, reason: 'Thi Đình mở vào Mùa Hạ sau kỳ Thi Hội (16, 19, 22... tuổi)', cost: 0 };
   }
   if (state.stats.education < 75 && state.stats.martial < 80) {
     return { ok: false, reason: 'Cần Học thức >= 75 (hoặc Võ nghệ >= 80)', cost: 0 };

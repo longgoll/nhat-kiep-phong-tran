@@ -64,6 +64,7 @@ const EXAM_LABELS: Record<ExamLevel, { title: string; desc: string }> = {
 };
 
 export function getEligibleExamLevelForPrompt(state: ActiveLifeState): ExamLevel | null {
+  if (state.officialRank > 0) return null;
   const age = getAgeYears(state.profile.totalDays);
   if (age < 13) return null;
   const currentYear = Math.floor(state.profile.totalDays / DAYS_PER_YEAR);
@@ -300,10 +301,12 @@ function generateDynamicDecisionInternal(
       state.profile.originClass === 'quan_lai' ||
       state.profile.originClass === 'hoang_toc') &&
     state.stats.education >= 24;
+  const canReofferAfterDeferral =
+    state.flags.includes('hoan_nham_chuc_de_thi') && state.flags.includes('do_tien_si');
   if (
     (!onlyId || onlyId === 'dec_official_appoint') &&
     canBeOfficialByGender &&
-    state.eventCooldowns['dec_official_appoint'] === undefined &&
+    (state.eventCooldowns['dec_official_appoint'] === undefined || canReofferAfterDeferral) &&
     age >= 20 &&
     age < 60 &&
     state.officialRank === 0 &&
@@ -328,6 +331,43 @@ function generateDynamicDecisionInternal(
     const entryReason = hasExamDegree
       ? 'Nhờ khoa bảng đỗ đạt, triều đình đã ban trát triệu tập bạn ra làm quan'
       : 'Nhờ ân trạch thế gia và sự tiến cử của quý nhân, bộ Lại ban trát bổ nhiệm bạn ra làm quan';
+    const choices: GameEventDef['choices'] = [
+      {
+        label: `Nhận sắc phong nhậm chức ${startRankTitle}`,
+        hint: 'Chính thức bước vào quan trường · Ngừng thi Khoa cử, thăng tiến qua Khảo khóa',
+        outcomes: [
+          {
+            weight: { base: 100 },
+            effects: { happiness: 6, remove_flags: ['hoan_nham_chuc_de_thi'] },
+            resultText: `Bạn bái lạy nhận sắc phong, chính thức nhậm chức ${startRankTitle}.`,
+          },
+        ],
+      },
+    ];
+    if (!state.flags.includes('do_tien_si')) {
+      choices.push({
+        label: 'Hoãn nhậm chức, tiếp tục dùi mài thi Hội / Thi Đình',
+        hint: 'Chưa làm quan ngay · Đỗ Tiến sĩ sẽ khởi đầu ở phẩm hàm cao hơn',
+        outcomes: [
+          {
+            weight: { base: 100 },
+            effects: { add_flags: ['hoan_nham_chuc_de_thi'] },
+            resultText: 'Bạn xin triều đình tạm hoãn nhậm chức để tiếp tục dùi mài kinh sử chờ kỳ thi cao hơn.',
+          },
+        ],
+      });
+    }
+    choices.push({
+      label: 'Từ chối làm quan, giữ chí ẩn dật hoặc tự lập',
+      hint: 'Không tham gia quan trường',
+      outcomes: [
+        {
+          weight: { base: 100 },
+          effects: { fame: 3, add_flags: ['dec_official_declined'], remove_flags: ['hoan_nham_chuc_de_thi'] },
+          resultText: 'Bạn khéo léo cáo từ sắc phong, chọn cuộc sống tự do ngoài chốn quan trường.',
+        },
+      ],
+    });
     return {
       id: 'dec_official_appoint',
       stage: 'adulthood',
@@ -338,30 +378,7 @@ function generateDynamicDecisionInternal(
       description: `${entryReason}, khởi đầu ở chức ${startRankTitle}.`,
       cooldownDays: 99999,
       weight: { base: 100 },
-      choices: [
-        {
-          label: `Nhận sắc phong nhậm chức ${startRankTitle}`,
-          hint: 'Chính thức bước vào quan trường · Thanh danh +10',
-          outcomes: [
-            {
-              weight: { base: 100 },
-              effects: { happiness: 6 },
-              resultText: `Bạn bái lạy nhận sắc phong, chính thức nhậm chức ${startRankTitle}.`,
-            },
-          ],
-        },
-        {
-          label: 'Từ chối làm quan, giữ chí ẩn dật hoặc tự lập',
-          hint: 'Không tham gia quan trường',
-          outcomes: [
-            {
-              weight: { base: 100 },
-              effects: { fame: 3, add_flags: ['dec_official_declined'] },
-              resultText: 'Bạn khéo léo cáo từ sắc phong, chọn cuộc sống tự do ngoài chốn quan trường.',
-            },
-          ],
-        },
-      ],
+      choices,
     };
   }
 
@@ -699,33 +716,33 @@ function generateDynamicDecisionInternal(
       choices: [
         ...(canFamilyHelp
           ? [
-              {
-                label: 'Về quê xin gia đình cứu trợ trả nợ',
-                hint: 'Nhận +500đ · Quan hệ -6',
-                outcomes: [
-                  {
-                    weight: { base: 100 },
-                    effects: { copper: 500, relationships: -6 },
-                    resultText: 'Gia đình đành dốc tiền tích góp giúp bạn trang trải một phần nợ nần.',
-                  },
-                ],
-              },
-            ]
+            {
+              label: 'Về quê xin gia đình cứu trợ trả nợ',
+              hint: 'Nhận +500đ · Quan hệ -6',
+              outcomes: [
+                {
+                  weight: { base: 100 },
+                  effects: { copper: 500, relationships: -6 },
+                  resultText: 'Gia đình đành dốc tiền tích góp giúp bạn trang trải một phần nợ nần.',
+                },
+              ],
+            },
+          ]
           : []),
         ...(hasProp
           ? [
-              {
-                label: 'Bán bớt một điền sản để trang trải nợ',
-                hint: 'Thu tiền mặt từ điền sản hiện có',
-                outcomes: [
-                  {
-                    weight: { base: 100 },
-                    effects: {},
-                    resultText: 'Bạn đành bán bớt một phần điền sản để giảm bớt gánh nặng nợ nần.',
-                  },
-                ],
-              },
-            ]
+            {
+              label: 'Bán bớt một điền sản để trang trải nợ',
+              hint: 'Thu tiền mặt từ điền sản hiện có',
+              outcomes: [
+                {
+                  weight: { base: 100 },
+                  effects: {},
+                  resultText: 'Bạn đành bán bớt một phần điền sản để giảm bớt gánh nặng nợ nần.',
+                },
+              ],
+            },
+          ]
           : []),
         {
           label: 'Cắn răng chịu đựng, tìm việc làm trả nợ dần',

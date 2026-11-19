@@ -57,11 +57,12 @@ export function ProgressionModules() {
 
   const ageYears = getAgeYears(life.profile.totalDays);
   const canExam =
-    life.stats.education >= 10 ||
-    life.stats.martial >= 15 ||
-    life.flags.includes('duoc_thay_do_quy') ||
-    life.flags.includes('do_cu_nhan') ||
-    life.flags.includes('do_cong_si');
+    life.officialRank === 0 &&
+    (life.stats.education >= 10 ||
+      life.stats.martial >= 15 ||
+      life.flags.includes('duoc_thay_do_quy') ||
+      life.flags.includes('do_cu_nhan') ||
+      life.flags.includes('do_cong_si'));
   const canTrade = true;
   const canCourt =
     life.officialRank > 0 ||
@@ -74,6 +75,12 @@ export function ProgressionModules() {
       !life.flags.includes('thai_giam') &&
       !life.flags.includes('trong_hau_cung'));
   const canRebel = life.stats.fame >= 70 || life.stats.infamy >= 70;
+  const effectiveTab =
+    activeTab === 'exam' && !canExam
+      ? canCourt
+        ? 'court'
+        : 'trade'
+      : activeTab;
   const royalPrivilege = canGrantRoyalPrivilege(life);
   const visibleProperties = getVisibleProperties(life);
 
@@ -97,9 +104,9 @@ export function ProgressionModules() {
         {canExam && (
           <button
             type="button"
-            onClick={() => setActiveTab(activeTab === 'exam' ? null : 'exam')}
+            onClick={() => setActiveTab(effectiveTab === 'exam' ? null : 'exam')}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer transition ${
-              activeTab === 'exam'
+              effectiveTab === 'exam'
                 ? 'bg-emerald-950/60 border-emerald-500 text-emerald-200'
                 : 'bg-stone-950 border-stone-700 text-stone-300 hover:border-stone-500'
             }`}
@@ -110,22 +117,22 @@ export function ProgressionModules() {
         {canTrade && (
           <button
             type="button"
-            onClick={() => setActiveTab(activeTab === 'trade' ? null : 'trade')}
+            onClick={() => setActiveTab(effectiveTab === 'trade' ? null : 'trade')}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer transition ${
-              activeTab === 'trade'
+              effectiveTab === 'trade'
                 ? 'bg-amber-950/60 border-amber-500 text-amber-200'
                 : 'bg-stone-950 border-stone-700 text-stone-300 hover:border-stone-500'
             }`}
           >
-            <Store className="w-3.5 h-3.5" /> Đầu tư &amp; Cho thuê
+            <Store className="w-3.5 h-3.5" /> {life.officialRank > 0 ? 'Điền sản & Chỗ ở' : 'Đầu tư & Cho thuê'}
           </button>
         )}
         {canCourt && (
           <button
             type="button"
-            onClick={() => setActiveTab(activeTab === 'court' ? null : 'court')}
+            onClick={() => setActiveTab(effectiveTab === 'court' ? null : 'court')}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer transition ${
-              activeTab === 'court'
+              effectiveTab === 'court'
                 ? 'bg-sky-950/60 border-sky-500 text-sky-200'
                 : 'bg-stone-950 border-stone-700 text-stone-300 hover:border-stone-500'
             }`}
@@ -136,9 +143,9 @@ export function ProgressionModules() {
         {canRebel && (
           <button
             type="button"
-            onClick={() => setActiveTab(activeTab === 'rebel' ? null : 'rebel')}
+            onClick={() => setActiveTab(effectiveTab === 'rebel' ? null : 'rebel')}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer transition ${
-              activeTab === 'rebel'
+              effectiveTab === 'rebel'
                 ? 'bg-rose-950/60 border-rose-500 text-rose-200'
                 : 'bg-stone-950 border-stone-700 text-stone-300 hover:border-stone-500'
             }`}
@@ -149,7 +156,7 @@ export function ProgressionModules() {
       </div>
 
       {/* KHOA CỬ PANEL */}
-      {activeTab === 'exam' && (
+      {effectiveTab === 'exam' && (
         <div className="p-3 rounded-lg bg-stone-950/80 border border-stone-800 space-y-2.5 text-xs">
           {life.profile.gender === 'female' &&
             !life.flags.includes('nu_cai_nam_trang') &&
@@ -216,18 +223,22 @@ export function ProgressionModules() {
       )}
 
       {/* THƯƠNG HỘI & ĐIỀN SẢN PANEL */}
-      {activeTab === 'trade' && (
+      {effectiveTab === 'trade' && (
         <div className="p-3 rounded-lg bg-stone-950/80 border border-stone-800 space-y-3 text-xs">
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="font-semibold text-amber-200">Tậu Điền Sản &amp; Cửa Hiệu (Mua nhiều · Thu mỗi mùa)</div>
+              <div className="font-semibold text-amber-200">
+                {life.officialRank > 0
+                  ? 'Điền Sản & Cơ Sở Công Ích (Thu mỗi mùa)'
+                  : 'Tậu Điền Sản & Cửa Hiệu (Mua nhiều · Thu mỗi mùa)'}
+              </div>
               <span className="text-[10px] px-2 py-0.5 rounded bg-stone-800 text-stone-300">
                 Thời thế: {getWorldStateLabel(life.world.worldState)}
               </span>
             </div>
             {life.officialRank > 0 && (
               <div className="p-2 rounded bg-sky-950/30 border border-sky-800/60 text-[11px] text-sky-200">
-                <strong>Luật Quan trường:</strong> Cấm quan đương chức trực tiếp buôn bán (chỉ có thể nhờ gia nhân đứng tên ngầm với +15% phí, -30% lãi &amp; tăng Hiềm nghi). Điền sản chịu giới hạn <em>Hạn điền</em> theo phẩm hàm.
+                <strong>Luật Quan trường:</strong> Cấm quan đương chức trực tiếp buôn bán ("Dữ dân tranh lợi"), các sản nghiệp thương mại đã được ẩn khỏi danh mục mua mới. Điền sản chịu giới hạn <em>Hạn điền</em> theo phẩm hàm.
               </div>
             )}
             {visibleProperties.map((prop) => {
@@ -354,7 +365,7 @@ export function ProgressionModules() {
       )}
 
       {/* CÔNG ĐƯỜNG PANEL */}
-      {activeTab === 'court' && (
+      {effectiveTab === 'court' && (
         <div className="p-3 rounded-lg bg-stone-950/80 border border-stone-800 space-y-3 text-xs">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
@@ -569,7 +580,7 @@ export function ProgressionModules() {
       )}
 
       {/* MẬT THẤT KHỞI NGHĨA PANEL */}
-      {activeTab === 'rebel' && (() => {
+      {effectiveTab === 'rebel' && (() => {
         const recruitElig = canRecruitRebellionArmy(life);
         return (
           <div className="p-3 rounded-lg bg-stone-950/80 border border-rose-900/50 space-y-3 text-xs">

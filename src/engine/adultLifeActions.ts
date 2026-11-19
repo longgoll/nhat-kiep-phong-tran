@@ -153,6 +153,7 @@ export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdult
   }
   if (def.id === 'inst_job_hunt' || def.id === 'inst_biz_plan') {
     if (
+      state.officialRank > 0 ||
       state.isStudent ||
       state.livelihoodStatus === 'student' ||
       state.flags.includes('trong_hau_cung') ||
@@ -161,6 +162,16 @@ export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdult
     ) {
       return false;
     }
+  }
+  if (
+    state.officialRank > 0 &&
+    (def.id === 'inst_rent_room' ||
+      def.id === 'inst_rent_land_season' ||
+      def.id === 'inst_rent_market_stall' ||
+      def.id === 'inst_night_class' ||
+      def.id === 'inst_trade_course')
+  ) {
+    return false;
   }
   if (def.requiresLivingParent) {
     const hasParent = state.npcs.some((n) => n.relation === 'parent' && n.isAlive);

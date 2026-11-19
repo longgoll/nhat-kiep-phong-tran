@@ -114,6 +114,32 @@ export function isEventContextuallyAllowed(state: ActiveLifeState, evt: GameEven
     if (!isDeclined && evt.id === 'evt_adult_major_desperate_theft') return false;
   }
 
+  if (state.officialRank > 0 || state.flags.includes('dang_lam_quan')) {
+    const OFFICIAL_BLOCKED_CIVILIAN_PREFIXES = [
+      'evt_jianghu_',
+      'evt_biz_',
+      'evt_career_',
+      'evt_craft_',
+    ];
+    const OFFICIAL_BLOCKED_CIVILIAN_IDS = new Set([
+      'evt_chain_len_kinh_1',
+      'evt_servitude_opportunity',
+      'evt_adult_major_desperate_theft',
+      'evt_scholar_local_exam_temptation',
+      'evt_scholar_road_to_capital',
+      'evt_scholar_poor_exam_fail',
+      'evt_scholar_rich_backdoor',
+      'evt_scholar_poor_copy_books',
+      'evt_scholar_poor_mentor',
+    ]);
+    if (
+      OFFICIAL_BLOCKED_CIVILIAN_PREFIXES.some((p) => evt.id.startsWith(p)) ||
+      OFFICIAL_BLOCKED_CIVILIAN_IDS.has(evt.id)
+    ) {
+      return false;
+    }
+  }
+
   return true;
 }
 

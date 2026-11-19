@@ -42,7 +42,7 @@
 | `da_len_kinh_thanh` | evt_chain_len_kinh_1 | evt_chain_len_kinh_1(missing_flags), evt_chain_len_kinh_2(has_flags), evt_chain_len_kinh_3(has_flags) |
 | `da_nhan_tuoc_vi` | evt_female_royal_title_grant, evt_adult_exp_hoang_toc_title_estate | evt_court_succession_crisis(has_any_flag), evt_female_royal_title_grant(missing_flags), evt_world_imperial_tax_levy(has_any_flag) |
 | `da_ra_o_rieng` | evt_chain_ra_o_rieng_1 | evt_chain_ra_o_rieng_1(missing_flags), evt_chain_ra_o_rieng_2(has_flags), evt_chain_ra_o_rieng_3(has_flags) |
-| `dang_lam_quan` | evt_nu_cai_nam_trang_exposed(-remove), evt_life_corrupt_audit(-remove), evt_official_corrupt_censor_raid(-remove), evt_official_retire_gracefully(-remove) | evt_biz_caravan_venture(missing_flags), evt_biz_supply_contract(missing_flags), evt_biz_tea_cart_rumor(missing_flags), evt_biz_scribe_secret_letter(missing_flags) |
+| `dang_lam_quan` | evt_nu_cai_nam_trang_exposed(-remove), evt_life_corrupt_audit(-remove), evt_official_corrupt_censor_raid(-remove), evt_official_retire_gracefully(-remove) | evt_chain_len_kinh_1(missing_flags), evt_biz_caravan_venture(missing_flags), evt_biz_supply_contract(missing_flags), evt_biz_tea_cart_rumor(missing_flags) |
 | `dang_no_dia_chu` | evt_debt_collection_01(-remove) | evt_debt_collection_01(has_flags) |
 | `danh_y_cuu_dan` | evt_physician_plague_outbreak | evt_physician_imperial_summons(has_flags), evt_physician_noble_poison(has_any_flag), evt_physician_rare_herb_expedition(has_any_flag), evt_physician_medical_treatise(has_any_flag) |
 | `do_cu_nhan` | *(engine/init)* | evt_military_enlist(missing_flags), evt_scholar_local_exam_temptation(missing_flags), evt_scholar_road_to_capital(has_any_flag), evt_scholar_poor_exam_fail(missing_flags) |

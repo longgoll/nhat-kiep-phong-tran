@@ -9,6 +9,7 @@
     "conditions": {
       "min_age": 16,
       "max_age": 35,
+      "max_official_rank": 0,
       "origin_in": [
         "ban_nong",
         "thu_cong",
@@ -16,6 +17,7 @@
       ],
       "missing_flags": [
         "da_len_kinh_thanh",
+        "dang_lam_quan",
         "trong_hau_cung",
         "thai_giam",
         "bi_ep_lam_gia_no"
