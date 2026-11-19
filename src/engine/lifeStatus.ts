@@ -1,6 +1,6 @@
 import { getAgeYears, type ActiveLifeState, type CohortPeer } from '../types/activeLife';
 import { CAREER_CATALOG, VENTURE_CATALOG } from './careerSystem';
-import { OFFICIAL_RANKS } from './progressionModules';
+import { POSTING_LABELS, getOfficialGradeAndTitle } from './officialSystem';
 
 /**
  * Unified 1in8b-style education ladder from childhood to adulthood.
@@ -102,7 +102,7 @@ export function hasActiveLivelihood(state: ActiveLifeState): boolean {
 export function getCurrentLivelihoodLabel(state: ActiveLifeState): string {
   if (state.livelihoodStatus === 'prison' || state.flags.includes('dang_o_tu')) return 'Trong tù';
   if (state.officialRank > 0) {
-    return `${OFFICIAL_RANKS[state.officialRank] ?? 'Quan viên'} (Triều đình)`;
+    return `${getOfficialGradeAndTitle(state)} (Triều đình)`;
   }
 
   const fateRole = getSpecialFateRole(state);
@@ -183,13 +183,13 @@ export function getFeudalTransportLabel(state: ActiveLifeState): string {
   const lifestyle = state.schedule.lifestyle;
 
   if (
-    state.officialRank >= 5 ||
+    state.officialRank >= 7 ||
     (state.profile.originClass === 'hoang_toc' && state.assets.housing === 'phu_de' && !isDeclined)
   ) {
     return 'Kiệu bát cống · Có lính hầu mở đường';
   }
   if (
-    state.officialRank >= 3 ||
+    state.officialRank >= 4 ||
     (state.assets.housing === 'phu_de' && (lifestyle === 'thit_ca' || lifestyle === 'son_hao'))
   ) {
     return 'Kiệu bốn người khiêng · Đi lại nhàn nhã';
@@ -231,10 +231,11 @@ export function getStatusLineParts(state: ActiveLifeState): { primary: string; d
   }
 
   if (state.officialRank > 0) {
-    const rankTitle = OFFICIAL_RANKS[state.officialRank] ?? 'Quan viên';
+    const rankTitle = getOfficialGradeAndTitle(state);
+    const posting = state.official ? POSTING_LABELS[state.official.posting] : place;
     return {
       primary: rankTitle,
-      detail: `quan chức triều đình · ${place}`,
+      detail: `quan chức triều đình · ${posting}`,
     };
   }
 

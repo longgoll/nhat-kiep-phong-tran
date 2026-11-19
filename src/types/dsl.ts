@@ -1,4 +1,13 @@
-import type { Gender, HousingTier, OriginClass, Season, TimeSlot, WorldState } from './activeLife';
+import type {
+  Gender,
+  HousingTier,
+  OfficialFaction,
+  OfficialTrack,
+  OriginClass,
+  Season,
+  TimeSlot,
+  WorldState,
+} from './activeLife';
 
 export interface ConditionSpec {
   min_age?: number;
@@ -44,6 +53,11 @@ export interface ConditionSpec {
   has_living_npc_id?: string;
   min_official_rank?: number;
   max_official_rank?: number;
+  official_tracks?: OfficialTrack[];
+  official_factions?: OfficialFaction[];
+  min_merit?: number;
+  min_scandal_risk?: number;
+  max_scandal_risk?: number;
 
   has_traits?: string[];
   has_any_trait?: string[];
@@ -75,6 +89,13 @@ export interface EffectSpec {
   remove_flags?: string[];
   reset_official_rank?: boolean;
   official_rank_delta?: number;
+  merit?: number;
+  public_trust?: number;
+  imperial_favor?: number;
+  scandal_risk?: number;
+  official_faction?: OfficialFaction;
+  suspend_salary_days?: number;
+  confiscate_assets?: boolean;
   add_traits?: string[];
   remove_traits?: string[];
   add_interests?: string[];

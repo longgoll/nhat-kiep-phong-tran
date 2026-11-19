@@ -1,0 +1,251 @@
+[
+  {
+    "id": "evt_official_vo_supply_shortage",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "official_tracks": ["vo"],
+      "min_official_rank": 1
+    },
+    "title": "Biên Ải Thiếu Quân Lương Mùa Đông",
+    "description": "Tuyết rơi dày đặc, đường tiếp tế từ Kinh đô bị nghẽn. Kho lương doanh trại chỉ còn đủ cầm cự 10 ngày.",
+    "cooldownDays": 1080,
+    "weight": { "base": 18 },
+    "choices": [
+      {
+        "label": "Bỏ 2.000đ tiền túi mua gấp lương thảo từ thương đoàn biên giới",
+        "hint": "-2.000đ · Quân công +10 · Dân tâm +8 · Thánh sủng +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": -2000,
+              "merit": 10,
+              "public_trust": 8,
+              "imperial_favor": 6,
+              "fame": 10
+            },
+            "resultText": "Binh sĩ no ấm cảm động rơi lệ, đồng thanh thề quyết tử bảo vệ ải."
+          }
+        ]
+      },
+      {
+        "label": "Cắt giảm khẩu phần, thúc quân đi săn thú rừng cầm cự",
+        "hint": "Quân công +3 · Sức khỏe -4 · Rủi ro binh sĩ bất mãn",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "merit": 3,
+              "health": -4,
+              "public_trust": -4
+            },
+            "resultText": "Cả doanh trại cắn răng chịu đói rét vượt qua mùa đông khắc nghiệt."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_vo_eunuch_supervisor",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "official_tracks": ["vo"],
+      "min_official_rank": 2
+    },
+    "title": "Hoạn Quan Giám Quân Đòi Tiền Khao Thưởng",
+    "description": "Thái giám Giám quân do triều đình phái xuống thị sát doanh trại bóng gió đòi tiền 'trà nước' mới chịu viết sớ tâu công trạng của bạn.",
+    "cooldownDays": 1080,
+    "weight": { "base": 16 },
+    "choices": [
+      {
+        "label": "Nghiến răng biếu 3.000đ cho êm chuyện để giữ đường thăng tiến",
+        "hint": "-3.000đ · Thánh sủng +5 · Hiềm nghi +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": -3000,
+              "imperial_favor": 5,
+              "scandal_risk": 6
+            },
+            "resultText": "Giám quân hớn hở nhét bạc vào tay áo, hứa sẽ tâu những lời tốt đẹp trước Ngự tiền."
+          }
+        ]
+      },
+      {
+        "label": "Thẳng thừng từ chối: 'Binh sĩ ngoài ải đổ máu chứ không nộp bạc!'",
+        "hint": "Thanh danh +10 · Thánh sủng -8 (Yêm đảng thù hằn)",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "fame": 10,
+              "merit": 4,
+              "imperial_favor": -8
+            },
+            "resultText": "Binh sĩ nể phục khí phách của bạn, nhưng tên Thái giám hậm hực ra về."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_vo_bandit_campaign",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "official_tracks": ["vo"],
+      "min_official_rank": 1,
+      "min_martial": 30
+    },
+    "title": "Xuất Binh Tiễu Trừ Sơn Tặc Cướp Lương",
+    "description": "Một toán sơn tặc hơn ba trăm tên chiếm giữ hẻm núi, chặn đường vận lương triều đình. Bộ Binh hạ lệnh cho bạn xuất kích.",
+    "cooldownDays": 1080,
+    "weight": { "base": 18 },
+    "choices": [
+      {
+        "label": "Đích thân dẫn quân tiên phong đánh úp sơn trại trong đêm",
+        "hint": "Tỷ lệ thắng cao nếu Võ nghệ >= 50 · Quân công +14 · Thánh sủng +8",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 65,
+              "modifiers": [
+                { "conditions": { "min_martial": 50 }, "addWeight": 25 }
+              ]
+            },
+            "effects": {
+              "merit": 14,
+              "imperial_favor": 8,
+              "fame": 15,
+              "copper": 1500
+            },
+            "resultText": "Đại thắng! Bạn bắt sống đầu mục sơn tặc, thu hồi toàn bộ lương thảo. Bộ Binh ghi đại công!"
+          },
+          {
+            "weight": { "base": 35 },
+            "effects": {
+              "health": -15,
+              "merit": 4,
+              "happiness": -6
+            },
+            "resultText": "Sơn tặc phục kích khiến bạn trúng tên bị thương, nhưng cuối cùng cũng đẩy lui được chúng."
+          }
+        ]
+      },
+      {
+        "label": "Đóng trại cố thủ, gửi thư chiêu hàng đầu mục để tránh đổ máu",
+        "hint": "An toàn · Quân công +5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "merit": 5,
+              "public_trust": 4
+            },
+            "resultText": "Toán sơn tặc đồng ý quy hàng giải tán, giữ được bình yên cho vùng núi."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_vo_border_defense",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "official_tracks": ["vo"],
+      "min_official_rank": 4,
+      "world_state_in": ["chien_tranh"]
+    },
+    "title": "Kỵ Binh Địch Tập Kích Cửa Ải Trọng Yếu",
+    "description": "Chiến sự bùng nổ! Địch điều tinh binh đánh thẳng vào cửa ải bạn trấn giữ.",
+    "cooldownDays": 1440,
+    "weight": { "base": 20 },
+    "choices": [
+      {
+        "label": "Thề sống chết với thành trì, mở cổng phản kích",
+        "hint": "Đại công nếu Võ nghệ >= 70 (+20 Quân công, +15 Thánh sủng) · Rủi ro trọng thương",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                { "conditions": { "min_martial": 70 }, "addWeight": 30 }
+              ]
+            },
+            "effects": {
+              "merit": 20,
+              "imperial_favor": 15,
+              "fame": 25,
+              "happiness": 12
+            },
+            "resultText": "Bạn chém gục tướng tiên phong của địch, giữ vững cửa ải! Hoàng đế ban chiếu khen ngợi."
+          },
+          {
+            "weight": { "base": 40 },
+            "effects": {
+              "health": -25,
+              "official_rank_delta": -1,
+              "imperial_favor": -12
+            },
+            "resultText": "Quân địch quá đông, cửa ải thất thủ. Bạn trọng thương rút lui và bị giáng 1 phẩm."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_vo_troop_mutiny",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "official_tracks": ["vo"],
+      "min_official_rank": 3,
+      "min_scandal_risk": 35
+    },
+    "title": "Binh Sĩ Bất Mãn Vì Nghi Ngờ Ăn Chặn Quân Lương",
+    "description": "Có kẻ tung tin trong doanh trại rằng tướng quân cấu kết với lái buôn ăn chặn quân lương. Binh lính xôn xao đòi kiểm kho.",
+    "cooldownDays": 1080,
+    "weight": { "base": 14 },
+    "choices": [
+      {
+        "label": "Công khai sổ quân lương và phát thưởng thêm 1.500đ an lòng quân",
+        "hint": "-1.500đ · Hiềm nghi -10 · Dân tâm +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": -1500,
+              "scandal_risk": -10,
+              "public_trust": 8
+            },
+            "resultText": "Binh sĩ thấy rõ sự minh bạch và hào phóng của chủ tướng, lập tức quy thuận."
+          }
+        ]
+      },
+      {
+        "label": "Bắt giam kẻ cầm đầu để lập quân uy",
+        "hint": "Hiềm nghi +10 · Dân tâm -12 · Thánh sủng -5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "scandal_risk": 10,
+              "public_trust": -12,
+              "imperial_favor": -5
+            },
+            "resultText": "Binh biến tạm lắng xuống nhưng lòng quân ly tán."
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -118,6 +118,22 @@ export function evaluateConditions(state: ActiveLifeState, cond?: ConditionSpec)
     if (!state.family || !cond.family_tier_in.includes(state.family.familyLivingTier)) return false;
   }
 
+  if (cond.official_tracks && cond.official_tracks.length > 0) {
+    if (!state.official || !cond.official_tracks.includes(state.official.track)) return false;
+  }
+  if (cond.official_factions && cond.official_factions.length > 0) {
+    if (!state.official || !cond.official_factions.includes(state.official.faction)) return false;
+  }
+  if (cond.min_merit !== undefined && (state.official?.merit ?? 0) < cond.min_merit) {
+    return false;
+  }
+  if (cond.min_scandal_risk !== undefined && (state.official?.scandalRisk ?? 0) < cond.min_scandal_risk) {
+    return false;
+  }
+  if (cond.max_scandal_risk !== undefined && (state.official?.scandalRisk ?? 0) > cond.max_scandal_risk) {
+    return false;
+  }
+
   return true;
 }
 

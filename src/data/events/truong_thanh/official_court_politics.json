@@ -1,0 +1,288 @@
+[
+  {
+    "id": "evt_official_court_faction_choice",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 4,
+      "official_factions": ["chua_dung_phe"]
+    },
+    "title": "Sóng Ngầm Triều Đường: Chọn Phe Đứng Chân",
+    "description": "Lên tới hàng trung-cao cấp, bạn không thể đứng ngoài cuộc đấu đá. Cả phe Thanh lưu (Sĩ phu), phe Quyền thần và Yêm đảng (Hoạn quan) đều ngỏ lời lôi kéo.",
+    "cooldownDays": 1440,
+    "weight": { "base": 20 },
+    "choices": [
+      {
+        "label": "Gia nhập phe Thanh lưu — giữ khí tiết sĩ phu, bài trừ tham nhũng",
+        "hint": "Phe Thanh lưu · Thanh danh +15 · Dễ bị Quyền thần & Hoạn quan chèn ép",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "official_faction": "thanh_luu",
+              "fame": 15,
+              "scandal_risk": -8,
+              "imperial_favor": 4
+            },
+            "resultText": "Các bậc lão thần Thanh lưu gật đầu tán thưởng, kết nạp bạn vào hàng ngũ chính trực."
+          }
+        ]
+      },
+      {
+        "label": "Nương tựa phe Quyền thần — nhanh tiến thân nhưng nhiều rủi ro",
+        "hint": "Phe Quyền thần · Thánh sủng +12 · Chính tích +6 · Hiềm nghi +10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "official_faction": "quyen_than",
+              "imperial_favor": 12,
+              "merit": 6,
+              "scandal_risk": 10
+            },
+            "resultText": "Tướng phủ che chở giúp đường quan lộ của bạn mở rộng thênh thang."
+          }
+        ]
+      },
+      {
+        "label": "Bắt tay Yêm đảng (Phe Hoạn quan nội đình)",
+        "hint": "Phe Yêm đảng · Thánh sủng +15 · Thanh danh -15 · Hiềm nghi +12",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "official_faction": "yem_dang",
+              "imperial_favor": 15,
+              "fame": -15,
+              "scandal_risk": 12
+            },
+            "resultText": "Bạn kết giao với Chưởng ấn Thái giám nội đình, tin tức Ngự tiền luôn nằm trong tay."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_emperor_audience",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 5
+    },
+    "title": "Triệu Kiến Ngự Tiền: Tấu Đối Quốc Sự",
+    "description": "Hoàng đế triệu các đại thần từ Ngũ phẩm trở lên vào điện Văn Hoa bàn kế sách quốc gia.",
+    "cooldownDays": 1080,
+    "weight": { "base": 18 },
+    "choices": [
+      {
+        "label": "Dâng tấu sớ sắc bén về chỉnh đốn thuế khóa và khuyến nông",
+        "hint": "Thánh sủng +12 nếu Học thức >= 70 · Chính tích +8",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 60,
+              "modifiers": [
+                { "conditions": { "min_education": 70 }, "addWeight": 35 }
+              ]
+            },
+            "effects": {
+              "imperial_favor": 12,
+              "merit": 8,
+              "fame": 12
+            },
+            "resultText": "Hoàng đế long nhan đại duyệt, khen tấu sớ của bạn thiết thực, ban thưởng ngự trà!"
+          },
+          {
+            "weight": { "base": 40 },
+            "effects": {
+              "imperial_favor": -5
+            },
+            "resultText": "Lời tấu chưa hợp thánh ý, Hoàng đế chỉ ậm ừ cho qua."
+          }
+        ]
+      },
+      {
+        "label": "Khéo léo ca ngợi thánh đức và hùa theo số đông để giữ an toàn",
+        "hint": "An toàn tuyệt đối · Thánh sủng +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "imperial_favor": 3
+            },
+            "resultText": "Bạn giữ thái độ ôn hòa, không mất lòng ai giữa triều đường."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_proxy_biz_leak",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 1,
+      "min_scandal_risk": 35
+    },
+    "title": "Tố Giác 'Quan Thương Cấu Kết' Đứng Tên Ngầm",
+    "description": "Một đối thủ chính trị nắm được sổ sách làm ăn đứng tên người nhà của bạn, dọa sẽ tố cáo tội 'Dữ dân tranh lợi' lên Đô Sát Viện.",
+    "cooldownDays": 1080,
+    "weight": { "base": 15 },
+    "choices": [
+      {
+        "label": "Chi 4.000đ mua chuộc người tố giác để tiêu hủy sổ sách",
+        "hint": "-4.000đ · Hiềm nghi -12",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": -4000,
+              "scandal_risk": -12
+            },
+            "resultText": "Cuốn sổ sách biến mất trong ngọn lửa, cơn sóng gió tạm thời qua đi."
+          }
+        ]
+      },
+      {
+        "label": "Cương quyết phủ nhận, cắt đứt liên hệ với cơ sở kinh doanh",
+        "hint": "Rủi ro bị phạt bổng 6 tháng hoặc giáng chức",
+        "outcomes": [
+          {
+            "weight": { "base": 55 },
+            "effects": {
+              "suspend_salary_days": 180,
+              "scandal_risk": -10,
+              "imperial_favor": -8
+            },
+            "resultText": "Triều đình không đủ chứng cứ kết tội nặng, chỉ phạt bổng 6 tháng để cảnh cáo."
+          },
+          {
+            "weight": { "base": 45 },
+            "effects": {
+              "official_rank_delta": -1,
+              "scandal_risk": -15,
+              "imperial_favor": -12
+            },
+            "resultText": "Chứng cứ rõ ràng, bạn bị kết tội Dữ dân tranh lợi và giáng 1 phẩm!"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_court_purge",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 6,
+      "official_factions": ["quyen_than", "yem_dang"]
+    },
+    "title": "Biến Cố Triều Đình: Hoàng Đế Thanh Trừng Phe Đảng",
+    "description": "Thế lực phe bạn đang dựa dẫm vừa bị Hoàng đế hạ lệnh thanh trừng! Cẩm Y Vệ đang rà soát danh sách các đại thần có liên quan.",
+    "cooldownDays": 1800,
+    "weight": { "base": 12 },
+    "choices": [
+      {
+        "label": "Dâng sớ tự thú, giao nộp chứng cứ phản tội của đầu lĩnh để lập công chuộc tội",
+        "hint": "Giữ được mạng & tài sản, nhưng giáng 2 phẩm và mang tiếng phản bội",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "official_rank_delta": -2,
+              "official_faction": "chua_dung_phe",
+              "scandal_risk": -25,
+              "fame": -20
+            },
+            "resultText": "Hoàng đế tha tội chết nhờ bạn quay đầu kịp lúc, nhưng giáng liền 2 phẩm và đẩy ra biên ải."
+          }
+        ]
+      },
+      {
+        "label": "Tìm cách tiêu hủy thư từ và cầu xin Thánh sủng che chở",
+        "hint": "Thoát nạn nếu Thánh sủng >= 75 · Thất bại sẽ bị Cách chức & Tịch biên gia sản!",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 35,
+              "modifiers": [
+                { "conditions": { "min_merit": 80 }, "addWeight": 35 }
+              ]
+            },
+            "effects": {
+              "official_faction": "chua_dung_phe",
+              "scandal_risk": -15,
+              "imperial_favor": -15
+            },
+            "resultText": "Nhờ công trạng và sủng tín cũ, bạn thoát khỏi án liên đới trong gang tấc."
+          },
+          {
+            "weight": { "base": 65 },
+            "effects": {
+              "reset_official_rank": true,
+              "confiscate_assets": true,
+              "happiness": -35,
+              "infamy": 25
+            },
+            "resultText": "Án liên đới giáng xuống! Bạn bị cách chức thu ấn, tịch biên toàn bộ gia sản đuổi về quê!"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_retire_with_honor",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_age": 55,
+      "min_official_rank": 4,
+      "max_scandal_risk": 45
+    },
+    "title": "Cáo Lão Hồi Hương (Trí Sĩ Vinh Quy)",
+    "description": "Tuổi đã cao, công danh đã trọn vẹn. Bạn có thể dâng sớ xin Hoàng đế cho Trí sĩ hồi hương để bảo toàn danh tiết cuối đời.",
+    "cooldownDays": 1800,
+    "weight": { "base": 18 },
+    "choices": [
+      {
+        "label": "Dâng sớ xin Trí sĩ, giữ trọn danh dự 'Cáo lão hồi hương'",
+        "hint": "Nhận thưởng 10.000đ dưỡng lão + Danh hiệu Trí sĩ · Con cháu được nhờ Ân ấm",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": 10000,
+              "fame": 25,
+              "happiness": 20,
+              "reset_official_rank": true,
+              "add_flags": ["co_luong_huu", "tri_si_vinh_quy"],
+              "milestone_title": "Cáo lão hồi hương · Trí sĩ vinh quy"
+            },
+            "resultText": "Hoàng đế ban yến tiễn chân và 10.000đ dưỡng lão. Bạn ung dung trở về quê nhà an hưởng tuổi già!"
+          }
+        ]
+      },
+      {
+        "label": "Tiếp tục ở lại triều đình phò tá cho đến hơi thở cuối cùng",
+        "hint": "Giữ chức vị hiện tại · Thánh sủng +8",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "imperial_favor": 8,
+              "merit": 5
+            },
+            "resultText": "Bạn chọn ở lại gánh vác giang sơn, được triều đình kính trọng."
+          }
+        ]
+      }
+    ]
+  }
+]

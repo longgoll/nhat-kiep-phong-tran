@@ -7,6 +7,7 @@ import {
   buyProperty,
   canBuyOfficialTitle,
   canGrantRoyalPrivilege,
+  canRecruitRebellionArmy,
   contributeRebellionTreasury,
   getExamEligibility,
   getHousingMarketCost,
@@ -19,13 +20,26 @@ import {
   HOUSING_ORDER,
   HOUSING_UPGRADES,
   launchRebellion,
-  OFFICIAL_RANKS,
   recruitRebellionArmy,
   sellProperty,
   takeExam,
   toggleCrossDress,
   upgradeHousing,
 } from '../engine/progressionModules';
+import {
+  COMMERCIAL_PROPERTY_IDS,
+  FACTION_LABELS,
+  POSTING_LABELS,
+  canRequestKhaoKhoa,
+  checkHousingTiemLe,
+  checkOfficialPropertyRule,
+  donateDisasterReliefAsOfficial,
+  getOfficialGradeAndTitle,
+  getOfficialMonthlyUpkeepCopper,
+  getOfficialRankSpec,
+  manageOfficialStaff,
+  sendSeasonalSuperiorGift,
+} from '../engine/officialSystem';
 import { getAgeYears } from '../types/activeLife';
 import { getWorldStateLabel } from '../engine/daySimulator';
 import { useActiveLifeStore } from '../stores/useActiveLifeStore';
@@ -47,8 +61,10 @@ export function ProgressionModules() {
   const canTrade = true;
   const canCourt =
     life.officialRank > 0 ||
+    life.flags.includes('do_tu_tai') ||
     life.flags.includes('do_cu_nhan') ||
     life.flags.includes('do_tien_si') ||
+    life.flags.includes('trong_quan_ngu') ||
     (life.profile.originClass === 'hoang_toc' &&
       ageYears >= 16 &&
       !life.flags.includes('thai_giam') &&
@@ -205,12 +221,20 @@ export function ProgressionModules() {
                 Thời thế: {getWorldStateLabel(life.world.worldState)}
               </span>
             </div>
+            {life.officialRank > 0 && (
+              <div className="p-2 rounded bg-sky-950/30 border border-sky-800/60 text-[11px] text-sky-200">
+                <strong>Luật Quan trường:</strong> Cấm quan đương chức trực tiếp buôn bán (chỉ có thể nhờ gia nhân đứng tên ngầm với +15% phí, -30% lãi &amp; tăng Hiềm nghi). Điền sản chịu giới hạn <em>Hạn điền</em> theo phẩm hàm.
+              </div>
+            )}
             {visibleProperties.map((prop) => {
               const ownedCount = life.assets.properties.filter((id) => id === prop.id).length;
               const marketCost = getPropertyMarketCost(prop, life.world.worldState);
               const seasonIncome = getPropertySeasonalIncome(prop, life.world.worldState, life.stats.craftTrade);
               const social = getPropertySeasonalSocial(prop);
               const sellValue = Math.round(marketCost * 0.7);
+              const isCommercial = life.officialRank > 0 && COMMERCIAL_PROPERTY_IDS.has(prop.id);
+              const effectiveCost = isCommercial ? Math.round(marketCost * 1.15) : marketCost;
+              const propRule = checkOfficialPropertyRule(life, prop.id, isCommercial);
               return (
                 <div
                   key={prop.id}
@@ -227,7 +251,9 @@ export function ProgressionModules() {
                     </div>
                     <div className="text-[11px] text-stone-400">
                       {prop.description} · Thu mùa này:{' '}
-                      <span className="text-emerald-300 font-mono">+{formatCopper(seasonIncome)}</span>
+                      <span className="text-emerald-300 font-mono">
+                        +{formatCopper(isCommercial ? Math.round(seasonIncome * 0.7) : seasonIncome)}
+                      </span>
                       {social.fame > 0 && (
                         <span className="text-amber-300 font-mono"> · Thanh danh +{social.fame}</span>
                       )}
@@ -235,6 +261,9 @@ export function ProgressionModules() {
                         <span className="text-sky-300 font-mono"> · Quan hệ +{social.relationships}</span>
                       )}
                     </div>
+                    {!propRule.allowed && propRule.reason && (
+                      <div className="text-[10px] text-rose-400 mt-0.5">{propRule.reason}</div>
+                    )}
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
                     {ownedCount > 0 && (
@@ -249,11 +278,15 @@ export function ProgressionModules() {
                     )}
                     <button
                       type="button"
-                      disabled={life.assets.wealthCopper < marketCost}
-                      onClick={() => applyLifeMutation((s) => buyProperty(s, prop.id))}
-                      className="px-2.5 py-1.5 rounded bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold disabled:opacity-40 cursor-pointer"
+                      disabled={!propRule.allowed || life.assets.wealthCopper < effectiveCost}
+                      onClick={() => applyLifeMutation((s) => buyProperty(s, prop.id, isCommercial))}
+                      className={`px-2.5 py-1.5 rounded font-bold disabled:opacity-40 cursor-pointer ${
+                        isCommercial
+                          ? 'bg-rose-700 hover:bg-rose-600 text-white'
+                          : 'bg-amber-600 hover:bg-amber-500 text-stone-950'
+                      }`}
                     >
-                      Mua {formatCopper(marketCost)}
+                      {isCommercial ? `Đứng tên ngầm ${formatCopper(effectiveCost)}` : `Mua ${formatCopper(effectiveCost)}`}
                     </button>
                   </div>
                 </div>
@@ -268,12 +301,14 @@ export function ProgressionModules() {
                 const currentRank = HOUSING_ORDER[life.assets.housing];
                 const targetRank = HOUSING_ORDER[h.tier];
                 const isCurrentOrLower = targetRank <= currentRank;
+                const tiemLe = checkHousingTiemLe(life, h.tier);
                 const cost = getHousingMarketCost(h.tier, life.world.worldState);
                 return (
                   <button
                     key={h.tier}
                     type="button"
-                    disabled={isCurrentOrLower || life.assets.wealthCopper < cost}
+                    title={tiemLe.reason}
+                    disabled={isCurrentOrLower || !tiemLe.allowed || life.assets.wealthCopper < cost}
                     onClick={() => applyLifeMutation((s) => upgradeHousing(s, h.tier))}
                     className="px-2.5 py-1.5 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 text-stone-200 cursor-pointer"
                   >
@@ -281,7 +316,9 @@ export function ProgressionModules() {
                       ? `${h.label} (Đang ở)`
                       : targetRank < currentRank
                         ? `${h.label} (Đã vượt cấp)`
-                        : `${h.label} (${formatCopper(cost)})`}
+                        : !tiemLe.allowed
+                          ? `${h.label} (Cấm Tiếm lễ)`
+                          : `${h.label} (${formatCopper(cost)})`}
                   </button>
                 );
               })}
@@ -293,7 +330,7 @@ export function ProgressionModules() {
             return (
               <div className="pt-2 border-t border-stone-800 flex items-center justify-between gap-2">
                 <div>
-                  <div className="text-stone-300">Quyên quan (Mua hàm Tri huyện bằng bạc)</div>
+                  <div className="text-stone-300">Quyên quan (Mua Cửu phẩm hư hàm bằng bạc)</div>
                   {!buyTitleElig.ok && buyTitleElig.reason && (
                     <div className="text-[11px] text-stone-500">{buyTitleElig.reason}</div>
                   )}
@@ -304,7 +341,7 @@ export function ProgressionModules() {
                   onClick={() => applyLifeMutation(buyOfficialTitle)}
                   className="px-3 py-1.5 rounded bg-amber-600 text-stone-950 font-bold disabled:opacity-40 cursor-pointer shrink-0"
                 >
-                  5 Vàng (50.000đ)
+                  15 Vàng (150.000đ)
                 </button>
               </div>
             );
@@ -314,11 +351,145 @@ export function ProgressionModules() {
 
       {/* CÔNG ĐƯỜNG PANEL */}
       {activeTab === 'court' && (
-        <div className="p-3 rounded-lg bg-stone-950/80 border border-stone-800 space-y-2.5 text-xs">
-          <div>
-            Chức vị hiện tại:{' '}
-            <strong className="text-sky-300">{OFFICIAL_RANKS[life.officialRank]}</strong>
+        <div className="p-3 rounded-lg bg-stone-950/80 border border-stone-800 space-y-3 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              Chức vị:{' '}
+              <strong className="text-sky-300">{getOfficialGradeAndTitle(life)}</strong>
+              {life.official?.isHanhHam && (
+                <span className="ml-1.5 px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 text-[10px]">
+                  Quyên quan (Trần Ngũ phẩm)
+                </span>
+              )}
+            </div>
+            {life.official && (
+              <span className="text-[11px] text-stone-400">
+                {POSTING_LABELS[life.official.posting]} · {FACTION_LABELS[life.official.faction]}
+              </span>
+            )}
           </div>
+
+          {life.official && life.officialRank > 0 && (() => {
+            const off = life.official;
+            const spec = getOfficialRankSpec(life.officialRank);
+            const khaoKhoa = canRequestKhaoKhoa(life);
+            const upkeep = getOfficialMonthlyUpkeepCopper(off);
+            const seasonKey = `${ageYears}_${life.world.season}`;
+            const sentBangKinh = off.lastSeasonalGiftKey === seasonKey;
+            const bangKinhCost = life.officialRank * 800;
+            const nhaHoiCost = life.officialRank * 2200;
+            const reliefCost = Math.max(1500, life.officialRank * 1200);
+            return (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="p-2 rounded bg-stone-900 border border-stone-800">
+                    <div className="text-[10px] text-stone-400">Chính tích</div>
+                    <div className="font-mono text-emerald-300 font-bold">{Math.round(off.merit)}</div>
+                  </div>
+                  <div className="p-2 rounded bg-stone-900 border border-stone-800">
+                    <div className="text-[10px] text-stone-400">Dân tâm</div>
+                    <div className={`font-mono font-bold ${off.publicTrust >= 0 ? 'text-sky-300' : 'text-rose-400'}`}>
+                      {Math.round(off.publicTrust)}
+                    </div>
+                  </div>
+                  <div className="p-2 rounded bg-stone-900 border border-stone-800">
+                    <div className="text-[10px] text-stone-400">Thánh sủng</div>
+                    <div className="font-mono text-amber-300 font-bold">{Math.round(off.imperialFavor)} / 100</div>
+                  </div>
+                  <div className="p-2 rounded bg-stone-900 border border-stone-800">
+                    <div className="text-[10px] text-stone-400">Án tích / Hiềm nghi</div>
+                    <div className={`font-mono font-bold ${off.scandalRisk >= 50 ? 'text-rose-400' : 'text-stone-300'}`}>
+                      {Math.round(off.scandalRisk)} / 100
+                    </div>
+                  </div>
+                </div>
+
+                {/* Phủ đệ & Người hầu */}
+                <div className="p-2.5 rounded bg-stone-900/70 border border-stone-800 space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-semibold text-amber-200">
+                      Phủ đệ &amp; Nhân khẩu (Chi phí: {formatCopper(upkeep)}/tháng · Bổng: {formatCopper(spec?.monthlySalaryCopper ?? 0)}/tháng)
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      disabled={off.maidsCount >= (spec?.maxMaids ?? 0) || life.assets.wealthCopper < 300}
+                      onClick={() => applyLifeMutation((s) => manageOfficialStaff(s, 'hire_maid'))}
+                      className="px-2 py-1 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 cursor-pointer"
+                    >
+                      + Nha hoàn ({off.maidsCount}/{spec?.maxMaids ?? 0}) -300đ
+                    </button>
+                    <button
+                      type="button"
+                      disabled={off.guardsCount >= (spec?.maxGuards ?? 0) || life.assets.wealthCopper < 450}
+                      onClick={() => applyLifeMutation((s) => manageOfficialStaff(s, 'hire_guard'))}
+                      className="px-2 py-1 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 cursor-pointer"
+                    >
+                      + Gia đinh ({off.guardsCount}/{spec?.maxGuards ?? 0}) -450đ
+                    </button>
+                    {!off.hasAdvisor && life.officialRank >= 2 && (
+                      <button
+                        type="button"
+                        disabled={life.assets.wealthCopper < 1500}
+                        onClick={() => applyLifeMutation((s) => manageOfficialStaff(s, 'hire_advisor'))}
+                        className="px-2 py-1 rounded bg-sky-900/60 hover:bg-sky-800/60 border border-sky-700/50 text-sky-200 disabled:opacity-40 cursor-pointer"
+                      >
+                        Thuê Sư gia (-1.500đ, 600đ/tháng)
+                      </button>
+                    )}
+                    {off.hasAdvisor && (
+                      <span className="px-2 py-1 rounded bg-emerald-950/60 border border-emerald-800 text-emerald-300">
+                        Đã có Sư gia hỗ trợ
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Tương tác Quan trường */}
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    disabled={sentBangKinh || life.assets.wealthCopper < bangKinhCost}
+                    onClick={() => applyLifeMutation((s) => sendSeasonalSuperiorGift(s, 'bang_kinh'))}
+                    className="px-2.5 py-1.5 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 cursor-pointer"
+                  >
+                    {sentBangKinh ? 'Đã gửi Băng/Thán kính mùa này' : `Gửi Băng/Thán kính (-${formatCopper(bangKinhCost)})`}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={life.assets.wealthCopper < nhaHoiCost}
+                    onClick={() => applyLifeMutation((s) => sendSeasonalSuperiorGift(s, 'nha_hoi'))}
+                    className="px-2.5 py-1.5 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 cursor-pointer"
+                  >
+                    Tặng Nhã hối cổ vật (-{formatCopper(nhaHoiCost)})
+                  </button>
+                  <button
+                    type="button"
+                    disabled={life.assets.wealthCopper < reliefCost}
+                    onClick={() => applyLifeMutation(donateDisasterReliefAsOfficial)}
+                    className="px-2.5 py-1.5 rounded bg-emerald-900/60 hover:bg-emerald-800/60 border border-emerald-700/50 text-emerald-200 disabled:opacity-40 cursor-pointer"
+                  >
+                    Phát chẩn cứu dân (-{formatCopper(reliefCost)})
+                  </button>
+                </div>
+
+                {life.officialRank < 9 && (
+                  <button
+                    type="button"
+                    disabled={!khaoKhoa.ok}
+                    onClick={() => applyLifeMutation(appointOrPromoteOfficial)}
+                    className="w-full py-2 rounded bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-stone-950 font-bold cursor-pointer"
+                  >
+                    {khaoKhoa.ok
+                      ? `Dâng sớ xin Khảo khóa xét thăng ${getOfficialRankSpec(life.officialRank + 1)?.gradeLabel ?? 'Đại thần'}`
+                      : khaoKhoa.reason}
+                  </button>
+                )}
+              </>
+            );
+          })()}
+
           {life.officialRank === 0 && life.profile.originClass === 'hoang_toc' && (
             <button
               type="button"
@@ -331,72 +502,75 @@ export function ProgressionModules() {
                 : `Thỉnh phong Tập ấm (${royalPrivilege.reason})`}
             </button>
           )}
-          {life.officialRank < 5 &&
-            (life.officialRank > 0 ||
+          {life.officialRank === 0 &&
+            (life.flags.includes('do_tu_tai') ||
               life.flags.includes('do_cu_nhan') ||
-              life.flags.includes('do_tien_si')) && (
+              life.flags.includes('do_tien_si') ||
+              life.flags.includes('trong_quan_ngu')) && (
             <button
               type="button"
-              disabled={
-                life.officialRank > 0 && life.stats.fame < life.officialRank * 25
-              }
               onClick={() => applyLifeMutation(appointOrPromoteOfficial)}
-              className="w-full py-2 rounded bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-stone-950 font-bold cursor-pointer"
+              className="w-full py-2 rounded bg-sky-600 hover:bg-sky-500 text-stone-950 font-bold cursor-pointer"
             >
-              {life.officialRank === 0
-                ? 'Xin triều đình bổ nhiệm làm quan'
-                : `Thăng chức lên ${OFFICIAL_RANKS[life.officialRank + 1]} (Cần Thanh danh >= ${life.officialRank * 25})`}
+              Xin triều đình bổ nhiệm làm quan
             </button>
           )}
         </div>
       )}
 
       {/* MẬT THẤT KHỞI NGHĨA PANEL */}
-      {activeTab === 'rebel' && (
-        <div className="p-3 rounded-lg bg-stone-950/80 border border-rose-900/50 space-y-3 text-xs">
-          <div className="grid grid-cols-2 gap-2">
-            <div className="p-2 rounded bg-stone-900 border border-stone-800">
-              <div className="text-stone-400">Ngân khố mật thất</div>
-              <div className="font-mono text-amber-300 font-bold">
-                {formatCopper(life.rebellion?.treasuryCopper ?? 0)} / 10 Vàng
+      {activeTab === 'rebel' && (() => {
+        const recruitElig = canRecruitRebellionArmy(life);
+        return (
+          <div className="p-3 rounded-lg bg-stone-950/80 border border-rose-900/50 space-y-3 text-xs">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="p-2 rounded bg-stone-900 border border-stone-800">
+                <div className="text-stone-400">Ngân khố mật thất</div>
+                <div className="font-mono text-amber-300 font-bold">
+                  {formatCopper(life.rebellion?.treasuryCopper ?? 0)} / 10 Vàng
+                </div>
+              </div>
+              <div className="p-2 rounded bg-stone-900 border border-stone-800">
+                <div className="text-stone-400">Binh quyền &amp; Tử sĩ (Nuôi: {(life.rebellion?.armyPower ?? 0) * 45}đ/tháng)</div>
+                <div className="font-mono text-rose-300 font-bold">
+                  {life.rebellion?.armyPower ?? 0} / 100
+                </div>
               </div>
             </div>
-            <div className="p-2 rounded bg-stone-900 border border-stone-800">
-              <div className="text-stone-400">Binh quyền & Tử sĩ</div>
-              <div className="font-mono text-rose-300 font-bold">
-                {life.rebellion?.armyPower ?? 0} / 100
-              </div>
+
+            {!recruitElig.ok && recruitElig.reason && (
+              <div className="text-[11px] text-rose-300">{recruitElig.reason}</div>
+            )}
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={life.assets.wealthCopper < 10000}
+                onClick={() => applyLifeMutation((s) => contributeRebellionTreasury(s, 10000))}
+                className="px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 cursor-pointer"
+              >
+                Góp 10.000đ vào mật thất
+              </button>
+              <button
+                type="button"
+                disabled={!recruitElig.ok}
+                onClick={() => applyLifeMutation(recruitRebellionArmy)}
+                className="px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 cursor-pointer"
+              >
+                Chiêu mộ 10 tử sĩ (-25.000đ kho, +10 Binh quyền)
+              </button>
             </div>
-          </div>
 
-          <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              disabled={life.assets.wealthCopper < 5000}
-              onClick={() => applyLifeMutation((s) => contributeRebellionTreasury(s, 5000))}
-              className="px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 cursor-pointer"
+              onClick={() => applyLifeMutation(launchRebellion)}
+              className="w-full py-2.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold cursor-pointer"
             >
-              Góp 5.000đ vào mật thất
-            </button>
-            <button
-              type="button"
-              disabled={(life.rebellion?.treasuryCopper ?? 0) < 2000}
-              onClick={() => applyLifeMutation(recruitRebellionArmy)}
-              className="px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 cursor-pointer"
-            >
-              Chiêu mộ tử sĩ (-2.000đ kho, +20 Binh quyền)
+              Phất Cờ Khởi Nghĩa! (Tỷ lệ thành công ước tính: {rebelChance}%)
             </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => applyLifeMutation(launchRebellion)}
-            className="w-full py-2.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold cursor-pointer"
-          >
-            Phất Cờ Khởi Nghĩa! (Tỷ lệ thành công ước tính: {rebelChance}%)
-          </button>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

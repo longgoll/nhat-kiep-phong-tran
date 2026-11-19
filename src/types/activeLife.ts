@@ -78,6 +78,34 @@ export type LivelihoodStatus =
   | 'retired'
   | 'prison';
 export type InvestmentChannel = 'cash' | 'bank' | 'guild' | 'caravan' | 'land_fund';
+export type OfficialTrack = 'van' | 'vo' | 'hoan_quan';
+export type OfficialPosting = 'kinh_do' | 'dong_bang' | 'song_nuoc' | 'bien_ai';
+export type OfficialFaction = 'chua_dung_phe' | 'thanh_luu' | 'quyen_than' | 'yem_dang';
+
+export interface OfficialProfile {
+  track: OfficialTrack;
+  rank: number; // 1 (Cửu phẩm) .. 9 (Nhất phẩm)
+  title: string;
+  posting: OfficialPosting;
+  tenureStartDay: number;
+  lastReviewDay: number;
+  merit: number; // Chính tích / Quân công (0 - 100+)
+  publicTrust: number; // Dân tâm (-100 .. +100)
+  imperialFavor: number; // Thánh sủng / Triều đình tín nhiệm (0 - 100)
+  scandalRisk: number; // Án tích / Hiềm nghi (0 - 100)
+  faction: OfficialFaction;
+  familyAccompanied: boolean;
+  maidsCount: number;
+  guardsCount: number;
+  hasAdvisor: boolean;
+  proxyBusinessIds: string[];
+  lastSeasonalGiftKey?: string;
+  dingYouUntilDay?: number;
+  savedRankBeforeDingYou?: number;
+  savedTrackBeforeDingYou?: OfficialTrack;
+  isHanhHam?: boolean; // Quyên quan hư hàm: trần tối đa Ngũ phẩm (5)
+  salarySuspendedUntilDay?: number;
+}
 
 export interface ActiveCareer {
   jobId: string;
@@ -210,7 +238,8 @@ export interface ActiveLifeState {
   npcs: NPC[];
   cohortPeers?: CohortPeer[];
   flags: string[];
-  officialRank: number; // 0: Dân thường, 1: Tri huyện, 2: Tri phủ, 3: Tuần phủ, 4: Thượng thư, 5: Tể tướng, 6: Khai quốc Hoàng đế
+  officialRank: number; // 0: Dân thường, 1..9: Cửu phẩm -> Nhất phẩm, 10: Khai quốc Hoàng đế
+  official?: OfficialProfile;
   exposureRisk: number; // 0 - 100 cho cơ chế Nữ cải nam trang
   rebellion: {
     treasuryCopper: number;

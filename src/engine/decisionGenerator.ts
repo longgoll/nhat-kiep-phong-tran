@@ -14,13 +14,19 @@ import {
 import { hasActiveLivelihood } from './lifeStatus';
 import { appendLog, applyEffects } from './effectApplier';
 import {
-  OFFICIAL_RANKS,
   appointOrPromoteOfficial,
   getExamEligibility,
   sellProperty,
   takeExam,
   type ExamLevel,
 } from './progressionModules';
+import {
+  canRequestKhaoKhoa,
+  createOfficialProfile,
+  getOfficialRankSpec,
+  getOfficialTitle,
+  setOfficialFamilyAccompany,
+} from './officialSystem';
 
 export interface DecisionCandidate {
   id: string;
@@ -29,10 +35,12 @@ export interface DecisionCandidate {
 
 const DYNAMIC_DECISION_PRIORITIES: Array<{ id: string; priority: number }> = [
   { id: 'dec_loan_heavy', priority: 100 },
+  { id: 'dec_official_censor_audit', priority: 95 },
   { id: 'dec_college_18', priority: 90 },
   { id: 'dec_retire_60', priority: 85 },
   { id: 'dec_exam_prompt', priority: 84 },
   { id: 'dec_official_appoint', priority: 82 },
+  { id: 'dec_official_family_move', priority: 80 },
   { id: 'dec_official_promote', priority: 78 },
   { id: 'dec_rankup', priority: 75 },
   { id: 'dec_job_offers', priority: 65 },
@@ -303,9 +311,19 @@ function generateDynamicDecisionInternal(
     state.livelihoodStatus !== 'retired' &&
     state.livelihoodStatus !== 'prison'
   ) {
-    const startRankTitle = state.flags.includes('do_tien_si') ? 'Tri phủ' : 'Tri huyện';
+    const previewRank = state.flags.includes('trang_nguyen') || state.flags.includes('bang_nhan')
+      ? 5
+      : state.flags.includes('tham_hoa') || state.flags.includes('hoang_giap')
+        ? 4
+        : state.flags.includes('do_tien_si') || state.flags.includes('giai_nguyen')
+          ? 3
+          : state.flags.includes('do_cu_nhan')
+            ? 2
+            : 1;
+    const previewTrack = state.flags.includes('trong_quan_ngu') ? 'vo' : 'van';
+    const startRankTitle = getOfficialTitle(previewRank, previewTrack);
     const entryReason = hasExamDegree
-      ? 'Nhờ khoa bảng đỗ đạt, bộ Lại đã gửi trát triệu tập bạn ra làm quan'
+      ? 'Nhờ khoa bảng đỗ đạt, triều đình đã ban trát triệu tập bạn ra làm quan'
       : 'Nhờ ân trạch thế gia và sự tiến cử của quý nhân, bộ Lại ban trát bổ nhiệm bạn ra làm quan';
     return {
       id: 'dec_official_appoint',
@@ -344,46 +362,172 @@ function generateDynamicDecisionInternal(
     };
   }
 
-  // 2c. DEC.official_promote when official meets fame requirement for next rank
+  // 2c. DEC.official_promote: Kỳ Khảo khóa 3 năm
   if (
     (!onlyId || onlyId === 'dec_official_promote') &&
     state.officialRank >= 1 &&
-    state.officialRank < 5 &&
-    state.stats.fame >= state.officialRank * 25 &&
-    totalDays - (state.eventCooldowns['dec_official_promote'] ?? -99999) >= 720 &&
+    state.officialRank < 9 &&
+    canRequestKhaoKhoa(state).ok &&
+    totalDays - (state.eventCooldowns['dec_official_promote'] ?? -99999) >= 360 &&
     state.livelihoodStatus !== 'prison'
   ) {
-    const nextRankTitle = OFFICIAL_RANKS[state.officialRank + 1] ?? 'Đại thần';
+    const nextSpec = getOfficialRankSpec(state.officialRank + 1);
+    const nextRankTitle = nextSpec ? `${nextSpec.gradeLabel} · ${nextSpec.titles[state.official?.track ?? 'van']}` : 'Đại thần';
     return {
       id: 'dec_official_promote',
       stage: 'adulthood',
       severity: 'major',
       isMilestone: true,
       conditions: {},
-      title: `Thăng tiến quan trường: Đề bạt chức ${nextRankTitle}`,
-      description: `Nhờ công trạng và thanh danh tích lũy (${Math.round(state.stats.fame)}), triều đình xét thăng bạn lên chức ${nextRankTitle}.`,
-      cooldownDays: 720,
+      title: `Kỳ Khảo khóa Triều đình: Xét thăng ${nextRankTitle}`,
+      description: `Đã hết nhiệm kỳ 3 năm tại nhiệm sở. Bộ Lại/Bộ Binh mở sổ Khảo khóa đánh giá Chính tích (${state.official?.merit ?? 0}), Dân tâm (${state.official?.publicTrust ?? 0}), Thánh sủng (${state.official?.imperialFavor ?? 0}) và Án tích (${state.official?.scandalRisk ?? 0}).`,
+      cooldownDays: 360,
       weight: { base: 100 },
       choices: [
         {
-          label: `Tiếp nhận chiếu chỉ thăng chức ${nextRankTitle}`,
-          hint: 'Phẩm hàm +1 · Thanh danh +10 · Hạnh phúc +12',
+          label: `Nộp sổ Khảo khóa xin xét thăng ${nextRankTitle}`,
+          hint: 'Thượng khảo: Thăng 1 phẩm · Trung khảo: Giữ nguyên · Hạ khảo: Giáng/Cách chức',
           outcomes: [
             {
               weight: { base: 100 },
               effects: {},
-              resultText: `Bạn tạ ân nhận ấn tín, chính thức thăng lên chức ${nextRankTitle}.`,
+              resultText: `Triều đình đã tiếp nhận sổ Khảo khóa và công bố kết quả xét hạch của bạn.`,
             },
           ],
         },
         {
-          label: 'Khiêm nhường xin giữ nguyên chức cũ để tránh mũi dùi phe phái',
-          hint: 'Giữ nguyên phẩm hàm hiện tại · Thanh danh +2',
+          label: 'Dâng sớ xin tạm giữ nguyên chức cũ để tránh mũi dùi phe phái',
+          hint: 'Tránh bị soi xét kỳ này · Thanh danh +2',
           outcomes: [
             {
               weight: { base: 100 },
               effects: { fame: 2 },
-              resultText: 'Bạn dâng sớ xin tạm giữ chức cũ để tránh gây chú ý nơi triều đường.',
+              resultText: 'Bạn chủ động cáo từ thăng tiến, tiếp tục giữ vững vị trí hiện tại.',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  // 2d. DEC.official_family_move: An bài gia quyến khi nhậm chức xa (Hồi Tỵ)
+  const hasSpouseOrChild = state.npcs.some((n) => (n.relation === 'spouse' || n.relation === 'child') && n.isAlive);
+  if (
+    (!onlyId || onlyId === 'dec_official_family_move') &&
+    state.officialRank > 0 &&
+    state.official &&
+    state.official.posting !== 'kinh_do' &&
+    !state.official.familyAccompanied &&
+    hasSpouseOrChild &&
+    state.eventCooldowns['dec_official_family_move'] === undefined
+  ) {
+    const movingCost = state.officialRank * 600;
+    return {
+      id: 'dec_official_family_move',
+      stage: 'adulthood',
+      severity: 'major',
+      conditions: {},
+      title: 'Luật Hồi Tỵ: An bài Gia quyến khi Nhậm chức xa',
+      description: `Theo luật Hồi Tỵ, bạn được điều đi trấn nhậm xa nguyên quán. Bạn định đưa vợ/con theo lên phủ nha hay để gia quyến ở lại quê nhà?`,
+      cooldownDays: 99999,
+      weight: { base: 100 },
+      choices: [
+        {
+          label: `Đưa gia quyến cùng lên phủ nha nhậm chức (-${movingCost}đ lộ phí)`,
+          hint: 'Giữ trọn Hạnh phúc & Quan hệ · Vợ/chồng nghỉ nghề cũ để quản gia · Tốn thêm tiền phủ đệ',
+          outcomes: [
+            {
+              weight: { base: 100 },
+              effects: {},
+              resultText: 'Bạn thu xếp xe ngựa đưa gia quyến cùng lên phủ nha nhậm chức.',
+            },
+          ],
+        },
+        {
+          label: 'Để gia quyến ở lại quê nhà giữ từ đường',
+          hint: 'Tiết kiệm chi phí · Vợ/chồng giữ nghề ở quê · Hạnh phúc & Quan hệ giảm nhẹ',
+          outcomes: [
+            {
+              weight: { base: 100 },
+              effects: {},
+              resultText: 'Bạn dặn dò gia quyến ở lại quê chăm lo hương hỏa, một thân lên đường nhậm chức.',
+            },
+          ],
+        },
+      ],
+    };
+  }
+
+  // 2e. DEC.official_censor_audit: Ngự sử đàn hặc khi Hiềm nghi >= 65
+  if (
+    (!onlyId || onlyId === 'dec_official_censor_audit') &&
+    state.officialRank > 0 &&
+    state.official &&
+    state.official.scandalRisk >= 65 &&
+    totalDays - (state.eventCooldowns['dec_official_censor_audit'] ?? -99999) >= 360
+  ) {
+    const bribeCost = state.officialRank * 5000;
+    return {
+      id: 'dec_official_censor_audit',
+      stage: 'adulthood',
+      severity: 'major',
+      isMilestone: true,
+      conditions: {},
+      title: 'Ngự Sử Đô Sát Viện Dâng Sớ Đàn Hặc!',
+      description: `Án tích và hiềm nghi của bạn đã lên tới ${Math.round(state.official.scandalRisk)}/100. Đô Sát Viện vừa dâng sớ hạch tội bạn tham ô, kinh doanh ngầm hoặc vượt lễ chế!`,
+      cooldownDays: 360,
+      weight: { base: 100 },
+      choices: [
+        {
+          label: state.official.hasAdvisor
+            ? 'Nhờ Sư gia soạn sớ phản biện rõ ràng từng khoản sổ sách'
+            : 'Tự dâng sớ nhận lỗi sơ suất, xin nộp phạt bổng để chuộc tội',
+          hint: state.official.hasAdvisor ? 'Có Sư gia bảo vệ: Giảm mạnh Hiềm nghi' : 'Phạt bổng 180 ngày · Giảm Hiềm nghi',
+          outcomes: [
+            {
+              weight: { base: state.official.hasAdvisor ? 80 : 50 },
+              effects: {
+                scandal_risk: -25,
+                suspend_salary_days: state.official.hasAdvisor ? 0 : 180,
+                imperial_favor: -5,
+              },
+              resultText: state.official.hasAdvisor
+                ? 'Nhờ Sư gia chuẩn bị sổ sách kín kẽ, triều đình tạm gác án đàn hặc.'
+                : 'Triều đình xét bạn thành khẩn, chỉ phạt cắt bổng 6 tháng để răn đe.',
+            },
+            {
+              weight: { base: state.official.hasAdvisor ? 20 : 50 },
+              effects: {
+                official_rank_delta: -1,
+                scandal_risk: -30,
+                imperial_favor: -15,
+              },
+              resultText: 'Chứng cứ quá rõ ràng, bạn bị giáng 1 phẩm để làm gương cho bách quan!',
+            },
+          ],
+        },
+        {
+          label: `Chạy cửa sau hối lộ quan thanh tra (${bribeCost}đ)`,
+          hint: 'Rủi ro cực lớn nếu gặp phe Thanh lưu: Có thể bị tịch biên gia sản!',
+          outcomes: [
+            {
+              weight: { base: state.world.worldState === 'binh_on' ? 40 : 65 },
+              effects: {
+                copper: -bribeCost,
+                scandal_risk: -20,
+                infamy: 6,
+              },
+              resultText: 'Tiền bạc mở đường, sớ đàn hặc bị ém nhẹm vào phút chót.',
+            },
+            {
+              weight: { base: state.world.worldState === 'binh_on' ? 60 : 35 },
+              effects: {
+                reset_official_rank: true,
+                confiscate_assets: true,
+                infamy: 20,
+                happiness: -30,
+              },
+              resultText: 'Gặp đúng Ngự sử Thanh lưu! Hối lộ bất thành, bạn bị cách chức và tịch biên gia sản!',
             },
           ],
         },
@@ -757,21 +901,48 @@ export function applyDynamicDecisionSideEffects(
       eventCooldowns: { ...state.eventCooldowns, dec_official_appoint: totalDays },
     };
     if (choiceIndex === 0) {
-      if (stamped.flags.includes('do_cu_nhan') || stamped.flags.includes('do_tien_si')) {
+      if (
+        stamped.flags.includes('do_tu_tai') ||
+        stamped.flags.includes('do_cu_nhan') ||
+        stamped.flags.includes('do_tien_si') ||
+        stamped.flags.includes('trong_quan_ngu')
+      ) {
         return appointOrPromoteOfficial(stamped);
       }
-      const next = applyEffects(stamped, {
-        official_rank_delta: 1,
-        add_flags: ['dang_lam_quan'],
-        fame: 10,
-        milestone_title: 'Được tiến cử nhậm chức Tri huyện',
-      });
+      const track = stamped.stats.martial > stamped.stats.education + 12 ? 'vo' : 'van';
+      const { profile: offProfile, nextPrng } = createOfficialProfile(stamped, track, 1, false);
+      const title = getOfficialTitle(1, track);
+      const next = applyEffects(
+        { ...stamped, prngState: nextPrng },
+        {
+          official_rank_delta: 1,
+          add_flags: ['dang_lam_quan'],
+          fame: 8,
+          milestone_title: `Được tiến cử nhậm chức ${title}`,
+        },
+      );
       return {
         ...next,
-        profile: { ...next.profile, currentRole: 'Tri huyện' },
+        official: offProfile,
+        profile: { ...next.profile, currentRole: title },
       };
     }
     return stamped;
+  }
+
+  if (eventId === 'dec_official_family_move') {
+    const stamped = {
+      ...state,
+      eventCooldowns: { ...state.eventCooldowns, dec_official_family_move: totalDays },
+    };
+    return setOfficialFamilyAccompany(stamped, choiceIndex === 0);
+  }
+
+  if (eventId === 'dec_official_censor_audit') {
+    return {
+      ...state,
+      eventCooldowns: { ...state.eventCooldowns, dec_official_censor_audit: totalDays },
+    };
   }
 
   if (eventId === 'dec_official_promote') {

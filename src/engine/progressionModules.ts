@@ -8,14 +8,26 @@ import {
 } from '../types/activeLife';
 import { appendLog, applyEffects } from './effectApplier';
 import { mulberry32Next } from './prng';
+import {
+  POSTING_LABELS,
+  checkHousingTiemLe,
+  checkOfficialPropertyRule,
+  createOfficialProfile,
+  evaluateKhaoKhoa,
+  getOfficialTitle,
+} from './officialSystem';
 
 export const OFFICIAL_RANKS = [
   'Dân thường',
-  'Tri huyện',
-  'Tri phủ',
-  'Tuần phủ',
-  'Thượng thư',
-  'Tể tướng',
+  'Cửu phẩm · Điển sử',
+  'Bát phẩm · Huyện thừa',
+  'Thất phẩm · Tri huyện',
+  'Lục phẩm · Tri châu',
+  'Ngũ phẩm · Tri phủ',
+  'Tứ phẩm · Án sát sứ',
+  'Tam phẩm · Tuần phủ',
+  'Nhị phẩm · Thượng thư',
+  'Nhất phẩm · Tể tướng',
   'Khai quốc Hoàng đế',
 ] as const;
 
@@ -464,46 +476,67 @@ function applyOfficialScheduleAndClearCareer(state: ActiveLifeState): ActiveLife
 }
 
 export function appointOrPromoteOfficial(state: ActiveLifeState): ActiveLifeState {
-  if (state.officialRank >= 5) return state;
+  if (state.officialRank >= 9) return state;
 
   if (state.officialRank === 0) {
-    const canBeAppointed = state.flags.includes('do_cu_nhan') || state.flags.includes('do_tien_si');
+    const canBeAppointed =
+      state.flags.includes('do_tu_tai') ||
+      state.flags.includes('do_cu_nhan') ||
+      state.flags.includes('do_tien_si') ||
+      state.flags.includes('trong_quan_ngu') ||
+      state.flags.includes('thai_giam');
     if (!canBeAppointed) return state;
 
-    const startRank = state.flags.includes('do_tien_si') ? 2 : 1;
-    const roleName = OFFICIAL_RANKS[startRank];
+    const track = state.flags.includes('thai_giam')
+      ? 'hoan_quan'
+      : state.flags.includes('trong_quan_ngu') || state.stats.martial > state.stats.education + 12
+        ? 'vo'
+        : 'van';
+
+    let startRank = 1;
+    let examBonusCopper = 0;
+    if (state.flags.includes('trang_nguyen') || state.flags.includes('bang_nhan')) {
+      startRank = 5;
+      examBonusCopper = 5000;
+    } else if (state.flags.includes('tham_hoa') || state.flags.includes('hoang_giap')) {
+      startRank = 4;
+      examBonusCopper = 3500;
+    } else if (state.flags.includes('do_tien_si') || state.flags.includes('giai_nguyen')) {
+      startRank = 3;
+      examBonusCopper = 2000;
+    } else if (state.flags.includes('do_cu_nhan')) {
+      startRank = 2;
+      examBonusCopper = 800;
+    }
+
+    const { profile: offProfile, nextPrng } = createOfficialProfile(state, track, startRank, false);
+    const roleName = getOfficialTitle(startRank, track);
     const next = applyOfficialScheduleAndClearCareer(
-      applyEffects(state, {
-        add_flags: ['dang_lam_quan'],
-        fame: 10,
-        milestone_title: `Bổ nhiệm chức ${roleName}`,
-      }),
+      applyEffects(
+        { ...state, prngState: nextPrng },
+        {
+          add_flags: ['dang_lam_quan'],
+          copper: examBonusCopper,
+          fame: 8,
+          milestone_title: `Bổ nhiệm ${roleName}`,
+        },
+      ),
     );
     return {
       ...next,
       officialRank: startRank,
+      official: offProfile,
       profile: { ...next.profile, currentRole: roleName },
-      logs: appendLog(next.logs, next.profile.totalDays, 'event', `Triều đình bổ nhiệm bạn làm ${roleName}.`),
+      logs: appendLog(
+        next.logs,
+        next.profile.totalDays,
+        'event',
+        `Triều đình hạ chỉ bổ nhiệm bạn làm ${roleName} (Nhiệm sở: ${POSTING_LABELS[offProfile.posting]}).`,
+      ),
     };
   }
 
-  // Promote existing official
-  const requiredFame = state.officialRank * 25;
-  if (state.stats.fame < requiredFame) return state;
-
-  const nextRank = state.officialRank + 1;
-  const roleName = OFFICIAL_RANKS[nextRank];
-  const next = applyEffects(state, {
-    fame: 10,
-    happiness: 12,
-    milestone_title: `Thăng chức ${roleName}`,
-  });
-  return {
-    ...next,
-    officialRank: nextRank,
-    profile: { ...next.profile, currentRole: roleName },
-    logs: appendLog(next.logs, next.profile.totalDays, 'event', `Nhờ công trạng nổi bật, bạn được thăng chức ${roleName}!`),
-  };
+  return evaluateKhaoKhoa(state);
 }
 
 export function canGrantRoyalPrivilege(state: ActiveLifeState): { ok: boolean; reason?: string } {
@@ -538,20 +571,26 @@ export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
 
   const isHighMerit =
     state.stats.fame >= 45 && (state.stats.education >= 50 || state.stats.martial >= 50);
-  const startRank = isHighMerit ? 3 : 2;
-  const roleName = OFFICIAL_RANKS[startRank];
+  const startRank = isHighMerit ? 5 : 4;
+  const track = state.stats.martial > state.stats.education + 10 ? 'vo' : 'van';
+  const { profile: offProfile, nextPrng } = createOfficialProfile(state, track, startRank, false);
+  const roleName = getOfficialTitle(startRank, track);
 
   const next = applyOfficialScheduleAndClearCareer(
-    applyEffects(state, {
-      add_flags: ['dang_lam_quan', 'tap_am_hoang_toc'],
-      fame: 8,
-      happiness: 10,
-      milestone_title: `Thụ phong Hoàng thất: ${roleName}`,
-    }),
+    applyEffects(
+      { ...state, prngState: nextPrng },
+      {
+        add_flags: ['dang_lam_quan', 'tap_am_hoang_toc'],
+        fame: 8,
+        happiness: 10,
+        milestone_title: `Thụ phong Hoàng thất: ${roleName}`,
+      },
+    ),
   );
   return {
     ...next,
     officialRank: startRank,
+    official: offProfile,
     profile: { ...next.profile, currentRole: roleName },
     logs: appendLog(
       next.logs,
@@ -563,7 +602,7 @@ export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
 }
 
 export function canBuyOfficialTitle(state: ActiveLifeState): { ok: boolean; reason?: string; cost: number } {
-  const COST = 50000;
+  const COST = 150000;
   const age = getAgeYears(state.profile.totalDays);
   if (state.profile.originClass === 'hoang_toc') {
     return { ok: false, reason: 'Hoàng tộc dùng lệ Tập ấm, không cần quyên quan', cost: COST };
@@ -585,13 +624,13 @@ export function canBuyOfficialTitle(state: ActiveLifeState): { ok: boolean; reas
     return { ok: false, reason: 'Đã có phẩm hàm triều đình', cost: COST };
   }
   if (age < 18) {
-    return { ok: false, reason: 'Cần đủ 18 tuổi mới được bổ làm Tri huyện', cost: COST };
+    return { ok: false, reason: 'Cần đủ 18 tuổi mới được quyên quan hư hàm', cost: COST };
   }
   if (state.stats.education < 15) {
     return { ok: false, reason: 'Cần Học thức ≥ 15 (biết đọc viết công văn)', cost: COST };
   }
   if (state.assets.wealthCopper < COST) {
-    return { ok: false, reason: 'Cần 5 Vàng (50.000đ)', cost: COST };
+    return { ok: false, reason: 'Cần 15 Vàng (150.000đ) để mua Cửu phẩm hư hàm', cost: COST };
   }
   return { ok: true, cost: COST };
 }
@@ -600,19 +639,29 @@ export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
   const elig = canBuyOfficialTitle(state);
   if (!elig.ok) return state;
 
+  const { profile: offProfile, nextPrng } = createOfficialProfile(state, 'van', 1, true);
   const next = applyOfficialScheduleAndClearCareer(
-    applyEffects(state, {
-      copper: -elig.cost,
-      add_flags: ['dang_lam_quan', 'quyen_quan'],
-      infamy: 5,
-      milestone_title: 'Quyên quan mua chức Tri huyện',
-    }),
+    applyEffects(
+      { ...state, prngState: nextPrng },
+      {
+        copper: -elig.cost,
+        add_flags: ['dang_lam_quan', 'quyen_quan'],
+        infamy: 10,
+        milestone_title: 'Quyên quan mua Cửu phẩm hư hàm',
+      },
+    ),
   );
   return {
     ...next,
     officialRank: 1,
-    profile: { ...next.profile, currentRole: 'Tri huyện (Quyên quan)' },
-    logs: appendLog(next.logs, next.profile.totalDays, 'event', 'Bạn bỏ 5 Vàng quyên quan, chính thức nhận ấn Tri huyện.'),
+    official: offProfile,
+    profile: { ...next.profile, currentRole: `${offProfile.title} (Quyên quan)` },
+    logs: appendLog(
+      next.logs,
+      next.profile.totalDays,
+      'event',
+      'Bạn bỏ 15 Vàng quyên quan, nhận Cửu phẩm hư hàm (trần thăng tiến tối đa Ngũ phẩm).',
+    ),
   };
 }
 
@@ -620,22 +669,34 @@ export function getMaxPropertyLimit(originClass: OriginClass): number {
   return originClass === 'dia_chu' || originClass === 'quan_lai' || originClass === 'hoang_toc' ? 12 : 8;
 }
 
-export function buyProperty(state: ActiveLifeState, propertyId: string): ActiveLifeState {
+export function buyProperty(state: ActiveLifeState, propertyId: string, useProxy = false): ActiveLifeState {
   const spec = PROPERTY_CATALOG.find((p) => p.id === propertyId);
   if (!spec) return state;
   if (state.assets.properties.length >= getMaxPropertyLimit(state.profile.originClass)) {
     return state;
   }
-  const cost = getPropertyMarketCost(spec, state.world.worldState);
+  const rule = checkOfficialPropertyRule(state, propertyId, useProxy);
+  if (!rule.allowed) return state;
+
+  const baseCost = getPropertyMarketCost(spec, state.world.worldState);
+  const cost = rule.isProxyViolationRisk ? Math.round(baseCost * 1.15) : baseCost;
   if (state.assets.wealthCopper < cost) return state;
 
   const next = applyEffects(state, {
     copper: -cost,
-    fame: 2,
+    fame: rule.isProxyViolationRisk ? 0 : 2,
+    scandal_risk: rule.isProxyViolationRisk ? 8 : 0,
     milestone_title: state.assets.properties.includes(spec.id) ? undefined : `Mua ${spec.name}`,
   });
   return {
     ...next,
+    official:
+      rule.isProxyViolationRisk && next.official
+        ? {
+            ...next.official,
+            proxyBusinessIds: [...next.official.proxyBusinessIds, spec.id],
+          }
+        : next.official,
     assets: {
       ...next.assets,
       properties: [...next.assets.properties, spec.id],
@@ -643,8 +704,10 @@ export function buyProperty(state: ActiveLifeState, propertyId: string): ActiveL
     logs: appendLog(
       next.logs,
       next.profile.totalDays,
-      'survival',
-      `Bạn tậu thêm ${spec.name} với giá ${cost} đồng.`,
+      rule.isProxyViolationRisk ? 'warning' : 'survival',
+      rule.isProxyViolationRisk
+        ? `Bạn nhờ gia nhân đứng tên ngầm mua ${spec.name} (-${cost}đ, Hiềm nghi +8).`
+        : `Bạn tậu thêm ${spec.name} với giá ${cost} đồng.`,
     ),
   };
 }
@@ -678,6 +741,7 @@ export function upgradeHousing(state: ActiveLifeState, tier: HousingTier): Activ
   const spec = HOUSING_UPGRADES.find((h) => h.tier === tier);
   if (!spec) return state;
   if (HOUSING_ORDER[tier] <= HOUSING_ORDER[state.assets.housing]) return state;
+  if (!checkHousingTiemLe(state, tier).allowed) return state;
   const cost = getHousingMarketCost(tier, state.world.worldState);
   if (state.assets.wealthCopper < cost) return state;
 
@@ -706,18 +770,50 @@ export function contributeRebellionTreasury(state: ActiveLifeState, amountCopper
   };
 }
 
-export function recruitRebellionArmy(state: ActiveLifeState): ActiveLifeState {
-  const COST = 2000;
+export function canRecruitRebellionArmy(state: ActiveLifeState): { ok: boolean; reason?: string; cost: number } {
+  const COST = 25000;
+  const hasBase =
+    state.flags.includes('trong_quan_ngu') ||
+    state.official?.track === 'vo' ||
+    state.assets.properties.includes('trang_vien_cho_thue') ||
+    state.assets.properties.includes('thai_ap_ton_that') ||
+    state.stats.fame >= 80 ||
+    state.stats.infamy >= 80;
+
+  if (!hasBase) {
+    return {
+      ok: false,
+      reason: 'Cần có căn cứ (Trang viên/Thái ấp, Quan Võ, hoặc Thanh danh/Tai tiếng >= 80) mới chiêu mộ được tử sĩ',
+      cost: COST,
+    };
+  }
   const rebellion = state.rebellion ?? { treasuryCopper: 0, armyPower: 0 };
-  if (rebellion.treasuryCopper < COST) return state;
-  const next = applyEffects(state, { infamy: 4 });
+  if (rebellion.treasuryCopper < COST) {
+    return { ok: false, reason: 'Cần 2.5 Vàng (25.000đ) trong ngân khố mật thất', cost: COST };
+  }
+  return { ok: true, cost: COST };
+}
+
+export function recruitRebellionArmy(state: ActiveLifeState): ActiveLifeState {
+  const elig = canRecruitRebellionArmy(state);
+  if (!elig.ok) return state;
+  const rebellion = state.rebellion ?? { treasuryCopper: 0, armyPower: 0 };
+  const next = applyEffects(state, {
+    infamy: 8,
+    scandal_risk: state.officialRank > 0 ? 12 : 0,
+  });
   return {
     ...next,
     rebellion: {
-      treasuryCopper: rebellion.treasuryCopper - COST,
-      armyPower: rebellion.armyPower + 20,
+      treasuryCopper: rebellion.treasuryCopper - elig.cost,
+      armyPower: rebellion.armyPower + 10,
     },
-    logs: appendLog(next.logs, next.profile.totalDays, 'event', 'Chiêu mộ thêm một đội tử sĩ vào mật thất (+20 Binh quyền).'),
+    logs: appendLog(
+      next.logs,
+      next.profile.totalDays,
+      'warning',
+      'Chiêu mộ thêm 10 tử sĩ vào mật thất (-25.000đ, +10 Binh quyền, tốn lương nuôi hàng tháng).',
+    ),
   };
 }
 
@@ -750,7 +846,7 @@ export function launchRebellion(state: ActiveLifeState): ActiveLifeState {
     });
     return {
       ...next,
-      officialRank: 6,
+      officialRank: 10,
       isAlive: false,
       deathReason: `Hoàn thành đại nghiệp: Đăng cơ ${emperorTitle}, lưu danh sử sách!`,
       profile: { ...next.profile, currentRole: emperorTitle },

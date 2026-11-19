@@ -117,7 +117,7 @@ describe('Career & Venture System', () => {
     };
 
     const official = appointOrPromoteOfficial(life);
-    expect(official.officialRank).toBe(1);
+    expect(official.officialRank).toBe(2);
     expect(official.activeCareer).toBeNull();
     expect(official.schedule.morning).toBe('act_xu_an_cong_duong');
 

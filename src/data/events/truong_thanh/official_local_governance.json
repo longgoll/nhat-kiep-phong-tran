@@ -1,0 +1,301 @@
+[
+  {
+    "id": "evt_official_case_deduction_1",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 1,
+      "max_official_rank": 6,
+      "official_tracks": ["van"]
+    },
+    "title": "Hồ Sơ Phá Án: Án Mạng Tại Tửu Điếm",
+    "description": "Một thương nhân chết bất đắc kỳ tử trong phòng trọ. Con trai Hào phú bản địa tố cáo tá điền nghèo giết người cướp bạc, nhưng thi thể lại không có vết đâm chém mà môi thâm tím.",
+    "cooldownDays": 1080,
+    "weight": { "base": 18 },
+    "choices": [
+      {
+        "label": "Phái Sư gia và Bộ khoái bí mật nghiệm thi, tra xét tửu điếm trong 5 ngày",
+        "hint": "Tốn 200đ công vụ · Tìm manh mối thật (mở bước 2 phán quyết)",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": -200,
+              "merit": 4,
+              "schedule_delayed": [
+                { "event_id": "evt_official_case_deduction_2", "delay_days": 5 }
+              ]
+            },
+            "resultText": "Bạn tạm hoãn phán quyết, sai người niêm phong hiện trường và bí mật điều tra."
+          }
+        ]
+      },
+      {
+        "label": "Dùng nhục hình ép cung tá điền cho mau xong án",
+        "hint": "Nhanh gọn nhưng cực dễ gây án oan · Dân tâm -12 · Hiềm nghi +10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "merit": 2,
+              "public_trust": -12,
+              "scandal_risk": 10,
+              "infamy": 5
+            },
+            "resultText": "Tá điền không chịu nổi đòn roi phải ký nhận tội. Người trong hạt xì xào bàn tán án oan."
+          }
+        ]
+      },
+      {
+        "label": "Nhận 2.000đ của Hào phú để khép án theo ý họ",
+        "hint": "+2.000đ · Dân tâm -15 · Hiềm nghi +15",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": 2000,
+              "public_trust": -15,
+              "scandal_risk": 15,
+              "infamy": 8
+            },
+            "resultText": "Bạc trắng lấp miệng người, vụ án khép lại chóng vánh nhưng tai tiếng âm ỉ lan rộng."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_case_deduction_2",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 1
+    },
+    "title": "Công Đường Phán Quyết: Chân Tướng Vụ Án Độc Dược",
+    "description": "Kết quả điều tra cho thấy nạn nhân bị đầu độc bằng thạch tín pha trong bình rượu của chính con trai Hào phú — kẻ đang nợ nần cờ bạc và muốn chiếm gia sản!",
+    "cooldownDays": 0,
+    "weight": { "base": 0 },
+    "choices": [
+      {
+        "label": "Thăng đường công minh: Trả tự do cho tá điền, bắt giam hung thủ thật",
+        "hint": "Chính tích +10 · Dân tâm +15 · Thanh danh +10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "merit": 10,
+              "public_trust": 15,
+              "fame": 10,
+              "imperial_favor": 5
+            },
+            "resultText": "Bách tính vỗ tay khen ngợi 'Bao Thanh Thiên tái thế', uy tín công đường vang xa!"
+          }
+        ]
+      },
+      {
+        "label": "Nắm thóp chứng cứ để tống tiền nhà Hào phú (+5.000đ)",
+        "hint": "+5.000đ · Hiềm nghi +18 · Dân tâm -10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": 5000,
+              "scandal_risk": 18,
+              "public_trust": -10,
+              "infamy": 10
+            },
+            "resultText": "Hào phú run rẩy dâng 5.000đ để đổi lấy bình an, còn bạn bước thêm một bước vào vũng bùn tham nhũng."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_flood_dyke_relief",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 1,
+      "max_official_rank": 7,
+      "official_tracks": ["van"]
+    },
+    "title": "Thiên Tai Vỡ Đê & Tiền Cứu Tế Triều Đình",
+    "description": "Mưa lớn kéo dài khiến đê điều trong hạt bị sạt lở, hoa màu ngập úng. Triều đình cấp bạc và thóc cứu tế, nhưng đường vận chuyển qua tay nhiều tầng nha lại.",
+    "cooldownDays": 1080,
+    "weight": { "base": 16 },
+    "choices": [
+      {
+        "label": "Xuất thêm 1.500đ tiền túi cùng bổng lộc ra đắp đê, phát cháo cứu dân",
+        "hint": "-1.500đ · Chính tích +10 · Dân tâm +15 · Thánh sủng +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": -1500,
+              "merit": 10,
+              "public_trust": 15,
+              "imperial_favor": 6,
+              "fame": 12
+            },
+            "resultText": "Bạn lội bùn cùng dân đắp đê suốt ba ngày đêm. Sớ khen ngợi của dân chúng được truyền lên tới Kinh thành."
+          }
+        ]
+      },
+      {
+        "label": "Chỉ dùng đúng ngân sách triều đình cấp, làm tròn bổn phận",
+        "hint": "Chính tích +4 · Dân tâm +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "merit": 4,
+              "public_trust": 3
+            },
+            "resultText": "Đê điều được gia cố tạm ổn, dân chúng qua được cơn hoạn nạn."
+          }
+        ]
+      },
+      {
+        "label": "Khai khống thiệt hại để bớt xén tiền cứu tế (+4.000đ)",
+        "hint": "+4.000đ · Dân tâm -20 · Hiềm nghi +20",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "copper": 4000,
+              "public_trust": -20,
+              "scandal_risk": 20,
+              "infamy": 12
+            },
+            "resultText": "Túi riêng đầy ắp bạc cứu tế, nhưng tiếng oán than của dân đói vang khắp phủ huyện."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_ministry_audit",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 1,
+      "max_official_rank": 7
+    },
+    "title": "Khâm Sai Bộ Lại Về Kiểm Tra Sổ Sách Thuế Khóa",
+    "description": "Khâm sai đại thần bất ngờ ghé nha môn kiểm tra sổ sách thu thuế, kho thóc công và lễ nghi tiếp đón.",
+    "cooldownDays": 1080,
+    "weight": { "base": 15 },
+    "choices": [
+      {
+        "label": "Mở toang kho thóc và sổ sách đối chiếu minh bạch",
+        "hint": "An toàn nếu Hiềm nghi thấp; nếu Hiềm nghi >= 40 dễ bị bắt lỗi",
+        "outcomes": [
+          {
+            "weight": {
+              "base": 75,
+              "modifiers": [
+                { "conditions": { "min_scandal_risk": 40 }, "addWeight": -50 }
+              ]
+            },
+            "effects": {
+              "merit": 6,
+              "imperial_favor": 6,
+              "scandal_risk": -5
+            },
+            "resultText": "Sổ sách rành mạch, kho thóc đầy đủ. Khâm sai gật đầu hài lòng ghi công vào sổ Khảo khóa."
+          },
+          {
+            "weight": {
+              "base": 25,
+              "modifiers": [
+                { "conditions": { "min_scandal_risk": 40 }, "addWeight": 50 }
+              ]
+            },
+            "effects": {
+              "suspend_salary_days": 90,
+              "imperial_favor": -8,
+              "scandal_risk": 8
+            },
+            "resultText": "Khâm sai phát hiện khoản chi bất minh trong sổ sách, phạt cắt bổng 3 tháng để cảnh cáo!"
+          }
+        ]
+      },
+      {
+        "label": "Dâng phong bì 2.500đ 'lộ phí đường xa' cho đoàn Khâm sai",
+        "hint": "-2.500đ · Giảm nguy cơ bị soi xét nhưng tăng Hiềm nghi +6",
+        "outcomes": [
+          {
+            "weight": { "base": 80 },
+            "effects": {
+              "copper": -2500,
+              "imperial_favor": 4,
+              "scandal_risk": 6
+            },
+            "resultText": "Khâm sai mỉm cười nhận lễ, buổi kiểm tra diễn ra êm thấm nhanh gọn."
+          },
+          {
+            "weight": { "base": 20 },
+            "effects": {
+              "copper": -2500,
+              "official_rank_delta": -1,
+              "scandal_risk": 15
+            },
+            "resultText": "Gặp đúng Khâm sai liêm khiết! Ông ta ném trả phong bì và dâng sớ khiển trách khiến bạn bị giáng 1 phẩm!"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_official_peasant_protest",
+    "stage": "adulthood",
+    "severity": "major",
+    "conditions": {
+      "has_flags": ["dang_lam_quan"],
+      "min_official_rank": 1,
+      "max_official_rank": 7,
+      "world_state_in": ["mat_mua", "chien_tranh"]
+    },
+    "title": "Dân Đói Kéo Đến Cổng Nha Môn Kêu Oan",
+    "description": "Mùa màng thất bát khiến hàng trăm dân nghèo tụ tập trước cổng nha môn xin giảm sưu thuế và mở kho chẩn cấp.",
+    "cooldownDays": 1080,
+    "weight": { "base": 14 },
+    "choices": [
+      {
+        "label": "Đứng ra nhận lỗi, mở kho phát gạo và dâng sớ xin triều đình miễn thuế",
+        "hint": "Dân tâm +15 · Chính tích +6 · Có thể bị quan trên quở trách",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "public_trust": 15,
+              "merit": 6,
+              "imperial_favor": -3,
+              "fame": 10
+            },
+            "resultText": "Đám đông cảm kích bái lạy rồi giải tán bình yên. Lòng dân quy thuận."
+          }
+        ]
+      },
+      {
+        "label": "Sai nha dịch mang gậy gộc giải tán đám đông",
+        "hint": "Dân tâm -22 · Hiềm nghi +10 · Nguy cơ dân biến",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "effects": {
+              "public_trust": -22,
+              "scandal_risk": 10,
+              "infamy": 10
+            },
+            "resultText": "Tiếng gào khóc vang trời khi đám đông bị đánh đuổi. Hạt mầm oán hận đã gieo xuống."
+          }
+        ]
+      }
+    ]
+  }
+]

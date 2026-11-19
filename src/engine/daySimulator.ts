@@ -22,6 +22,12 @@ import { buildDynamicDecisionById } from './decisionGenerator';
 import { isEventContextuallyAllowed, planYear } from './yearPlanner';
 import { resolveEventChoice } from './childhoodEngine';
 import { getPropertySeasonalIncome, getPropertySeasonalSocial, PROPERTY_CATALOG } from './progressionModules';
+import {
+  getOfficialMonthlyUpkeepCopper,
+  getOfficialRankSpec,
+  getOfficialTitle,
+  getRebellionMonthlyUpkeepCopper,
+} from './officialSystem';
 import { computeFamilyMonthlyNetCopper } from './familyEconomy';
 import {
   applyAnnualGiftEtiquette,
@@ -188,7 +194,7 @@ function scaleActionRewards(
           : 1.0;
     tradeMult = (1 + Math.min(100, state.stats.craftTrade) * 0.01) * worldTradeMult;
   } else if (category === 'official') {
-    tradeMult = 1 + Math.max(0, state.officialRank - 1) * 0.25;
+    tradeMult = 1 + Math.max(0, state.officialRank - 1) * 0.15;
   }
 
   const focusMod = getDailyFocusModifiers(state.schedule.lifeFocus);
@@ -210,6 +216,15 @@ function scaleActionRewards(
   }
   if (scaled.rice !== undefined && scaled.rice > 0) {
     scaled.rice = Number((scaled.rice * workEfficiency).toFixed(2));
+  }
+  if (category === 'official' && state.officialRank > 0) {
+    if (actionId === 'act_xu_an_cong_duong') {
+      scaled.merit = Number((0.25 * workEfficiency).toFixed(2));
+      scaled.public_trust = Number((0.15 * workEfficiency).toFixed(2));
+    } else if (actionId === 'act_tham_o_nhan_hoi_lo') {
+      scaled.scandal_risk = Number((0.35 * workEfficiency).toFixed(2));
+      scaled.public_trust = -0.25;
+    }
   }
 
   return scaled;
@@ -564,7 +579,9 @@ export function advanceDays(
         for (const propId of state.assets.properties) {
           const spec = PROPERTY_CATALOG.find((p) => p.id === propId);
           if (spec) {
-            seasonalGain += getPropertySeasonalIncome(spec, state.world.worldState, state.stats.craftTrade);
+            const rawIncome = getPropertySeasonalIncome(spec, state.world.worldState, state.stats.craftTrade);
+            const isProxy = state.official?.proxyBusinessIds.includes(propId) ?? false;
+            seasonalGain += isProxy ? Math.round(rawIncome * 0.7) : rawIncome;
             const social = getPropertySeasonalSocial(spec);
             seasonalFame += social.fame;
             seasonalRelationships += social.relationships;
@@ -704,6 +721,103 @@ export function advanceDays(
         }
       }
       state = applyMonthlyFamilyAllowance(state, newAge);
+
+      // Monthly official salary & manor upkeep (Anti-inflation balance)
+      if (state.officialRank > 0 && state.officialRank < 10 && state.official) {
+        const off = state.official;
+        const rankSpec = getOfficialRankSpec(state.officialRank);
+        if (rankSpec) {
+          const isSuspended =
+            off.salarySuspendedUntilDay !== undefined &&
+            nextTotalDays < off.salarySuspendedUntilDay;
+          if (!isSuspended) {
+            state = applyEffects(state, {
+              copper: rankSpec.monthlySalaryCopper,
+              rice: rankSpec.monthlyRiceDau,
+            });
+            state = addLedger(state, { workIncomeCopper: rankSpec.monthlySalaryCopper });
+          }
+          const upkeep = getOfficialMonthlyUpkeepCopper(off);
+          if (upkeep > 0) {
+            state = applyEffects(state, { copper: -upkeep });
+            state = addLedger(state, { livingExpenseCopper: upkeep });
+          }
+        }
+        // Proxy business monthly audit risk creep
+        if (off.proxyBusinessIds.length > 0) {
+          state = applyEffects(state, {
+            scandal_risk: Math.min(4, off.proxyBusinessIds.length),
+          });
+        }
+      }
+
+      // Restore rank after 3-year DingYou (Đinh ưu) mourning period
+      if (
+        state.officialRank === 0 &&
+        state.official?.dingYouUntilDay !== undefined &&
+        nextTotalDays >= state.official.dingYouUntilDay
+      ) {
+        const dingOff = state.official;
+        const restoredRank = dingOff.savedRankBeforeDingYou ?? 1;
+        const restoredTrack = dingOff.savedTrackBeforeDingYou ?? dingOff.track;
+        const restoredTitle = getOfficialTitle(restoredRank, restoredTrack);
+        state = applyEffects(state, {
+          add_flags: ['dang_lam_quan'],
+          milestone_title: `Mãn tang Đinh ưu: Phục chức ${restoredTitle}`,
+        });
+        state = {
+          ...state,
+          officialRank: restoredRank,
+          official: {
+            ...dingOff,
+            rank: restoredRank,
+            title: restoredTitle,
+            dingYouUntilDay: undefined,
+            savedRankBeforeDingYou: undefined,
+            savedTrackBeforeDingYou: undefined,
+          },
+          profile: { ...state.profile, currentRole: restoredTitle },
+          logs: appendLog(
+            state.logs,
+            nextTotalDays,
+            'event',
+            `Hết 3 năm chịu tang Đinh ưu, triều đình phục chức ${restoredTitle} cho bạn.`,
+          ),
+        };
+      }
+
+      // Monthly rebellion army upkeep & desertion check
+      if ((state.rebellion?.armyPower ?? 0) > 0) {
+        const armyUpkeep = getRebellionMonthlyUpkeepCopper(state);
+        if (state.rebellion.treasuryCopper >= armyUpkeep) {
+          state = {
+            ...state,
+            rebellion: {
+              ...state.rebellion,
+              treasuryCopper: state.rebellion.treasuryCopper - armyUpkeep,
+            },
+          };
+          if (state.officialRank > 0) {
+            state = applyEffects(state, { scandal_risk: 2 });
+          }
+        } else {
+          const deserted = Math.min(state.rebellion.armyPower, 10);
+          state = {
+            ...state,
+            rebellion: {
+              ...state.rebellion,
+              armyPower: Math.max(0, state.rebellion.armyPower - deserted),
+            },
+            logs: appendLog(
+              state.logs,
+              nextTotalDays,
+              'warning',
+              `Ngân khố mật thất cạn tiền nuôi quân, ${deserted} tử sĩ bỏ trốn!`,
+            ),
+          };
+          state = applyEffects(state, { infamy: 5, scandal_risk: state.officialRank > 0 ? 8 : 0 });
+        }
+      }
     }
     const focusMod = getDailyFocusModifiers(state.schedule.lifeFocus);
     if (

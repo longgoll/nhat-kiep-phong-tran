@@ -102,7 +102,7 @@ describe('Progression Modules (MVP 3)', () => {
       profile: { ...life.profile, gender: 'male', totalDays: 20 * 360 + 89 }, // 1 ngày trước sang Hạ
       world: { ...life.world, season: 'spring' },
       stats: { ...life.stats, education: 0 },
-      assets: { ...life.assets, wealthCopper: 60000, rice: 100 },
+      assets: { ...life.assets, wealthCopper: 160000, rice: 100 },
     };
 
     life = buyProperty(life, 'ruong_tu');
@@ -119,7 +119,7 @@ describe('Progression Modules (MVP 3)', () => {
     const res = advanceDays(life, 1, ACTIONS, EVENTS);
     expect(res.state.world.season).toBe('summer');
     // Should have received seasonal income (+420 copper)
-    expect(res.state.assets.wealthCopper).toBeGreaterThan(60000 - 3000 - 50000);
+    expect(res.state.assets.wealthCopper).toBeGreaterThan(160000 - 3000 - 150000);
   });
 
   it('enforces feudal marriage ages (15 female / 16 male), origin dowry, and 3-year Hoi/Dinh exam cycle', () => {

@@ -86,6 +86,7 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
   };
   let flags = [...state.flags];
   let officialRank = state.officialRank;
+  let official = state.official ? { ...state.official } : undefined;
   let currentRole = state.profile.currentRole;
   let traits = [...(state.traits ?? [])];
   let interests = [...(state.interests ?? [])];
@@ -213,25 +214,91 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
   }
   if (effects.reset_official_rank) {
     officialRank = 0;
+    official = undefined;
     currentRole = 'Dân thường';
     flags = flags.filter((f) => f !== 'dang_lam_quan');
   }
   if (effects.official_rank_delta !== undefined && effects.official_rank_delta !== 0) {
-    const rankNames = [
-      'Dân thường',
-      'Tri huyện',
-      'Tri phủ',
-      'Tuần phủ',
-      'Thượng thư',
-      'Tể tướng',
-      'Khai quốc Hoàng đế',
-    ];
-    officialRank = Math.max(0, Math.min(5, officialRank + effects.official_rank_delta));
-    currentRole = rankNames[officialRank] ?? 'Dân thường';
+    const rankNamesByTrack = {
+      van: [
+        'Dân thường',
+        'Điển sử / Thư lại huyện',
+        'Huyện thừa / Huấn đạo',
+        'Tri huyện / Hàn lâm Biên tu',
+        'Tri châu / Chủ sự Lục bộ',
+        'Tri phủ / Lang trung',
+        'Án sát sứ / Thiếu khanh',
+        'Bố chính sứ / Tuần phủ',
+        'Tổng đốc / Thượng thư Lục bộ',
+        'Tể tướng / Thái sư / Đại học sĩ',
+      ],
+      vo: [
+        'Dân thường',
+        'Đội trưởng / Bách hộ',
+        'Phó Thiên hộ / Bả tổng',
+        'Thiên hộ / Thủ bị',
+        'Du kích / Chỉ huy Thiêm sự',
+        'Tham tướng / Chỉ huy sứ',
+        'Phó tướng / Phó Đô đốc',
+        'Tổng binh / Đô đốc Đồng tri',
+        'Ngũ quân Đô đốc / Binh bộ Thượng thư',
+        'Đại Nguyên soái / Thái úy',
+      ],
+      hoan_quan: [
+        'Dân thường',
+        'Tiểu Thái giám',
+        'Thủ lĩnh Thái giám',
+        'Giám thừa Nội đình',
+        'Thiếu giám',
+        'Đốc công Thái giám',
+        'Bỉnh bút Thái giám',
+        'Chưởng ấn Thái giám',
+        'Đề đốc Đông Xưởng',
+        'Cửu Thiên Tuế',
+      ],
+    };
+    const track = official?.track ?? (flags.includes('thai_giam') ? 'hoan_quan' : 'van');
+    const maxCap = official?.isHanhHam ? 5 : 9;
+    officialRank = Math.max(0, Math.min(maxCap, officialRank + effects.official_rank_delta));
+    currentRole = rankNamesByTrack[track][officialRank] ?? 'Dân thường';
     if (officialRank === 0) {
       flags = flags.filter((f) => f !== 'dang_lam_quan');
-    } else if (!flags.includes('dang_lam_quan')) {
-      flags.push('dang_lam_quan');
+      official = undefined;
+    } else {
+      if (!flags.includes('dang_lam_quan')) {
+        flags.push('dang_lam_quan');
+      }
+      if (official) {
+        official.rank = officialRank;
+        official.title = currentRole;
+      }
+    }
+  }
+  if (official) {
+    if (effects.merit !== undefined) {
+      official.merit = Math.max(0, official.merit + effects.merit);
+    }
+    if (effects.public_trust !== undefined) {
+      official.publicTrust = Math.max(-100, Math.min(100, official.publicTrust + effects.public_trust));
+    }
+    if (effects.imperial_favor !== undefined) {
+      official.imperialFavor = Math.max(0, Math.min(100, official.imperialFavor + effects.imperial_favor));
+    }
+    if (effects.scandal_risk !== undefined) {
+      official.scandalRisk = Math.max(0, Math.min(100, official.scandalRisk + effects.scandal_risk));
+    }
+    if (effects.official_faction !== undefined) {
+      official.faction = effects.official_faction;
+    }
+    if (effects.suspend_salary_days !== undefined && effects.suspend_salary_days > 0) {
+      official.salarySuspendedUntilDay = state.profile.totalDays + effects.suspend_salary_days;
+    }
+  }
+  if (effects.confiscate_assets) {
+    assets.wealthCopper = Math.min(assets.wealthCopper, 500);
+    assets.properties = [];
+    if (official) {
+      official.proxyBusinessIds = [];
     }
   }
 
@@ -347,6 +414,7 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
       currentRole,
     },
     officialRank,
+    official,
     isAlive,
     deathReason,
     stats,

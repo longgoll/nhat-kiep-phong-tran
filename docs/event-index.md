@@ -2,7 +2,7 @@
 
 > File tự động sinh bởi `npm run gen:index` (`scripts/gen-event-index.mjs`). AI đọc file này để tra cứu toàn bộ ID, file, cờ (`flags`) và tránh đọc hàng chục file JSON lớn.
 
-- **Tổng số file:** 70 | **Tổng số sự kiện:** 327 | **Tổng số flags:** 91
+- **Tổng số file:** 73 | **Tổng số sự kiện:** 342 | **Tổng số flags:** 93
 
 ## 1. Từ Điển Flags Đang Hoạt Động
 | Flag | Được gắn/gỡ bởi | Được kiểm tra bởi (samples) |
@@ -31,6 +31,7 @@
 | `co_ban_noi_kho` | evt_child_best_friend | evt_adult_reunion_best_friend(has_flags) |
 | `co_ban_tri_ky` | evt_child_quan_lai_academy_peer | — |
 | `co_luc_luong_rieng` | evt_martial_train_disciples | evt_rebellion_spark(has_any_flag) |
+| `co_luong_huu` | evt_official_retire_with_honor | — |
 | `co_tai_mat_noi_dinh` | evt_adult_hoang_toc_teen_cold_palace_ally | — |
 | `da_co_con` | *(engine/init)* | evt_elder_descendants_success(has_flags), evt_elder_divide_estate(has_flags), evt_elder_clan_patriarch_feast(has_any_flag), evt_elder_teach_grandchildren(has_flags) |
 | `da_hoi_ra_o_rieng` | evt_chain_ra_o_rieng_1 | evt_chain_ra_o_rieng_1(missing_flags) |
@@ -85,6 +86,7 @@
 | `thien_huong_nam_xoi` | evt_milestone_thoi_noi, evt_milestone_thoi_noi_thu_cong, evt_milestone_thoi_noi_dia_chu, evt_milestone_thoi_noi_quan_lai | — |
 | `thien_huong_thoi_bac` | evt_milestone_thoi_noi, evt_milestone_thoi_noi_thu_cong, evt_milestone_thoi_noi_dia_chu, evt_milestone_thoi_noi_quan_lai | — |
 | `trang_nguyen` | *(engine/init)* | evt_scholar_vinh_quy_bai_to(has_any_flag) |
+| `tri_si_vinh_quy` | evt_official_retire_with_honor | — |
 | `trong_hau_cung` | evt_fate_tuyen_tu_palace, evt_fate_eunuch_or_palace_maid, evt_fate_palace_promotion(-remove) | evt_chain_len_kinh_1(missing_flags), evt_chain_ra_o_rieng_1(missing_flags), evt_craft_imperial_commission(missing_flags), evt_craft_apprentice_rivalry(missing_flags) |
 | `trong_quan_ngu` | evt_military_enlist, evt_military_retire(-remove) | evt_military_enlist(missing_flags), evt_military_promotion_1(has_flags), evt_military_promotion_2(has_flags), evt_military_retire(has_flags) |
 | `trum_phuong_tho` | evt_adult_exp_thu_cong_guild | evt_adult_exp_thu_cong_merchant_order(has_any_flag) |
@@ -338,6 +340,11 @@
 | `evt_official_corrupt_bribe_case` | Nhận Hối Lộ Chạy Án Trọng Tội | adulthood | major | 1200 | all | `truong_thanh/official_corrupt.json` |
 | `evt_official_corrupt_faction_alliance` | Kết Bè Đảng Với Quyền Thần Trong Triều | adulthood | major (1x) | 99999 | all | `truong_thanh/official_corrupt.json` |
 | `evt_official_corrupt_censor_raid` | Đoàn Thanh Tra Ngự Sử Ập Tới Nha Môn | adulthood | major | 1440 | all | `truong_thanh/official_corrupt.json` |
+| `evt_official_court_faction_choice` | Sóng Ngầm Triều Đường: Chọn Phe Đứng Chân | adulthood | major | 1440 | all | `truong_thanh/official_court_politics.json` |
+| `evt_official_emperor_audience` | Triệu Kiến Ngự Tiền: Tấu Đối Quốc Sự | adulthood | major | 1080 | all | `truong_thanh/official_court_politics.json` |
+| `evt_official_proxy_biz_leak` | Tố Giác 'Quan Thương Cấu Kết' Đứng Tên Ngầm | adulthood | major | 1080 | all | `truong_thanh/official_court_politics.json` |
+| `evt_official_court_purge` | Biến Cố Triều Đình: Hoàng Đế Thanh Trừng Phe Đảng | adulthood | major | 1800 | all | `truong_thanh/official_court_politics.json` |
+| `evt_official_retire_with_honor` | Cáo Lão Hồi Hương (Trí Sĩ Vinh Quy) | adulthood | major | 1800 | all | `truong_thanh/official_court_politics.json` |
 | `evt_official_faction_choice` | Ngã Rẽ Phe Phái Nơi Triều Đường | adulthood | major (1x) | 99999 | all | `truong_thanh/official_factions.json` |
 | `evt_official_faction_grand_case` | Đại Án Quân Lương Biên Ải | adulthood | major | 1440 | all | `truong_thanh/official_factions.json` |
 | `evt_official_faction_patron_fall` | Quyền Thần Thất Thế — Sóng Gió Liên Lụy | adulthood | major (1x) | 99999 | all | `truong_thanh/official_factions.json` |
@@ -347,6 +354,16 @@
 | `evt_official_intrigue_strike_rival` | Nắm Thóp Đối Thủ Tranh Chức | adulthood | major | 1440 | all | `truong_thanh/official_intrigue.json` |
 | `evt_official_intrigue_border_exile` | Bị Điều Đi Trấn Nhậm Vùng Biên Viễn | adulthood | major | 1800 | all | `truong_thanh/official_intrigue.json` |
 | `evt_official_intrigue_tax_audit` | Phụng Chỉ Tra Xét Tham Nhũng Địa Phương | adulthood | major | 1440 | all | `truong_thanh/official_intrigue.json` |
+| `evt_official_case_deduction_1` | Hồ Sơ Phá Án: Án Mạng Tại Tửu Điếm | adulthood | major | 1080 | all | `truong_thanh/official_local_governance.json` |
+| `evt_official_case_deduction_2` | Công Đường Phán Quyết: Chân Tướng Vụ Án Độc Dược | adulthood | major | 0 | all | `truong_thanh/official_local_governance.json` |
+| `evt_official_flood_dyke_relief` | Thiên Tai Vỡ Đê & Tiền Cứu Tế Triều Đình | adulthood | major | 1080 | all | `truong_thanh/official_local_governance.json` |
+| `evt_official_ministry_audit` | Khâm Sai Bộ Lại Về Kiểm Tra Sổ Sách Thuế Khóa | adulthood | major | 1080 | all | `truong_thanh/official_local_governance.json` |
+| `evt_official_peasant_protest` | Dân Đói Kéo Đến Cổng Nha Môn Kêu Oan | adulthood | major | 1080 | all | `truong_thanh/official_local_governance.json` |
+| `evt_official_vo_supply_shortage` | Biên Ải Thiếu Quân Lương Mùa Đông | adulthood | major | 1080 | all | `truong_thanh/official_military_posts.json` |
+| `evt_official_vo_eunuch_supervisor` | Hoạn Quan Giám Quân Đòi Tiền Khao Thưởng | adulthood | major | 1080 | all | `truong_thanh/official_military_posts.json` |
+| `evt_official_vo_bandit_campaign` | Xuất Binh Tiễu Trừ Sơn Tặc Cướp Lương | adulthood | major | 1080 | all | `truong_thanh/official_military_posts.json` |
+| `evt_official_vo_border_defense` | Kỵ Binh Địch Tập Kích Cửa Ải Trọng Yếu | adulthood | major | 1440 | all | `truong_thanh/official_military_posts.json` |
+| `evt_official_vo_troop_mutiny` | Binh Sĩ Bất Mãn Vì Nghi Ngờ Ăn Chặn Quân Lương | adulthood | major | 1080 | all | `truong_thanh/official_military_posts.json` |
 | `evt_ban_nong_land_reclaim` | Khai Khẩn Đất Hoang Ven Bãi Bồi | adulthood | major | 1440 | ban_nong | `truong_thanh/origin_ban_nong_and_tiers.json` |
 | `evt_ban_nong_village_elder_council` | Đình Làng Bàn Cử Chức Sắc Hương Lý | adulthood | major | 1800 | ban_nong, thu_cong | `truong_thanh/origin_ban_nong_and_tiers.json` |
 | `evt_tier_binh_dan_seasonal_fair` | Hội Vật & Phiên Chợ Đầu Xuân | adulthood | major | 1080 | ban_nong, thu_cong | `truong_thanh/origin_ban_nong_and_tiers.json` |

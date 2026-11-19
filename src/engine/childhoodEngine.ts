@@ -21,6 +21,7 @@ import {
   type FamilyCashflowBreakdown,
 } from './familyEconomy';
 import { ORIGIN_CORE_CONFIG } from './originConfigs';
+import { triggerDingYouLeave } from './officialSystem';
 import { mulberry32Next, pickWeightedIndex } from './prng';
 
 export { computeFamilyMonthlyNetCopper, type FamilyCashflowBreakdown };
@@ -385,8 +386,18 @@ export function resolveEventChoice(
   if (!hadMovedOutBefore && nextState.flags.includes('da_ra_o_rieng') && choiceIndex === 0) {
     nextState = applyMoveOutInheritance(nextState);
   }
-  if (hadLivingParentBefore && !nextState.npcs.some((n) => n.relation === 'parent' && n.isAlive)) {
+  const livingParentsBefore = inputState.npcs.filter((n) => n.relation === 'parent' && n.isAlive).length;
+  const livingParentsAfter = nextState.npcs.filter((n) => n.relation === 'parent' && n.isAlive).length;
+  if (hadLivingParentBefore && livingParentsAfter === 0) {
     nextState = applyFinalInheritanceIfEligible(nextState);
+  }
+  if (
+    livingParentsAfter < livingParentsBefore &&
+    nextState.official?.track === 'van' &&
+    nextState.officialRank > 0 &&
+    nextState.world.worldState !== 'chien_tranh'
+  ) {
+    nextState = triggerDingYouLeave(nextState);
   }
 
   return { state: nextState, resultText: outcome.resultText };
