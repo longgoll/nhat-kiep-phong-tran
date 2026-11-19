@@ -41,7 +41,7 @@ export const CHILDHOOD_FOCUS_OPTIONS: ChildhoodFocusOption[] = [
     label: 'Học chữ · Kinh sử',
     effectHint: 'Học thức↑ · Hạnh phúc↑',
     description: 'Miệt mài đọc sách, luyện chữ và nghe giảng kinh sử để mở đường khoa cử.',
-    monthlyEffects: { education: 0.25, happiness: 0.05 },
+    monthlyEffects: { education: 0.14, happiness: 0.03 },
     interestOnBirthday: 'kinh_su',
   },
   {
@@ -49,21 +49,21 @@ export const CHILDHOOD_FOCUS_OPTIONS: ChildhoodFocusOption[] = [
     label: 'Bạn bè · Vui chơi',
     effectHint: 'Quan hệ↑ · Hạnh phúc↑',
     description: 'Chạy nhảy khắp xóm làng, kết thân với bạn đồng niên và giữ tâm hồn vui vẻ.',
-    monthlyEffects: { relationships: 0.22, happiness: 0.14 },
+    monthlyEffects: { relationships: 0.12, happiness: 0.08 },
   },
   {
     id: 'giup_nha',
     label: 'Phụ giúp gia đình',
     effectHint: 'Gia sản↑ · Gắn kết↑',
     description: 'Phụ cha mẹ việc đồng áng, buôn bán hoặc giữ nếp nhà để gia đình thêm khấm khá.',
-    monthlyEffects: { relationships: 0.14, craft_trade: 0.15, family_copper: 12 },
+    monthlyEffects: { relationships: 0.08, craft_trade: 0.09, family_copper: 12 },
   },
   {
     id: 'ren_vo',
     label: 'Rèn võ · Thể chất',
     effectHint: 'Sức khỏe↑ · Võ nghệ↑',
     description: 'Chạy bộ, tập quyền cước và rèn gân cốt từ nhỏ để thân thể cường tráng.',
-    monthlyEffects: { health: 0.16, martial: 0.28 },
+    monthlyEffects: { health: 0.09, martial: 0.15 },
     interestOnBirthday: 'vo_nghe',
   },
   {
@@ -71,7 +71,7 @@ export const CHILDHOOD_FOCUS_OPTIONS: ChildhoodFocusOption[] = [
     label: 'Thú vui · Sở thích',
     effectHint: 'Hạnh phúc↑ · Khéo tay↑',
     description: 'Dành thời gian cho những thú vui tao nhã, thư họa, đan lát hoặc ngắm cảnh.',
-    monthlyEffects: { happiness: 0.18, craft_trade: 0.15 },
+    monthlyEffects: { happiness: 0.09, craft_trade: 0.09 },
   },
 ];
 
@@ -127,7 +127,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
               effectHint: `Học thức↑${suffix} · Hạnh phúc↑`,
               description:
                 'Nhờ được thầy đồ thương tình nhận dạy, bạn chăm chỉ mài mực, học chữ thánh hiền.',
-              monthlyEffects: { education: 0.25 + prodigyEduBonus, happiness: 0.06 },
+              monthlyEffects: { education: 0.14 + prodigyEduBonus, happiness: 0.04 },
             }
           : {
               ...base,
@@ -135,7 +135,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
               effectHint: `Học thức${isProdigy ? '↑ (Thần đồng)' : '↗'} · Hạnh phúc↑`,
               description:
                 'Không có tiền đi học, bạn lén nghe thầy đồ giảng bài và lấy que tre vạch chữ xuống đất.',
-              monthlyEffects: { education: 0.15 + prodigyEduBonus, happiness: 0.04 },
+              monthlyEffects: { education: 0.08 + prodigyEduBonus, happiness: 0.02 },
             };
       }
       case 'thu_cong':
@@ -146,7 +146,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
           description: parentInfo.hasAny
             ? `Theo học lớp thầy đồ làng và tập tính toán sổ sách buôn bán cùng ${parentInfo.term}.`
             : 'Theo học lớp thầy đồ làng và tự tập tính toán sổ sách buôn bán.',
-          monthlyEffects: { education: 0.2 + prodigyEduBonus, craft_trade: 0.06, happiness: 0.04 },
+          monthlyEffects: { education: 0.11 + prodigyEduBonus, craft_trade: 0.04, happiness: 0.02 },
         };
       case 'dia_chu':
         return {
@@ -155,7 +155,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
           effectHint: `Học thức↑${suffix} · Hạnh phúc↑`,
           description:
             'Nhà có điều kiện mời ông đồ về dạy chữ thánh hiền và tập đọc khế ước điền trang.',
-          monthlyEffects: { education: 0.26 + prodigyEduBonus, happiness: 0.05 },
+          monthlyEffects: { education: 0.15 + prodigyEduBonus, happiness: 0.03 },
         };
       case 'quan_lai':
         return isDeclined
@@ -165,7 +165,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
               effectHint: `Học thức↑${suffix} · Hạnh phúc↑`,
               description:
                 'Gia đạo sa sút không còn mời được danh sư, bạn tự nghiền ngẫm sách vở cũ trong nhà.',
-              monthlyEffects: { education: 0.2 + prodigyEduBonus, happiness: 0.03 },
+              monthlyEffects: { education: 0.11 + prodigyEduBonus, happiness: 0.02 },
             }
           : {
               ...base,
@@ -173,7 +173,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
               effectHint: `Học thức↑↑${suffix} · Hạnh phúc↑`,
               description:
                 'Dưới sự kèm cặp của danh sư và thư viện gia đình, bạn dùi mài kinh sử chuẩn bị khoa cử.',
-              monthlyEffects: { education: 0.3 + prodigyEduBonus, happiness: 0.05 },
+              monthlyEffects: { education: 0.16 + prodigyEduBonus, happiness: 0.03 },
             };
       case 'hoang_toc':
         return isDeclined
@@ -183,7 +183,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
               effectHint: `Học thức↑${suffix} · Hạnh phúc↑`,
               description:
                 'Thất sủng thiếu thầy chỉ dạy, bạn lặng lẽ tự đọc kinh sử để giữ phẩm cách Tôn thất.',
-              monthlyEffects: { education: 0.2 + prodigyEduBonus, happiness: 0.02 },
+              monthlyEffects: { education: 0.11 + prodigyEduBonus, happiness: 0.01 },
             }
           : {
               ...base,
@@ -191,7 +191,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
               effectHint: `Học thức↑↑${suffix} · Hạnh phúc↑`,
               description:
                 'Được Thái phó và các bậc đại nho triều đình trực tiếp truyền thụ kinh sử, trị quốc.',
-              monthlyEffects: { education: 0.32 + prodigyEduBonus, happiness: 0.06 },
+              monthlyEffects: { education: 0.18 + prodigyEduBonus, happiness: 0.03 },
             };
       default:
         return base;
@@ -276,7 +276,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
           label: 'Bạn bè · Thả diều',
           effectHint: 'Quan hệ↑ · Hạnh phúc↑',
           description: 'Chơi ô ăn quan, thả diều sáo ngoài bãi cỏ cùng đám trẻ con trong xóm.',
-          monthlyEffects: { relationships: 0.24, happiness: 0.14 },
+          monthlyEffects: { relationships: 0.12, happiness: 0.07 },
         };
       case 'giup_nha':
         return {
@@ -286,7 +286,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
           description: parentInfo.hasAny
             ? `Theo ${parentInfo.term} ra đồng cắt cỏ, chăn trâu, mót lúa để đỡ đần miếng cơm manh áo cho cả nhà.`
             : 'Ra đồng cắt cỏ, chăn trâu, mót lúa để tự lo miếng cơm manh áo cho gia đình.',
-          monthlyEffects: { health: 0.08, relationships: 0.14, family_copper: 15 },
+          monthlyEffects: { health: 0.05, relationships: 0.08, family_copper: 15 },
         };
       case 'ren_vo':
         return {
@@ -295,7 +295,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
           effectHint: 'Sức khỏe↑ · Võ nghệ↗',
           description:
             'Bơi sông, leo cây, chạy nhảy khắp triền đê giúp thân thể dẻo dai dù không có thầy dạy võ.',
-          monthlyEffects: { health: 0.22, martial: 0.14 },
+          monthlyEffects: { health: 0.11, martial: 0.08 },
         };
       case 'so_thich':
         return {
@@ -303,7 +303,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
           label: 'Khéo tay · Đan lát',
           effectHint: 'Hạnh phúc↑ · Khéo tay↑',
           description: 'Thắt cào cào lá dừa, đẽo con quay gỗ hoặc tập đan rổ rá dưới gốc đa đầu làng.',
-          monthlyEffects: { happiness: 0.16, craft_trade: 0.18 },
+          monthlyEffects: { happiness: 0.08, craft_trade: 0.1 },
         };
       default:
         return opt;
@@ -510,18 +510,18 @@ export function advanceChildhoodMonth(
       tier === 'tung_thieu'
         ? familyWealth < 40
           ? -0.06
-          : 0.03
+          : 0.015
         : tier === 'du_an'
-          ? 0.06
+          ? 0.03
           : tier === 'kha_gia'
-            ? 0.09
-            : 0.11;
+            ? 0.04
+            : 0.05;
     const happyDrift =
-      state.stats.happiness < happyBaseline ? 0.08 : state.stats.happiness > happyBaseline + 12 ? -0.1 : 0.02;
+      state.stats.happiness < happyBaseline ? 0.05 : state.stats.happiness > happyBaseline + 12 ? -0.1 : 0.01;
     state = applyEffects(state, {
       health: healthGain,
       happiness: happyDrift,
-      relationships: 0.04,
+      relationships: 0.015,
     });
   }
 
