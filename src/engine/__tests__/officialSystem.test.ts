@@ -10,6 +10,8 @@ import {
   upgradeHousing,
 } from '../progressionModules';
 import {
+  bribeForEarlyPromotion,
+  canBribeForPromotion,
   canRequestKhaoKhoa,
   checkHousingTiemLe,
   checkOfficialPropertyRule,
@@ -201,5 +203,29 @@ describe('Feudal Official System (Văn · Võ · Hoạn Quan & Luật Triều Đ
     const mourningVo = triggerKimCachTongNhung(vo);
     expect(mourningVo.officialRank).toBe(vo.officialRank);
     expect(mourningVo.official?.imperialFavor).toBeGreaterThan(vo.official?.imperialFavor ?? 0);
+  });
+
+  it('supports high-risk bribeForEarlyPromotion after half tenure while respecting isHanhHam cap', () => {
+    const cuNhan = { ...makeAdultLife(), flags: ['do_cu_nhan'] };
+    const off = appointOrPromoteOfficial(cuNhan); // Rank 2, tenure 720 days
+    expect(canBribeForPromotion(off).ok).toBe(false); // < half tenure (360 days)
+
+    const halfTenureReady = {
+      ...off,
+      profile: { ...off.profile, totalDays: off.profile.totalDays + 360 },
+      assets: { ...off.assets, wealthCopper: 100000 },
+    };
+    expect(canBribeForPromotion(halfTenureReady).ok).toBe(true);
+    const result = bribeForEarlyPromotion(halfTenureReady);
+    expect(result.assets.wealthCopper).toBeLessThan(100000);
+    expect(result.official?.scandalRisk).toBeGreaterThan(0);
+
+    // Quyên quan at Rank 5 cannot bribe past Ngũ phẩm
+    const hanhHam5 = {
+      ...halfTenureReady,
+      officialRank: 5,
+      official: { ...halfTenureReady.official!, rank: 5, isHanhHam: true },
+    };
+    expect(canBribeForPromotion(hanhHam5).ok).toBe(false);
   });
 });

@@ -854,3 +854,122 @@ export function equipMilitaryGear(state: ActiveLifeState): ActiveLifeState {
     ),
   };
 }
+
+export function canBribeForPromotion(state: ActiveLifeState): {
+  ok: boolean;
+  reason?: string;
+  cost: number;
+  successChance: number;
+} {
+  const rank = state.officialRank;
+  const cost = Math.max(12000, rank * rank * 3000);
+  if (rank <= 0 || !state.official) {
+    return { ok: false, reason: 'Chưa có chức vị triều đình', cost, successChance: 0 };
+  }
+  if (state.official.dingYouUntilDay && state.profile.totalDays < state.official.dingYouUntilDay) {
+    return { ok: false, reason: 'Đang chịu tang Đinh ưu không thể chạy chức', cost, successChance: 0 };
+  }
+  if (rank >= 9) {
+    return { ok: false, reason: 'Đã đạt tột đỉnh Nhất phẩm', cost, successChance: 0 };
+  }
+  if (state.official.isHanhHam && rank >= 5) {
+    return { ok: false, reason: 'Quyên quan hư hàm không thể chạy vượt trần Ngũ phẩm', cost, successChance: 0 };
+  }
+  const spec = getOfficialRankSpec(rank);
+  const halfTenure = Math.floor((spec?.tenureDaysRequired ?? 1080) / 2);
+  const elapsed = state.profile.totalDays - state.official.lastReviewDay;
+  if (elapsed < halfTenure) {
+    return {
+      ok: false,
+      reason: `Cần giữ chức ít nhất nửa nhiệm kỳ (còn ${halfTenure - elapsed} ngày) mới chạy đặc cách được`,
+      cost,
+      successChance: 0,
+    };
+  }
+  const lastAttempt = state.eventCooldowns['bribe_promote'] ?? -99999;
+  if (state.profile.totalDays - lastAttempt < 360) {
+    return { ok: false, reason: 'Vừa chạy chức gần đây, cần đợi 1 năm tránh bị Ngự sử soi xét', cost, successChance: 0 };
+  }
+  let successChance = 0.65;
+  if (state.official.faction === 'quyen_than' || state.official.faction === 'yem_dang') successChance += 0.15;
+  if (state.world.worldState === 'binh_on') successChance -= 0.15;
+  if (state.official.scandalRisk >= 50) successChance -= 0.2;
+  successChance = Math.max(0.2, Math.min(0.9, successChance));
+
+  if (state.assets.wealthCopper < cost) {
+    return { ok: false, reason: `Cần ${cost}đ để đút lót Bộ Lại / Quyền thần`, cost, successChance };
+  }
+  return { ok: true, cost, successChance };
+}
+
+export function bribeForEarlyPromotion(state: ActiveLifeState): ActiveLifeState {
+  const elig = canBribeForPromotion(state);
+  if (!elig.ok || !state.official) return state;
+
+  const off = state.official;
+  const roll = mulberry32Next(state.prngState);
+  let next: ActiveLifeState = {
+    ...state,
+    prngState: roll.nextState,
+    eventCooldowns: { ...state.eventCooldowns, bribe_promote: state.profile.totalDays },
+  };
+
+  if (roll.value <= elig.successChance) {
+    const nextRank = off.rank + 1;
+    const nextSpec = getOfficialRankSpec(nextRank)!;
+    const newTitle = nextSpec.titles[off.track];
+    const { posting, nextPrng } = pickPostingByAvoidance(nextRank, off.track, next.prngState);
+    next = applyEffects(
+      { ...next, prngState: nextPrng },
+      {
+        copper: -elig.cost,
+        scandal_risk: 20,
+        infamy: 8,
+        happiness: 8,
+        milestone_title: `Đặc cách thăng ${nextSpec.gradeLabel} (Chạy chức)`,
+      },
+    );
+    return {
+      ...next,
+      officialRank: nextRank,
+      official: {
+        ...off,
+        rank: nextRank,
+        title: newTitle,
+        posting,
+        tenureStartDay: next.profile.totalDays,
+        lastReviewDay: next.profile.totalDays,
+        scandalRisk: Math.min(100, off.scandalRisk + 20),
+      },
+      profile: { ...next.profile, currentRole: newTitle },
+      logs: appendLog(
+        next.logs,
+        next.profile.totalDays,
+        'warning',
+        `Nhờ đút lót ${elig.cost}đ cho Bộ Lại/Quyền thần, bạn được đặc cách thăng lên ${nextSpec.gradeLabel} · ${newTitle} (Hiềm nghi +20)!`,
+      ),
+    };
+  }
+
+  // Failed bribe
+  const exposed = off.scandalRisk >= 65;
+  next = applyEffects(next, {
+    copper: -elig.cost,
+    scandal_risk: 22,
+    imperial_favor: -10,
+    official_rank_delta: exposed ? -1 : 0,
+    infamy: 12,
+    happiness: -12,
+  });
+  return {
+    ...next,
+    logs: appendLog(
+      next.logs,
+      next.profile.totalDays,
+      'warning',
+      exposed
+        ? `Chạy chức thất bại và bị Ngự sử Thanh lưu tố ngược! Mất trắng ${elig.cost}đ và bị giáng 1 phẩm!`
+        : `Đút lót chạy chức bất thành, mất trắng ${elig.cost}đ (Hiềm nghi +22, Thánh sủng -10).`,
+    ),
+  };
+}

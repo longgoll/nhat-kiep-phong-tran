@@ -29,6 +29,7 @@ import {
 import {
   COMMERCIAL_PROPERTY_IDS,
   FACTION_LABELS,
+  canBribeForPromotion,
   canRequestKhaoKhoa,
   checkHousingTiemLe,
   checkOfficialPropertyRule,
@@ -41,6 +42,7 @@ import {
   manageOfficialStaff,
   rewardMilitaryTroops,
   sendSeasonalSuperiorGift,
+  bribeForEarlyPromotion,
 } from '../engine/officialSystem';
 import { getAgeYears } from '../types/activeLife';
 import { getWorldStateLabel } from '../engine/daySimulator';
@@ -507,18 +509,33 @@ export function ProgressionModules() {
                   )}
                 </div>
 
-                {life.officialRank < 9 && (
-                  <button
-                    type="button"
-                    disabled={!khaoKhoa.ok}
-                    onClick={() => applyLifeMutation(appointOrPromoteOfficial)}
-                    className="w-full py-2 rounded bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-stone-950 font-bold cursor-pointer"
-                  >
-                    {khaoKhoa.ok
-                      ? `Dâng sớ xin Khảo khóa xét thăng ${getOfficialRankSpec(life.officialRank + 1)?.gradeLabel ?? 'Đại thần'}`
-                      : khaoKhoa.reason}
-                  </button>
-                )}
+                {life.officialRank < 9 && (() => {
+                  const bribeElig = canBribeForPromotion(life);
+                  return (
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        disabled={!khaoKhoa.ok}
+                        onClick={() => applyLifeMutation(appointOrPromoteOfficial)}
+                        className="w-full py-2 rounded bg-sky-600 hover:bg-sky-500 disabled:opacity-40 text-stone-950 font-bold cursor-pointer"
+                      >
+                        {khaoKhoa.ok
+                          ? `Dâng sớ xin Khảo khóa xét thăng ${getOfficialRankSpec(life.officialRank + 1)?.gradeLabel ?? 'Đại thần'}`
+                          : khaoKhoa.reason}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!bribeElig.ok}
+                        onClick={() => applyLifeMutation(bribeForEarlyPromotion)}
+                        className="w-full py-1.5 rounded bg-rose-950/70 hover:bg-rose-900/70 border border-rose-700/60 disabled:opacity-40 text-rose-200 font-semibold cursor-pointer"
+                      >
+                        {bribeElig.ok
+                          ? `Chạy chức / Đặc cách đề bạt (-${formatCopper(bribeElig.cost)} · Thành công ~${Math.round(bribeElig.successChance * 100)}% · Hiềm nghi +20)`
+                          : `Chạy chức (${bribeElig.reason})`}
+                      </button>
+                    </div>
+                  );
+                })()}
               </>
             );
           })()}

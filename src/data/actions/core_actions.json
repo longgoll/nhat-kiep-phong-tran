@@ -128,8 +128,8 @@
       "stamina": 25
     },
     "rewards": {
-      "copper": 4,
-      "rice": 0.5,
+      "copper": 5,
+      "rice": 0.6,
       "happiness": -0.015
     }
   },
@@ -155,7 +155,7 @@
       "stamina": 35
     },
     "rewards": {
-      "copper": 7,
+      "copper": 9,
       "martial": 0.02,
       "health": -0.012,
       "happiness": -0.015
@@ -183,7 +183,7 @@
       "stamina": 20
     },
     "rewards": {
-      "copper": 5,
+      "copper": 7,
       "craft_trade": 0.04
     }
   },
@@ -316,7 +316,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 7,
+      "copper": 9,
       "craft_trade": 0.06
     }
   },
@@ -533,7 +533,7 @@
       "stamina": 18
     },
     "rewards": {
-      "copper": 6,
+      "copper": 8,
       "education": 0.04,
       "fame": 0.01
     }
@@ -561,7 +561,7 @@
       "stamina": 20
     },
     "rewards": {
-      "copper": 6,
+      "copper": 8,
       "education": 0.04
     }
   },
@@ -587,7 +587,7 @@
       "stamina": 20
     },
     "rewards": {
-      "copper": 11,
+      "copper": 12,
       "education": 0.04,
       "craft_trade": 0.04
     }
@@ -696,7 +696,7 @@
       "stamina": 24
     },
     "rewards": {
-      "copper": 10,
+      "copper": 11,
       "craft_trade": 0.06,
       "relationships": 0.03
     }
@@ -750,7 +750,7 @@
       "stamina": 26
     },
     "rewards": {
-      "copper": 7,
+      "copper": 9,
       "craft_trade": 0.06
     }
   },

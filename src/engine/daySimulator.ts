@@ -75,16 +75,16 @@ const LIFESTYLE_TABLE: Record<
 > = {
   nhin_doi: { rice: 0, copper: 0, stamina: 0, health: -1.8, happiness: -1.2 },
   chao_loang: { rice: 0.5, copper: 0, stamina: 5, health: -0.04, happiness: -0.05 },
-  com_rau: { rice: 1.0, copper: 5, stamina: 15, health: 0, happiness: 0 },
+  com_rau: { rice: 0.8, copper: 2, stamina: 15, health: 0, happiness: 0 },
   thit_ca: { rice: 1.5, copper: 30, stamina: 30, health: 0.015, happiness: 0.012 },
   son_hao: { rice: 2.0, copper: 120, stamina: 40, health: 0.025, happiness: 0.02, fame: 0.015 },
 };
 
 const HOUSING_DAILY_UPKEEP: Record<HousingTier, number> = {
   gam_cau: 0,
-  nha_tranh: 2,
-  nha_gach: 8,
-  phu_de: 25,
+  nha_tranh: 1,
+  nha_gach: 5,
+  phu_de: 18,
 };
 
 const WORLD_LIVING_COST_MULT: Record<ActiveLifeState['world']['worldState'], number> = {
