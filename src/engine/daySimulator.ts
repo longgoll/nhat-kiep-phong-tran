@@ -28,6 +28,7 @@ import {
   ensureValidLifeFocus,
   generateAnnualLifeFlavorLogs,
   getCreditLimitCopper,
+  processRentalExpirations,
   getDailyFocusModifiers,
   runAnnualAutoActions,
 } from './adultLifeActions';
@@ -527,6 +528,8 @@ export function advanceDays(
         yearInEra: isBirthday ? state.world.yearInEra + 1 : state.world.yearInEra,
       },
     };
+
+    state = processRentalExpirations(state);
 
     if (isNewSeason) {
       state = rollWorldStateOnNewSeason(state);

@@ -25,9 +25,8 @@ export function applyMoodSocialDelta(current: number, delta: number): number {
     return clamp(Number((current + delta).toFixed(2)), 0, 100);
   }
   let mult = 1.0;
-  if (current >= 92) mult = 0.12;
-  else if (current >= 85) mult = 0.3;
-  else if (current >= 75) mult = 0.55;
+  if (current >= 94) mult = 0.12;
+  else if (current >= 88) mult = 0.35;
   return clamp(Number((current + delta * mult).toFixed(2)), 0, 100);
 }
 

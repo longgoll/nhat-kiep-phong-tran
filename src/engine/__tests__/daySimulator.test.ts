@@ -309,4 +309,62 @@ describe('Day Simulator (MVP 2)', () => {
     expect(res2.pendingEvent?.id).toBe('evt_delay_b');
     expect(res2.state.delayedEvents.length).toBe(0);
   });
+
+  it('applies weather/market risk to timed rentals and logs expiration after 90 days', () => {
+    const baseRaw = createNewLife(808);
+    const base = {
+      ...baseRaw,
+      profile: { ...baseRaw.profile, originClass: 'ban_nong' as const, totalDays: 20 * 360 },
+      assets: { ...baseRaw.assets, wealthCopper: 2000, rice: 200 },
+    };
+
+    // Market stall rental across multiple seeds should include both loss and profit outcomes in chien_tranh
+    const stallDeltas: number[] = [];
+    for (let s = 1; s <= 25; s++) {
+      const st = {
+        ...base,
+        prngState: s * 137,
+        world: { ...base.world, worldState: 'chien_tranh' as const },
+      };
+      const res = executeInstantAdultAction(st, 'inst_rent_market_stall');
+      expect(res.ok).toBe(true);
+      stallDeltas.push(res.state.assets.wealthCopper - st.assets.wealthCopper);
+    }
+    expect(stallDeltas.some((d) => d < 0)).toBe(true);
+    expect(stallDeltas.some((d) => d > 0)).toBe(true);
+
+    // Land rental in mat_mua should include crop failure (0 rice) and partial harvest
+    const riceDeltas: number[] = [];
+    for (let s = 1; s <= 25; s++) {
+      const st = {
+        ...base,
+        prngState: s * 137,
+        world: { ...base.world, worldState: 'mat_mua' as const },
+      };
+      const res = executeInstantAdultAction(st, 'inst_rent_land_season');
+      expect(res.ok).toBe(true);
+      riceDeltas.push(res.state.assets.rice - st.assets.rice);
+    }
+    expect(riceDeltas.some((d) => d === 0)).toBe(true);
+    expect(riceDeltas.some((d) => d > 0)).toBe(true);
+
+    // Advancing 90 days after renting logs expiration in Ghi Chép Cuộc Đời
+    const rented = executeInstantAdultAction(base, 'inst_rent_market_stall');
+    expect(rented.ok).toBe(true);
+    const after89 = advanceDays(rented.state, 89, ACTIONS, [], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: false,
+    });
+    expect(after89.state.logs.some((l) => l.text.includes('hết hạn 90 ngày thuê sạp chợ'))).toBe(false);
+
+    const after90 = advanceDays(after89.state, 1, ACTIONS, [], {
+      pauseOnBirthday: false,
+      pauseOnLowHealth: false,
+      pauseOnLowHappiness: false,
+      pauseOnNoFood: false,
+    });
+    expect(after90.state.logs.some((l) => l.text.includes('hết hạn 90 ngày thuê sạp chợ'))).toBe(true);
+  });
 });

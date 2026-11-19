@@ -10,6 +10,7 @@ import {
 } from '../types/activeLife';
 import type { EffectSpec } from '../types/dsl';
 import { appendLog, applyEffects } from './effectApplier';
+import { mulberry32Next } from './prng';
 import { INTEREST_LABELS } from './lifeInitializer';
 import { pickWeightedIndex, randomInt } from './prng';
 
@@ -110,6 +111,8 @@ export interface InstantAdultActionDef {
   excludeOrigins?: OriginClass[];
   effects: EffectSpec;
   levelUpHobby?: boolean;
+  isRental?: boolean;
+  rentalExpiryLog?: string;
   logText: string;
 }
 
@@ -213,10 +216,12 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
   {
     id: 'inst_rent_room',
     title: 'Thuê gian trọ bình dân tránh mưa nắng',
-    subtitle: 'Chỗ ở → Nhà tranh · Sức khỏe +5 · Hạnh phúc +8',
+    subtitle: 'Chỗ ở → Nhà tranh · Kỳ hạn 90 ngày · Sức khỏe +5 · Hạnh phúc +8',
     costCopper: 180,
     cooldownDays: 90,
     requiresHousingIn: ['gam_cau'],
+    isRental: true,
+    rentalExpiryLog: 'Đã hết hạn kỳ thuê trọ 90 ngày; tiền trọ vẫn được tính vào chi phí nhà ở hằng ngày.',
     effects: {
       set_housing: 'nha_tranh',
       health: 5,
@@ -227,10 +232,12 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
   {
     id: 'inst_rent_land_season',
     title: 'Thuê 2 sào ruộng công cày thêm vụ mùa',
-    subtitle: 'Nhận +7 đấu gạo · Hạnh phúc +2',
+    subtitle: 'Nhận 0–10 đấu gạo tùy mùa vụ · Kỳ hạn 90 ngày (Có rủi ro mất mùa)',
     costCopper: 120,
     cooldownDays: 90,
     excludeOrigins: ['hoang_toc', 'quan_lai'],
+    isRental: true,
+    rentalExpiryLog: 'Đã mãn hạn kỳ thuê 2 sào ruộng công vụ vừa qua, có thể thuê lại cho vụ mới.',
     effects: {
       rice: 7,
       happiness: 2,
@@ -241,10 +248,12 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
   {
     id: 'inst_rent_market_stall',
     title: 'Thuê sạp chợ buôn chuyến ngắn ngày',
-    subtitle: 'Thương tài +1.5 · Thu về 240đ (+60đ lãi)',
+    subtitle: 'Thương tài +1.5 · Thu 95–320đ tùy chợ · Kỳ hạn 90 ngày (Có rủi ro lỗ vốn)',
     costCopper: 180,
     cooldownDays: 90,
     excludeOrigins: ['hoang_toc', 'quan_lai'],
+    isRental: true,
+    rentalExpiryLog: 'Đã hết hạn 90 ngày thuê sạp chợ buôn chuyến, có thể thuê lại kỳ mới.',
     effects: {
       copper: 240,
       craft_trade: 1.5,
@@ -1016,10 +1025,91 @@ export function executeInstantAdultAction(
   }
 
   const scaledEffects: EffectSpec = { ...def.effects };
-  if (def.id === 'inst_rent_land_season' && inputState.world.worldState === 'mat_mua') {
-    scaledEffects.rice = 3;
+  let customLogText = def.logText;
+  let nextPrngState = inputState.prngState;
+
+  if (def.id === 'inst_rent_land_season') {
+    const roll = mulberry32Next(nextPrngState);
+    nextPrngState = roll.nextState;
+    const ws = inputState.world.worldState;
+    if (ws === 'mat_mua') {
+      if (roll.value < 0.3) {
+        scaledEffects.rice = 0;
+        scaledEffects.happiness = -3;
+        customLogText =
+          'Thuê 2 sào ruộng công gặp đúng năm đại hạn mất mùa, lúa chết khô gần hết khiến bạn trắng tay mất vốn.';
+      } else if (roll.value < 0.85) {
+        scaledEffects.rice = 2;
+        scaledEffects.happiness = -1;
+        customLogText =
+          'Thuê 2 sào ruộng công giữa mùa mất mùa, đất khô nẻ chỉ gặt vớt vát được 2 đấu gạo.';
+      } else {
+        scaledEffects.rice = 4;
+        scaledEffects.happiness = 1;
+        customLogText =
+          'Dù trời hạn mất mùa nhưng nhờ chịu khó tát nước đêm ngày, 2 sào ruộng thuê cũng thu về được 4 đấu gạo.';
+      }
+    } else if (ws === 'chien_tranh' || ws === 'dich_benh') {
+      if (roll.value < 0.25) {
+        scaledEffects.rice = 1;
+        scaledEffects.happiness = -2;
+        customLogText =
+          'Thời cuộc loạn lạc, ruộng thuê bị giẫm phá và trưng thu bớt nên chỉ còn thu lại vỏn vẹn 1 đấu gạo.';
+      } else if (roll.value < 0.75) {
+        scaledEffects.rice = 4;
+        scaledEffects.happiness = 0;
+        customLogText =
+          'Thuê 2 sào ruộng công trong lúc thời thế bất ổn, thu hoạch giảm sút còn 4 đấu gạo.';
+      } else {
+        scaledEffects.rice = 7;
+        scaledEffects.happiness = 2;
+        customLogText =
+          'May mắn giữ được 2 sào ruộng thuê yên ổn giữa buổi loạn lạc, thu hoạch đủ 7 đấu gạo.';
+      }
+    } else {
+      if (roll.value < 0.15) {
+        scaledEffects.rice = 3;
+        scaledEffects.happiness = -1;
+        customLogText =
+          'Thuê 2 sào ruộng công nhưng nửa vụ gặp sâu bệnh và mưa dầm, năng suất giảm chỉ thu được 3 đấu gạo.';
+      } else if (roll.value < 0.8) {
+        scaledEffects.rice = 7;
+        scaledEffects.happiness = 2;
+        customLogText =
+          'Bạn bỏ tiền thuê 2 sào ruộng công chăm bón thuận lợi, thu hoạch được 7 đấu thóc gạo dự trữ.';
+      } else {
+        scaledEffects.rice = 10;
+        scaledEffects.happiness = 3;
+        customLogText =
+          'Mưa thuận gió hòa, 2 sào ruộng công thuê được mùa bội thu hẳn 10 đấu gạo đầy bồ!';
+      }
+    }
+  } else if (def.id === 'inst_rent_market_stall') {
+    const roll = mulberry32Next(nextPrngState);
+    nextPrngState = roll.nextState;
+    const ws = inputState.world.worldState;
+    const tradeSkillBonus = Math.min(0.12, inputState.stats.craftTrade * 0.0015);
+    const lossProb =
+      (ws === 'binh_on' ? 0.18 : ws === 'mat_mua' ? 0.32 : 0.42) - tradeSkillBonus * 0.5;
+    const boomProb = (ws === 'binh_on' ? 0.26 : 0.14) + tradeSkillBonus;
+
+    if (roll.value < lossProb) {
+      const lossReturn = Math.round((ws === 'chien_tranh' ? 95 : 120) + inputState.stats.craftTrade * 0.5);
+      scaledEffects.copper = Math.min(effectiveCost - 25, lossReturn);
+      scaledEffects.craft_trade = 1.0;
+      scaledEffects.happiness = -2;
+      customLogText = `Thuê sạp chợ gặp cảnh chợ chiều ế ẩm, hàng hóa ẩm mốc phải bán tháo chỉ thu hồi được ${scaledEffects.copper}đ (lỗ vốn).`;
+    } else if (roll.value < lossProb + boomProb) {
+      scaledEffects.copper = Math.round(295 + inputState.stats.craftTrade * 2.0);
+      scaledEffects.craft_trade = 1.8;
+      scaledEffects.happiness = 2;
+      customLogText = `Phiên chợ đông khách bất ngờ, sạp hàng của bạn bán đắt như tôm tươi, thu về ${scaledEffects.copper}đ!`;
+    } else {
+      const mult = ws === 'binh_on' ? 1.05 : ws === 'mat_mua' ? 0.92 : 0.85;
+      scaledEffects.copper = Math.round(230 * mult + inputState.stats.craftTrade * 1.4);
+      customLogText = `Bạn thuê góc sạp chợ phiên bán hàng khô và vải vóc, xoay vòng vốn thu về ${scaledEffects.copper}đ.`;
+    }
   } else if (
-    def.id === 'inst_rent_market_stall' ||
     def.id === 'inst_startup_tea_cart' ||
     def.id === 'inst_startup_craft_guild'
   ) {
@@ -1040,10 +1130,13 @@ export function executeInstantAdultAction(
     scaledEffects.copper = Math.round(baseGain * plagueMult + inputState.stats.craftTrade * 2);
   }
 
-  let state = applyEffects(inputState, {
-    ...scaledEffects,
-    copper: -effectiveCost + (scaledEffects.copper ?? 0),
-  });
+  let state = applyEffects(
+    { ...inputState, prngState: nextPrngState },
+    {
+      ...scaledEffects,
+      copper: -effectiveCost + (scaledEffects.copper ?? 0),
+    },
+  );
 
   const hobbyLevels = { ...(state.hobbyLevels ?? {}) };
   let extraLog = '';
@@ -1070,11 +1163,34 @@ export function executeInstantAdultAction(
       state.logs,
       state.profile.totalDays,
       'survival',
-      `${def.logText}${extraLog} (-${effectiveCost}đ)`,
+      `${customLogText}${extraLog} (-${effectiveCost}đ)`,
     ),
   };
 
-  return { ok: true, state, message: `${def.logText}${extraLog}` };
+  return { ok: true, state, message: `${customLogText}${extraLog}` };
+}
+
+/**
+ * Checks if any timed rental action (90-day lease) expired on the current day and appends
+ * a clear notification into Ghi Chép Cuộc Đời.
+ */
+export function processRentalExpirations(inputState: ActiveLifeState): ActiveLifeState {
+  const cooldowns = inputState.actionCooldowns;
+  if (!cooldowns) return inputState;
+
+  let state = inputState;
+  const currentDay = state.profile.totalDays;
+  for (const def of INSTANT_ADULT_ACTIONS) {
+    if (!def.isRental || !def.rentalExpiryLog) continue;
+    const startDay = cooldowns[def.id];
+    if (startDay !== undefined && currentDay === startDay + def.cooldownDays) {
+      state = {
+        ...state,
+        logs: appendLog(state.logs, currentDay, 'survival', def.rentalExpiryLog),
+      };
+    }
+  }
+  return state;
 }
 
 export function getDailyFocusModifiers(focusId: string): {

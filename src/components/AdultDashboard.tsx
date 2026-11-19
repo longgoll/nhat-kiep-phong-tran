@@ -1038,7 +1038,9 @@ export function AdultDashboard() {
                           <div className="text-[10px] text-rose-400 font-medium">Tạm khóa do thời cuộc loạn lạc</div>
                         )}
                         {cd > 0 && (
-                          <div className="text-[10px] text-sky-400 font-mono">Chờ {cd} ngày</div>
+                          <div className="text-[10px] text-sky-400 font-mono">
+                            {act.isRental ? `Đang thuê · Hết hạn sau ${cd} ngày` : `Chờ ${cd} ngày`}
+                          </div>
                         )}
                       </button>
                     );
