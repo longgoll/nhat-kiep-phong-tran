@@ -129,7 +129,7 @@
     },
     "rewards": {
       "copper": 4,
-      "rice": 1,
+      "rice": 0.5,
       "happiness": -0.015
     }
   },
@@ -316,7 +316,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 14,
+      "copper": 7,
       "craft_trade": 0.06
     }
   },
@@ -362,7 +362,7 @@
       "stamina": 24
     },
     "rewards": {
-      "copper": 150,
+      "copper": 12,
       "fame": 0.08,
       "relationships": 0.03
     }
@@ -386,7 +386,7 @@
       "stamina": 24
     },
     "rewards": {
-      "copper": 140,
+      "copper": 10,
       "martial": 0.08,
       "fame": 0.06
     }
@@ -409,7 +409,7 @@
       "stamina": 12
     },
     "rewards": {
-      "copper": 280,
+      "copper": 35,
       "infamy": 0.15,
       "fame": -0.06
     }
@@ -433,7 +433,7 @@
       "stamina": 24
     },
     "rewards": {
-      "copper": 95,
+      "copper": 14,
       "martial": 0.1,
       "fame": 0.04
     }
@@ -459,7 +459,7 @@
       "stamina": 18
     },
     "rewards": {
-      "copper": 85,
+      "copper": 10,
       "relationships": 0.06,
       "education": 0.04
     }
@@ -483,7 +483,7 @@
       "stamina": 20
     },
     "rewards": {
-      "copper": 85,
+      "copper": 18,
       "craft_trade": 0.07,
       "infamy": 0.03
     }
@@ -507,7 +507,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 95,
+      "copper": 20,
       "martial": 0.06,
       "infamy": 0.08
     }
@@ -533,7 +533,7 @@
       "stamina": 18
     },
     "rewards": {
-      "copper": 32,
+      "copper": 6,
       "education": 0.04,
       "fame": 0.01
     }
@@ -561,7 +561,7 @@
       "stamina": 20
     },
     "rewards": {
-      "copper": 11,
+      "copper": 6,
       "education": 0.04
     }
   },
@@ -587,7 +587,7 @@
       "stamina": 20
     },
     "rewards": {
-      "copper": 20,
+      "copper": 11,
       "education": 0.04,
       "craft_trade": 0.04
     }
@@ -614,7 +614,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 28,
+      "copper": 14,
       "education": 0.05,
       "fame": 0.03
     }
@@ -641,7 +641,7 @@
       "stamina": 20
     },
     "rewards": {
-      "copper": 88,
+      "copper": 20,
       "education": 0.06,
       "fame": 0.05,
       "relationships": 0.03
@@ -669,7 +669,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 36,
+      "copper": 17,
       "education": 0.05,
       "fame": 0.05
     }
@@ -696,7 +696,7 @@
       "stamina": 24
     },
     "rewards": {
-      "copper": 18,
+      "copper": 10,
       "craft_trade": 0.06,
       "relationships": 0.03
     }
@@ -723,7 +723,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 38,
+      "copper": 18,
       "craft_trade": 0.08,
       "fame": 0.03
     }
@@ -750,7 +750,7 @@
       "stamina": 26
     },
     "rewards": {
-      "copper": 14,
+      "copper": 7,
       "craft_trade": 0.06
     }
   },
@@ -776,7 +776,7 @@
       "stamina": 24
     },
     "rewards": {
-      "copper": 36,
+      "copper": 17,
       "craft_trade": 0.07,
       "fame": 0.04
     }
@@ -803,7 +803,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 12,
+      "copper": 8,
       "martial": 0.04
     }
   },
@@ -829,7 +829,7 @@
       "stamina": 28
     },
     "rewards": {
-      "copper": 26,
+      "copper": 13,
       "martial": 0.06,
       "fame": 0.02
     }
@@ -856,7 +856,7 @@
       "stamina": 26
     },
     "rewards": {
-      "copper": 40,
+      "copper": 19,
       "martial": 0.08,
       "fame": 0.05
     }
@@ -883,8 +883,8 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 32,
-      "rice": 0.8,
+      "copper": 15,
+      "rice": 0.4,
       "craft_trade": 0.03,
       "fame": 0.03
     }
@@ -911,7 +911,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 38,
+      "copper": 18,
       "craft_trade": 0.06,
       "infamy": 0.09
     }
@@ -938,7 +938,7 @@
       "stamina": 24
     },
     "rewards": {
-      "copper": 22,
+      "copper": 11,
       "craft_trade": 0.05
     }
   },
@@ -964,7 +964,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 36,
+      "copper": 18,
       "craft_trade": 0.07,
       "fame": 0.02
     }
@@ -991,7 +991,7 @@
       "stamina": 20
     },
     "rewards": {
-      "copper": 38,
+      "copper": 19,
       "education": 0.07,
       "fame": 0.05
     }
@@ -1018,7 +1018,7 @@
       "stamina": 22
     },
     "rewards": {
-      "copper": 45,
+      "copper": 22,
       "education": 0.06,
       "fame": 0.07
     }
@@ -1045,7 +1045,7 @@
       "stamina": 25
     },
     "rewards": {
-      "copper": 42,
+      "copper": 21,
       "craft_trade": 0.08,
       "fame": 0.04
     }
@@ -1072,8 +1072,8 @@
       "stamina": 26
     },
     "rewards": {
-      "copper": 24,
-      "rice": 1.2,
+      "copper": 12,
+      "rice": 0.6,
       "craft_trade": 0.03
     }
   }

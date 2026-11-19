@@ -381,6 +381,10 @@ export function ProgressionModules() {
             const upkeep = getOfficialMonthlyUpkeepCopper(off);
             const seasonKey = `${ageYears}_${life.world.season}`;
             const sentBangKinh = off.lastSeasonalGiftKey === seasonKey;
+            const sentNhaHoi = off.lastNhaHoiSeasonKey === seasonKey;
+            const sentRelief = off.lastReliefSeasonKey === seasonKey;
+            const sentMilReward = off.lastMilitaryRewardSeasonKey === seasonKey;
+            const sentMilGear = off.lastMilitaryGearSeasonKey === seasonKey;
             const bangKinhCost = life.officialRank * 800;
             const nhaHoiCost = life.officialRank * 2200;
             const reliefCost = Math.max(1500, life.officialRank * 1200);
@@ -466,38 +470,38 @@ export function ProgressionModules() {
                     <>
                       <button
                         type="button"
-                        disabled={life.assets.wealthCopper < reliefCost}
+                        disabled={sentMilReward || life.assets.wealthCopper < reliefCost}
                         onClick={() => applyLifeMutation(rewardMilitaryTroops)}
                         className="px-2.5 py-1.5 rounded bg-emerald-900/60 hover:bg-emerald-800/60 border border-emerald-700/50 text-emerald-200 disabled:opacity-40 cursor-pointer"
                       >
-                        Khao thưởng quân sĩ (-{formatCopper(reliefCost)})
+                        {sentMilReward ? 'Đã khao quân mùa này' : `Khao thưởng quân sĩ (-${formatCopper(reliefCost)})`}
                       </button>
                       <button
                         type="button"
-                        disabled={life.assets.wealthCopper < gearCost}
+                        disabled={sentMilGear || life.assets.wealthCopper < gearCost}
                         onClick={() => applyLifeMutation(equipMilitaryGear)}
                         className="px-2.5 py-1.5 rounded bg-amber-900/50 hover:bg-amber-800/50 border border-amber-700/50 text-amber-200 disabled:opacity-40 cursor-pointer"
                       >
-                        Sắm chiến mã &amp; Giáp trụ (-{formatCopper(gearCost)})
+                        {sentMilGear ? 'Đã sắm quân khí mùa này' : `Sắm chiến mã & Giáp trụ (-${formatCopper(gearCost)})`}
                       </button>
                     </>
                   ) : (
                     <>
                       <button
                         type="button"
-                        disabled={life.assets.wealthCopper < nhaHoiCost}
+                        disabled={sentNhaHoi || life.assets.wealthCopper < nhaHoiCost}
                         onClick={() => applyLifeMutation((s) => sendSeasonalSuperiorGift(s, 'nha_hoi'))}
                         className="px-2.5 py-1.5 rounded bg-stone-800 hover:bg-stone-700 disabled:opacity-40 cursor-pointer"
                       >
-                        Tặng Nhã hối cổ vật (-{formatCopper(nhaHoiCost)})
+                        {sentNhaHoi ? 'Đã tặng Nhã hối mùa này' : `Tặng Nhã hối cổ vật (-${formatCopper(nhaHoiCost)})`}
                       </button>
                       <button
                         type="button"
-                        disabled={life.assets.wealthCopper < reliefCost}
+                        disabled={sentRelief || life.assets.wealthCopper < reliefCost}
                         onClick={() => applyLifeMutation(donateDisasterReliefAsOfficial)}
                         className="px-2.5 py-1.5 rounded bg-emerald-900/60 hover:bg-emerald-800/60 border border-emerald-700/50 text-emerald-200 disabled:opacity-40 cursor-pointer"
                       >
-                        Phát chẩn cứu dân (-{formatCopper(reliefCost)})
+                        {sentRelief ? 'Đã phát chẩn mùa này' : `Phát chẩn cứu dân (-${formatCopper(reliefCost)})`}
                       </button>
                     </>
                   )}

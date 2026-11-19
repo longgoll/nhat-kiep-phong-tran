@@ -100,6 +100,10 @@ export interface OfficialProfile {
   hasAdvisor: boolean;
   proxyBusinessIds: string[];
   lastSeasonalGiftKey?: string;
+  lastNhaHoiSeasonKey?: string;
+  lastReliefSeasonKey?: string;
+  lastMilitaryRewardSeasonKey?: string;
+  lastMilitaryGearSeasonKey?: string;
   dingYouUntilDay?: number;
   savedRankBeforeDingYou?: number;
   savedTrackBeforeDingYou?: OfficialTrack;

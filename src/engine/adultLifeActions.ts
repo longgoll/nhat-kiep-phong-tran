@@ -1306,7 +1306,7 @@ export function getDailyFocusModifiers(focusId: string): {
   switch (focusId) {
     case 'cong_danh':
       return {
-        copperMult: 1.2,
+        copperMult: 1.12,
         studyMartialMult: 1.0,
         dailyEffects: { health: -0.01, relationships: -0.008 },
         dailyCopperCost: 0,

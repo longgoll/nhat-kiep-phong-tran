@@ -658,6 +658,7 @@ export function sendSeasonalSuperiorGift(state: ActiveLifeState, kind: 'bang_kin
   if (!state.official || state.officialRank <= 0) return state;
   const seasonKey = `${getAgeYears(state.profile.totalDays)}_${state.world.season}`;
   if (kind === 'bang_kinh' && state.official.lastSeasonalGiftKey === seasonKey) return state;
+  if (kind === 'nha_hoi' && state.official.lastNhaHoiSeasonKey === seasonKey) return state;
 
   const cost = kind === 'bang_kinh' ? state.officialRank * 800 : state.officialRank * 2200;
   if (state.assets.wealthCopper < cost) return state;
@@ -680,6 +681,7 @@ export function sendSeasonalSuperiorGift(state: ActiveLifeState, kind: 'bang_kin
     official: {
       ...state.official,
       lastSeasonalGiftKey: kind === 'bang_kinh' ? seasonKey : state.official.lastSeasonalGiftKey,
+      lastNhaHoiSeasonKey: kind === 'nha_hoi' ? seasonKey : state.official.lastNhaHoiSeasonKey,
       imperialFavor: Math.min(100, state.official.imperialFavor + favorDelta),
       merit: state.official.merit + meritDelta,
       scandalRisk: Math.min(100, state.official.scandalRisk + scandalDelta),
@@ -698,6 +700,8 @@ export function sendSeasonalSuperiorGift(state: ActiveLifeState, kind: 'bang_kin
 
 export function donateDisasterReliefAsOfficial(state: ActiveLifeState): ActiveLifeState {
   if (!state.official || state.officialRank <= 0) return state;
+  const seasonKey = `${getAgeYears(state.profile.totalDays)}_${state.world.season}`;
+  if (state.official.lastReliefSeasonKey === seasonKey) return state;
   const cost = Math.max(1500, state.officialRank * 1200);
   if (state.assets.wealthCopper < cost) return state;
 
@@ -710,6 +714,7 @@ export function donateDisasterReliefAsOfficial(state: ActiveLifeState): ActiveLi
     ...next,
     official: {
       ...state.official,
+      lastReliefSeasonKey: seasonKey,
       publicTrust: Math.min(100, state.official.publicTrust + 10),
       merit: state.official.merit + 6,
       scandalRisk: Math.max(0, state.official.scandalRisk - 4),
@@ -797,6 +802,8 @@ export function triggerKimCachTongNhung(state: ActiveLifeState): ActiveLifeState
 
 export function rewardMilitaryTroops(state: ActiveLifeState): ActiveLifeState {
   if (!state.official || state.official.track !== 'vo' || state.officialRank <= 0) return state;
+  const seasonKey = `${getAgeYears(state.profile.totalDays)}_${state.world.season}`;
+  if (state.official.lastMilitaryRewardSeasonKey === seasonKey) return state;
   const cost = Math.max(1500, state.officialRank * 1200);
   if (state.assets.wealthCopper < cost) return state;
   const next = applyEffects(state, {
@@ -808,6 +815,7 @@ export function rewardMilitaryTroops(state: ActiveLifeState): ActiveLifeState {
     ...next,
     official: {
       ...state.official,
+      lastMilitaryRewardSeasonKey: seasonKey,
       publicTrust: Math.min(100, state.official.publicTrust + 12),
       merit: state.official.merit + 6,
       imperialFavor: Math.min(100, state.official.imperialFavor + 3),
@@ -823,6 +831,8 @@ export function rewardMilitaryTroops(state: ActiveLifeState): ActiveLifeState {
 
 export function equipMilitaryGear(state: ActiveLifeState): ActiveLifeState {
   if (!state.official || state.official.track !== 'vo' || state.officialRank <= 0) return state;
+  const seasonKey = `${getAgeYears(state.profile.totalDays)}_${state.world.season}`;
+  if (state.official.lastMilitaryGearSeasonKey === seasonKey) return state;
   const cost = Math.max(2000, state.officialRank * 1500);
   if (state.assets.wealthCopper < cost) return state;
   const next = applyEffects(state, {
@@ -832,6 +842,10 @@ export function equipMilitaryGear(state: ActiveLifeState): ActiveLifeState {
   });
   return {
     ...next,
+    official: {
+      ...state.official,
+      lastMilitaryGearSeasonKey: seasonKey,
+    },
     logs: appendLog(
       next.logs,
       next.profile.totalDays,

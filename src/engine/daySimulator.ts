@@ -183,7 +183,7 @@ function scaleActionRewards(
   if (state.stats.happiness < 20) workEfficiency *= 0.7; // -30% despair penalty
   if (state.stats.health < 20) workEfficiency *= 0.75; // -25% illness penalty
 
-  // craftTrade (0-100) boosts trade actions up to 2.0x; worldState dampens trade in war/plague
+  // craftTrade (0-100) boosts trade actions up to 1.25x; worldState dampens trade in war/plague
   let tradeMult = 1.0;
   if (category === 'trade') {
     const worldTradeMult =
@@ -192,9 +192,9 @@ function scaleActionRewards(
         : state.world.worldState === 'dich_benh'
           ? 0.85
           : 1.0;
-    tradeMult = (1 + Math.min(100, state.stats.craftTrade) * 0.01) * worldTradeMult;
+    tradeMult = (1 + Math.min(100, state.stats.craftTrade) * 0.0025) * worldTradeMult;
   } else if (category === 'official') {
-    tradeMult = 1 + Math.max(0, state.officialRank - 1) * 0.15;
+    tradeMult = 1 + Math.max(0, state.officialRank - 1) * 0.08;
   }
 
   const focusMod = getDailyFocusModifiers(state.schedule.lifeFocus);

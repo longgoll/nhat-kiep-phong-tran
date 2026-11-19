@@ -322,8 +322,12 @@ export function getExamEligibility(
     if (state.world.season !== 'spring' || age % 3 !== 1) {
       return { ok: false, reason: 'Thi Hội mở vào Mùa Xuân năm sau kỳ Thi Hương (16, 19, 22... tuổi)', cost: 1000 };
     }
-    if (state.stats.education < 55 && state.stats.martial < 60) {
-      return { ok: false, reason: 'Cần Học thức >= 55 (hoặc Võ nghệ >= 60)', cost: 1000 };
+    if (state.stats.education < 50 && state.stats.martial < 55) {
+      return {
+        ok: false,
+        reason: `Cần Học thức >= 50 (hiện có ${Math.round(state.stats.education)}) hoặc Võ nghệ >= 55`,
+        cost: 1000,
+      };
     }
     if (state.assets.wealthCopper < 1000) {
       return { ok: false, reason: 'Cần 1.000 đồng lộ phí lên kinh', cost: 1000 };

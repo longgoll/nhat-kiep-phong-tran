@@ -134,6 +134,8 @@ function generateDynamicDecisionInternal(
     !state.flags.includes('trong_quan_ngu') &&
     !state.flags.includes('bi_ep_lam_gia_no') &&
     !state.flags.includes('dang_lam_quan') &&
+    !state.flags.includes('do_cu_nhan') &&
+    !state.flags.includes('do_tien_si') &&
     state.officialRank === 0 &&
     (state.eduLevel ?? 0) < 4 &&
     state.livelihoodStatus !== 'prison'
