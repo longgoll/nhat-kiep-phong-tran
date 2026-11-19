@@ -414,15 +414,35 @@ function applyDailyLifestyle(inputState: ActiveLifeState): ActiveLifeState {
     }
 
     if (tier !== inputState.schedule.lifestyle && i === LIFESTYLE_ORDER.length - 1) {
-      state = {
-        ...state,
-        logs: appendLog(
-          state.logs,
-          state.profile.totalDays,
-          'warning',
-          'Hết lương thực và tiền bạc, bạn buộc phải nhịn đói qua ngày!',
-        ),
-      };
+      const lastLog = state.logs[state.logs.length - 1];
+      const alreadyWarnedRecently =
+        lastLog &&
+        lastLog.text.startsWith('Hết lương thực và tiền bạc') &&
+        state.profile.totalDays - lastLog.day < 7;
+      if (!state.isAlive) {
+        const starveReason = 'Chết đói vì hết lương thực và tiền bạc';
+        const starveLogText = `Qua đời ở tuổi ${getAgeYears(state.profile.totalDays)}: ${starveReason}.`;
+        const updatedLogs =
+          lastLog && lastLog.day === state.profile.totalDays && lastLog.text.startsWith('Qua đời ở tuổi')
+            ? [...state.logs.slice(0, -1), { ...lastLog, text: starveLogText }]
+            : appendLog(state.logs, state.profile.totalDays, 'warning', starveLogText, { tone: 'negative' });
+        state = {
+          ...state,
+          deathReason: starveReason,
+          logs: updatedLogs,
+        };
+      } else if (!alreadyWarnedRecently) {
+        state = {
+          ...state,
+          logs: appendLog(
+            state.logs,
+            state.profile.totalDays,
+            'warning',
+            `Hết lương thực và tiền bạc, bạn buộc phải nhịn đói qua ngày! (Sức khỏe còn ${Math.round(state.stats.health)}%)`,
+            { tone: 'negative' },
+          ),
+        };
+      }
     }
 
     return state;

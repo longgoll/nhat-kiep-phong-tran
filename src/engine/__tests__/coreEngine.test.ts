@@ -5,7 +5,12 @@ import { evaluateConditions } from '../conditionEvaluator';
 import { applyAnnualStatMeanReversion, applyEffects } from '../effectApplier';
 import { buildEndingSummary } from '../endingSummary';
 import { breakdownCopper, calculateRicePrice, formatCopper } from '../economy';
-import { getCohortPeerStatusLabel, getCurrentLivelihoodLabel, getEducationLabel } from '../lifeStatus';
+import {
+  getCohortPeerStatusLabel,
+  getCurrentLivelihoodLabel,
+  getEducationLabel,
+  getFocusStatusBadges,
+} from '../lifeStatus';
 import {
   canAffordInstantAction,
   ensureValidLifeFocus,
@@ -595,5 +600,26 @@ describe('Core Engine (MVP 1)', () => {
     expect(bizRes.ok).toBe(true);
     const bizDec = generateDynamicDecision(bizRes.state);
     expect(bizDec?.id).toBe('dec_biz_offers');
+  });
+
+  it('computes compact focus status badges for hunger, empty rice, debt, and study', () => {
+    const base = createNewLife(101);
+    const hungry = {
+      ...base,
+      profile: { ...base.profile, totalDays: 20 * 360 },
+      assets: { ...base.assets, rice: 0, wealthCopper: -150 },
+      schedule: { ...base.schedule, lifestyle: 'nhin_doi' as const, autoBuyRice: false },
+    };
+    const badges = getFocusStatusBadges(hungry, { isCoveredByFamily: false });
+    expect(badges.map((b) => b.id)).toEqual(['starving', 'out_of_rice', 'in_debt', 'need_job']);
+
+    // Covered by family at home with 0 personal rice should not falsely show starving/out_of_rice
+    const atHome = {
+      ...base,
+      profile: { ...base.profile, totalDays: 15 * 360 },
+      assets: { ...base.assets, rice: 0, wealthCopper: 100 },
+      schedule: { ...base.schedule, lifestyle: 'com_rau' as const },
+    };
+    expect(getFocusStatusBadges(atHome, { isCoveredByFamily: true })).toEqual([]);
   });
 });

@@ -8,6 +8,7 @@
     "conditions": {
       "min_age": 18,
       "min_martial": 20,
+      "has_any_flag": ["trong_quan_ngu", "quan_ham_hieu_uy", "quan_ham_tuong_quan"],
       "missing_flags": ["trong_hau_cung"]
     },
     "weight": {
@@ -51,6 +52,7 @@
     "conditions": {
       "min_age": 20,
       "min_martial": 18,
+      "has_any_flag": ["trong_quan_ngu", "quan_ham_hieu_uy", "quan_ham_tuong_quan"],
       "missing_flags": ["trong_hau_cung"]
     },
     "weight": {

@@ -12,7 +12,6 @@ import {
   User,
   CalendarClock,
   ScrollText,
-  Briefcase,
 } from 'lucide-react';
 import {
   getAgeYears,
@@ -56,10 +55,12 @@ import {
   getEducationLabel,
   getFeudalIncomeRankLabel,
   getFeudalTransportLabel,
+  getFocusStatusBadges,
   getPersonalPossessions,
   getStatusLineParts,
   hasActiveLivelihood,
 } from '../engine/lifeStatus';
+import { getFamilyCoveredLifestyleTier } from '../engine/daySimulator';
 import { getThemeWrapperClass, useLegacyArchiveStore } from '../stores/useLegacyArchiveStore';
 import { ProgressionModules } from './ProgressionModules';
 import { LegacyArchiveModal } from './LegacyArchiveModal';
@@ -235,7 +236,6 @@ export function AdultDashboard() {
 
   const age = getAgeYears(life.profile.totalDays);
   const originMeta = ORIGIN_METADATA[life.profile.originClass];
-  const isBroke = life.assets.rice <= 0 && life.assets.wealthCopper < life.world.ricePriceInCopper;
   const isInDebt = life.flags.includes('dang_no_dia_chu');
   const isInPrison = life.livelihoodStatus === 'prison' || life.flags.includes('dang_o_tu');
   const creditLimitCopper = getCreditLimitCopper(life);
@@ -275,6 +275,9 @@ export function AdultDashboard() {
   const personalPossessions = getPersonalPossessions(life);
   const transportLabel = getFeudalTransportLabel(life);
   const statusLine = getStatusLineParts(life);
+  const focusBadges = getFocusStatusBadges(life, {
+    isCoveredByFamily: getFamilyCoveredLifestyleTier(life) !== null,
+  });
   const hasJob = hasActiveLivelihood(life);
   const tierDots = life.family ? TIER_DOTS[life.family.familyLivingTier] ?? 1 : 1;
   const focusOptions = getLifeFocusOptions(life);
@@ -549,7 +552,7 @@ export function AdultDashboard() {
               </div>
 
               {/* Nợ */}
-              {(isInDebt || isBroke || hasNegativeCash) && (
+              {(isInDebt || hasNegativeCash) && (
                 <div className="pt-2.5 border-t border-stone-800/80 space-y-1 text-xs">
                   <div className="text-[11px] text-stone-400">Nợ</div>
                   {hasNegativeCash && (
@@ -557,24 +560,11 @@ export function AdultDashboard() {
                       {formatCopper(Math.abs(life.assets.wealthCopper))}
                     </div>
                   )}
-                  {isInDebt ? (
+                  {isInDebt && (
                     <div className="font-semibold text-rose-400">
                       Nợ địa chủ (Đáo hạn sau 180 ngày • lãi 60%)
                     </div>
-                  ) : !hasJob && age < 60 ? (
-                    <div className="space-y-1.5">
-                      <div className="text-[11px] text-rose-400">
-                        Cạn tiền &amp; lương thực! Hãy tìm việc làm thuê hoặc vay nóng.
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => performInstantAction('inst_job_hunt')}
-                        className="inline-flex items-center gap-1 px-2 py-1 rounded bg-amber-600/20 hover:bg-amber-600/35 border border-amber-500/50 text-[11px] font-semibold text-amber-200 cursor-pointer"
-                      >
-                        <Briefcase className="w-3 h-3" /> Tìm việc ngay
-                      </button>
-                    </div>
-                  ) : null}
+                  )}
                 </div>
               )}
 
@@ -760,9 +750,48 @@ export function AdultDashboard() {
 
             {/* Trọng tâm hiện tại (Life Focus) */}
             <div className="bg-stone-900/75 border border-stone-800 rounded-xl p-3.5 space-y-2">
-              <div className="text-xs text-stone-300 pb-2 border-b border-stone-800/80">
-                <span className="font-bold text-stone-100">{statusLine.primary}</span>{' '}
-                <span className="text-stone-400">· {statusLine.detail}</span>
+              <div className="pb-2 border-b border-stone-800/80 space-y-1.5">
+                <div className="text-xs text-stone-300">
+                  <span className="font-bold text-stone-100">{statusLine.primary}</span>{' '}
+                  <span className="text-stone-400">· {statusLine.detail}</span>
+                </div>
+                {focusBadges.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {focusBadges.map((badge) => {
+                      const toneCls =
+                        badge.tone === 'danger'
+                          ? 'bg-rose-950/70 border-rose-500/50 text-rose-200 hover:bg-rose-900/60'
+                          : badge.tone === 'warning'
+                            ? 'bg-amber-950/70 border-amber-500/50 text-amber-200 hover:bg-amber-900/60'
+                            : 'bg-sky-950/60 border-sky-500/40 text-sky-200';
+                      const handleClick =
+                        badge.action === 'open_spend_modal'
+                          ? openActionModal
+                          : badge.action === 'job_hunt'
+                            ? () => performInstantAction('inst_job_hunt')
+                            : undefined;
+                      return handleClick ? (
+                        <button
+                          key={badge.id}
+                          type="button"
+                          onClick={handleClick}
+                          title={badge.title}
+                          className={`px-2 py-0.5 rounded-md border text-[10px] font-semibold transition cursor-pointer ${toneCls}`}
+                        >
+                          {badge.label}
+                        </button>
+                      ) : (
+                        <span
+                          key={badge.id}
+                          title={badge.title}
+                          className={`px-2 py-0.5 rounded-md border text-[10px] font-semibold ${toneCls}`}
+                        >
+                          {badge.label}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-300">

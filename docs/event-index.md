@@ -74,7 +74,7 @@
 | `phe_thanh_luu` | evt_official_faction_choice | evt_official_faction_choice(missing_flags), evt_official_faction_scholar_support(has_flags) |
 | `quan_ham_binh_si` | evt_military_enlist, evt_military_promotion_1(-remove), evt_military_retire(-remove) | evt_military_promotion_1(has_flags) |
 | `quan_ham_hieu_uy` | evt_military_enlist, evt_military_promotion_1, evt_military_promotion_2(-remove), evt_military_retire(-remove) | evt_military_promotion_2(has_flags), evt_martial_vanguard_duel(has_any_flag), evt_martial_supply_sabotage(has_any_flag), evt_martial_border_campaign(has_any_flag) |
-| `quan_ham_tuong_quan` | evt_military_promotion_2, evt_military_retire(-remove) | evt_martial_vanguard_duel(has_any_flag), evt_martial_supply_sabotage(has_any_flag), evt_martial_border_campaign(has_any_flag), evt_martial_court_rivalry(has_any_flag) |
+| `quan_ham_tuong_quan` | evt_military_promotion_2, evt_military_retire(-remove) | evt_martial_vanguard_duel(has_any_flag), evt_martial_supply_sabotage(has_any_flag), evt_martial_border_campaign(has_any_flag), evt_martial_siege_defense(has_any_flag) |
 | `thai_giam` | evt_fate_eunuch_or_palace_maid | evt_chain_len_kinh_1(missing_flags), evt_chain_ra_o_rieng_1(missing_flags), evt_craft_imperial_commission(missing_flags), evt_craft_apprentice_rivalry(missing_flags) |
 | `tham_hoa` | *(engine/init)* | evt_scholar_vinh_quy_bai_to(has_any_flag) |
 | `thanh_vien_phuong_tho` | evt_adult_exp_thu_cong_guild | evt_adult_exp_thu_cong_merchant_order(has_any_flag) |

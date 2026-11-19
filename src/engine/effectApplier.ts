@@ -309,6 +309,17 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
     deathReason = deathReason ?? 'Sức khỏe suy kiệt qua đời';
   }
 
+  let nextLogs = state.logs;
+  if (state.isAlive && !isAlive && deathReason) {
+    nextLogs = appendLog(
+      nextLogs,
+      state.profile.totalDays,
+      'warning',
+      `Qua đời ở tuổi ${getAgeYears(state.profile.totalDays)}: ${deathReason}.`,
+      { tone: 'negative' },
+    );
+  }
+
   return {
     ...state,
     profile: {
@@ -329,6 +340,7 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
     npcs,
     delayedEvents,
     milestones,
+    logs: nextLogs,
   };
 }
 

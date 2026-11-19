@@ -262,3 +262,105 @@ export function getStatusLineParts(state: ActiveLifeState): { primary: string; d
     detail: place,
   };
 }
+
+export interface FocusStatusBadge {
+  id: string;
+  label: string;
+  tone: 'danger' | 'warning' | 'info';
+  title?: string;
+  action?: 'open_spend_modal' | 'job_hunt';
+}
+
+/**
+ * Compact status chips rendered inside the "Trọng Tâm" card when survival,
+ * debt, or temporary study conditions need immediate visibility.
+ */
+export function getFocusStatusBadges(
+  state: ActiveLifeState,
+  opts?: { isCoveredByFamily?: boolean },
+): FocusStatusBadge[] {
+  const badges: FocusStatusBadge[] = [];
+  const isCoveredByFamily = opts?.isCoveredByFamily ?? false;
+  const rice = state.assets.rice;
+  const cash = state.assets.wealthCopper;
+  const ricePrice = state.world.ricePriceInCopper;
+
+  const cannotAutoBuyRice = !state.schedule.autoBuyRice || cash < ricePrice * 0.5;
+  const isStarving =
+    state.schedule.lifestyle === 'nhin_doi' ||
+    (!isCoveredByFamily && rice < 0.5 && cannotAutoBuyRice);
+
+  if (isStarving) {
+    badges.push({
+      id: 'starving',
+      label: 'Đang đói',
+      tone: 'danger',
+      title:
+        state.schedule.lifestyle === 'nhin_doi'
+          ? 'Khẩu phần hiện tại là Nhịn đói (-1.8 SK, -1.2 HP/ngày)'
+          : 'Không đủ gạo và tiền ăn trong ngày',
+      action: 'open_spend_modal',
+    });
+  }
+
+  if (!isCoveredByFamily && rice <= 0) {
+    badges.push({
+      id: 'out_of_rice',
+      label: 'Hết gạo',
+      tone: isStarving ? 'danger' : 'warning',
+      title: 'Kho gạo đã cạn (0 đấu) — bấm để mua gạo hoặc điều chỉnh chi tiêu',
+      action: 'open_spend_modal',
+    });
+  }
+
+  if (cash < 0 || state.flags.includes('dang_no_dia_chu')) {
+    badges.push({
+      id: 'in_debt',
+      label: state.flags.includes('dang_no_dia_chu') ? 'Nợ địa chủ' : 'Đang nợ',
+      tone: 'danger',
+      title: 'Tài chính đang âm hoặc có khoản vay chưa trả',
+      action: 'open_spend_modal',
+    });
+  }
+
+  const nightRem =
+    state.actionCooldowns?.inst_night_class !== undefined
+      ? Math.max(0, 360 - (state.profile.totalDays - state.actionCooldowns.inst_night_class))
+      : 0;
+  const tradeRem =
+    state.actionCooldowns?.inst_trade_course !== undefined
+      ? Math.max(0, 360 - (state.profile.totalDays - state.actionCooldowns.inst_trade_course))
+      : 0;
+  if (nightRem > 0) {
+    badges.push({
+      id: 'night_class',
+      label: `Học bổ túc (${nightRem}d)`,
+      tone: 'info',
+    });
+  } else if (tradeRem > 0) {
+    badges.push({
+      id: 'trade_course',
+      label: `Học nghề (${tradeRem}d)`,
+      tone: 'info',
+    });
+  }
+
+  const age = getAgeYears(state.profile.totalDays);
+  if (
+    (isStarving || (!isCoveredByFamily && rice <= 0)) &&
+    !hasActiveLivelihood(state) &&
+    age >= 13 &&
+    age < 60 &&
+    !state.isStudent
+  ) {
+    badges.push({
+      id: 'need_job',
+      label: 'Tìm việc ngay',
+      tone: 'warning',
+      title: 'Chưa có nghề nghiệp ổn định để kiếm cơm',
+      action: 'job_hunt',
+    });
+  }
+
+  return badges;
+}
