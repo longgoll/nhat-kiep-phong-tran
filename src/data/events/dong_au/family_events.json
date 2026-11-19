@@ -11,7 +11,12 @@
       "max_age": 12,
       "origin_in": [
         "ban_nong",
-        "thu_cong"
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ],
+      "family_tier_in": [
+        "tung_thieu"
       ],
       "has_living_npc_id": "npc_mother"
     },
@@ -149,9 +154,15 @@
         "quan_lai",
         "hoang_toc"
       ],
+      "family_tier_in": [
+        "kha_gia",
+        "sung_tuc",
+        "hoang_gia"
+      ],
       "missing_flags": [
         "gia_toc_sa_sut",
-        "that_sung_cung_dinh"
+        "that_sung_cung_dinh",
+        "gia_dinh_mac_no"
       ],
       "has_living_npc_id": "npc_mother"
     },
@@ -298,13 +309,18 @@
     "severity": "major",
     "cooldownDays": 99999,
     "oncePerLife": true,
-    "title": "Cha Đổ Bệnh Sốt Rét Sau Mùa Gặt",
+    "title": "Cha Đổ Bệnh Sốt Rét Lúc Túng Thiếu",
     "conditions": {
       "min_age": 6,
       "max_age": 12,
       "origin_in": [
         "ban_nong",
-        "thu_cong"
+        "thu_cong",
+        "dia_chu",
+        "quan_lai"
+      ],
+      "family_tier_in": [
+        "tung_thieu"
       ],
       "has_living_npc_id": "npc_father"
     },
@@ -312,10 +328,10 @@
       "base": 40,
       "modifiers": []
     },
-    "description": "Dầm mưa ngoài đồng suốt mấy ngày gặt chạy bão, cha bạn bỗng lên cơn sốt rét run cầm cập, đắp hai lớp chăn bông vẫn lạnh cóng. Mẹ tất bật tìm thuốc còn bạn muốn đỡ đần phần nào.",
+    "description": "Dầm mưa dãi nắng mưu sinh suốt mấy ngày liền, cha bạn bỗng lên cơn sốt rét run cầm cập, đắp hai lớp chăn mỏng vẫn lạnh cóng. Trong nhà túng thiếu chẳng dư dả, mẹ tất bật tìm lá thuốc còn bạn muốn đỡ đần phần nào.",
     "choices": [
       {
-        "label": "Ra đồng mót thóc, bắt cua tép và nhặt củi khô về nấu cháo bồi bổ cho cha",
+        "label": "Ra bờ bãi bắt cua tép và nhặt củi khô về nấu cháo bồi bổ cho cha",
         "conditions": {},
         "outcomes": [
           {
@@ -362,6 +378,174 @@
               "npc_affinity": [
                 {
                   "npc_id": "npc_father",
+                  "delta": 14
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_family_father_sick_comfortable",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Cha Đổ Bệnh Giữa Mùa Làm Ăn",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong"
+      ],
+      "family_tier_in": [
+        "du_an",
+        "kha_gia",
+        "sung_tuc"
+      ],
+      "has_living_npc_id": "npc_father"
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Dầm sương dãi nắng mưu sinh suốt mấy ngày liền, cha bạn bỗng lên cơn sốt rét nằm liệt giường. May nhờ gia đình có chút tiền tích lũy, người nhà đi mời thầy lang nhưng bạn vẫn muốn tự tay đỡ đần.",
+    "choices": [
+      {
+        "label": "Cầm tiền nhà chạy ra hiệu thuốc bốc thang thuốc bổ và mua thịt về hầm cháo cho cha",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nhờ thang thuốc tốt và bát cháo thịt ấm nóng, chỉ sau vài hôm cha bạn đã cắt sốt và hồi phục sức lực. Cha khen bạn lanh lợi, có hiếu.",
+            "effects": {
+              "family_copper": -45,
+              "stamina": -4,
+              "happiness": 4,
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 16
+                },
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 10
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Ở nhà trông bếp lửa, đắp khăn ấm và thu dọn đồ nghề giúp cha yên tâm dưỡng bệnh",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn túc trực thay khăn ấm và sắp xếp gọn gàng đồ nghề trong nhà, giúp cha ngủ yên giấc rồi dần bình phục.",
+            "effects": {
+              "stamina": -5,
+              "craft_trade": 2,
+              "family_copper": -25,
+              "happiness": 3,
+              "add_traits": [
+                "kien_cuong"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_father",
+                  "delta": 14
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_family_mother_sick_comfortable",
+    "stage": "childhood",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Mẹ Đổ Bệnh Cảm Hàn",
+    "conditions": {
+      "min_age": 6,
+      "max_age": 12,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong"
+      ],
+      "family_tier_in": [
+        "du_an",
+        "kha_gia",
+        "sung_tuc"
+      ],
+      "has_living_npc_id": "npc_mother"
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": []
+    },
+    "description": "Trở trời gió lạnh khiến mẹ bạn bị cảm nặng, đầu đau như búa bổ chẳng gượng dậy nổi. Trong nhà tuy có sẵn tiền phòng thân để mời thầy cắt thuốc, bạn vẫn thương mẹ mà xắn tay đỡ đần.",
+    "choices": [
+      {
+        "label": "Dùng tiền nhà mời thầy lang giỏi tới chẩn mạch, tự tay sắc thuốc dâng mẹ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Thầy lang bốc thuốc đúng bệnh lại có bạn túc trực bên giường sắc nước dâng tận tay, chỉ vài ngày sau mẹ đã khỏe hẳn.",
+            "effects": {
+              "family_copper": -50,
+              "happiness": 4,
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
+                  "delta": 16
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thay mẹ lo cơm nước trong nhà, nhóm bếp nấu nồi cháo hành nóng hổi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Mẹ ăn bát cháo nóng do chính tay bạn nấu mà rưng rưng xúc động, tinh thần phấn chấn nên cơn cảm cũng mau lui.",
+            "effects": {
+              "stamina": -6,
+              "craft_trade": 2,
+              "family_copper": -20,
+              "happiness": 3,
+              "npc_affinity": [
+                {
+                  "npc_id": "npc_mother",
                   "delta": 14
                 }
               ]

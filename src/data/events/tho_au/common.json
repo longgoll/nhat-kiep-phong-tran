@@ -767,11 +767,12 @@
         "dia_chu"
       ],
       "missing_flags": [
-        "mo_coi_me"
+        "mo_coi_me",
+        "da_dinh_hinh_tinh_cach_tho_au"
       ]
     },
     "weight": {
-      "base": 65,
+      "base": 35,
       "modifiers": []
     },
     "description": "Hôm nay mẹ đi chợ về mua được một tấm bánh mật thơm lừng chia cho bạn. Đám trẻ bên cạnh (hoặc anh chị em trong nhà) đang nhìn đầy thèm thuồng.",
@@ -794,6 +795,9 @@
                   "relation": "sibling",
                   "delta": 10
                 }
+              ],
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
               ],
               "add_traits": [
                 "trong_nghia"
@@ -823,6 +827,9 @@
                   "relation": "sibling",
                   "delta": -6
                 }
+              ],
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
               ],
               "add_traits": [
                 "tham_vong"

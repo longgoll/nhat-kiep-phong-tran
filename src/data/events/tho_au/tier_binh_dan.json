@@ -113,7 +113,7 @@
     "stage": "infancy",
     "severity": "minor",
     "cooldownDays": 720,
-    "title": "Mùa Màng Bội Thu",
+    "title": "Năm Nay Làm Ăn Khấm Khá",
     "conditions": {
       "min_age": 2,
       "max_age": 5,
@@ -130,7 +130,7 @@
       "base": 35,
       "modifiers": []
     },
-    "description": "Năm nay mưa thuận gió hòa.",
+    "description": "Năm nay thời tiết thuận hòa, việc mưu sinh của cha mẹ suôn sẻ.",
     "choices": [
       {
         "label": "Tiếp tục",
@@ -140,7 +140,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Mùa gặt năm nay khấm khá hơn hẳn, bữa cơm nhà có thêm chút cá kho và kinh tế gia đình đỡ chật vật.",
+            "resultText": "Thu nhập năm nay khấm khá hơn hẳn, bữa cơm nhà có thêm chút cá thịt và kinh tế gia đình đỡ chật vật.",
             "effects": {
               "family_copper": 40,
               "health": 3,

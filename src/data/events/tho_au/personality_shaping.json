@@ -1,0 +1,516 @@
+[
+  {
+    "id": "evt_infant_persona_lost_coin",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Đồng Tiền Rơi Bên Ngõ",
+    "conditions": {
+      "min_age": 4,
+      "max_age": 5,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ],
+      "missing_flags": [
+        "da_dinh_hinh_tinh_cach_tho_au"
+      ]
+    },
+    "weight": {
+      "base": 40,
+      "modifiers": [
+        {
+          "conditions": {
+            "family_tier_in": [
+              "tung_thieu",
+              "du_an"
+            ]
+          },
+          "addWeight": 15
+        }
+      ]
+    },
+    "description": "Chiều hôm ấy lúc theo người lớn ra đầu ngõ, bạn bất chợt trông thấy một xâu tiền đồng nhỏ ai đó đánh rơi bên vệ cỏ, xung quanh chưa có ai để ý.",
+    "choices": [
+      {
+        "label": "Đứng chờ và hỏi thăm người qua đường để trả lại cho người mất",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bác hàng xóm quay lại tìm được tiền thì mừng rỡ khôn xiết, xoa đầu khen bạn nhỏ tuổi mà thật thà, giữ nghĩa.",
+            "effects": {
+              "fame": 3,
+              "relationships": 6,
+              "happiness": 5,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "giao_du"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhặt cất vào túi áo làm của riêng cho mình",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn lặng lẽ giữ lấy xâu tiền nhỏ, trong lòng sớm nhen nhóm ý thức gom góp và tính toán cho bản thân.",
+            "effects": {
+              "copper": 12,
+              "happiness": 4,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "tham_vong"
+              ],
+              "add_interests": [
+                "thuong_buon"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Mang thẳng về đưa cho người lớn trong nhà giữ hộ phòng khi cần",
+        "conditions": {
+          "has_living_parent": true
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Người nhà vừa khen bạn biết nghĩ cho gia đình, vừa dặn dò sau này gặp của rơi cũng phải hỏi tìm người trả lại.",
+            "effects": {
+              "family_copper": 12,
+              "happiness": 4,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ],
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_persona_stray_animal",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Con Vật Nhỏ Lạc Bước Trước Sân",
+    "conditions": {
+      "min_age": 4,
+      "max_age": 5,
+      "missing_flags": [
+        "da_dinh_hinh_tinh_cach_tho_au"
+      ]
+    },
+    "weight": {
+      "base": 38,
+      "modifiers": []
+    },
+    "description": "Một chiều mưa lất phất, có chú chó nhỏ (hoặc mèo con) ướt sũng run rẩy nép bên hiên nhà. Thấy bạn bước ra, nó khẽ rên lên như cầu xin.",
+    "choices": [
+      {
+        "label": "Lén chia phần ăn của mình cho nó và xin người lớn cho giữ lại nuôi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Con vật nhỏ quấn quýt bên chân bạn suốt cả buổi chiều. Lòng trắc ẩn từ thuở bé khiến bạn dễ gần gũi và yêu thiên nhiên hơn.",
+            "effects": {
+              "happiness": 6,
+              "relationships": 4,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "trong_nghia"
+              ],
+              "add_interests": [
+                "dien_vien"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ khoảng cách và xua nó ra ngoài vì sợ dơ bẩn hoặc bị người lớn quở trách",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Con vật lủi thủi chạy biến vào màn mưa. Từ nhỏ bạn đã quen giữ chừng mực và cẩn trọng với mọi thứ xung quanh.",
+            "effects": {
+              "health": 2,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "da_nghi"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_persona_broken_bowl",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Tai Nạn Nhỏ Trong Gian Bếp",
+    "conditions": {
+      "min_age": 4,
+      "max_age": 5,
+      "origin_in": [
+        "ban_nong",
+        "thu_cong",
+        "dia_chu"
+      ],
+      "has_living_parent": true,
+      "missing_flags": [
+        "da_dinh_hinh_tinh_cach_tho_au"
+      ]
+    },
+    "weight": {
+      "base": 38,
+      "modifiers": []
+    },
+    "description": "Trong lúc nô đùa chạy qua gian nhà, bạn lỡ tay làm rơi chiếc bát sứ (hoặc bình gốm) mà người lớn quý nhất, vỡ tan thành mấy mảnh trên nền gạch.",
+    "choices": [
+      {
+        "label": "Đứng yên chờ người lớn về rồi khoanh tay thật thà nhận lỗi",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Dù bị nhắc nhở vài câu nhưng người lớn rất hài lòng vì bạn dám làm dám chịu, không quanh co chối tội.",
+            "effects": {
+              "relationships": 4,
+              "happiness": -2,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 8
+                }
+              ],
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhanh tay thu dọn mảnh vỡ, thử lấy nhựa cây/đất sét gắn lại cho khéo",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Tuy không giấu được vết nứt nhưng người lớn bật cười trước sự khéo léo và bình tĩnh xử lý của đứa trẻ mới 4-5 tuổi.",
+            "effects": {
+              "craft_trade": 4,
+              "happiness": 2,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "kheo_tay"
+              ],
+              "add_interests": [
+                "thu_cong"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lén gạt mảnh vỡ vào góc khuất, đổ lỗi cho gió lùa hoặc con mèo",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn thoát được trận mắng, nhưng từ đó quen thói lanh lợi né tránh trách nhiệm khi gặp chuyện bất lợi.",
+            "effects": {
+              "happiness": 3,
+              "relationships": -3,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "da_nghi"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_persona_noble_gift",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Món Quà Từ Khách Quý Đến Thăm Phủ",
+    "conditions": {
+      "min_age": 4,
+      "max_age": 5,
+      "origin_in": [
+        "dia_chu",
+        "quan_lai",
+        "hoang_toc"
+      ],
+      "family_tier_in": [
+        "kha_gia",
+        "sung_tuc",
+        "hoang_gia"
+      ],
+      "missing_flags": [
+        "gia_toc_sa_sut",
+        "that_sung_cung_dinh",
+        "gia_dinh_mac_no",
+        "da_dinh_hinh_tinh_cach_tho_au"
+      ]
+    },
+    "weight": {
+      "base": 45,
+      "modifiers": []
+    },
+    "description": "Một vị khách quý (hoặc trưởng bối trong họ) ghé thăm phủ đệ, mang theo hộp quà tinh xảo và cười bảo cho bạn tự chọn lấy một món làm kỷ niệm.",
+    "choices": [
+      {
+        "label": "Chọn bộ sách tranh và cây bút lông nhỏ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Vị khách vỗ tay khen đứa trẻ sớm có khí chất thư hương, tương lai ắt giỏi giang chữ nghĩa.",
+            "effects": {
+              "education": 5,
+              "happiness": 4,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "ham_hoc"
+              ],
+              "add_interests": [
+                "kinh_su"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chọn thanh kiếm gỗ khảm bạc và chiếc cung nhỏ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn múa vài đường ngây ngô khiến cả sảnh đường cười vang, ai nấy đều khen có phong thái mạnh mẽ, hoạt bát.",
+            "effects": {
+              "martial": 5,
+              "health": 2,
+              "happiness": 5,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "hieu_dong"
+              ],
+              "add_interests": [
+                "vo_nghe"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chọn chiếc bàn tính ngà và hộp gấm đựng tiền xu cổ",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn thích thú gảy từng hạt bàn tính lách cách. Người lớn gật gù bảo đứa trẻ này sau này rất biết giữ cơ nghiệp.",
+            "effects": {
+              "craft_trade": 5,
+              "happiness": 4,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "tham_vong"
+              ],
+              "add_interests": [
+                "thuong_buon"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_infant_persona_fallen_whispers",
+    "stage": "infancy",
+    "severity": "major",
+    "cooldownDays": 99999,
+    "oncePerLife": true,
+    "title": "Lời Xì Xào Sau Cánh Cửa",
+    "conditions": {
+      "min_age": 4,
+      "max_age": 5,
+      "has_any_flag": [
+        "gia_toc_sa_sut",
+        "that_sung_cung_dinh",
+        "gia_dinh_mac_no"
+      ],
+      "missing_flags": [
+        "da_dinh_hinh_tinh_cach_tho_au"
+      ]
+    },
+    "weight": {
+      "base": 55,
+      "modifiers": []
+    },
+    "description": "Đang chơi ngoài hành lang vắng, bạn vô tình nghe tiếng mấy người xung quanh xì xào bàn tán về cảnh gia đạo sa sút (hoặc thất thế) hiện tại của nhà mình.",
+    "choices": [
+      {
+        "label": "Nắm chặt tay tự nhủ sau này nhất định phải ngẩng cao đầu đòi lại thể diện",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Nỗi tủi thân sớm biến thành ý chí sắt đá. Tuy còn nhỏ nhưng ánh mắt bạn đã ánh lên quyết tâm không chịu khuất phục.",
+            "effects": {
+              "education": 3,
+              "happiness": -2,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "tham_vong"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lặng lẽ nhớ mặt từng kẻ gièm pha, tự nhủ phải luôn cảnh giác lòng người",
+        "conditions": {},
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Bạn không nói một lời nào mà chỉ lẳng lặng quay đi. Sự lạnh nhạt của thế thái nhân tình sớm rèn cho bạn tính đa nghi cẩn trọng.",
+            "effects": {
+              "craft_trade": 2,
+              "relationships": -2,
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "da_nghi"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Chạy về ôm lấy người thân trong nhà, chẳng bận tâm lời thiên hạ",
+        "conditions": {
+          "has_living_parent": true
+        },
+        "outcomes": [
+          {
+            "weight": {
+              "base": 100,
+              "modifiers": []
+            },
+            "resultText": "Sự quấn quýt hồn nhiên của bạn làm người thân rưng rưng xúc động, thêm vững lòng vượt qua giai đoạn khó khăn.",
+            "effects": {
+              "happiness": 4,
+              "npc_affinity": [
+                {
+                  "relation": "parent",
+                  "delta": 10
+                }
+              ],
+              "add_flags": [
+                "da_dinh_hinh_tinh_cach_tho_au"
+              ],
+              "add_traits": [
+                "kien_cuong"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

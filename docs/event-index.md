@@ -2,7 +2,7 @@
 
 > File tự động sinh bởi `npm run gen:index` (`scripts/gen-event-index.mjs`). AI đọc file này để tra cứu toàn bộ ID, file, cờ (`flags`) và tránh đọc hàng chục file JSON lớn.
 
-- **Tổng số file:** 73 | **Tổng số sự kiện:** 344 | **Tổng số flags:** 93
+- **Tổng số file:** 74 | **Tổng số sự kiện:** 351 | **Tổng số flags:** 94
 
 ## 1. Từ Điển Flags Đang Hoạt Động
 | Flag | Được gắn/gỡ bởi | Được kiểm tra bởi (samples) |
@@ -34,6 +34,7 @@
 | `co_luong_huu` | evt_official_retire_with_honor | — |
 | `co_tai_mat_noi_dinh` | evt_adult_hoang_toc_teen_cold_palace_ally | — |
 | `da_co_con` | *(engine/init)* | evt_elder_descendants_success(has_flags), evt_elder_divide_estate(has_flags), evt_elder_clan_patriarch_feast(has_any_flag), evt_elder_teach_grandchildren(has_flags) |
+| `da_dinh_hinh_tinh_cach_tho_au` | evt_infant_share_cake, evt_infant_persona_lost_coin, evt_infant_persona_stray_animal, evt_infant_persona_broken_bowl | evt_infant_share_cake(missing_flags), evt_infant_persona_lost_coin(missing_flags), evt_infant_persona_stray_animal(missing_flags), evt_infant_persona_broken_bowl(missing_flags) |
 | `da_hoi_ra_o_rieng` | evt_chain_ra_o_rieng_1 | evt_chain_ra_o_rieng_1(missing_flags) |
 | `da_ket_hon` | *(engine/init)* | evt_elder_clan_patriarch_feast(has_any_flag), evt_romance_lantern_festival(missing_flags), evt_romance_matchmaker_visit(missing_flags), evt_adult_family_spouse_hardship(has_flags) |
 | `da_khai_phu_hoang_toc` | evt_female_royal_title_grant, evt_adult_exp_hoang_toc_title_estate | evt_female_royal_title_grant(missing_flags), evt_world_imperial_tax_levy(has_any_flag) |
@@ -51,7 +52,7 @@
 | `duoc_quy_nhan_nang_do` | evt_chain_len_kinh_3 | — |
 | `duoc_thay_do_quy` | evt_child_eavesdrop_01, evt_child_odo_study_eavesdrop, evt_scholar_poor_mentor | evt_adult_teacher_gift(has_flags), evt_scholar_poor_mentor(missing_flags) |
 | `gia_dinh_bi_chen_ep` | *(engine/init)* | evt_child_exp_thu_cong_extortion(has_flags) |
-| `gia_dinh_mac_no` | evt_child_poor_sell_indenture(-remove), evt_adult_family_pay_old_debt(-remove) | evt_child_poor_begging(has_any_flag), evt_child_poor_sell_indenture(has_flags), evt_adult_family_pay_old_debt(has_flags), evt_fate_eunuch_or_palace_maid(has_flags) |
+| `gia_dinh_mac_no` | evt_child_poor_sell_indenture(-remove), evt_adult_family_pay_old_debt(-remove) | evt_child_poor_begging(has_any_flag), evt_child_poor_sell_indenture(has_flags), evt_child_family_mother_sick_noble(missing_flags), evt_infant_persona_noble_gift(missing_flags) |
 | `gia_phong_thu_huong` | *(engine/init)* | evt_child_exp_dia_chu_strict_tutor(has_flags) |
 | `gia_toc_phuc_hung` | evt_chain_phuc_hung_2 | — |
 | `gia_toc_sa_sut` | evt_chain_phuc_hung_2(-remove), evt_child_quan_lai_fall | evt_chain_phuc_hung_1(has_any_flag), evt_child_exp_circ_fall_betrayal(has_any_flag), evt_child_family_mother_sick_noble(missing_flags), evt_child_female_boudoir_arts(missing_flags) |
@@ -138,10 +139,12 @@
 | `evt_child_low_happiness_rebel` | Nỗi Uất Ức Tuổi Thơ | childhood | major | 1080 | ban_nong, thu_cong, dia_chu | `dong_au/common.json` |
 | `evt_child_low_happiness_rebel_cung_dinh` | Nỗi Ngột Ngạt Chốn Phủ Đệ | childhood | major | 1080 | quan_lai, hoang_toc | `dong_au/common.json` |
 | `evt_child_craft_discovery` | Thạo Việc Nhà Nghề | childhood | minor | 720 | all | `dong_au/common.json` |
-| `evt_child_family_mother_sick_poor` | Mẹ Gục Ngã Bên Bếp Lửa | childhood | major (1x) | 99999 | ban_nong, thu_cong | `dong_au/family_events.json` |
+| `evt_child_family_mother_sick_poor` | Mẹ Gục Ngã Bên Bếp Lửa | childhood | major (1x) | 99999 | ban_nong, thu_cong, dia_chu, quan_lai | `dong_au/family_events.json` |
 | `evt_child_family_mother_sick_noble` | Mẫu Thân Khiếm An | childhood | major (1x) | 99999 | dia_chu, quan_lai, hoang_toc | `dong_au/family_events.json` |
 | `evt_child_family_sibling_illness` | Anh Chị Em Đổ Bệnh Mùa Trở Trời | childhood | major (1x) | 99999 | all | `dong_au/family_events.json` |
-| `evt_child_family_father_sick_common` | Cha Đổ Bệnh Sốt Rét Sau Mùa Gặt | childhood | major (1x) | 99999 | ban_nong, thu_cong | `dong_au/family_events.json` |
+| `evt_child_family_father_sick_common` | Cha Đổ Bệnh Sốt Rét Lúc Túng Thiếu | childhood | major (1x) | 99999 | ban_nong, thu_cong, dia_chu, quan_lai | `dong_au/family_events.json` |
+| `evt_child_family_father_sick_comfortable` | Cha Đổ Bệnh Giữa Mùa Làm Ăn | childhood | major (1x) | 99999 | ban_nong, thu_cong | `dong_au/family_events.json` |
+| `evt_child_family_mother_sick_comfortable` | Mẹ Đổ Bệnh Cảm Hàn | childhood | major (1x) | 99999 | ban_nong, thu_cong | `dong_au/family_events.json` |
 | `evt_child_female_embroidery_craft` | Khéo Léo Đường Kim Mũi Chỉ | childhood | major (1x) | 99999 | ban_nong, thu_cong | `dong_au/female_childhood.json` |
 | `evt_child_female_boudoir_arts` | Cầm Kỳ Thi Họa Nơi Khuê Các | childhood | major (1x) | 99999 | dia_chu, quan_lai, hoang_toc | `dong_au/female_childhood.json` |
 | `evt_child_female_princess_etiquette` | Lời Dạy Của Mẫu Hậu Về Phận Công Chúa | childhood | major (1x) | 99999 | hoang_toc | `dong_au/female_childhood.json` |
@@ -205,8 +208,13 @@
 | `evt_infant_exp_tl_1` | Lễ Đầy Tháng Linh Đình | infancy | minor (1x) | 99999 | dia_chu, quan_lai | `tho_au/origin_thuong_luu.json` |
 | `evt_infant_exp_tl_2` | Nếp Nhà Gia Giáo | infancy | minor (1x) | 99999 | dia_chu, quan_lai | `tho_au/origin_thuong_luu.json` |
 | `evt_infant_exp_tl_3` | Báu Vật Trong Thư Phòng | infancy | major (1x) | 99999 | dia_chu, quan_lai | `tho_au/origin_thuong_luu.json` |
+| `evt_infant_persona_lost_coin` | Đồng Tiền Rơi Bên Ngõ | infancy | major (1x) | 99999 | ban_nong, thu_cong, dia_chu | `tho_au/personality_shaping.json` |
+| `evt_infant_persona_stray_animal` | Con Vật Nhỏ Lạc Bước Trước Sân | infancy | major (1x) | 99999 | all | `tho_au/personality_shaping.json` |
+| `evt_infant_persona_broken_bowl` | Tai Nạn Nhỏ Trong Gian Bếp | infancy | major (1x) | 99999 | ban_nong, thu_cong, dia_chu | `tho_au/personality_shaping.json` |
+| `evt_infant_persona_noble_gift` | Món Quà Từ Khách Quý Đến Thăm Phủ | infancy | major (1x) | 99999 | dia_chu, quan_lai, hoang_toc | `tho_au/personality_shaping.json` |
+| `evt_infant_persona_fallen_whispers` | Lời Xì Xào Sau Cánh Cửa | infancy | major (1x) | 99999 | all | `tho_au/personality_shaping.json` |
 | `evt_infant_illness_poor` | Cơn Sốt Phong Hàn Mùa Đông | infancy | minor | 1080 | ban_nong, thu_cong | `tho_au/tier_binh_dan.json` |
-| `evt_infant_minor_harvest` | Mùa Màng Bội Thu | infancy | minor | 720 | ban_nong, thu_cong | `tho_au/tier_binh_dan.json` |
+| `evt_infant_minor_harvest` | Năm Nay Làm Ăn Khấm Khá | infancy | minor | 720 | ban_nong, thu_cong | `tho_au/tier_binh_dan.json` |
 | `evt_infant_court_poison` | Án Ngữ Trong Chén Thuốc Bổ | infancy | minor (1x) | 99999 | quan_lai, hoang_toc | `tho_au/tier_cung_dinh.json` |
 | `evt_infant_share_cake_cung_dinh` | Đĩa Bánh Ngon Trong Phủ | infancy | major (1x) | 99999 | quan_lai, hoang_toc | `tho_au/tier_cung_dinh.json` |
 | `evt_craft_imperial_commission` | Xưởng Nghề Nhận Đơn Chế Tác Đồ Ngự Dụng | adulthood | major (1x) | 99999 | all | `truong_thanh/branch_craft_and_estate.json` |
