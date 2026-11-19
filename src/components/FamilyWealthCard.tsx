@@ -51,7 +51,19 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
             {personalWealth > 0 ? formatCopper(personalWealth) : '—'}
           </div>
           <div className="text-[11px] text-stone-500 mt-0.5 leading-snug">
-            Vẫn sống cùng cha mẹ
+            {(() => {
+              if (life.flags.includes('tung_o_do')) return 'Đang đi ở đợ nhà địa chủ';
+              const fAlive =
+                !life.flags.includes('mo_coi_cha') &&
+                life.npcs.some((n) => n.id === 'npc_father' && n.isAlive);
+              const mAlive =
+                !life.flags.includes('mo_coi_me') &&
+                life.npcs.some((n) => n.id === 'npc_mother' && n.isAlive);
+              if (fAlive && mAlive) return 'Vẫn sống cùng cha mẹ';
+              if (fAlive) return 'Đang sống cùng cha';
+              if (mAlive) return 'Đang sống cùng mẹ';
+              return 'Sống cùng người thân / tự lập';
+            })()}
           </div>
         </div>
 
@@ -83,11 +95,16 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
       {/* Giá trị gia sản của gia đình */}
       {family && (
         <div className="pt-2.5 border-t border-stone-800/80 space-y-2 text-xs">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-[11px] text-stone-400">Giá trị gia sản gia đình</span>
-            <span className="font-mono font-bold text-amber-200">
-              {formatCopper(family.familyWealthCopper)}
-            </span>
+          <div>
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] text-stone-400">Quỹ gia sản tích lũy</span>
+              <span className="font-mono font-bold text-amber-200">
+                {formatCopper(family.familyWealthCopper)}
+              </span>
+            </div>
+            <div className="text-[10px] text-stone-500 leading-snug">
+              Tổng tiền &amp; tài sản sẵn có của nhà (tăng/giảm theo tích lũy ròng &amp; biến cố)
+            </div>
           </div>
 
           {familyCashflow && (() => {
@@ -121,7 +138,7 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
                 </div>
                 <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
                   <span className="text-stone-400">
-                    Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu)
+                    Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu: bạn &amp; {Math.max(0, familyCashflow.mouthsToFeed - 1)} người thân)
                     {familyCashflow.foodSelfSufficient ? ' · Tự túc gạo' : ''}
                   </span>
                   <span className="font-mono text-rose-300 shrink-0">

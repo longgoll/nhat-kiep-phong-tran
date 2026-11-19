@@ -143,6 +143,9 @@ export function isInstantActionVisible(state: ActiveLifeState, def: InstantAdult
   if (def.requiresHousingIn && !def.requiresHousingIn.includes(state.assets.housing)) {
     return false;
   }
+  if (def.id === 'inst_contribute_family_money') {
+    if (state.flags.includes('da_ra_o_rieng') || state.flags.includes('trong_hau_cung')) return false;
+  }
   if (def.id === 'inst_ask_family_money') {
     if (state.flags.includes('trong_hau_cung')) return false;
     if ((state.family?.familyWealthCopper ?? 0) < 60) return false;
@@ -277,14 +280,31 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
     logText: 'Bạn mở lời xin gia đình hỗ trợ thêm chút tiền tiêu.',
   },
   {
+    id: 'inst_contribute_family_money',
+    title: 'Đưa tiền phụ giúp kinh tế gia đình',
+    subtitle: 'Chuyển 80đ vào gia sản gốc · Thân thiết cha mẹ +8 · Hạnh phúc +3',
+    costCopper: 80,
+    cooldownDays: 90,
+    requiresLivingParent: true,
+    category: 'social',
+    effects: {
+      family_copper: 80,
+      happiness: 3,
+      fame: 1,
+      npc_affinity: [{ relation: 'parent', delta: 8 }],
+    },
+    logText: 'Bạn trích tiền tự kiếm được đưa cho gia đình trang trải chi tiêu và tích cóp thêm.',
+  },
+  {
     id: 'inst_send_parents_money',
     title: 'Gửi tiền phụng dưỡng bậc sinh thành',
-    subtitle: 'Thân thiết gia đình +10 · Hạnh phúc +4 · Thanh danh +2',
+    subtitle: 'Chuyển 100đ vào gia sản gốc · Thân thiết +10 · Hạnh phúc +4 · Thanh danh +2',
     costCopper: 100,
     cooldownDays: 120,
     requiresFlag: 'da_ra_o_rieng',
     requiresLivingParent: true,
     effects: {
+      family_copper: 100,
       happiness: 4,
       fame: 2,
       npc_affinity: [{ relation: 'parent', delta: 10 }],

@@ -442,4 +442,30 @@ describe('Day Simulator (MVP 2)', () => {
     expect(res.state.isAlive).toBe(true);
     expect(res.pausedReason).not.toBe('no_food');
   });
+
+  it('transfers copper into familyWealthCopper when contributing or sending money to parents', () => {
+    const raw = createNewLife(960);
+    const atHome = {
+      ...raw,
+      profile: { ...raw.profile, originClass: 'ban_nong' as const, totalDays: 18 * 360 },
+      assets: { ...raw.assets, wealthCopper: 300, rice: 20 },
+      flags: raw.flags.filter((f) => f !== 'da_ra_o_rieng' && f !== 'trong_hau_cung'),
+      npcs: raw.npcs.map((n) => (n.id === 'npc_mother' ? { ...n, isAlive: true } : n)),
+      family: { ...raw.family!, familyWealthCopper: 500 },
+    };
+
+    const contribRes = executeInstantAdultAction(atHome, 'inst_contribute_family_money');
+    expect(contribRes.ok).toBe(true);
+    expect(contribRes.state.assets.wealthCopper).toBe(220);
+    expect(contribRes.state.family!.familyWealthCopper).toBe(580);
+
+    const movedOut = {
+      ...atHome,
+      flags: [...atHome.flags, 'da_ra_o_rieng'],
+    };
+    const sendRes = executeInstantAdultAction(movedOut, 'inst_send_parents_money');
+    expect(sendRes.ok).toBe(true);
+    expect(sendRes.state.assets.wealthCopper).toBe(200);
+    expect(sendRes.state.family!.familyWealthCopper).toBe(600);
+  });
 });

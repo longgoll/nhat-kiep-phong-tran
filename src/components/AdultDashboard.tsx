@@ -671,11 +671,16 @@ export function AdultDashboard() {
                 </div>
                 {life.family && (
                   <div className="pt-2 border-t border-stone-800/70 space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] text-stone-400">Gia sản gia đình gốc</span>
-                      <span className="font-mono font-semibold text-amber-200">
-                        {formatCopper(life.family.familyWealthCopper)}
-                      </span>
+                    <div>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[11px] text-stone-400">Quỹ gia sản tích lũy</span>
+                        <span className="font-mono font-semibold text-amber-200">
+                          {formatCopper(life.family.familyWealthCopper)}
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-stone-500">
+                        Tiền &amp; tài sản sẵn có của nhà (biến động theo thu chi &amp; sự kiện)
+                      </div>
                     </div>
                     {familyCashflow && (() => {
                       const fatherDead =
@@ -708,7 +713,7 @@ export function AdultDashboard() {
                           </div>
                           <div className="flex items-center justify-between gap-2 pt-0.5 border-t border-stone-800/60">
                             <span className="text-stone-400">
-                              Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu)
+                              Chi tiêu ({familyCashflow.mouthsToFeed} nhân khẩu: bạn &amp; {Math.max(0, familyCashflow.mouthsToFeed - 1)} người thân)
                               {familyCashflow.foodSelfSufficient ? ' · Tự túc gạo' : ''}
                             </span>
                             <span className="font-mono text-rose-400 shrink-0">
