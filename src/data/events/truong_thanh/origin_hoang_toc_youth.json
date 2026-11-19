@@ -138,8 +138,10 @@
         "hoang_toc"
       ],
       "missing_flags": [
-        "that_sung_cung_dinh"
-      ]
+        "that_sung_cung_dinh",
+        "mo_coi_cha"
+      ],
+      "has_living_npc_id": "npc_father"
     },
     "weight": {
       "base": 220,

@@ -27,7 +27,7 @@
               "base": 70,
               "modifiers": []
             },
-            "resultText": "Bạn giật mình ôm chặt lấy mẹ khi tràng pháo đầu tiên nổ giòn, rồi lại cười khanh khách khi được lì xì vài đồng tiền kẽm buộc chỉ đỏ.",
+            "resultText": "Bạn giật mình ôm chặt lấy người thân khi tràng pháo đầu tiên nổ giòn, rồi lại cười khanh khách khi được lì xì vài đồng tiền kẽm buộc chỉ đỏ.",
             "effects": {
               "happiness": 7,
               "npc_affinity": [
@@ -181,7 +181,7 @@
         ]
       },
       {
-        "label": "Quấy khóc òa lên, bám chặt lấy mẹ đòi bế ru mới chịu ngủ",
+        "label": "Quấy khóc òa lên, bám chặt lấy người nhà đòi bế ru mới chịu ngủ",
         "conditions": {},
         "outcomes": [
           {
@@ -189,7 +189,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn khóc nấc suốt đêm trong vòng tay mẹ, mãi tới gần sáng mới thiếp đi. Trận ốm qua đi nhưng bạn trở nên bám hơi mẹ hơn.",
+            "resultText": "Bạn khóc nấc suốt đêm trong vòng tay người thân, mãi tới gần sáng mới thiếp đi. Trận ốm qua đi nhưng bạn trở nên hay bám người hơn.",
             "effects": {
               "health": -6,
               "happiness": -1,
@@ -279,7 +279,7 @@
               "base": 35,
               "modifiers": []
             },
-            "resultText": "Đang chơi hăng say thì vấp ngã sưng đầu gối, bạn mếu máo chạy về mách mẹ rồi lại lén ra hóng chuyện tiếp.",
+            "resultText": "Đang chơi hăng say thì vấp ngã sưng đầu gối, bạn mếu máo chạy về mách người lớn rồi lại lén ra hóng chuyện tiếp.",
             "effects": {
               "happiness": 3,
               "relationships": 3,
@@ -320,7 +320,7 @@
     "description": "Mưa bão đầu thu trút xuống suốt ba ngày đêm, gió rít ầm ầm ngoài mái hiên và tiếng sấm chớp vang rền khiến trẻ nhỏ dễ giật mình.",
     "choices": [
       {
-        "label": "Nép chặt vào lòng mẹ, bịt tai mỗi khi sấm nổ",
+        "label": "Nép chặt vào lòng người thân, bịt tai mỗi khi sấm nổ",
         "conditions": {},
         "outcomes": [
           {
@@ -328,7 +328,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Hơi ấm của mẹ giúp bạn yên tâm ngủ thiếp đi giữa tiếng mưa gào gió thét, nhưng từ đó bạn rất sợ tiếng sấm lớn.",
+            "resultText": "Hơi ấm của người thân giúp bạn yên tâm ngủ thiếp đi giữa tiếng mưa gào gió thét, nhưng từ đó bạn rất sợ tiếng sấm lớn.",
             "effects": {
               "happiness": 1,
               "add_traits": [

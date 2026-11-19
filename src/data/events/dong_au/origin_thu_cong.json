@@ -30,10 +30,10 @@
         }
       ]
     },
-    "description": "Từ sáng sớm, tiếng đục đẽo và mùi sơn mộc đã quen thuộc bên hiên nhà. Cha mẹ gọi bạn ra xưởng phụ việc, dạy cho những bước vỡ lòng của nghề tổ truyền.",
+    "description": "Từ sáng sớm, tiếng đục đẽo và mùi sơn mộc đã quen thuộc bên hiên nhà. Người nhà gọi bạn ra xưởng phụ việc, dạy cho những bước vỡ lòng của nghề tổ truyền.",
     "choices": [
       {
-        "label": "Chăm chú ngồi bên cha mẹ học từng đường nét thủ công",
+        "label": "Chăm chú ngồi bên học từng đường nét thủ công",
         "conditions": {},
         "outcomes": [
           {
@@ -151,7 +151,7 @@
     "description": "Giữa buổi chợ đông, viên lại mục địa phương dẫn hai tên nha lệ mặt mày bặm trợn sà xuống sạp hàng nhà bạn, hạch sách đủ thứ lệ phí rồi trắng trợn đòi tiền bảo kê.",
     "choices": [
       {
-        "label": "Khuyên cha mẹ nhẫn nhịn nộp tiền cho yên chuyện làm ăn (-80 đồng gia đình)",
+        "label": "Khuyên người nhà nhẫn nhịn nộp tiền cho yên chuyện làm ăn (-80 đồng gia đình)",
         "conditions": {},
         "outcomes": [
           {
@@ -159,7 +159,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Cha mẹ nén tiếng thở dài móc túi nộp đủ tiền. Bọn nha lệ cười khẩy bỏ đi, còn bạn thấm thía nỗi cơ cực của kiếp thợ thuyền.",
+            "resultText": "Người nhà nén tiếng thở dài móc túi nộp đủ tiền. Bọn nha lệ cười khẩy bỏ đi, còn bạn thấm thía nỗi cơ cực của kiếp thợ thuyền.",
             "effects": {
               "family_copper": -80,
               "happiness": -8,
@@ -349,7 +349,7 @@
         }
       ]
     },
-    "description": "Phường hội mở hội thi tay nghề cho lớp thợ trẻ kế cận trước sân đình. Các bậc thợ cả ngồi chấm giải rất kỹ, cha mẹ khích lệ bạn ghi danh thử sức.",
+    "description": "Phường hội mở hội thi tay nghề cho lớp thợ trẻ kế cận trước sân đình. Các bậc thợ cả ngồi chấm giải rất kỹ, người nhà khích lệ bạn ghi danh thử sức.",
     "choices": [
       {
         "label": "Dốc hết tâm sức chế tác món đồ dự thi",

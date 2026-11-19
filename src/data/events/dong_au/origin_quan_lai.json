@@ -24,7 +24,7 @@
     "description": "Một buổi chiều u ám, tin dữ từ kinh thành đưa về: phụ thân bạn vướng vào vụ án phe phái trên triều, bị hặc tội nặng và lâm bệnh nguy kịch trong ngục.",
     "choices": [
       {
-        "label": "Theo mẹ thu dọn hành lý về quê, giữ gìn sách vở gia phong",
+        "label": "Thu dọn hành lý về quê, giữ gìn sách vở gia phong",
         "outcomes": [
           {
             "weight": {
@@ -138,7 +138,8 @@
         "quan_lai"
       ],
       "missing_flags": [
-        "gia_toc_sa_sut"
+        "gia_toc_sa_sut",
+        "mo_coi_me"
       ]
     },
     "weight": {
@@ -469,7 +470,8 @@
         "quan_lai"
       ],
       "missing_flags": [
-        "gia_toc_sa_sut"
+        "gia_toc_sa_sut",
+        "mo_coi_me"
       ]
     },
     "weight": {

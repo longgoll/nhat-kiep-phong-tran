@@ -11,6 +11,10 @@
       "origin_in": [
         "ban_nong",
         "thu_cong"
+      ],
+      "missing_flags": [
+        "mo_coi_cha",
+        "mo_coi_me"
       ]
     },
     "weight": {
@@ -116,6 +120,10 @@
       "origin_in": [
         "ban_nong",
         "thu_cong"
+      ],
+      "missing_flags": [
+        "mo_coi_cha",
+        "mo_coi_me"
       ]
     },
     "weight": {

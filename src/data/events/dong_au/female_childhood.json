@@ -63,7 +63,7 @@
       "max_age": 12,
       "gender": "female",
       "origin_in": ["dia_chu", "quan_lai", "hoang_toc"],
-      "missing_flags": ["gia_toc_sa_sut", "that_sung_cung_dinh"]
+      "missing_flags": ["gia_toc_sa_sut", "that_sung_cung_dinh", "mo_coi_me"]
     },
     "weight": {
       "base": 48

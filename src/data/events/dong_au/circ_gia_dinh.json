@@ -27,10 +27,10 @@
         }
       ]
     },
-    "description": "Cha mẹ bận rộn việc nhà việc cửa suốt ngày, mọi chuyện trông nom, dỗ dành và chăm lo cho đàn em nhỏ đều đặt cả lên đôi vai người con trưởng là bạn.",
+    "description": "Người nhà bận rộn việc mưu sinh suốt ngày, mọi chuyện trông nom, dỗ dành và chăm lo cho đàn em nhỏ đều đặt cả lên đôi vai người con trưởng là bạn.",
     "choices": [
       {
-        "label": "Ân cần dỗ dành, nhường phần ngon cho các em và đỡ đần cha mẹ",
+        "label": "Ân cần dỗ dành, nhường phần ngon cho các em và đỡ đần gia đình",
         "conditions": {},
         "outcomes": [
           {
@@ -38,7 +38,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Dù có lúc mệt nhoài, nhìn các em quấn quýt bên mình và nụ cười an lòng của cha mẹ, bạn thấy lòng ấm áp lạ thường.",
+            "resultText": "Dù có lúc mệt nhoài, nhìn các em quấn quýt bên mình và nụ cười an lòng của người thân, bạn thấy lòng ấm áp lạ thường.",
             "effects": {
               "stamina": -5,
               "happiness": -2,
@@ -115,7 +115,7 @@
       "base": 50,
       "modifiers": []
     },
-    "description": "Là con út trong nhà, hễ có tấm bánh ngon hay đồng quà vặt nào là cha mẹ đều phần cho bạn trước, anh chị cũng thường nhường nhịn mỗi khi bạn mè nheo.",
+    "description": "Là con út trong nhà, hễ có tấm bánh ngon hay đồng quà vặt nào là người nhà đều phần cho bạn trước, anh chị cũng thường nhường nhịn mỗi khi bạn mè nheo.",
     "choices": [
       {
         "label": "Vui vẻ nhận phần hơn, tận hưởng sự nuông chiều của cả nhà",
@@ -126,7 +126,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn lớn lên vô tư lự trong sự bao bọc của cha mẹ, dù thỉnh thoảng anh chị có hơi tị nạnh vì thấy bạn được chiều quá mức.",
+            "resultText": "Bạn lớn lên vô tư lự trong sự bao bọc của người thân, dù thỉnh thoảng anh chị có hơi tị nạnh vì thấy bạn được chiều quá mức.",
             "effects": {
               "happiness": 12,
               "health": 4,
@@ -195,6 +195,9 @@
       ],
       "has_flags": [
         "mo_coi_cha"
+      ],
+      "missing_flags": [
+        "mo_coi_me"
       ]
     },
     "weight": {
@@ -391,10 +394,10 @@
         }
       ]
     },
-    "description": "Tháng ba ngày tám giáp hạt, hũ gạo trong nhà đã cạn đáy từ mấy hôm nay. Cha mẹ nhìn đàn con đói lả mà rưng rưng nước mắt, đành tính chuyện dẫn nhau ra chợ đầu làng xin bố thí.",
+    "description": "Tháng ba ngày tám giáp hạt, hũ gạo trong nhà đã cạn đáy từ mấy hôm nay. Người lớn nhìn đàn con cháu đói lả mà rưng rưng nước mắt, đành tính chuyện dẫn nhau ra chợ đầu làng xin bố thí.",
     "choices": [
       {
-        "label": "Theo mẹ cầm bát mẻ ra cổng chợ xin từng nắm cơm nguội",
+        "label": "Cầm chiếc bát mẻ ra cổng chợ xin từng nắm cơm nguội đỡ đần cả nhà",
         "conditions": {},
         "outcomes": [
           {

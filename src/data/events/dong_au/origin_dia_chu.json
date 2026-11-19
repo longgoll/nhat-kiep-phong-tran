@@ -247,7 +247,7 @@
     "description": "Đêm khuya thanh vắng, bạn tỉnh giấc vì tiếng sột soạt ngoài sân gạch. Qua khe cửa sổ, hai bóng đen đang lén lút cạy khóa kho thóc của điền trang.",
     "choices": [
       {
-        "label": "Giữ bình tĩnh, lén chạy đi đánh thức cha mẹ và gia đinh vây bắt",
+        "label": "Giữ bình tĩnh, lén chạy đi đánh thức người nhà và gia đinh vây bắt",
         "conditions": {},
         "outcomes": [
           {
@@ -369,7 +369,7 @@
       "base": 45,
       "modifiers": []
     },
-    "description": "Đi ngang qua hành lang nhà ngang, bạn vô tình nghe mấy anh chị em đang rì rầm bàn tán xem sau này cha mẹ sẽ chia bao nhiêu mẫu ruộng tốt và phần điền trang cho từng người.",
+    "description": "Đi ngang qua hành lang nhà ngang, bạn vô tình nghe mấy anh chị em đang rì rầm bàn tán xem sau này gia đình sẽ chia bao nhiêu mẫu ruộng tốt và phần điền trang cho từng người.",
     "choices": [
       {
         "label": "Lặng lẽ bỏ đi, tự nhủ phải tự tạo cơ nghiệp riêng chứ không trông chờ chia chác",

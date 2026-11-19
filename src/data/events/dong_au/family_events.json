@@ -264,7 +264,7 @@
         ]
       },
       {
-        "label": "Phụ cha mẹ đi tìm lá tắm và sắc nước giải nhiệt theo lời thầy lang",
+        "label": "Phụ người nhà đi tìm lá tắm và sắc nước giải nhiệt theo lời thầy lang",
         "conditions": {},
         "outcomes": [
           {
@@ -272,7 +272,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn chạy đôn chạy đáo phụ mẹ nhóm bếp nấu nước lá xông, góp phần giúp người thân mau chóng hồi phục.",
+            "resultText": "Bạn chạy đôn chạy đáo nhóm bếp nấu nước lá xông, góp phần giúp người thân mau chóng hồi phục.",
             "effects": {
               "craft_trade": 2,
               "family_copper": -20,
@@ -315,7 +315,7 @@
     "description": "Dầm mưa ngoài đồng suốt mấy ngày gặt chạy bão, cha bạn bỗng lên cơn sốt rét run cầm cập, đắp hai lớp chăn bông vẫn lạnh cóng. Mẹ tất bật tìm thuốc còn bạn muốn đỡ đần phần nào.",
     "choices": [
       {
-        "label": "Ra đồng mót thóc, bắt cua tép và nhặt củi khô về cho mẹ nấu cháo bồi bổ cha",
+        "label": "Ra đồng mót thóc, bắt cua tép và nhặt củi khô về nấu cháo bồi bổ cho cha",
         "conditions": {},
         "outcomes": [
           {

@@ -34,10 +34,10 @@
         }
       ]
     },
-    "description": "Tuổi xuân đã chớm trưởng thành, dưới mái nhà chung nay bắt đầu chật chội trước những dự tính riêng tư. Sau bữa cơm chiều bên ánh đèn dầu leo lét, bạn định bụng thưa với song thân chuyện tách hộ ra ở riêng để tự thân lập nghiệp.",
+    "description": "Tuổi xuân đã chớm trưởng thành, dưới mái nhà chung nay bắt đầu chật chội trước những dự tính riêng tư. Sau bữa cơm chiều bên ánh đèn dầu leo lét, bạn định bụng thưa với bề trên trong nhà chuyện tách hộ ra ở riêng để tự thân lập nghiệp.",
     "choices": [
       {
-        "label": "Xin cha mẹ ra ở riêng lập nghiệp, nhận chút vốn liếng tự lập",
+        "label": "Xin bề trên trong nhà ra ở riêng lập nghiệp, nhận chút vốn liếng tự lập",
         "conditions": {},
         "outcomes": [
           {
@@ -56,7 +56,7 @@
                 }
               ]
             },
-            "resultText": "Cha mẹ gật đầu ưng thuận, tuy trong mắt thoáng chút bùi ngùi nhưng vẫn vui lòng trích từ rương gỗ một ít đồng kẽm cùng mấy đấu gạo làm vốn ban đầu. Người dặn dò hai tháng nữa thu xếp ổn thỏa hãy dựng nếp nhà cho đàng hoàng.",
+            "resultText": "Bề trên trong nhà gật đầu ưng thuận, tuy trong mắt thoáng chút bùi ngùi nhưng vẫn vui lòng trích từ rương gỗ một ít đồng kẽm cùng mấy đấu gạo làm vốn ban đầu. Người dặn dò hai tháng nữa thu xếp ổn thỏa hãy dựng nếp nhà cho đàng hoàng.",
             "effects": {
               "copper": 260,
               "rice": 18,
@@ -76,7 +76,7 @@
                   "delay_days": 60
                 }
               ],
-              "milestone_title": "Xin phép cha mẹ ra ở riêng"
+              "milestone_title": "Xin phép gia đình ra ở riêng"
             }
           },
           {
@@ -84,7 +84,7 @@
               "base": 30,
               "modifiers": []
             },
-            "resultText": "Cảnh nhà vốn thanh bần nên cha mẹ thở dài thương con vất vả, chỉ có thể gói ghém ít gạo mới và vài chục đồng tiền lẻ làm lộ phí. Dù vốn mỏng, bạn vẫn quyết tâm tự dựng cơ đồ bằng đôi tay mình.",
+            "resultText": "Cảnh nhà vốn thanh bần nên người thân thở dài thương con vất vả, chỉ có thể gói ghém ít gạo mới và vài chục đồng tiền lẻ làm lộ phí. Dù vốn mỏng, bạn vẫn quyết tâm tự dựng cơ đồ bằng đôi tay mình.",
             "effects": {
               "copper": 90,
               "rice": 10,
@@ -104,7 +104,7 @@
         ]
       },
       {
-        "label": "Ở lại phụng dưỡng cha mẹ, giữ tròn hòa khí gia đình",
+        "label": "Ở lại phụng dưỡng người thân, giữ tròn hòa khí gia đình",
         "conditions": {},
         "outcomes": [
           {
@@ -112,7 +112,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Nghe bạn thưa sẽ tiếp tục ở lại sớm hôm đỡ đần cơm nước và giữ ấm nếp nhà, cha mẹ rưng rưng cảm động. Cả nhà quây quần bên ấm trà nóng, tình thân thêm phần khăng khít.",
+            "resultText": "Nghe bạn thưa sẽ tiếp tục ở lại sớm hôm đỡ đần cơm nước và giữ ấm nếp nhà, người thân rưng rưng cảm động. Cả nhà quây quần bên ấm trà nóng, tình thân thêm phần khăng khít.",
             "effects": {
               "npc_affinity": [
                 {
@@ -329,7 +329,7 @@
               "base": 35,
               "modifiers": []
             },
-            "resultText": "Đang lúc chén rượu đưa cay, có người bỗng buột miệng tị nạnh chuyện cha mẹ năm xưa chia phần không đều, khiến bữa cơm sum họp bỗng trở nên gượng gạo, sượng sùng.",
+            "resultText": "Đang lúc chén rượu đưa cay, có người bỗng buột miệng tị nạnh chuyện gia đình năm xưa chia phần không đều, khiến bữa cơm sum họp bỗng trở nên gượng gạo, sượng sùng.",
             "effects": {
               "npc_affinity": [
                 {

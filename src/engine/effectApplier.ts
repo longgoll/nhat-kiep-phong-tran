@@ -254,6 +254,12 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
       }
       return npc;
     });
+    if (effects.kill_npc_id === 'npc_father' && !flags.includes('mo_coi_cha')) {
+      flags.push('mo_coi_cha');
+    }
+    if (effects.kill_npc_id === 'npc_mother' && !flags.includes('mo_coi_me')) {
+      flags.push('mo_coi_me');
+    }
   }
 
   if (effects.npc_affinity) {
@@ -261,7 +267,7 @@ export function applyEffects(state: ActiveLifeState, effects: EffectSpec): Activ
       let totalDelta = 0;
       let matched = 0;
       npcs = npcs.map((npc) => {
-        const matchId = mod.npc_id && npc.id === mod.npc_id;
+        const matchId = mod.npc_id && npc.id === mod.npc_id && npc.isAlive;
         const matchRel = mod.relation && npc.relation === mod.relation && npc.isAlive;
         if (matchId || matchRel) {
           matched += 1;

@@ -37,7 +37,7 @@ export const LIFE_FOCUS_OPTIONS: LifeFocusOption[] = [
     id: 'gia_dinh',
     label: 'Gia đình · Bằng hữu',
     effectHint: 'Quan hệ↑ · Hạnh phúc↑',
-    description: 'Dành nhiều tâm trí cho cha mẹ, anh chị em và bạn bè xung quanh.',
+    description: 'Dành nhiều tâm trí cho người thân trong gia đình và bạn bè xung quanh.',
   },
   {
     id: 'suc_khoe',
@@ -254,8 +254,8 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
   },
   {
     id: 'inst_send_parents_money',
-    title: 'Gửi tiền phụng dưỡng cha mẹ phương xa',
-    subtitle: 'Thân thiết cha mẹ +10 · Hạnh phúc +4 · Thanh danh +2',
+    title: 'Gửi tiền phụng dưỡng bậc sinh thành',
+    subtitle: 'Thân thiết gia đình +10 · Hạnh phúc +4 · Thanh danh +2',
     costCopper: 100,
     cooldownDays: 120,
     requiresFlag: 'da_ra_o_rieng',
@@ -265,7 +265,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
       fame: 2,
       npc_affinity: [{ relation: 'parent', delta: 10 }],
     },
-    logText: 'Bạn gửi người quen mang trăm đồng tiền kẽm cùng ít quà về biếu song thân.',
+    logText: 'Bạn gửi người quen mang trăm đồng tiền kẽm cùng ít quà về quê phụng dưỡng bậc sinh thành.',
   },
   {
     id: 'inst_treat_friends',
@@ -514,7 +514,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
   },
   {
     id: 'inst_pay_family_debt',
-    title: 'Trả nợ thay cha mẹ · Xóa văn tự nợ',
+    title: 'Trả nợ cũ gia đình · Xóa văn tự nợ',
     subtitle: 'Xóa cờ mắc nợ · Hạnh phúc +14 · Thanh danh +6 · Thân thiết +15',
     costCopper: 220,
     cooldownDays: 9999,
@@ -527,7 +527,7 @@ export const INSTANT_ADULT_ACTIONS: InstantAdultActionDef[] = [
       npc_affinity: [{ relation: 'parent', delta: 15 }],
       milestone_title: 'Trả sạch nợ nần cho gia đình',
     },
-    logText: 'Bạn mang tiền dành dụm về trả sạch món nợ cũ, xé bỏ văn tự nợ trước sự nhẹ nhõm và tự hào của cha mẹ.',
+    logText: 'Bạn mang tiền dành dụm về trả sạch món nợ cũ, xé bỏ văn tự nợ, trút được gánh nặng nghìn cân cho gia đình.',
   },
   {
     id: 'inst_plague_prayer',

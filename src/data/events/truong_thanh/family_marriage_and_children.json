@@ -5,7 +5,7 @@
     "severity": "major",
     "cooldownDays": 99999,
     "oncePerLife": true,
-    "title": "Món Nợ Cũ Của Song Thân Đến Hạn",
+    "title": "Món Nợ Cũ Của Gia Đình Đến Hạn",
     "conditions": {
       "min_age": 18,
       "max_age": 38,
@@ -23,10 +23,10 @@
       "base": 55,
       "modifiers": []
     },
-    "description": "Món nợ cũ mà gia đình gánh từ thuở bạn còn thơ ấu nay lại bị chủ nợ kéo người tới giục trả. Cha mẹ tuổi đã lớn, nhìn tờ khế ước cũ mà thở dài lo âu.",
+    "description": "Món nợ cũ mà gia đình gánh từ thuở bạn còn thơ ấu nay lại bị chủ nợ kéo người tới giục trả. Người nhà nhìn tờ khế ước cũ mà thở dài lo âu.",
     "choices": [
       {
-        "label": "Xuất tiền tích góp đứng ra trả dứt món nợ thay cha mẹ (-250 đồng)",
+        "label": "Xuất tiền tích góp đứng ra trả dứt món nợ cho gia đình (-250 đồng)",
         "conditions": {
           "min_copper": 250
         },
@@ -36,7 +36,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn đếm đủ 250 đồng đặt lên bàn rồi tự tay xé tờ khế ước cũ trước mặt chủ nợ. Cha mẹ rưng rưng nước mắt nhẹ nhõm, cả nhà từ nay sạch bóng nợ nần!",
+            "resultText": "Bạn đếm đủ 250 đồng đặt lên bàn rồi tự tay xé tờ khế ước cũ trước mặt chủ nợ. Người thân rưng rưng nước mắt nhẹ nhõm, cả nhà từ nay sạch bóng nợ nần!",
             "effects": {
               "copper": -250,
               "remove_flags": [

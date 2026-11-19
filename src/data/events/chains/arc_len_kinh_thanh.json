@@ -140,7 +140,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Nghĩ đến cha mẹ tuổi cao và ruộng vườn quen thuộc, bạn gác lại mộng công danh nơi phồn hoa, chọn ở lại quê hương an ổn qua ngày.",
+            "resultText": "Nghĩ đến người thân và ruộng vườn quen thuộc, bạn gác lại mộng công danh nơi phồn hoa, chọn ở lại quê hương an ổn qua ngày.",
             "effects": {
               "add_flags": [
                 "da_len_kinh_thanh"

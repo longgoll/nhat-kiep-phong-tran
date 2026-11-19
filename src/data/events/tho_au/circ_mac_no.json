@@ -26,7 +26,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Đêm khuya bạn nghe tiếng cha mẹ bàn chuyện khất nợ địa chủ. Bữa cơm độn khoai khiến bạn sớm hiểu sự cơ cực.",
+            "resultText": "Đêm khuya bạn nghe tiếng người lớn trong nhà bàn chuyện khất nợ địa chủ. Bữa cơm độn khoai khiến bạn sớm hiểu sự cơ cực.",
             "effects": {
               "happiness": -4,
               "add_traits": [

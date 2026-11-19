@@ -18,7 +18,7 @@
       "base": 100,
       "modifiers": []
     },
-    "description": "Tròn một tuổi, cha mẹ dọn một chiếc mẹt tre trước sân nhà, bày vài món đồ mộc mạc để xem thiên hướng của bạn. Đôi tay nhỏ xíu của bạn hướng về món nào?",
+    "description": "Tròn một tuổi, gia đình dọn một chiếc mẹt tre trước sân nhà, bày vài món đồ mộc mạc để xem thiên hướng của bạn. Đôi tay nhỏ xíu của bạn hướng về món nào?",
     "choices": [
       {
         "label": "Bốc cây bút tre",
@@ -29,7 +29,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn nắm chặt cây bút tre không buông. Cha mẹ mừng thầm mong sau này con biết chữ nghĩa, thoát cảnh chân lấm tay bùn.",
+            "resultText": "Bạn nắm chặt cây bút tre không buông. Gia đình mừng thầm mong sau này con biết chữ nghĩa, thoát cảnh chân lấm tay bùn.",
             "effects": {
               "education": 5,
               "happiness": 5,
@@ -149,7 +149,7 @@
       "base": 100,
       "modifiers": []
     },
-    "description": "Tròn một tuổi, cha mẹ bày mâm đồ trước gian xưởng nhỏ. Đôi tay nhỏ xíu của bạn hướng về món đồ nào?",
+    "description": "Tròn một tuổi, gia đình bày mâm đồ trước gian xưởng nhỏ. Đôi tay nhỏ xíu của bạn hướng về món đồ nào?",
     "choices": [
       {
         "label": "Bốc cây bút lông",
@@ -214,7 +214,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Bạn cầm ngay cây thước mộc và bàn tính nhỏ nghịch ngợm. Cha mẹ mừng rỡ vì con có duyên nối nghiệp thủ công buôn bán.",
+            "resultText": "Bạn cầm ngay cây thước mộc và bàn tính nhỏ nghịch ngợm. Gia đình mừng rỡ vì con có duyên nối nghiệp thủ công buôn bán.",
             "effects": {
               "craft_trade": 5,
               "add_flags": [
@@ -280,7 +280,7 @@
       "base": 100,
       "modifiers": []
     },
-    "description": "Tròn một tuổi, cha mẹ bày mâm sơn son thếp vàng giữa nhà gạch lớn để bạn bốc đồ thử thiên hướng. Đôi tay nhỏ xíu của bạn hướng về món nào?",
+    "description": "Tròn một tuổi, gia đình bày mâm sơn son thếp vàng giữa nhà gạch lớn để bạn bốc đồ thử thiên hướng. Đôi tay nhỏ xíu của bạn hướng về món nào?",
     "choices": [
       {
         "label": "Bốc cây bút lông & nghiên mực",
@@ -411,7 +411,7 @@
       "base": 100,
       "modifiers": []
     },
-    "description": "Tròn một tuổi, giữa đại sảnh phủ đệ, cha mẹ bày mâm lễ gồm văn phòng tứ bảo, kiếm gỗ, bàn tính và ấn triện nhỏ. Đôi tay nhỏ xíu của bạn hướng về món nào?",
+    "description": "Tròn một tuổi, giữa đại sảnh phủ đệ, gia đình bày mâm lễ gồm văn phòng tứ bảo, kiếm gỗ, bàn tính và ấn triện nhỏ. Đôi tay nhỏ xíu của bạn hướng về món nào?",
     "choices": [
       {
         "label": "Bốc cây bút lông & quyển kinh sử",
@@ -607,7 +607,7 @@
               "base": 100,
               "modifiers": []
             },
-            "resultText": "Ánh mắt bạn sáng rực khi chạm vào ngọc bội vàng son. Mẫu thân khẽ mỉm cười chúc bạn một đời phú quý, khéo léo giữ gìn tài lộc.",
+            "resultText": "Ánh mắt bạn sáng rực khi chạm vào ngọc bội vàng son. Người thân khẽ mỉm cười chúc bạn một đời phú quý, khéo léo giữ gìn tài lộc.",
             "effects": {
               "craft_trade": 5,
               "add_flags": [
@@ -719,7 +719,11 @@
       },
       {
         "label": "Nép bên vạt áo mẹ, nghe kể chuyện cổ tích & ca dao",
-        "conditions": {},
+        "conditions": {
+          "missing_flags": [
+            "mo_coi_me"
+          ]
+        },
         "outcomes": [
           {
             "weight": {
@@ -761,6 +765,9 @@
         "ban_nong",
         "thu_cong",
         "dia_chu"
+      ],
+      "missing_flags": [
+        "mo_coi_me"
       ]
     },
     "weight": {

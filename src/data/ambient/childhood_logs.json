@@ -13,7 +13,39 @@
     {
       "day": 240,
       "text": "Bạn đã biết lẫy và ê a gọi tên cha mẹ.",
-      "tone": "positive"
+      "tone": "positive",
+      "conditions": {
+        "missing_flags": [
+          "mo_coi_cha",
+          "mo_coi_me"
+        ]
+      }
+    },
+    {
+      "day": 240,
+      "text": "Bạn đã biết lẫy và ê a gọi tiếng mẹ đầu đời.",
+      "tone": "positive",
+      "conditions": {
+        "has_flags": [
+          "mo_coi_cha"
+        ],
+        "missing_flags": [
+          "mo_coi_me"
+        ]
+      }
+    },
+    {
+      "day": 240,
+      "text": "Bạn đã biết lẫy và ê a gọi tiếng cha đầu đời.",
+      "tone": "positive",
+      "conditions": {
+        "has_flags": [
+          "mo_coi_me"
+        ],
+        "missing_flags": [
+          "mo_coi_cha"
+        ]
+      }
     },
     {
       "day": 300,
@@ -37,6 +69,9 @@
       "conditions": {
         "origin_in": [
           "quan_lai"
+        ],
+        "missing_flags": [
+          "mo_coi_cha"
         ]
       }
     },
@@ -117,7 +152,12 @@
     {
       "day": 1200,
       "text": "Tối nào trước khi ngủ, mẹ cũng kể chuyện cổ tích cho bạn nghe.",
-      "tone": "positive"
+      "tone": "positive",
+      "conditions": {
+        "missing_flags": [
+          "mo_coi_me"
+        ]
+      }
     },
     {
       "day": 1320,
@@ -126,6 +166,9 @@
       "conditions": {
         "has_flags": [
           "mo_coi_cha"
+        ],
+        "missing_flags": [
+          "mo_coi_me"
         ],
         "origin_in": [
           "ban_nong",
@@ -161,6 +204,9 @@
         "origin_in": [
           "ban_nong",
           "thu_cong"
+        ],
+        "missing_flags": [
+          "mo_coi_me"
         ]
       }
     },
@@ -232,6 +278,9 @@
         "origin_in": [
           "ban_nong",
           "thu_cong"
+        ],
+        "missing_flags": [
+          "mo_coi_me"
         ]
       }
     },
@@ -301,6 +350,10 @@
           "thu_cong",
           "dia_chu",
           "quan_lai"
+        ],
+        "missing_flags": [
+          "mo_coi_cha",
+          "mo_coi_me"
         ]
       }
     },
@@ -313,6 +366,10 @@
           "thu_cong",
           "dia_chu",
           "quan_lai"
+        ],
+        "missing_flags": [
+          "mo_coi_cha",
+          "mo_coi_me"
         ]
       }
     },
@@ -322,6 +379,9 @@
       "conditions": {
         "origin_in": [
           "hoang_toc"
+        ],
+        "missing_flags": [
+          "mo_coi_me"
         ]
       }
     },
@@ -331,6 +391,9 @@
       "conditions": {
         "has_flags": [
           "mo_coi_cha"
+        ],
+        "missing_flags": [
+          "mo_coi_me"
         ],
         "origin_in": [
           "ban_nong",
@@ -345,8 +408,16 @@
       "conditions": {
         "origin_in": [
           "thu_cong"
+        ],
+        "missing_flags": [
+          "mo_coi_cha",
+          "mo_coi_me"
         ]
       }
+    },
+    {
+      "focusId": "giup_nha",
+      "text": "Bạn tự giác thu dọn đồ đạc, quét sân và phụ giúp mọi việc trong nhà vừa sức mình."
     },
     {
       "focusId": "giup_nha",

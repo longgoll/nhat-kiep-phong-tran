@@ -62,7 +62,7 @@
 | `lien_minh_the_gia` | evt_adult_quan_lai_marriage_alliance | — |
 | `mau_phi_phuc_sung` | evt_adult_exp_hoang_toc_vindication | — |
 | `mo_coi_cha` | evt_chain_bao_hieu_phu_hoang_2_nguy, evt_child_ban_nong_corvee, evt_child_quan_lai_fall | evt_chain_bao_hieu_me_1(has_flags), evt_chain_bao_hieu_phu_hoang_1(missing_flags), evt_child_exp_circ_fatherless(has_flags), evt_child_poor_begging(has_any_flag) |
-| `mo_coi_me` | evt_chain_bao_hieu_me_2_nguy, evt_chain_bao_hieu_hoang_toc_2_nguy, evt_family_mother_old_age_passing | — |
+| `mo_coi_me` | evt_chain_bao_hieu_me_2_nguy, evt_chain_bao_hieu_hoang_toc_2_nguy, evt_family_mother_old_age_passing | evt_child_exp_circ_fatherless(missing_flags), evt_child_female_boudoir_arts(missing_flags), evt_child_exp_hoang_toc_harem_intrigue(missing_flags), evt_child_exp_hoang_toc_royal_banquet(missing_flags) |
 | `nghe_ky_thanh_lau` | evt_fate_brothel_or_bodyguard, evt_fate_brothel_redemption(-remove) | evt_fate_brothel_or_bodyguard(missing_flags), evt_fate_brothel_redemption(has_flags) |
 | `nho_thu_quan_tham` | evt_child_exp_thu_cong_extortion, evt_scholar_rich_backdoor | — |
 | `nu_cai_nam_trang` | evt_nu_cai_nam_trang_exposed(-remove), evt_female_crossdress_crossroads | evt_nu_cai_nam_trang_exposed(has_flags), evt_female_noble_flower_banquet(missing_flags), evt_female_crossdress_crossroads(missing_flags), evt_female_late_marriage_pressure(missing_flags) |
@@ -278,7 +278,7 @@
 | `evt_elder_grandchild_blessing` | Sum Vầy Con Cháu Mừng Tuổi Thất Tuần | adulthood | major | 2160 | all | `truong_thanh/family_and_elder_ext.json` |
 | `evt_elder_memoir_writing` | Soạn Gia Phả & Hồi Ký Lưu Truyền Hậu Thế | adulthood | major (1x) | 99999 | all | `truong_thanh/family_and_elder_ext.json` |
 | `evt_elder_old_rival_reconcile` | Gặp Lại Cố Nhân Xưa Lúc Tuổi Xế Chiều | adulthood | major (1x) | 99999 | all | `truong_thanh/family_and_elder_ext.json` |
-| `evt_adult_family_pay_old_debt` | Món Nợ Cũ Của Song Thân Đến Hạn | adulthood | major (1x) | 99999 | ban_nong, thu_cong, dia_chu | `truong_thanh/family_marriage_and_children.json` |
+| `evt_adult_family_pay_old_debt` | Món Nợ Cũ Của Gia Đình Đến Hạn | adulthood | major (1x) | 99999 | ban_nong, thu_cong, dia_chu | `truong_thanh/family_marriage_and_children.json` |
 | `evt_adult_family_sibling_wedding` | Hỷ Sự Của Anh Chị Em Trong Nhà | adulthood | major (1x) | 99999 | all | `truong_thanh/family_marriage_and_children.json` |
 | `evt_adult_family_spouse_hardship` | Vợ Chồng Đồng Cam Cộng Khổ | adulthood | major | 720 | all | `truong_thanh/family_marriage_and_children.json` |
 | `evt_adult_family_child_education` | Chuyện Học Hành Của Con Cái | adulthood | major | 900 | all | `truong_thanh/family_marriage_and_children.json` |

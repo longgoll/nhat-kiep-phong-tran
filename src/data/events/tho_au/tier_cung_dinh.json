@@ -15,7 +15,8 @@
       ],
       "missing_flags": [
         "gia_toc_sa_sut",
-        "that_sung_cung_dinh"
+        "that_sung_cung_dinh",
+        "mo_coi_me"
       ]
     },
     "weight": {
@@ -84,7 +85,8 @@
         "hoang_toc"
       ],
       "missing_flags": [
-        "gia_toc_sa_sut"
+        "gia_toc_sa_sut",
+        "mo_coi_me"
       ]
     },
     "weight": {

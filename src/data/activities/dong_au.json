@@ -3,7 +3,7 @@
     "id": "chan_trau",
     "name": "Chăn trâu, cắt cỏ, mót lúa phụ gia đình",
     "category": "Gia đình",
-    "description": "Theo cha mẹ ra đồng từ sáng sớm. Rèn luyện sức khỏe dẻo dai và phụ thêm thóc gạo cho nhà.",
+    "description": "Ra đồng từ sáng sớm. Rèn luyện sức khỏe dẻo dai và phụ thêm thóc gạo cho nhà.",
     "conditions": {
       "min_age": 6,
       "max_age": 10,
@@ -25,7 +25,7 @@
     "id": "lam_ruong_lon",
     "name": "Phụ cày cấy, tát nước ngoài đồng",
     "category": "Gia đình",
-    "description": "Đã lớn hơn một chút, bạn đủ sức gánh vác việc nặng ngoài ruộng cùng cha mẹ.",
+    "description": "Đã lớn hơn một chút, bạn đủ sức gánh vác việc nặng ngoài ruộng phụ giúp gia đình.",
     "conditions": {
       "min_age": 10,
       "max_age": 12,
@@ -214,6 +214,9 @@
       "max_age": 12,
       "has_flags": [
         "mo_coi_cha"
+      ],
+      "missing_flags": [
+        "mo_coi_me"
       ]
     },
     "costCopper": 0,
@@ -256,7 +259,7 @@
   },
   {
     "id": "xin_hoc_chu",
-    "name": "Xin cha mẹ cho đi học chữ trường làng",
+    "name": "Theo học chữ tại trường làng",
     "category": "Học tập",
     "description": "Gia đình bỏ tiền đóng học phí để bạn theo học bài bản, tìm đường đổi đời qua khoa cử.",
     "conditions": {
@@ -414,7 +417,7 @@
     "id": "duong_benh_nha",
     "name": "Nghỉ ngơi dưỡng bệnh, bồi bổ thân thể",
     "category": "Sức khỏe",
-    "description": "Thể trạng yếu ớt khiến cha mẹ giữ bạn ở nhà nghỉ ngơi, uống thuốc bổ.",
+    "description": "Thể trạng yếu ớt khiến người nhà giữ bạn ở nhà nghỉ ngơi, uống thuốc bổ.",
     "conditions": {
       "min_age": 6,
       "max_age": 12,

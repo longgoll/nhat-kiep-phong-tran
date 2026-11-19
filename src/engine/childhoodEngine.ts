@@ -75,6 +75,32 @@ export const CHILDHOOD_FOCUS_OPTIONS: ChildhoodFocusOption[] = [
 ];
 
 /**
+ * Returns an accurate Vietnamese parent reference based on which parents are alive.
+ */
+function getLivingParentTerm(state: ActiveLifeState): {
+  term: string;
+  hasFather: boolean;
+  hasMother: boolean;
+  hasAny: boolean;
+} {
+  const hasFather =
+    state.npcs.some((n) => n.id === 'npc_father' && n.isAlive) &&
+    !state.flags.includes('mo_coi_cha');
+  const hasMother =
+    state.npcs.some((n) => n.id === 'npc_mother' && n.isAlive) &&
+    !state.flags.includes('mo_coi_me');
+  const term =
+    hasFather && hasMother
+      ? 'cha mẹ'
+      : hasFather
+        ? 'cha'
+        : hasMother
+          ? 'mẹ'
+          : 'người nhà';
+  return { term, hasFather, hasMother, hasAny: hasFather || hasMother };
+}
+
+/**
  * Returns childhood focus options tailored to the character's origin class, living tier, and traits.
  */
 export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocusOption[] {
@@ -82,6 +108,7 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
   const tier = state.family?.familyLivingTier ?? 'du_an';
   const isProdigy = state.traits?.includes('than_dong') ?? false;
   const prodigyEduBonus = isProdigy ? 0.1 : 0;
+  const parentInfo = getLivingParentTerm(state);
   const isDeclined =
     tier === 'tung_thieu' ||
     state.flags.includes('gia_toc_sa_sut') ||
@@ -115,8 +142,9 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
           ...base,
           label: 'Học chữ · Tính sổ',
           effectHint: `Học thức↑${suffix} · Khéo tay↑`,
-          description:
-            'Theo học lớp thầy đồ làng và tập tính toán sổ sách buôn bán cùng cha mẹ.',
+          description: parentInfo.hasAny
+            ? `Theo học lớp thầy đồ làng và tập tính toán sổ sách buôn bán cùng ${parentInfo.term}.`
+            : 'Theo học lớp thầy đồ làng và tự tập tính toán sổ sách buôn bán.',
           monthlyEffects: { education: 0.2 + prodigyEduBonus, craft_trade: 0.06, happiness: 0.04 },
         };
       case 'dia_chu':
@@ -229,6 +257,14 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
     }
 
     if (origin !== 'ban_nong') {
+      if (opt.id === 'giup_nha') {
+        return {
+          ...opt,
+          description: parentInfo.hasAny
+            ? `Phụ ${parentInfo.term} việc đồng áng, buôn bán hoặc giữ nếp nhà để gia đình thêm khấm khá.`
+            : 'Phụ giúp việc nhà cửa, buôn bán và giữ nếp sinh hoạt để gia cảnh thêm ổn định.',
+        };
+      }
       return opt;
     }
 
@@ -246,8 +282,9 @@ export function getChildhoodFocusOptions(state: ActiveLifeState): ChildhoodFocus
           ...opt,
           label: 'Chăn trâu · Phụ đồng áng',
           effectHint: 'Gia sản↑ · Sức khỏe↑ · Gắn kết↑',
-          description:
-            'Theo cha mẹ ra đồng cắt cỏ, chăn trâu, mót lúa để đỡ đần miếng cơm manh áo cho cả nhà.',
+          description: parentInfo.hasAny
+            ? `Theo ${parentInfo.term} ra đồng cắt cỏ, chăn trâu, mót lúa để đỡ đần miếng cơm manh áo cho cả nhà.`
+            : 'Ra đồng cắt cỏ, chăn trâu, mót lúa để tự lo miếng cơm manh áo cho gia đình.',
           monthlyEffects: { health: 0.08, relationships: 0.14, family_copper: 15 },
         };
       case 'ren_vo':
@@ -372,11 +409,12 @@ function findEligibleMilestoneEvent(
 
 const DEFAULT_AMBIENT_DATA: ChildhoodAmbientData = {
   infancyMilestones: [
-    { day: 240, text: 'Bạn đã biết lẫy và ê a gọi tên cha mẹ.', tone: 'positive' },
+    { day: 240, text: 'Bạn đã biết lẫy và ê a gọi tên cha mẹ.', tone: 'positive', conditions: { missing_flags: ['mo_coi_cha', 'mo_coi_me'] } },
+    { day: 240, text: 'Bạn đã biết lẫy và ê a tập gọi tiếng đầu đời.', tone: 'positive', conditions: { has_any_flag: ['mo_coi_cha', 'mo_coi_me'] } },
     { day: 420, text: 'Bạn chập chững những bước đi đầu tiên. Cả nhà vỗ tay reo mừng.', tone: 'milestone' },
     { day: 600, text: 'Bạn nói được từ đầu tiên rõ ràng, đôi mắt sáng long lanh.', tone: 'positive' },
     { day: 900, text: 'Chỉ một nắm đất, vài hòn sỏi cũng đủ để bạn chơi đùa suốt buổi.', tone: 'neutral' },
-    { day: 1200, text: 'Tối nào trước khi ngủ, mẹ cũng kể chuyện cổ tích cho bạn nghe.', tone: 'positive' },
+    { day: 1200, text: 'Tối nào trước khi ngủ, mẹ cũng kể chuyện cổ tích cho bạn nghe.', tone: 'positive', conditions: { missing_flags: ['mo_coi_me'] } },
     { day: 1560, text: 'Bạn bắt đầu tò mò với thế giới bên ngoài, hay chạy quanh sân hỏi đủ chuyện.', tone: 'neutral' },
     { day: 1890, text: 'Người lớn trong xóm khen bạn lanh lợi, ngoan ngoãn.', tone: 'positive' },
   ],
@@ -385,8 +423,9 @@ const DEFAULT_AMBIENT_DATA: ChildhoodAmbientData = {
     { focusId: 'hoc_tap', text: 'Buổi tối bên ánh đèn dầu, bạn chăm chỉ luyện viết từng nét chữ ngay ngắn.' },
     { focusId: 'ban_be', text: 'Bạn cùng đám trẻ trong xóm thả diều, chơi ô ăn quan rộn rã cả buổi chiều.' },
     { focusId: 'ban_be', text: 'Lũ bạn đồng niên kéo nhau ra bờ đê hóng gió và chia nhau trái ổi vườn nhà.' },
-    { focusId: 'giup_nha', text: 'Bạn phụ cha mẹ thu dọn đồ đạc, quét sân và làm những việc vừa sức.' },
-    { focusId: 'giup_nha', text: 'Thấy bạn chăm chỉ đỡ đần việc nhà, cha mẹ mỉm cười đầy tự hào.' },
+    { focusId: 'giup_nha', text: 'Bạn phụ cha mẹ thu dọn đồ đạc, quét sân và làm những việc vừa sức.', conditions: { missing_flags: ['mo_coi_cha', 'mo_coi_me'] } },
+    { focusId: 'giup_nha', text: 'Thấy bạn chăm chỉ đỡ đần việc nhà, cha mẹ mỉm cười đầy tự hào.', conditions: { missing_flags: ['mo_coi_cha', 'mo_coi_me'] } },
+    { focusId: 'giup_nha', text: 'Bạn chăm chỉ thu dọn đồ đạc, quét sân và đỡ đần việc nhà vừa sức.' },
     { focusId: 'ren_vo', text: 'Sáng sớm bạn ra sân hít thở khí trời, tập vài đường quyền cơ bản cho dẻo dai.' },
     { focusId: 'ren_vo', text: 'Bạn chạy quanh bờ ao rèn sức bền, mồ hôi ướt đẫm nhưng tinh thần rất sảng khoái.' },
     { focusId: 'so_thich', text: 'Bạn say sưa với thú vui riêng, quên cả thời gian trôi qua.' },
@@ -482,10 +521,13 @@ export function advanceChildhoodMonth(
     const canAffordMedicine = familyWealth >= 45;
     if (canAffordMedicine) {
       state = applyEffects(state, { family_copper: -25, health: -1.5, happiness: -1 });
+      const parentInfo = getLivingParentTerm(state);
       const sickMsg =
         state.profile.originClass === 'hoang_toc'
           ? 'Trở trời bạn bị cảm sốt, trong cung vội mời thái y bắt mạch kê phương thuốc bổ cho uống nên mau khỏi.'
-          : 'Trở trời bạn bị cảm sốt, cha mẹ vội trích tiền cắt thuốc bắc cho uống nên mau khỏi.';
+          : parentInfo.hasAny
+            ? `Trở trời bạn bị cảm sốt, ${parentInfo.term} vội trích tiền cắt thuốc bắc cho uống nên mau khỏi.`
+            : 'Trở trời bạn bị cảm sốt, may còn chút tiền trong nhà cắt thuốc bắc uống nên mau khỏi.';
       state = {
         ...state,
         logs: appendLog(
@@ -784,8 +826,18 @@ function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeState {
       : 'Bước vào tuổi 13 tự lập',
   });
 
+  const parentInfo = getLivingParentTerm(state);
+  const teenGiver =
+    parentInfo.hasFather && parentInfo.hasMother
+      ? 'Cha mẹ'
+      : parentInfo.hasFather
+        ? 'Cha'
+        : parentInfo.hasMother
+          ? 'Mẹ'
+          : 'Gia đình';
+
   const teenLogByOrigin: Record<ActiveLifeState['profile']['originClass'], string> = {
-    ban_nong: `Tuổi 13 thành đinh! Cha mẹ chắt chiu chia cho ${familyGrantCopper} đồng tiền vốn và ${personalRice} đấu gạo làm hành trang tự lập.`,
+    ban_nong: `Tuổi 13 thành đinh! ${teenGiver} chắt chiu chia cho ${familyGrantCopper} đồng tiền vốn và ${personalRice} đấu gạo làm hành trang tự lập.`,
     thu_cong: `Tuổi 13 học nghề lập nghiệp! Gia đình trích ${familyGrantCopper} đồng vốn liếng cùng ${personalRice} đấu gạo để bạn tự xoay xở.`,
     dia_chu: `Tuổi 13 nối dõi cơ nghiệp! Gia đình cấp ${familyGrantCopper} đồng tiền tiêu và ${personalRice} đấu gạo làm vốn lập thân.`,
     quan_lai: isDeclined

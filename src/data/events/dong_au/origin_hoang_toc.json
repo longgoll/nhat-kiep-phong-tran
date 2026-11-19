@@ -207,7 +207,8 @@
         "hoang_toc"
       ],
       "missing_flags": [
-        "that_sung_cung_dinh"
+        "that_sung_cung_dinh",
+        "mo_coi_me"
       ]
     },
     "weight": {
@@ -351,7 +352,8 @@
         "hoang_toc"
       ],
       "missing_flags": [
-        "that_sung_cung_dinh"
+        "that_sung_cung_dinh",
+        "mo_coi_me"
       ]
     },
     "weight": {
@@ -423,6 +425,9 @@
       ],
       "has_flags": [
         "that_sung_cung_dinh"
+      ],
+      "missing_flags": [
+        "mo_coi_me"
       ],
       "has_living_npc_id": "npc_father"
     },
@@ -516,6 +521,9 @@
       ],
       "has_flags": [
         "that_sung_cung_dinh"
+      ],
+      "missing_flags": [
+        "mo_coi_me"
       ]
     },
     "weight": {
