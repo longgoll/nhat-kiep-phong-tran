@@ -218,9 +218,12 @@ export function AdultDashboard() {
         lastTickTimeRef.current = now;
         setSubMonthProgress(0);
         advanceAdultDays(cfg.days);
-        return;
+        if (useActiveLifeStore.getState().isSimulating) {
+          return;
+        }
+      } else {
+        setSubMonthProgress(Math.min(1, elapsed / cfg.ms));
       }
-      setSubMonthProgress(Math.min(1, elapsed / cfg.ms));
       rafId = window.requestAnimationFrame(frame);
     };
 

@@ -981,7 +981,7 @@ export function advanceDays(
       return { state, daysSimulated, pausedReason: 'birthday' };
     }
 
-    if (isBirthday && newAge >= 13) {
+    if (isBirthday && newAge >= 13 && state.yearPlan?.yearAge !== newAge) {
       state = planYear(state, eventsPool);
     }
 

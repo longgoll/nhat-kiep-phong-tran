@@ -315,6 +315,9 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
           resPaused: AutoPauseReason | null | undefined,
         ) => {
           const { autoDecide } = get();
+          // 'major_event' is handled by pendingEvent (EventModal) without killing autoPlaySpeed,
+          // matching ChildhoodView behavior where playback resumes after choosing an option.
+          const effectivePauseReason = resPaused === 'major_event' ? null : (resPaused ?? null);
           if (resPending && autoDecide) {
             const idx = pickAutoChoiceIndex(resState, resPending);
             const resolved = resolveEventChoice(resState, resPending, idx);
@@ -324,7 +327,7 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
             set({
               life: finalState,
               pendingEvent: null,
-              lastPauseReason: resPaused ?? null,
+              lastPauseReason: effectivePauseReason,
               lastEventResult: `[Tự động chọn] ${resolved.resultText}`,
               isSimulating: false,
             });
@@ -333,13 +336,15 @@ export const useActiveLifeStore = create<ActiveLifeStore>()(
           set({
             life: resState,
             pendingEvent: resPending ?? null,
-            lastPauseReason: resPaused ?? null,
+            lastPauseReason: effectivePauseReason,
             lastEventResult: null,
             isSimulating: false,
           });
         };
 
-        const worker = getWorker();
+        // Run short ticks (<= 30 days) synchronously so the rAF timeline bar stays 60fps
+        // without Worker structuredClone latency or backwards progress jumps.
+        const worker = days > 30 ? getWorker() : null;
         if (!worker) {
           const res = advanceDays(life, days, ALL_ACTIONS, ALL_ADULTHOOD_EVENTS, autoPauseConfig);
           applyResult(res.state, res.pendingEvent, res.pausedReason);

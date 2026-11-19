@@ -86,6 +86,7 @@ export function ChildhoodView() {
   const lastTickTimeRef = useRef<number>(0);
 
   const currentAge = life ? getAgeYears(life.profile.totalDays) : 0;
+  const isTeenReady = currentAge >= 13;
   const isLifeAlive = life?.isAlive ?? false;
   const hasPendingEvent = Boolean(pendingEvent);
 
@@ -99,7 +100,7 @@ export function ChildhoodView() {
       setSubMonthProgress(0);
       return;
     }
-    if (currentAge >= 13 || hasPendingEvent) {
+    if (isTeenReady || hasPendingEvent) {
       setSubMonthProgress(0);
       return;
     }
@@ -125,7 +126,7 @@ export function ChildhoodView() {
 
     rafId = window.requestAnimationFrame(frame);
     return () => window.cancelAnimationFrame(rafId);
-  }, [autoPlaySpeed, isLifeAlive, hasPendingEvent, currentAge]);
+  }, [autoPlaySpeed, isLifeAlive, hasPendingEvent, isTeenReady]);
 
   if (!life) return null;
 
@@ -133,7 +134,6 @@ export function ChildhoodView() {
   const dayOfYear = life.profile.totalDays % 360;
   const originMeta = ORIGIN_METADATA[life.profile.originClass];
   const isInfancy = age < 6;
-  const isTeenReady = age >= 13;
   const activeFocusId = life.schedule.childhoodFocus || 'giup_nha';
 
   const tierDots = life.family ? TIER_DOTS[life.family.familyLivingTier] ?? 1 : 1;
