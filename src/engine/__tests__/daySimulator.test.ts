@@ -181,7 +181,7 @@ describe('Day Simulator (MVP 2)', () => {
       pauseOnNoFood: true,
     });
     expect(resStudent.state.assets.wealthCopper).toBeGreaterThan(500);
-    expect(resStudent.state.family!.familyWealthCopper).toBeLessThan(10000);
+    expect(resStudent.state.family!.familyWealthCopper).toBeLessThan(resIdle.state.family!.familyWealthCopper);
   });
 
   it('does not trap player in a 2-day no_food pause loop when foraging fallback runs', () => {

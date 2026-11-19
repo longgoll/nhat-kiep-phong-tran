@@ -17,9 +17,9 @@ export interface FamilyCashflowBreakdown {
 const PER_MOUTH_COST_BY_ORIGIN: Record<OriginClass, number> = {
   ban_nong: 4,
   thu_cong: 11,
-  dia_chu: 42,
-  quan_lai: 85,
-  hoang_toc: 220,
+  dia_chu: 55,
+  quan_lai: 140,
+  hoang_toc: 500,
 };
 
 /**
@@ -52,7 +52,8 @@ export function computeFamilyMonthlyNetCopper(state: ActiveLifeState): FamilyCas
     (n) =>
       n.isAlive &&
       (n.relation === 'parent' || n.relation === 'sibling') &&
-      !(origin === 'hoang_toc' && (n.id.startsWith('npc_concubine_') || n.id === 'npc_grandmother')),
+      !n.id.startsWith('npc_concubine_') &&
+      n.id !== 'npc_grandmother',
   ).length;
   const livingAway =
     state.flags.includes('da_ra_o_rieng') ||
@@ -72,7 +73,7 @@ export function computeFamilyMonthlyNetCopper(state: ActiveLifeState): FamilyCas
   // Upkeep for wealthier estates to prevent runaway inflation during childhood
   const familyWealth = state.family?.familyWealthCopper ?? 0;
   if (origin === 'dia_chu' || origin === 'quan_lai' || origin === 'hoang_toc') {
-    expense += Math.round(familyWealth * 0.002);
+    expense += Math.round(familyWealth * 0.0012);
   }
 
   if (state.flags.includes('that_sung_cung_dinh')) {
@@ -135,7 +136,7 @@ export function applyMoveOutInheritance(state: ActiveLifeState): ActiveLifeState
   const relScale = state.stats.relationships >= 50 ? 1.15 : state.stats.relationships < 20 ? 0.7 : 1.0;
 
   const rawShare = Math.round((familyWealth * orderBonus * relScale) / Math.max(1, 1 + siblings * 0.6));
-  const cappedShare = Math.min(4000, Math.min(Math.floor(familyWealth * 0.6), rawShare));
+  const cappedShare = Math.min(15000, Math.min(Math.floor(familyWealth * 0.6), rawShare));
   if (cappedShare <= 0) return state;
 
   const next = applyEffects(state, {
@@ -199,7 +200,7 @@ export function applyFinalInheritanceIfEligible(state: ActiveLifeState): ActiveL
       next.logs,
       next.profile.totalDays,
       'event',
-      `Song thân đều đã quy tiên, bạn được chia ${formatCopper(finalShare)} di sản gia đình để lại.`,
+      `Cả hai đấng sinh thành đều đã quy tiên, bạn được chia ${formatCopper(finalShare)} di sản gia đình để lại.`,
       { tone: 'positive' },
     ),
   };

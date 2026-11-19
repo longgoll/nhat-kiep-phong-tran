@@ -59,8 +59,15 @@ describe('Economy, Food & Stipend Integrity Audit', () => {
       expect(life.schedule.afternoon).toBe('act_nghi_ngoi');
       expect(life.schedule.evening).toBe('act_nghi_ngoi');
       expect(life.schedule.fallbackRules).toEqual([]);
-      // Personal grant at age 13 must be bounded (never >450đ) and logs must not claim royal stipend without rank
-      expect(life.assets.wealthCopper).toBeLessThanOrEqual(450);
+      // Personal grant at age 13 must be bounded by origin tier and logs must not claim royal stipend without rank
+      const maxExpectedAt13: Record<OriginClass, number> = {
+        ban_nong: 120,
+        thu_cong: 350,
+        dia_chu: 1350,
+        quan_lai: 2800,
+        hoang_toc: 6500,
+      };
+      expect(life.assets.wealthCopper).toBeLessThanOrEqual(maxExpectedAt13[origin]);
       expect(life.assets.rice).toBeLessThanOrEqual(50);
       const lastTransitionLog = life.logs.find((l) => l.text.includes('Tuổi 13'));
       if (lastTransitionLog) {

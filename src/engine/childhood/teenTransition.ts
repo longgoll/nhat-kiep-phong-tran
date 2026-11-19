@@ -27,11 +27,11 @@ export function applyTeenTransition(inputState: ActiveLifeState): ActiveLifeStat
   }
 
   const maxGrantByOrigin: Record<ActiveLifeState['profile']['originClass'], number> = {
-    ban_nong: 40,
-    thu_cong: 80,
-    dia_chu: 150,
-    quan_lai: 250,
-    hoang_toc: 300,
+    ban_nong: 60,
+    thu_cong: 250,
+    dia_chu: 1200,
+    quan_lai: 2500,
+    hoang_toc: 6000,
   };
   const wasIndentured = inputState.flags.includes('tung_o_do');
   const continueServitude =

@@ -113,8 +113,8 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
   const circ = circList[circPick.value];
 
   if (circ.isTonThat) {
-    fatherOcc = { id: 'quan_vuong', label: 'Quận vương Tôn thất', monthlyIncome: 850 };
-    motherOcc = { id: 'vuong_phi', label: 'Vương phi', monthlyIncome: 140 };
+    fatherOcc = { id: 'quan_vuong', label: 'Quận vương Tôn thất', monthlyIncome: 4500 };
+    motherOcc = { id: 'vuong_phi', label: 'Vương phi', monthlyIncome: 900 };
   } else if (originClass === 'hoang_toc' && circ.fatherAlive === false) {
     fatherOcc = { id: 'tien_de', label: 'Tiên đế quá cố', monthlyIncome: 0 };
   }
@@ -330,8 +330,8 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       familyAssetsSummary.push(`${servantCount} thợ phụ lành nghề`);
     }
   } else if (originClass === 'dia_chu') {
-    const minAcres = isStartDeclined ? 2 : familyWealthCopper >= 12000 ? 16 : 7;
-    const maxAcres = isStartDeclined ? 5 : familyWealthCopper >= 12000 ? 28 : 15;
+    const minAcres = isStartDeclined ? 4 : familyWealthCopper >= 28000 ? 22 : 10;
+    const maxAcres = isStartDeclined ? 8 : familyWealthCopper >= 28000 ? 40 : 21;
     const acresRoll = randomInt(prng, minAcres, maxAcres);
     prng = acresRoll.nextState;
     familyAssetsSummary.push(
@@ -351,8 +351,13 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       servantCount > 0 ? `Quản gia & ${servantCount} gia đinh` : 'Ít người làm thuê',
     );
   } else if (originClass === 'quan_lai') {
+    const officialAcresRoll = randomInt(prng, isStartDeclined ? 3 : 15, isStartDeclined ? 7 : 35);
+    prng = officialAcresRoll.nextState;
     familyAssetsSummary.push(
       isStartDeclined ? 'Gian nhà nhỏ nơi quê cũ' : 'Phủ đệ rộng rãi chốn quan trường',
+      isStartDeclined
+        ? `${officialAcresRoll.value} mẫu ruộng cũ nơi quê nhà`
+        : `${officialAcresRoll.value} mẫu lộc điền & trang trại`,
       fatherOcc.id === 'quan_vo'
         ? 'Binh thư & binh khí gia truyền'
         : fatherOcc.id === 'tham_quan'
@@ -361,7 +366,7 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
       servantCount > 0 ? `Tổng quản, vú em & ${servantCount} gia nhân` : 'Gia nhân đã ly tán',
     );
   } else {
-    const royalAcres = randomInt(prng, 15, 35);
+    const royalAcres = randomInt(prng, 60, 150);
     prng = royalAcres.nextState;
     familyAssetsSummary.push(
       circ.isTonThat
@@ -370,10 +375,10 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
           ? 'Tẩm cung hẻo lánh'
           : 'Cung điện trong Tử Cấm Thành',
       isStartDeclined
-        ? 'Bổng lộc bị cắt giảm'
+        ? 'Bổng lộc nội đình bị cắt giảm'
         : circ.isTonThat
-          ? `${royalAcres.value} mẫu đất phong & bổng lộc`
-          : 'Đất phong & bổng lộc Hoàng gia',
+          ? `${royalAcres.value} mẫu thái ấp & bổng lộc`
+          : `Nội khố Hoàng gia & ${royalAcres.value} mẫu thái ấp`,
       isStartDeclined
         ? 'Lão thái giám & cung nữ trung thành'
         : servantCount > 0

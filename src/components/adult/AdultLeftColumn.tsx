@@ -2,6 +2,7 @@ import { Heart, Smile, Users, BookOpen, ScrollText } from 'lucide-react';
 import { getAgeYears } from '../../types/activeLife';
 import { ALL_ACTIONS } from '../../data/registry';
 import { computeFamilyMonthlyNetCopper } from '../../engine/childhoodEngine';
+import { getFamilyCoveredLifestyleTier } from '../../engine/daySimulator';
 import { formatCopper } from '../../engine/economy';
 import {
   FAMILY_TIER_LABELS,
@@ -77,6 +78,11 @@ export function AdultLeftColumn({
       ? `Làm thêm tự do (${freelanceAction.name})`
       : rawJobLabel;
   const familyCashflow = life.family ? computeFamilyMonthlyNetCopper(life) : null;
+  const familyCoveredTier = getFamilyCoveredLifestyleTier(life);
+  const isLivingWithFamily =
+    Boolean(life.family) &&
+    !life.flags.includes('da_ra_o_rieng') &&
+    !life.flags.includes('da_khai_phu_hoang_toc');
   const educationLabel = getEducationLabel(life);
   const incomeRankLabel = getFeudalIncomeRankLabel(annualIncomeCopper);
   const personalPossessions = getPersonalPossessions(life);
@@ -305,6 +311,21 @@ export function AdultLeftColumn({
                 <div className="text-[11px] text-stone-400">Vị trí thu nhập</div>
                 <div className="font-semibold text-stone-100 mt-0.5">{incomeRankLabel}</div>
               </div>
+
+              {isLivingWithFamily && life.family && (
+                <div className="pt-2.5 border-t border-stone-800/80 text-xs space-y-0.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] text-stone-400">Quỹ gia sản nhà</span>
+                    <span className="font-mono font-semibold text-amber-200">
+                      {formatCopper(life.family.familyWealthCopper)}
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-stone-500">
+                    {FAMILY_TIER_LABELS[life.family.familyLivingTier]}
+                    {familyCoveredTier ? ' · Gia đình bao cơm áo' : ''}
+                  </div>
+                </div>
+              )}
 
               {/* Nợ */}
               {(isInDebt || hasNegativeCash) && (

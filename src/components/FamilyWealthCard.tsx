@@ -48,12 +48,18 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
         )}
       </div>
 
-      {/* 1in8b-style 2-column summary: Tài sản ròng & Thu nhập hằng năm */}
+      {/* 1in8b-style 2-column summary: Tài sản / Quỹ gia sản & Thu nhập hằng năm */}
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <div className="text-[11px] text-stone-400">Tài sản ròng</div>
+          <div className="text-[11px] text-stone-400">
+            {personalWealth === 0 && family ? 'Quỹ gia sản nhà' : 'Tài sản ròng'}
+          </div>
           <div className="text-base font-bold font-mono text-amber-100 leading-tight mt-0.5">
-            {personalWealth > 0 ? formatCopper(personalWealth) : '—'}
+            {personalWealth > 0
+              ? formatCopper(personalWealth)
+              : family
+                ? formatCopper(family.familyWealthCopper)
+                : '—'}
           </div>
           <div className="text-[11px] text-stone-500 mt-0.5 leading-snug">
             {(() => {
@@ -109,17 +115,19 @@ export function FamilyWealthCard({ life }: FamilyWealthCardProps) {
       {/* Giá trị gia sản của gia đình */}
       {family && (
         <div className="pt-2.5 border-t border-stone-800/80 space-y-2 text-xs">
-          <div>
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-[11px] text-stone-400">Quỹ gia sản tích lũy</span>
-              <span className="font-mono font-bold text-amber-200">
-                {formatCopper(family.familyWealthCopper)}
-              </span>
+          {personalWealth > 0 && (
+            <div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[11px] text-stone-400">Quỹ gia sản tích lũy</span>
+                <span className="font-mono font-bold text-amber-200">
+                  {formatCopper(family.familyWealthCopper)}
+                </span>
+              </div>
+              <div className="text-[10px] text-stone-500 leading-snug">
+                Tổng tiền &amp; tài sản sẵn có của nhà (tăng/giảm theo tích lũy ròng &amp; biến cố)
+              </div>
             </div>
-            <div className="text-[10px] text-stone-500 leading-snug">
-              Tổng tiền &amp; tài sản sẵn có của nhà (tăng/giảm theo tích lũy ròng &amp; biến cố)
-            </div>
-          </div>
+          )}
 
           {familyCashflow && (() => {
             const fatherDead =

@@ -140,54 +140,54 @@ interface OccupationSpec {
 
 export const FATHER_OCCUPATIONS: Record<OriginClass, OccupationSpec[]> = {
   ban_nong: [
-    { id: 'ta_dien', label: 'Tá điền làm thuê', monthlyIncome: 16, bonusStats: { health: 4 } },
-    { id: 'tho_san', label: 'Thợ săn vùng đồi', monthlyIncome: 20, bonusStats: { health: 5, martial: 3 } },
-    { id: 'ngu_dan', label: 'Ngư dân chài lưới', monthlyIncome: 18, bonusStats: { health: 4, craftTrade: 2 } },
-    { id: 'thay_do_ngheo', label: 'Thầy đồ nghèo dạy chữ', monthlyIncome: 13, wealthMult: 0.9, bonusStats: { education: 5, health: -3 } },
-    { id: 'phu_khuon_vac', label: 'Phu khuân vác bến thuyền', monthlyIncome: 19, bonusStats: { health: 5, martial: 2 } },
+    { id: 'ta_dien', label: 'Tá điền làm thuê', monthlyIncome: 18, bonusStats: { health: 4 } },
+    { id: 'tho_san', label: 'Thợ săn vùng đồi', monthlyIncome: 24, bonusStats: { health: 5, martial: 3 } },
+    { id: 'ngu_dan', label: 'Ngư dân chài lưới', monthlyIncome: 21, bonusStats: { health: 4, craftTrade: 2 } },
+    { id: 'thay_do_ngheo', label: 'Thầy đồ nghèo dạy chữ', monthlyIncome: 16, wealthMult: 0.9, bonusStats: { education: 5, health: -3 } },
+    { id: 'phu_khuon_vac', label: 'Phu khuân vác bến thuyền', monthlyIncome: 22, bonusStats: { health: 5, martial: 2 } },
   ],
   thu_cong: [
-    { id: 'tho_ren', label: 'Thợ rèn rèn nông cụ', monthlyIncome: 46, bonusStats: { martial: 3, craftTrade: 4 } },
-    { id: 'tho_moc', label: 'Thợ mộc đóng đồ gỗ', monthlyIncome: 48, bonusStats: { craftTrade: 5 } },
-    { id: 'thay_lang', label: 'Thầy lang bốc thuốc nam', monthlyIncome: 42, bonusStats: { education: 4, craftTrade: 3 } },
-    { id: 'lai_buon', label: 'Tiểu thương buôn chuyến', monthlyIncome: 58, wealthMult: 1.15, bonusStats: { craftTrade: 6 } },
-    { id: 'tho_gom', label: 'Thợ gốm làng nghề', monthlyIncome: 44, bonusStats: { craftTrade: 5 } },
+    { id: 'tho_ren', label: 'Thợ rèn rèn nông cụ', monthlyIncome: 72, bonusStats: { martial: 3, craftTrade: 4 } },
+    { id: 'tho_moc', label: 'Thợ mộc đóng đồ gỗ', monthlyIncome: 76, bonusStats: { craftTrade: 5 } },
+    { id: 'thay_lang', label: 'Thầy lang bốc thuốc nam', monthlyIncome: 68, bonusStats: { education: 4, craftTrade: 3 } },
+    { id: 'lai_buon', label: 'Tiểu thương buôn chuyến', monthlyIncome: 95, wealthMult: 1.15, bonusStats: { craftTrade: 6 } },
+    { id: 'tho_gom', label: 'Thợ gốm làng nghề', monthlyIncome: 70, bonusStats: { craftTrade: 5 } },
   ],
   dia_chu: [
-    { id: 'dien_chu', label: 'Điền chủ nhiều ruộng đất', monthlyIncome: 190, bonusStats: { fame: 3 } },
-    { id: 'hao_phu', label: 'Hào phú buôn muối & tơ lụa', monthlyIncome: 240, wealthMult: 1.2, bonusStats: { craftTrade: 6, fame: 2 } },
-    { id: 'chu_duoc_phong', label: 'Chủ hiệu thuốc bắc lớn', monthlyIncome: 210, bonusStats: { education: 4, craftTrade: 4 } },
+    { id: 'dien_chu', label: 'Điền chủ nhiều ruộng đất', monthlyIncome: 460, bonusStats: { fame: 3 } },
+    { id: 'hao_phu', label: 'Hào phú buôn muối & tơ lụa', monthlyIncome: 620, wealthMult: 1.25, bonusStats: { craftTrade: 6, fame: 2 } },
+    { id: 'chu_duoc_phong', label: 'Chủ hiệu thuốc bắc lớn', monthlyIncome: 520, bonusStats: { education: 4, craftTrade: 4 } },
   ],
   quan_lai: [
-    { id: 'quan_van', label: 'Quan văn thanh liêm', monthlyIncome: 290, wealthMult: 0.65, bonusStats: { education: 8, fame: 5 } },
-    { id: 'quan_vo', label: 'Quan võ trấn ải', monthlyIncome: 380, wealthMult: 0.85, bonusStats: { martial: 8, fame: 4 } },
-    { id: 'tham_quan', label: 'Quan phủ nhiều mưu mẹo', monthlyIncome: 620, wealthMult: 1.4, bonusStats: { craftTrade: 5, fame: 1 } },
+    { id: 'quan_van', label: 'Quan văn thanh liêm', monthlyIncome: 1400, wealthMult: 0.8, bonusStats: { education: 8, fame: 5 } },
+    { id: 'quan_vo', label: 'Quan võ trấn ải', monthlyIncome: 1800, wealthMult: 0.9, bonusStats: { martial: 8, fame: 4 } },
+    { id: 'tham_quan', label: 'Quan phủ nhiều mưu mẹo', monthlyIncome: 2600, wealthMult: 1.35, bonusStats: { craftTrade: 5, fame: 1 } },
   ],
   hoang_toc: [
-    { id: 'hoang_de', label: 'Hoàng thượng trị vì', monthlyIncome: 1100, bonusStats: { fame: 10, education: 5 } },
+    { id: 'hoang_de', label: 'Hoàng thượng trị vì', monthlyIncome: 8000, bonusStats: { fame: 10, education: 5 } },
   ],
 };
 
 export const MOTHER_OCCUPATIONS: Record<OriginClass, OccupationSpec[]> = {
   ban_nong: [
-    { id: 'lam_ruong', label: 'Làm ruộng & hái củi', monthlyIncome: 8 },
-    { id: 'det_vai', label: 'Dệt vải thô bán chợ', monthlyIncome: 11 },
-    { id: 'ban_hang_rong', label: 'Bán hàng rong đầu làng', monthlyIncome: 12 },
+    { id: 'lam_ruong', label: 'Làm ruộng & hái củi', monthlyIncome: 10 },
+    { id: 'det_vai', label: 'Dệt vải thô bán chợ', monthlyIncome: 13 },
+    { id: 'ban_hang_rong', label: 'Bán hàng rong đầu làng', monthlyIncome: 14 },
   ],
   thu_cong: [
-    { id: 'theu_thua', label: 'Thêu thùa & may vá', monthlyIncome: 18 },
-    { id: 'ban_hang_xom', label: 'Trông coi sạp hàng nhỏ', monthlyIncome: 24 },
-    { id: 'det_lua', label: 'Dệt lụa truyền thống', monthlyIncome: 22 },
+    { id: 'theu_thua', label: 'Thêu thùa & may vá', monthlyIncome: 26 },
+    { id: 'ban_hang_xom', label: 'Trông coi sạp hàng nhỏ', monthlyIncome: 34 },
+    { id: 'det_lua', label: 'Dệt lụa truyền thống', monthlyIncome: 30 },
   ],
   dia_chu: [
-    { id: 'quan_gia_noi_tro', label: 'Quản lý điền trang & gia nhân', monthlyIncome: 45 },
-    { id: 'tieu_thu', label: 'Tiểu thư khuê các', monthlyIncome: 0 },
+    { id: 'quan_gia_noi_tro', label: 'Quản lý điền trang & gia nhân', monthlyIncome: 140 },
+    { id: 'tieu_thu', label: 'Tiểu thư khuê các', monthlyIncome: 80 },
   ],
   quan_lai: [
-    { id: 'phu_nhan', label: 'Phu nhân phủ quan', monthlyIncome: 40 },
+    { id: 'phu_nhan', label: 'Phu nhân phủ quan', monthlyIncome: 220 },
   ],
   hoang_toc: [
-    { id: 'hoang_hau_phi_tan', label: 'Hoàng hậu / Phi tần', monthlyIncome: 180 },
+    { id: 'hoang_hau_phi_tan', label: 'Hoàng hậu / Phi tần', monthlyIncome: 1500 },
   ],
 };
 
@@ -202,11 +202,11 @@ export function getParentMonthlyIncome(
   const fList = FATHER_OCCUPATIONS[originClass] ?? [];
   const mList = MOTHER_OCCUPATIONS[originClass] ?? [];
   const extraFatherIncome: Record<string, number> = {
-    quan_vuong: 850,
+    quan_vuong: 4500,
     tien_de: 0,
   };
   const extraMotherIncome: Record<string, number> = {
-    vuong_phi: 140,
+    vuong_phi: 900,
   };
   const fSpec = fList.find((o) => o.id === fatherOccId) ?? fList[0];
   const mSpec = mList.find((o) => o.id === motherOccId) ?? mList[0];
@@ -273,9 +273,9 @@ export const SIBLING_PERSONALITIES = ['Ngoan hiền', 'Nghịch ngợm', 'Ham h�
 
 export function computeLivingTier(wealthCopper: number, originClass: OriginClass): FamilyLivingTier {
   if (originClass === 'hoang_toc') return 'hoang_gia';
-  if (wealthCopper >= 12000) return 'sung_tuc';
-  if (wealthCopper >= 3000) return 'kha_gia';
-  if (wealthCopper >= 350) return 'du_an';
+  if (wealthCopper >= 35000) return 'sung_tuc';
+  if (wealthCopper >= 10000) return 'kha_gia';
+  if (wealthCopper >= 700) return 'du_an';
   return 'tung_thieu';
 }
 
