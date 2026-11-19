@@ -19,7 +19,7 @@ import { appendLog, applyAnnualStatMeanReversion, applyEffects } from './effectA
 import { mulberry32Next, pickWeightedIndex } from './prng';
 import { getCurrentLivelihoodLabel, hasActiveLivelihood } from './lifeStatus';
 import { buildDynamicDecisionById } from './decisionGenerator';
-import { planYear } from './yearPlanner';
+import { isEventContextuallyAllowed, planYear } from './yearPlanner';
 import { resolveEventChoice } from './childhoodEngine';
 import { getPropertySeasonalIncome, getPropertySeasonalSocial, PROPERTY_CATALOG } from './progressionModules';
 import {
@@ -580,7 +580,7 @@ export function advanceDays(
       state = { ...state, delayedEvents: remaining };
 
       const target = eventsPool.find((e) => e.id === dueItem.eventId);
-      if (target && evaluateConditions(state, target.conditions)) {
+      if (target && isEventContextuallyAllowed(state, target) && evaluateConditions(state, target.conditions)) {
         state = {
           ...state,
           eventCooldowns: { ...state.eventCooldowns, [target.id]: nextTotalDays },

@@ -2,7 +2,7 @@
 
 > File tự động sinh bởi `npm run gen:index` (`scripts/gen-event-index.mjs`). AI đọc file này để tra cứu toàn bộ ID, file, cờ (`flags`) và tránh đọc hàng chục file JSON lớn.
 
-- **Tổng số file:** 68 | **Tổng số sự kiện:** 318 | **Tổng số flags:** 91
+- **Tổng số file:** 70 | **Tổng số sự kiện:** 327 | **Tổng số flags:** 91
 
 ## 1. Từ Điển Flags Đang Hoạt Động
 | Flag | Được gắn/gỡ bởi | Được kiểm tra bởi (samples) |
@@ -35,10 +35,10 @@
 | `da_co_con` | *(engine/init)* | evt_elder_descendants_success(has_flags), evt_elder_divide_estate(has_flags), evt_elder_clan_patriarch_feast(has_any_flag), evt_elder_teach_grandchildren(has_flags) |
 | `da_hoi_ra_o_rieng` | evt_chain_ra_o_rieng_1 | evt_chain_ra_o_rieng_1(missing_flags) |
 | `da_ket_hon` | *(engine/init)* | evt_elder_clan_patriarch_feast(has_any_flag), evt_romance_lantern_festival(missing_flags), evt_romance_matchmaker_visit(missing_flags), evt_adult_family_spouse_hardship(has_flags) |
-| `da_khai_phu_hoang_toc` | evt_adult_exp_hoang_toc_title_estate | evt_world_imperial_tax_levy(has_any_flag) |
+| `da_khai_phu_hoang_toc` | evt_female_royal_title_grant, evt_adult_exp_hoang_toc_title_estate | evt_female_royal_title_grant(missing_flags), evt_world_imperial_tax_levy(has_any_flag) |
 | `da_khoi_nghia` | evt_rebellion_amnesty_offer(-remove), evt_rebellion_spark | evt_rebellion_people_support(has_flags), evt_rebellion_amnesty_offer(has_flags), evt_rebellion_spark(missing_flags), evt_rebellion_recruit_bandits(has_flags) |
 | `da_len_kinh_thanh` | evt_chain_len_kinh_1 | evt_chain_len_kinh_1(missing_flags), evt_chain_len_kinh_2(has_flags), evt_chain_len_kinh_3(has_flags) |
-| `da_nhan_tuoc_vi` | evt_adult_exp_hoang_toc_title_estate | evt_court_succession_crisis(has_any_flag), evt_world_imperial_tax_levy(has_any_flag) |
+| `da_nhan_tuoc_vi` | evt_female_royal_title_grant, evt_adult_exp_hoang_toc_title_estate | evt_court_succession_crisis(has_any_flag), evt_female_royal_title_grant(missing_flags), evt_world_imperial_tax_levy(has_any_flag) |
 | `da_ra_o_rieng` | evt_chain_ra_o_rieng_1 | evt_chain_ra_o_rieng_1(missing_flags), evt_chain_ra_o_rieng_2(has_flags), evt_chain_ra_o_rieng_3(has_flags) |
 | `dang_lam_quan` | evt_nu_cai_nam_trang_exposed(-remove), evt_life_corrupt_audit(-remove), evt_official_corrupt_censor_raid(-remove), evt_official_retire_gracefully(-remove) | evt_biz_caravan_venture(missing_flags), evt_biz_supply_contract(missing_flags), evt_biz_tea_cart_rumor(missing_flags), evt_biz_scribe_secret_letter(missing_flags) |
 | `dang_no_dia_chu` | evt_debt_collection_01(-remove) | evt_debt_collection_01(has_flags) |
@@ -53,7 +53,7 @@
 | `gia_dinh_mac_no` | evt_child_poor_sell_indenture(-remove), evt_adult_family_pay_old_debt(-remove) | evt_child_poor_begging(has_any_flag), evt_child_poor_sell_indenture(has_flags), evt_adult_family_pay_old_debt(has_flags), evt_fate_eunuch_or_palace_maid(has_flags) |
 | `gia_phong_thu_huong` | *(engine/init)* | evt_child_exp_dia_chu_strict_tutor(has_flags) |
 | `gia_toc_phuc_hung` | evt_chain_phuc_hung_2 | — |
-| `gia_toc_sa_sut` | evt_chain_phuc_hung_2(-remove), evt_child_quan_lai_fall | evt_chain_phuc_hung_1(has_any_flag), evt_child_exp_circ_fall_betrayal(has_any_flag), evt_child_family_mother_sick_noble(missing_flags), evt_child_quan_lai_fall(missing_flags) |
+| `gia_toc_sa_sut` | evt_chain_phuc_hung_2(-remove), evt_child_quan_lai_fall | evt_chain_phuc_hung_1(has_any_flag), evt_child_exp_circ_fall_betrayal(has_any_flag), evt_child_family_mother_sick_noble(missing_flags), evt_child_female_boudoir_arts(missing_flags) |
 | `giu_tin_vat_gia_toc` | evt_chain_phuc_hung_1, evt_chain_phuc_hung_2(-remove) | evt_chain_phuc_hung_2(has_flags) |
 | `ket_hon_chi_hon` | evt_adult_exp_hoang_toc_royal_marriage | — |
 | `kinh_thanh_buon_ban` | evt_chain_len_kinh_1 | — |
@@ -65,8 +65,8 @@
 | `mo_coi_me` | evt_chain_bao_hieu_me_2_nguy, evt_chain_bao_hieu_hoang_toc_2_nguy, evt_family_mother_old_age_passing | — |
 | `nghe_ky_thanh_lau` | evt_fate_brothel_or_bodyguard, evt_fate_brothel_redemption(-remove) | evt_fate_brothel_or_bodyguard(missing_flags), evt_fate_brothel_redemption(has_flags) |
 | `nho_thu_quan_tham` | evt_child_exp_thu_cong_extortion, evt_scholar_rich_backdoor | — |
-| `nu_cai_nam_trang` | evt_nu_cai_nam_trang_exposed(-remove) | evt_nu_cai_nam_trang_exposed(has_flags) |
-| `nu_quan_dac_xa` | evt_nu_cai_nam_trang_exposed | — |
+| `nu_cai_nam_trang` | evt_nu_cai_nam_trang_exposed(-remove), evt_female_crossdress_crossroads | evt_nu_cai_nam_trang_exposed(has_flags), evt_female_noble_flower_banquet(missing_flags), evt_female_crossdress_crossroads(missing_flags), evt_female_late_marriage_pressure(missing_flags) |
+| `nu_quan_dac_xa` | evt_nu_cai_nam_trang_exposed | evt_female_crossdress_crossroads(missing_flags) |
 | `phe_hoang_tu` | evt_official_faction_choice | evt_court_succession_crisis(has_any_flag), evt_official_faction_choice(missing_flags) |
 | `phe_hoang_tu_binh_quyen` | evt_court_succession_crisis | evt_court_succession_victory(has_any_flag) |
 | `phe_quyen_than` | evt_official_faction_choice, evt_official_faction_patron_fall(-remove) | evt_official_faction_choice(missing_flags), evt_official_faction_patron_fall(has_flags) |
@@ -140,6 +140,9 @@
 | `evt_child_family_mother_sick_noble` | Mẫu Thân Khiếm An | childhood | major (1x) | 99999 | dia_chu, quan_lai, hoang_toc | `dong_au/family_events.json` |
 | `evt_child_family_sibling_illness` | Anh Chị Em Đổ Bệnh Mùa Trở Trời | childhood | major (1x) | 99999 | all | `dong_au/family_events.json` |
 | `evt_child_family_father_sick_common` | Cha Đổ Bệnh Sốt Rét Sau Mùa Gặt | childhood | major (1x) | 99999 | ban_nong, thu_cong | `dong_au/family_events.json` |
+| `evt_child_female_embroidery_craft` | Khéo Léo Đường Kim Mũi Chỉ | childhood | major (1x) | 99999 | ban_nong, thu_cong | `dong_au/female_childhood.json` |
+| `evt_child_female_boudoir_arts` | Cầm Kỳ Thi Họa Nơi Khuê Các | childhood | major (1x) | 99999 | dia_chu, quan_lai, hoang_toc | `dong_au/female_childhood.json` |
+| `evt_child_female_princess_etiquette` | Lời Dạy Của Mẫu Hậu Về Phận Công Chúa | childhood | major (1x) | 99999 | hoang_toc | `dong_au/female_childhood.json` |
 | `evt_feed_child_kite` | Thả diều sáo trên đê | childhood | minor | 300 | all | `dong_au/minor_life_feed.json` |
 | `evt_feed_child_ink_grind` | Mài mực giúp thầy đồ | childhood | minor | 300 | all | `dong_au/minor_life_feed.json` |
 | `evt_feed_child_grandma_tale` | Nghe chuyện cổ tích bên bếp lửa | childhood | minor | 360 | all | `dong_au/minor_life_feed.json` |
@@ -285,6 +288,12 @@
 | `evt_youth_family_sibling_court_rivalry` | Sóng Gió Huynh Đệ Nơi Phủ Đệ | adulthood | major (1x) | 99999 | quan_lai, hoang_toc | `truong_thanh/family_youth_and_siblings.json` |
 | `evt_family_father_old_age_passing` | Phụ Thân Tuổi Cao Quy Tiên | adulthood | major (1x) | 99999 | all | `truong_thanh/family_youth_and_siblings.json` |
 | `evt_family_mother_old_age_passing` | Mẫu Thân Tuổi Già Nhắm Mắt Xuôi Tay | adulthood | major (1x) | 99999 | all | `truong_thanh/family_youth_and_siblings.json` |
+| `evt_female_royal_title_grant` | Lễ Cập Kê & Sắc Phong Phẩm Trật Công Chúa | adulthood | major (1x) | 99999 | hoang_toc | `truong_thanh/female_life_and_court.json` |
+| `evt_female_noble_flower_banquet` | Yến Tiệc Thưởng Hoa Của Giới Khuê Các | adulthood | major | 1440 | dia_chu, quan_lai, hoang_toc | `truong_thanh/female_life_and_court.json` |
+| `evt_female_crossdress_crossroads` | Ngã Rẽ Nữ Nhi: An Phận Khuê Các Hay Cải Nam Trang Ứng Thí? | adulthood | major (1x) | 99999 | all | `truong_thanh/female_life_and_court.json` |
+| `evt_female_merchant_workshop` | Nữ Chủ Nhân Tiệm Lụa & Dược Thảo | adulthood | major | 1440 | ban_nong, thu_cong, dia_chu | `truong_thanh/female_life_and_court.json` |
+| `evt_female_household_steward` | Thu Vén Gia Đạo & Cân Đối Sổ Sách | adulthood | minor | 1440 | all | `truong_thanh/female_life_and_court.json` |
+| `evt_female_late_marriage_pressure` | Lời Bàn Tán Chuyện Chồng Con Tuổi Quá Lứa | adulthood | major (1x) | 99999 | all | `truong_thanh/female_life_and_court.json` |
 | `evt_wealth_build_ancestral_hall` | Hưng Công Xây Dựng Từ Đường Dòng Họ | adulthood | major (1x) | 99999 | all | `truong_thanh/late_game_wealth_sinks.json` |
 | `evt_wealth_sponsor_academy` | Lập Nghĩa Thục Miễn Học Phí Cho Trẻ Nghèo | adulthood | major | 2160 | all | `truong_thanh/late_game_wealth_sinks.json` |
 | `evt_wealth_imperial_relief_fund` | Xuất Kho Tư Gia Cứu Tế Nạn Dân Liên Tỉnh | adulthood | major | 2160 | all | `truong_thanh/late_game_wealth_sinks.json` |

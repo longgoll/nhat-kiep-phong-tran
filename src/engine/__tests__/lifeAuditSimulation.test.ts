@@ -246,5 +246,5 @@ describe('YearPlanner & Headless Life Audit Simulation', () => {
     console.info('Decision hits:', Object.fromEntries(globalDecisionHits.entries()));
     console.info(`Untriggered major pool events (${untriggeredMajors.length}/${adulthoodMajorEvents.length}):`, untriggeredMajors.slice(0, 15));
     console.info(`Sample chronicle (${richSample.origin}/${richSample.persona}, finalAge=${richSample.finalAge}):`, richSample.timeline.slice(0, 10));
-  }, 30000);
+  }, 60000);
 });

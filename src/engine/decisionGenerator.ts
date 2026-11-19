@@ -72,6 +72,10 @@ function generateDynamicDecisionInternal(
   const totalDays = state.profile.totalDays;
 
   // 1. DEC.college at age 18 (or 18-20 if not yet decided)
+  const canAttendMaleAcademy =
+    state.profile.gender === 'male' ||
+    state.flags.includes('nu_cai_nam_trang') ||
+    state.flags.includes('nu_quan_dac_xa');
   if (
     (!onlyId || onlyId === 'dec_college_18') &&
     age >= 18 &&
@@ -86,15 +90,21 @@ function generateDynamicDecisionInternal(
     (state.eduLevel ?? 0) < 4 &&
     state.livelihoodStatus !== 'prison'
   ) {
+    const maleAcademyLock = canAttendMaleAcademy
+      ? undefined
+      : { has_any_flag: ['nu_cai_nam_trang', 'nu_quan_dac_xa'] };
     return {
       id: 'dec_college_18',
       stage: 'adulthood',
       severity: 'major',
       conditions: {},
       isMilestone: true,
-      title: 'Ngã rẽ tuổi 18: Nhập học Quốc Tử Giám hay Ra đời lập nghiệp?',
-      description:
-        'Bạn đã bước sang tuổi trưởng thành. Các kỳ khảo thí vào Quốc Tử Giám và Thư viện lớn đang mở cửa cho sĩ tử khắp nơi.',
+      title: canAttendMaleAcademy
+        ? 'Ngã rẽ tuổi 18: Nhập học Quốc Tử Giám hay Ra đời lập nghiệp?'
+        : 'Ngã rẽ tuổi 18: Học Y dược · Thương toán hay Ra đời tự lập?',
+      description: canAttendMaleAcademy
+        ? 'Bạn đã bước sang tuổi trưởng thành. Các kỳ khảo thí vào Quốc Tử Giám và Thư viện lớn đang mở cửa cho sĩ tử khắp nơi.'
+        : 'Bạn đã bước sang tuổi trưởng thành. Theo lễ giáo đương thời, nữ nhi chưa cải nam trang không được dự thi Quốc Tử Giám hay Võ học đường, nhưng vẫn có thể theo học Y dược · Thương toán hoặc tự lập mưu sinh.',
       contextNote: `Học thức hiện tại: ${Math.round(state.stats.education)} · Hoàn cảnh gia đình quyết định phần lớn học phí ăn ở.`,
       cooldownDays: 99999,
       weight: { base: 100 },
@@ -102,6 +112,7 @@ function generateDynamicDecisionInternal(
         {
           label: 'Ứng thí Quốc Tử Giám — Kinh sử · Chính trị',
           hint: 'Học thức +6 · Mở rộng đường Khoa cử & Quan trường',
+          ...(maleAcademyLock ? { conditions: maleAcademyLock } : {}),
           outcomes: [
             {
               weight: { base: 100 },
@@ -116,7 +127,9 @@ function generateDynamicDecisionInternal(
           ],
         },
         {
-          label: 'Ứng thí Quốc Tử Giám — Y dược · Thương toán',
+          label: canAttendMaleAcademy
+            ? 'Ứng thí Quốc Tử Giám — Y dược · Thương toán'
+            : 'Theo học Nữ học — Y dược · Thương toán tại Thư viện',
           hint: 'Học thức +5 · Thương tài +4 · Thuận lợi làm thầy thuốc & buôn bán',
           outcomes: [
             {
@@ -126,7 +139,9 @@ function generateDynamicDecisionInternal(
                 craft_trade: 4,
                 happiness: 3,
                 add_flags: ['dec_college_done'],
-                milestone_title: 'Nhập học Quốc Tử Giám (Y dược · Thương toán)',
+                milestone_title: canAttendMaleAcademy
+                  ? 'Nhập học Quốc Tử Giám (Y dược · Thương toán)'
+                  : 'Theo học Y dược · Thương toán tại Thư viện',
               },
               resultText: 'Bạn theo học ngành Y dược · Thương toán tại Thư viện lớn.',
             },
@@ -135,6 +150,7 @@ function generateDynamicDecisionInternal(
         {
           label: 'Ghi danh Võ học đường — Binh pháp & Võ nghệ',
           hint: 'Võ nghệ +6 · Sức khỏe +3 · Mở rộng đường Tòng quân',
+          ...(maleAcademyLock ? { conditions: maleAcademyLock } : {}),
           outcomes: [
             {
               weight: { base: 100 },
@@ -223,6 +239,10 @@ function generateDynamicDecisionInternal(
   }
 
   // 2b. DEC.official_appoint when eligible for officialdom via exam degree, tap am, or recommendation
+  const canBeOfficialByGender =
+    state.profile.gender === 'male' ||
+    state.flags.includes('nu_cai_nam_trang') ||
+    state.flags.includes('nu_quan_dac_xa');
   const hasExamDegree = state.flags.includes('do_cu_nhan') || state.flags.includes('do_tien_si');
   const hasPatronEntry =
     (state.flags.includes('co_an_tap_am') ||
@@ -232,6 +252,7 @@ function generateDynamicDecisionInternal(
     state.stats.education >= 24;
   if (
     (!onlyId || onlyId === 'dec_official_appoint') &&
+    canBeOfficialByGender &&
     state.eventCooldowns['dec_official_appoint'] === undefined &&
     age >= 20 &&
     age < 60 &&
@@ -453,6 +474,8 @@ function generateDynamicDecisionInternal(
     age >= 18 &&
     !state.isStudent &&
     !state.flags.includes('trong_hau_cung') &&
+    !state.flags.includes('thai_giam') &&
+    !state.flags.includes('bi_ep_lam_gia_no') &&
     (wantsNewJob ||
       (!hasActiveLivelihood(state) &&
         state.livelihoodStatus !== 'homemaker' &&
@@ -519,6 +542,8 @@ function generateDynamicDecisionInternal(
     age >= 18 &&
     state.flags.includes('cho_khoi_nghiep') &&
     !state.flags.includes('trong_hau_cung') &&
+    !state.flags.includes('thai_giam') &&
+    !state.flags.includes('bi_ep_lam_gia_no') &&
     state.livelihoodStatus !== 'prison'
   ) {
     const bizOffers = getAvailableVentures(state)

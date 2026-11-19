@@ -108,6 +108,21 @@ export async function teardown(): Promise<void> {
     };
   });
 
+  const byGender = (['male', 'female'] as const).map((g) => {
+    const sub = records.filter((r) => r.gender === g);
+    if (sub.length === 0) {
+      return { gender: g, count: 0, avgAge: 0, avgCopper: 0, officialRankPct: 0, spousePct: 0 };
+    }
+    return {
+      gender: g,
+      count: sub.length,
+      avgAge: Number((sub.reduce((a, r) => a + r.finalAge, 0) / sub.length).toFixed(1)),
+      avgCopper: Math.round(sub.reduce((a, r) => a + r.finalCopper, 0) / sub.length),
+      officialRankPct: Number(((sub.filter((r) => r.officialRank > 0).length / sub.length) * 100).toFixed(1)),
+      spousePct: Number(((sub.filter((r) => r.hadSpouse).length / sub.length) * 100).toFixed(0)),
+    };
+  });
+
   const deadMajors = majorEventIds.filter((id) => !eventHits.has(id));
   const topEvents = [...eventHits.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12);
   const topDeaths = [...deathReasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
@@ -145,6 +160,16 @@ export async function teardown(): Promise<void> {
   for (const row of byArchetype) {
     lines.push(
       `| ${row.archetype} (${row.focus}) | ${row.avgAge.toFixed(1)} | ${row.avgCopper} | ${row.avgEducation.toFixed(1)} | ${row.spousePct}% | ${row.venturePct}% | ${row.avgProperties.toFixed(1)} |`,
+    );
+  }
+  lines.push('');
+
+  lines.push('## 2b. Thống Kê Theo Giới Tính (`Gender`)');
+  lines.push('| Giới tính | Số kiếp | Tuổi TB | Tài sản TB (đ) | Quan hàm >0 | Kết hôn |');
+  lines.push('| :--- | ---: | ---: | ---: | ---: | ---: |');
+  for (const row of byGender) {
+    lines.push(
+      `| ${row.gender} | ${row.count} | ${row.avgAge.toFixed(1)} | ${row.avgCopper} | ${row.officialRankPct.toFixed(1)}% | ${row.spousePct}% |`,
     );
   }
   lines.push('');
@@ -218,6 +243,7 @@ export async function teardown(): Promise<void> {
     anomaliesCount: allAnomalies.length,
     anomalies: allAnomalies,
     byOrigin,
+    byGender,
     byArchetype,
     decisionHits: Object.fromEntries(decisionHits.entries()),
     topDeathReasons: topDeaths.map(([reason, count]) => ({ reason, count })),

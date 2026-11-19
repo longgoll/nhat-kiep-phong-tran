@@ -471,6 +471,13 @@ export function canGrantRoyalPrivilege(state: ActiveLifeState): { ok: boolean; r
   if (state.profile.originClass !== 'hoang_toc') {
     return { ok: false, reason: 'Chỉ dành cho thân thế Hoàng tộc' };
   }
+  if (
+    state.profile.gender === 'female' &&
+    !state.flags.includes('nu_cai_nam_trang') &&
+    !state.flags.includes('nu_quan_dac_xa')
+  ) {
+    return { ok: false, reason: 'Công chúa / Quận chúa cần cải nam trang để thụ phong ngoại triều' };
+  }
   if (state.officialRank > 0) {
     return { ok: false, reason: 'Đã có chức vị triều đình' };
   }
@@ -519,6 +526,13 @@ export function grantRoyalPrivilege(state: ActiveLifeState): ActiveLifeState {
 export function buyOfficialTitle(state: ActiveLifeState): ActiveLifeState {
   const COST = 50000;
   if (state.profile.originClass === 'hoang_toc') return state;
+  if (
+    state.profile.gender === 'female' &&
+    !state.flags.includes('nu_cai_nam_trang') &&
+    !state.flags.includes('nu_quan_dac_xa')
+  ) {
+    return state;
+  }
   if (state.flags.includes('thai_giam') || state.flags.includes('trong_hau_cung')) return state;
   if (state.officialRank > 0 || state.assets.wealthCopper < COST) return state;
 
@@ -657,18 +671,19 @@ export function launchRebellion(state: ActiveLifeState): ActiveLifeState {
   let next: ActiveLifeState = { ...state, prngState: roll.nextState };
 
   if (roll.value <= chance) {
+    const emperorTitle = next.profile.gender === 'female' ? 'Khai quốc Nữ đế' : 'Khai quốc Hoàng đế';
     next = applyEffects(next, {
       fame: 100,
       add_flags: ['khai_quoc_hoang_de'],
-      milestone_title: 'Phất cờ khởi nghĩa, đăng cơ Hoàng đế!',
+      milestone_title: `Phất cờ khởi nghĩa, đăng cơ ${emperorTitle}!`,
     });
     return {
       ...next,
       officialRank: 6,
       isAlive: false,
-      deathReason: 'Hoàn thành đại nghiệp: Đăng cơ Khai quốc Hoàng đế, lưu danh sử sách!',
-      profile: { ...next.profile, currentRole: 'Khai quốc Hoàng đế' },
-      logs: appendLog(next.logs, next.profile.totalDays, 'event', 'Đại quân tiến vào kinh thành! Bạn chính thức lên ngôi Hoàng đế!'),
+      deathReason: `Hoàn thành đại nghiệp: Đăng cơ ${emperorTitle}, lưu danh sử sách!`,
+      profile: { ...next.profile, currentRole: emperorTitle },
+      logs: appendLog(next.logs, next.profile.totalDays, 'event', `Đại quân tiến vào kinh thành! Bạn chính thức lên ngôi ${emperorTitle}!`),
     };
   }
 

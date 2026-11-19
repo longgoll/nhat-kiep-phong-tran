@@ -9,6 +9,7 @@
     "conditions": {
       "min_age": 18,
       "max_age": 28,
+      "gender": "male",
       "origin_in": [
         "quan_lai"
       ],
@@ -97,6 +98,7 @@
     "conditions": {
       "min_age": 18,
       "max_age": 28,
+      "gender": "male",
       "origin_in": [
         "quan_lai"
       ],
@@ -451,6 +453,7 @@
     "conditions": {
       "min_age": 17,
       "max_age": 34,
+      "gender": "male",
       "origin_in": [
         "quan_lai"
       ],

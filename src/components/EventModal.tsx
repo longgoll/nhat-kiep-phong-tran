@@ -60,6 +60,11 @@ function buildChoiceHint(choice: EventChoice): string {
 function buildLockReason(state: ActiveLifeState, cond?: ConditionSpec): string {
   if (!cond) return 'Chưa đủ điều kiện để thực hiện';
   const reasons: string[] = [];
+  if (cond.gender === 'male') reasons.push('Chỉ dành cho Nam giới');
+  if (cond.gender === 'female') reasons.push('Chỉ dành cho Nữ giới');
+  if (cond.has_any_flag?.includes('nu_cai_nam_trang')) {
+    reasons.push('Cần cải nam trang hoặc được đặc xá Nữ quan');
+  }
   if (cond.min_copper !== undefined && state.assets.wealthCopper < cond.min_copper) {
     reasons.push(`Cần ${formatCopper(cond.min_copper)}`);
   }

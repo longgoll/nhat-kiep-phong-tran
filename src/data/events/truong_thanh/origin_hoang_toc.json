@@ -9,8 +9,13 @@
     "title": "Lễ Trưởng Thành & Khai Phủ Tôn Thất",
     "conditions": {
       "min_age": 16,
+      "gender": "male",
       "origin_in": [
         "hoang_toc"
+      ],
+      "missing_flags": [
+        "that_sung_cung_dinh",
+        "gia_toc_sa_sut"
       ]
     },
     "weight": {
@@ -102,6 +107,7 @@
     "title": "Vòng Xoáy Tranh Đoạt Trữ Vị",
     "conditions": {
       "min_age": 17,
+      "gender": "male",
       "origin_in": [
         "hoang_toc"
       ]
@@ -230,8 +236,13 @@
     "title": "Bị Kẻ Tiểu Nhân Gièm Pha Trước Ngai Vàng",
     "conditions": {
       "min_age": 16,
+      "gender": "male",
       "origin_in": [
         "hoang_toc"
+      ],
+      "missing_flags": [
+        "that_sung_cung_dinh",
+        "gia_toc_sa_sut"
       ]
     },
     "weight": {
@@ -355,8 +366,13 @@
     "title": "Thánh Chỉ Ban Hôn Hoàng Gia",
     "conditions": {
       "min_age": 16,
+      "gender": "male",
       "origin_in": [
         "hoang_toc"
+      ],
+      "missing_flags": [
+        "that_sung_cung_dinh",
+        "gia_toc_sa_sut"
       ]
     },
     "weight": {

@@ -65,6 +65,7 @@
     "conditions": {
       "min_age": 16,
       "max_age": 30,
+      "gender": "male",
       "min_copper": 500,
       "origin_in": ["dia_chu", "quan_lai", "hoang_toc"],
       "missing_flags": ["trong_hau_cung", "thai_giam", "dang_lam_quan"]

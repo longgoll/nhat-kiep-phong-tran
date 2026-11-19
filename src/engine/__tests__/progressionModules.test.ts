@@ -18,6 +18,9 @@ import {
 } from '../progressionModules';
 import { INSTANT_ADULT_ACTIONS, isInstantActionVisible } from '../adultLifeActions';
 import { advanceDays } from '../daySimulator';
+import { buildDynamicDecisionById } from '../decisionGenerator';
+import { evaluateConditions } from '../conditionEvaluator';
+import { isEventContextuallyAllowed } from '../yearPlanner';
 import { ALL_ACTIONS as ACTIONS, ALL_ADULTHOOD_EVENTS as EVENTS } from '../../data/registry';
 
 describe('Progression Modules (MVP 3)', () => {
@@ -48,7 +51,7 @@ describe('Progression Modules (MVP 3)', () => {
     let life = createNewLife(666);
     life = {
       ...life,
-      profile: { ...life.profile, totalDays: 20 * 360 + 89 }, // 1 ngày trước sang Hạ
+      profile: { ...life.profile, gender: 'male', totalDays: 20 * 360 + 89 }, // 1 ngày trước sang Hạ
       world: { ...life.world, season: 'spring' },
       assets: { ...life.assets, wealthCopper: 60000, rice: 100 },
     };
@@ -141,7 +144,7 @@ describe('Progression Modules (MVP 3)', () => {
     let royal = createNewLife(777);
     royal = {
       ...royal,
-      profile: { ...royal.profile, originClass: 'hoang_toc', totalDays: 18 * 360 + 89 },
+      profile: { ...royal.profile, gender: 'male', originClass: 'hoang_toc', totalDays: 18 * 360 + 89 },
       world: { ...royal.world, season: 'spring' },
       officialRank: 0,
       flags: royal.flags.filter((f) => f !== 'thai_giam' && f !== 'trong_hau_cung'),
@@ -175,5 +178,37 @@ describe('Progression Modules (MVP 3)', () => {
     // Wealth-gated social actions unlock when wealthy
     const patronAction = INSTANT_ADULT_ACTIONS.find((a) => a.id === 'inst_patron_scholars')!;
     expect(isInstantActionVisible(res.state, patronAction)).toBe(true);
+  });
+
+  it('enforces gender, origin, and status narrative guards across decisions and events', () => {
+    let princess = createNewLife(888);
+    princess = {
+      ...princess,
+      profile: { ...princess.profile, gender: 'female', originClass: 'hoang_toc', totalDays: 20 * 360 },
+      officialRank: 0,
+      flags: princess.flags.filter((f) => f !== 'nu_cai_nam_trang' && f !== 'nu_quan_dac_xa'),
+      stats: { ...princess.stats, education: 50 },
+      assets: { ...princess.assets, wealthCopper: 60000 },
+    };
+
+    // Female without cross-dressing cannot be appointed official or take royal male privilege
+    expect(canGrantRoyalPrivilege(princess).ok).toBe(false);
+    expect(buildDynamicDecisionById(princess, 'dec_official_appoint')).toBeNull();
+    expect(buyOfficialTitle(princess).officialRank).toBe(0);
+
+    // dec_college_18 locks male-only Quốc Tử Giám Kinh sử & Võ học đường choices for non-crossdressing female
+    const collegeDec = buildDynamicDecisionById(princess, 'dec_college_18');
+    expect(collegeDec).not.toBeNull();
+    expect(evaluateConditions(princess, collegeDec!.choices[0].conditions)).toBe(false);
+    expect(evaluateConditions(princess, collegeDec!.choices[1].conditions)).toBe(true);
+    expect(evaluateConditions(princess, collegeDec!.choices[2].conditions)).toBe(false);
+
+    // Harem concubine / eunuch cannot receive outside civilian events
+    const concubine = { ...princess, flags: [...princess.flags, 'trong_hau_cung'] };
+    const outsideEvt = EVENTS.find((e) => e.id === 'evt_adult_exp_thu_cong_guild') ?? EVENTS[0];
+    expect(isEventContextuallyAllowed(concubine, outsideEvt)).toBe(false);
+
+    const haremEvt = EVENTS.find((e) => e.id === 'evt_harem_moonlight_pavilion')!;
+    expect(isEventContextuallyAllowed(concubine, haremEvt)).toBe(true);
   });
 });

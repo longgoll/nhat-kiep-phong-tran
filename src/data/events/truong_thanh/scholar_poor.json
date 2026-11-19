@@ -118,6 +118,7 @@
     "conditions": {
       "min_age": 18,
       "max_age": 28,
+      "gender": "male",
       "min_education": 20,
       "origin_in": ["ban_nong", "thu_cong"],
       "missing_flags": ["da_ket_hon", "trong_hau_cung", "thai_giam", "dang_lam_quan"]

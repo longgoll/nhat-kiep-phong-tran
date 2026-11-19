@@ -17,7 +17,9 @@
       "missing_flags": [
         "da_ket_hon",
         "trong_hau_cung",
-        "da_co_con"
+        "da_co_con",
+        "nu_cai_nam_trang",
+        "dang_lam_quan"
       ]
     },
     "weight": {
@@ -286,6 +288,7 @@
       {
         "label": "Nhận làm Ca kỹ / Nghệ nhân đàn hát tiếp khách văn nhân nơi Thanh lâu (Cần Tay nghề >= 12 hoặc Học vấn >= 15)",
         "conditions": {
+          "gender": "female",
           "min_craft_trade": 12
         },
         "outcomes": [
@@ -310,6 +313,7 @@
       {
         "label": "Nhận chân Bảo kê cho sòng bạc và thanh lâu, trấn áp kẻ quấy phá (Cần Võ nghệ >= 16)",
         "conditions": {
+          "gender": "male",
           "min_martial": 16
         },
         "outcomes": [

@@ -90,6 +90,7 @@
     "conditions": {
       "min_age": 18,
       "max_age": 55,
+      "gender": "male",
       "origin_in": [
         "hoang_toc"
       ],
@@ -152,6 +153,7 @@
     "conditions": {
       "min_age": 20,
       "max_age": 48,
+      "gender": "male",
       "origin_in": [
         "hoang_toc"
       ],

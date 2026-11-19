@@ -10,10 +10,12 @@ import {
   DAYS_PER_YEAR,
   getAgeYears,
   type ActiveLifeState,
+  type Gender,
   type LifeFocusId,
   type OriginClass,
 } from '../../types/activeLife';
 import type { GameEventDef } from '../../types/dsl';
+import { evaluateConditions } from '../conditionEvaluator';
 import {
   buyGoldReserve,
   canHaveChild,
@@ -339,9 +341,18 @@ function applyAnnualBotSpendAndInvest(state: ActiveLifeState, arch: ArchetypeCon
 }
 
 function pickChoice(state: ActiveLifeState, event: GameEventDef, arch: ArchetypeConfig): number {
-  if (event.choices.length <= 1) return 0;
+  const validIndices: number[] = [];
+  event.choices.forEach((ch, idx) => {
+    if (evaluateConditions(state, ch.conditions)) {
+      validIndices.push(idx);
+    }
+  });
+  const pool = validIndices.length > 0 ? validIndices : [0];
+  if (pool.length === 1) return pool[0];
+
   if (event.id === 'dec_college_18') {
-    return Math.min(arch.preferCollegeChoice, event.choices.length - 1);
+    if (pool.includes(arch.preferCollegeChoice)) return arch.preferCollegeChoice;
+    return pool[0];
   }
   if (
     event.id === 'dec_job_offers' ||
@@ -350,19 +361,21 @@ function pickChoice(state: ActiveLifeState, event: GameEventDef, arch: Archetype
     event.id === 'dec_official_appoint' ||
     event.id === 'dec_official_promote'
   ) {
-    return 0;
+    return pool[0];
   }
   if (event.id === 'dec_retire_60') {
-    return arch.focus === 'lam_them' ? 1 : 0;
+    const preferred = arch.focus === 'lam_them' ? 1 : 0;
+    return pool.includes(preferred) ? preferred : pool[0];
   }
   if (arch.riskyChoices) {
-    return event.choices.length - 1;
+    return pool[pool.length - 1];
   }
-  return (state.profile.totalDays + arch.id.length) % event.choices.length;
+  return pool[(state.profile.totalDays + arch.id.length) % pool.length];
 }
 
 export interface LifeAuditRecord {
   origin: OriginClass;
+  gender: Gender;
   archetype: string;
   focus: LifeFocusId;
   seed: number;
@@ -396,6 +409,20 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
   const decisionsFired: string[] = [];
   const anomalies: string[] = [];
   const timeline: string[] = [];
+  const gender = state.profile.gender;
+
+  if (gender === 'female' && /(Cu Tí|Thằng Cò|Thằng Đực|Cu Tẹo)/.test(state.profile.fullName)) {
+    anomalies.push(`FEMALE_MALE_NICKNAME_${state.profile.fullName}`);
+  }
+  if (gender === 'male' && /(Cái Hến|Con Mít|Cái Tẻo|Cái Na)/.test(state.profile.fullName)) {
+    anomalies.push(`MALE_FEMALE_NICKNAME_${state.profile.fullName}`);
+  }
+  if (gender === 'female' && state.family?.birthOrderLabel?.includes('Đích tử')) {
+    anomalies.push(`FEMALE_DICH_TU_LABEL`);
+  }
+  if (state.profile.currentRole.includes('/')) {
+    anomalies.push(`SLASH_ROLE_LABEL_${state.profile.currentRole}`);
+  }
 
   let lastBotSeasonKey = '';
   let guard = 0;
@@ -480,12 +507,31 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
       if (evt.id.includes('spouse') && !livingSpouse) {
         anomalies.push(`NO_LIVING_SPOUSE_FOR_${evt.id}_AGE_${age}`);
       }
+      const hasCrossDress =
+        state.flags.includes('nu_cai_nam_trang') || state.flags.includes('nu_quan_dac_xa');
+      if (gender === 'female' && !hasCrossDress && evt.id === 'dec_official_appoint') {
+        anomalies.push(`FEMALE_OFFICIAL_WITHOUT_CROSSDRESS_AGE_${age}`);
+      }
+      if (
+        gender === 'male' &&
+        (evt.id === 'evt_fate_tuyen_tu_palace' || evt.id === 'evt_female_royal_title_grant')
+      ) {
+        anomalies.push(`MALE_GOT_FEMALE_EVENT_${evt.id}_AGE_${age}`);
+      }
 
       const idx = pickChoice(state, evt, arch);
+      const prevFlags = new Set(state.flags);
       const resolved = resolveEventChoice(state, evt, idx);
       state = evt.id.startsWith('dec_')
         ? applyDynamicDecisionSideEffects(resolved.state, evt.id, idx)
         : resolved.state;
+
+      if (gender === 'male' && !prevFlags.has('nghe_ky_thanh_lau') && state.flags.includes('nghe_ky_thanh_lau')) {
+        anomalies.push(`MALE_BROTHEL_CONFLICT_AGE_${age}`);
+      }
+      if (gender === 'female' && !prevFlags.has('bao_ke_giang_ho') && state.flags.includes('bao_ke_giang_ho')) {
+        anomalies.push(`FEMALE_BODYGUARD_CONFLICT_AGE_${age}`);
+      }
 
       if (evt.id.startsWith('dec_')) decisionsFired.push(evt.id);
       else eventsFired.push(evt.id);
@@ -496,6 +542,7 @@ function runOneLife(seed: number, origin: OriginClass, arch: ArchetypeConfig): L
 
   return {
     origin,
+    gender,
     archetype: arch.id,
     focus: arch.focus,
     seed,

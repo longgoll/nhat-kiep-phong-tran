@@ -103,7 +103,8 @@ const FAMILY_NAMES_BY_ORIGIN: Record<OriginClass, string[]> = {
 
 const MALE_GIVEN_NAMES = ['An', 'Bình', 'Minh', 'Khang', 'Tuấn', 'Quân', 'Long', 'Hải', 'Khoa', 'Tâm', 'Đức', 'Phúc'];
 const FEMALE_GIVEN_NAMES = ['Lan', 'Huệ', 'Mai', 'Cúc', 'Trúc', 'Ngọc', 'Hoa', 'Thảo', 'Liên', 'Nga', 'Vân', 'Chi'];
-const RUSTIC_NICKNAMES = ['Cu Tí', 'Thằng Cò', 'Cái Hến', 'Con Mít', 'Thằng Đực', 'Cái Tẻo'];
+const RUSTIC_MALE_NICKNAMES = ['Cu Tí', 'Thằng Cò', 'Thằng Đực', 'Cu Tẹo'];
+const RUSTIC_FEMALE_NICKNAMES = ['Cái Hến', 'Con Mít', 'Cái Tẻo', 'Cái Na'];
 
 const DYNASTY_NAMES = ['Đại Việt', 'Đại Ngu', 'Đại Nam', 'Hồng Đức', 'Thái Bình'];
 
@@ -312,9 +313,10 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     const nickRoll = mulberry32Next(prng);
     prng = nickRoll.nextState;
     if (nickRoll.value < 0.35) {
-      const nPick = randomInt(prng, 0, RUSTIC_NICKNAMES.length - 1);
+      const nickPool = gender === 'male' ? RUSTIC_MALE_NICKNAMES : RUSTIC_FEMALE_NICKNAMES;
+      const nPick = randomInt(prng, 0, nickPool.length - 1);
       prng = nPick.nextState;
-      fullName = `${surname} ${RUSTIC_NICKNAMES[nPick.value]}`;
+      fullName = `${surname} ${nickPool[nPick.value]}`;
     } else {
       const pool = gender === 'male' ? MALE_GIVEN_NAMES : FEMALE_GIVEN_NAMES;
       const nPick = randomInt(prng, 0, pool.length - 1);
@@ -617,7 +619,7 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
 
   if (hasConcubines) {
     if (motherStatus === 'chinh_that' && (birthOrder === 'con_truong' || birthOrder === 'con_mot')) {
-      birthOrderLabel = `${birthOrderLabel} (Đích tử)`;
+      birthOrderLabel = `${birthOrderLabel} (${gender === 'female' ? 'Đích nữ' : 'Đích tử'})`;
     } else if (motherStatus === 'thu_that' || motherStatus === 'phi_tan') {
       birthOrderLabel = `${birthOrderLabel} (Thứ xuất)`;
     }
@@ -998,10 +1000,20 @@ export function createNewLife(customSeed?: number): ActiveLifeState {
     circ.housingOverride ??
     (originClass === 'thu_cong' && !isStartDeclined && familyWealthCopper >= 900 ? 'nha_gach' : meta.housing);
   let initialRoleLabel = meta.roleLabel;
-  if (originClass === 'hoang_toc' && circ.isTonThat) {
-    initialRoleLabel = gender === 'male' ? 'Thế tử phủ Tôn thất' : 'Quận chúa phủ Tôn thất';
-  } else if (originClass === 'quan_lai' && initialFlags.includes('gia_toc_sa_sut')) {
-    initialRoleLabel = 'Con nhà quan sa sút';
+  if (originClass === 'dia_chu') {
+    initialRoleLabel = gender === 'female' ? 'Tiểu thư nhà địa chủ' : 'Thiếu gia nhà địa chủ';
+  } else if (originClass === 'quan_lai') {
+    initialRoleLabel = initialFlags.includes('gia_toc_sa_sut')
+      ? 'Con nhà quan sa sút'
+      : gender === 'female'
+        ? 'Thiên kim phủ quan'
+        : 'Công tử phủ quan';
+  } else if (originClass === 'hoang_toc') {
+    if (circ.isTonThat) {
+      initialRoleLabel = gender === 'male' ? 'Thế tử phủ Tôn thất' : 'Quận chúa phủ Tôn thất';
+    } else {
+      initialRoleLabel = gender === 'female' ? 'Công chúa' : 'Hoàng tử';
+    }
   }
   const fatherLogDesc =
     circ.fatherAlive === false

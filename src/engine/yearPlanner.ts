@@ -14,6 +14,109 @@ const MAX_ANNUAL_DECISIONS = 2;
 const POSTPONED_PRIORITY_BOOST = 15;
 const MAJOR_EVENT_COOLDOWN_DAYS = 90;
 
+const PALACE_OR_EUNUCH_ALLOWED_PREFIXES = [
+  'evt_harem_',
+  'evt_fate_palace',
+  'evt_fate_eunuch',
+  'evt_court_',
+  'evt_life_',
+  'evt_elder_',
+  'evt_chain_bao_hieu',
+];
+
+const PALACE_OR_EUNUCH_ALLOWED_IDS = new Set([
+  'evt_family_father_old_age_passing',
+  'evt_family_mother_old_age_passing',
+  'evt_adult_exp_hoang_toc_slander',
+  'evt_adult_exp_hoang_toc_vindication',
+  'evt_adult_hoang_toc_teen_empress_dowager',
+  'evt_adult_hoang_toc_clan_mediation',
+  'evt_adult_hoang_toc_elder_memoirs',
+]);
+
+const SERVITUDE_BLOCKED_PREFIXES = [
+  'evt_scholar_',
+  'evt_official_',
+  'evt_military_',
+  'evt_jianghu_',
+  'evt_biz_',
+  'evt_wealth_',
+  'evt_craft_',
+  'evt_estate_',
+];
+
+const FEMALE_CROSSDRESS_ONLY_IDS = new Set([
+  'evt_scholar_local_exam_temptation',
+  'evt_scholar_road_to_capital',
+  'evt_scholar_vinh_quy_bai_to',
+  'evt_scholar_poor_exam_fail',
+  'evt_scholar_rich_backdoor',
+  'evt_adult_quan_lai_tap_am',
+]);
+
+const ROYAL_BLOCKED_COMMONER_IDS = new Set([
+  'evt_adult_major_noble_patron',
+  'evt_elder_village_scholarship',
+  'evt_feed_adult_village_feast',
+  'evt_feed_adult_neighbor_tea',
+  'evt_feed_adult_tet_market',
+  'evt_feed_adult_village_ceremony',
+  'evt_feed_adult_homesick_meal',
+  'evt_adult_martial_bandit_ambush',
+]);
+
+/**
+ * Global narrative & identity guard enforcing status, gender, and origin boundaries
+ * even when individual event JSON files omit redundant `missing_flags`.
+ */
+export function isEventContextuallyAllowed(state: ActiveLifeState, evt: GameEventDef): boolean {
+  const isPrison = state.livelihoodStatus === 'prison' || state.flags.includes('dang_o_tu');
+  if (isPrison) {
+    return (
+      evt.id.includes('prison') ||
+      evt.id === 'evt_life_midlife_illness' ||
+      evt.id === 'evt_family_father_old_age_passing' ||
+      evt.id === 'evt_family_mother_old_age_passing'
+    );
+  }
+
+  const inHarem = state.flags.includes('trong_hau_cung');
+  const isEunuch = state.flags.includes('thai_giam');
+  if (inHarem || isEunuch) {
+    const hasExplicitPalaceFlag =
+      (evt.conditions.has_flags ?? []).some((f) => f === 'trong_hau_cung' || f === 'thai_giam') ||
+      (evt.conditions.has_any_flag ?? []).some((f) => f === 'trong_hau_cung' || f === 'thai_giam');
+    const isAllowedPrefix = PALACE_OR_EUNUCH_ALLOWED_PREFIXES.some((p) => evt.id.startsWith(p));
+    if (!hasExplicitPalaceFlag && !isAllowedPrefix && !PALACE_OR_EUNUCH_ALLOWED_IDS.has(evt.id)) {
+      return false;
+    }
+  }
+
+  if (state.flags.includes('bi_ep_lam_gia_no')) {
+    if (SERVITUDE_BLOCKED_PREFIXES.some((p) => evt.id.startsWith(p))) {
+      return false;
+    }
+  }
+
+  const hasCrossDressAccess =
+    state.profile.gender === 'male' ||
+    state.flags.includes('nu_cai_nam_trang') ||
+    state.flags.includes('nu_quan_dac_xa');
+  if (!hasCrossDressAccess) {
+    if (FEMALE_CROSSDRESS_ONLY_IDS.has(evt.id)) return false;
+    if (evt.id.startsWith('evt_official_') && state.officialRank === 0) return false;
+  }
+
+  if (state.profile.originClass === 'hoang_toc') {
+    if (ROYAL_BLOCKED_COMMONER_IDS.has(evt.id)) return false;
+    const isDeclined =
+      state.flags.includes('gia_toc_sa_sut') || state.flags.includes('that_sung_cung_dinh');
+    if (!isDeclined && evt.id === 'evt_adult_major_desperate_theft') return false;
+  }
+
+  return true;
+}
+
 function nextIntInRange(prngState: number, min: number, max: number): { value: number; nextState: number } {
   if (max <= min) {
     const r = mulberry32Next(prngState);
@@ -89,6 +192,7 @@ export function planYear(state: ActiveLifeState, eventsPool: GameEventDef[]): Ac
     if (alreadyQueuedIds.has(evt.id)) return false;
     const last = state.eventCooldowns[evt.id] ?? -99999;
     if (totalDays - last < evt.cooldownDays) return false;
+    if (!isEventContextuallyAllowed(state, evt)) return false;
     return evaluateConditions(state, evt.conditions);
   });
 

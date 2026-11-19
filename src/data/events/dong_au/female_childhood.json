@@ -1,0 +1,159 @@
+[
+  {
+    "id": "evt_child_female_embroidery_craft",
+    "stage": "childhood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Khéo Léo Đường Kim Mũi Chỉ",
+    "conditions": {
+      "min_age": 7,
+      "max_age": 12,
+      "gender": "female",
+      "origin_in": ["ban_nong", "thu_cong"],
+      "missing_flags": ["tung_o_do"]
+    },
+    "weight": {
+      "base": 45
+    },
+    "description": "Buổi trưa rảnh rỗi bên hiên nhà, mẹ bày khung thêu và rổ vải vụn ra dạy bạn cách vá áo, thêu hoa văn và tính toán chi tiêu trong nhà.",
+    "choices": [
+      {
+        "label": "Chăm chú học thêu thùa và khâu vá tỉ mỉ",
+        "hint": "Thương tài +4 · Quan hệ +3 · Khéo tay",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Đường kim mũi chỉ của bạn ngày càng đều tăm tắp, hàng xóm ai cũng tấm tắc khen khéo tay.",
+            "effects": {
+              "craft_trade": 4,
+              "relationships": 3,
+              "add_traits": ["kheo_tay"],
+              "npc_affinity": [{ "relation": "parent", "delta": 8 }]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Xin mẹ dạy cách ghi chép sổ chợ và tính tiền đồng",
+        "hint": "Thương tài +3 · Học thức +2 · Hạnh phúc +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn nhanh chóng nắm được cách tính lời lỗ khi đi chợ phiên, sớm bộc lộ đầu óc tính toán sắc sảo.",
+            "effects": {
+              "craft_trade": 3,
+              "education": 2,
+              "happiness": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_female_boudoir_arts",
+    "stage": "childhood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Cầm Kỳ Thi Họa Nơi Khuê Các",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "gender": "female",
+      "origin_in": ["dia_chu", "quan_lai", "hoang_toc"],
+      "missing_flags": ["gia_toc_sa_sut", "that_sung_cung_dinh"]
+    },
+    "weight": {
+      "base": 48
+    },
+    "description": "Mẫu thân mời nữ sư về phủ dạy lễ nghi khuê các, đánh đàn cổ cầm, ngâm vịnh Đường thi và phép tắc ứng xử của bậc thiên kim tiểu thư.",
+    "choices": [
+      {
+        "label": "Dốc lòng rèn giũa thi thư và cầm họa cho thông tuệ",
+        "hint": "Học thức +5 · Thanh danh +3 · Hạnh phúc +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Tiếng đàn tao nhã cùng nét chữ thanh tú giúp bạn sớm nổi tiếng là bậc tài nữ trong phủ đệ.",
+            "effects": {
+              "education": 5,
+              "fame": 3,
+              "happiness": 3,
+              "add_interests": ["kinh_su"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Học thêm cách quản lý gia nhân và sổ sách điền sản từ mẫu thân",
+        "hint": "Thương tài +4 · Quan hệ +4 · Học thức +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn học được cách cai quản nội trạch đâu ra đấy, khiến mẫu thân vô cùng an tâm.",
+            "effects": {
+              "craft_trade": 4,
+              "relationships": 4,
+              "education": 2
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_child_female_princess_etiquette",
+    "stage": "childhood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Lời Dạy Của Mẫu Hậu Về Phận Công Chúa",
+    "conditions": {
+      "min_age": 8,
+      "max_age": 12,
+      "gender": "female",
+      "origin_in": ["hoang_toc"],
+      "has_living_npc_id": "npc_mother"
+    },
+    "weight": {
+      "base": 52
+    },
+    "description": "Trong vườn ngự uyển, mẫu thân nhẹ nhàng nắm tay bạn căn dặn: sinh ra nơi cửa cung, phận nữ nhi tôn thất tuy vinh hoa nhưng từng lời ăn tiếng nói đều gắn với thể diện Hoàng gia.",
+    "choices": [
+      {
+        "label": "Ghi lòng tạc dạ, rèn phong thái đoan trang uy nghiêm",
+        "hint": "Thanh danh +5 · Quan hệ +5 · Hạnh phúc +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Phong thái ung dung, chừng mực của bạn khiến các bậc trưởng bối trong cung hết lời khen ngợi.",
+            "effects": {
+              "fame": 5,
+              "relationships": 5,
+              "happiness": 2,
+              "npc_affinity": [{ "npc_id": "npc_mother", "delta": 12 }]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Thầm ước sau này tự do đọc sách, không chịu gò bó trong khuôn phép",
+        "hint": "Học thức +4 · Kiên cường · Hạnh phúc -2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Mẫu thân khẽ thở dài rồi mỉm cười xoa đầu bạn, ngầm gửi thêm nhiều sách hay vào tẩm cung.",
+            "effects": {
+              "education": 4,
+              "happiness": -2,
+              "add_traits": ["kien_cuong"],
+              "npc_affinity": [{ "npc_id": "npc_mother", "delta": 6 }]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

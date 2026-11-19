@@ -1370,8 +1370,15 @@ export function runAnnualAutoActions(inputState: ActiveLifeState): ActiveLifeSta
 }
 
 export function canMarrySpouse(state: ActiveLifeState): { ok: boolean; reason?: string } {
+  if (state.livelihoodStatus === 'prison' || state.flags.includes('dang_o_tu')) {
+    return { ok: false, reason: 'Đang trong lao ngục không thể thành hôn' };
+  }
+  if (state.flags.includes('bi_truy_na')) return { ok: false, reason: 'Đang bị truy nã không thể công khai thành hôn' };
   if (state.flags.includes('thai_giam')) return { ok: false, reason: 'Thân phận thái giám không thể thành hôn' };
   if (state.flags.includes('trong_hau_cung')) return { ok: false, reason: 'Đang mang thân phận hậu cung' };
+  if (state.flags.includes('nu_cai_nam_trang') && !state.flags.includes('nu_quan_dac_xa')) {
+    return { ok: false, reason: 'Đang cải nam trang ẩn thân phận, không thể công khai thành hôn' };
+  }
   const age = getAgeYears(state.profile.totalDays);
   if (age < 18) return { ok: false, reason: 'Cần đủ 18 tuổi' };
   const hasSpouse = state.npcs.some((n) => n.relation === 'spouse' && n.isAlive);
@@ -1420,7 +1427,11 @@ export function marrySpouse(inputState: ActiveLifeState): ActiveLifeState {
 }
 
 export function canHaveChild(state: ActiveLifeState): { ok: boolean; reason?: string } {
+  if (state.livelihoodStatus === 'prison' || state.flags.includes('dang_o_tu')) {
+    return { ok: false, reason: 'Đang trong lao ngục' };
+  }
   if (state.flags.includes('thai_giam')) return { ok: false, reason: 'Thân phận thái giám không thể sinh con' };
+  if (state.flags.includes('trong_hau_cung')) return { ok: false, reason: 'Đang mang thân phận hậu cung' };
   const age = getAgeYears(state.profile.totalDays);
   const hasSpouse = state.npcs.some((n) => n.relation === 'spouse' && n.isAlive);
   if (!hasSpouse) return { ok: false, reason: 'Cần thành hôn trước' };

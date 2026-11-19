@@ -1,0 +1,306 @@
+[
+  {
+    "id": "evt_female_royal_title_grant",
+    "stage": "adulthood",
+    "severity": "major",
+    "isMilestone": true,
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Lễ Cập Kê & Sắc Phong Phẩm Trật Công Chúa",
+    "conditions": {
+      "min_age": 16,
+      "gender": "female",
+      "origin_in": ["hoang_toc"],
+      "missing_flags": ["that_sung_cung_dinh", "gia_toc_sa_sut", "da_khai_phu_hoang_toc", "da_nhan_tuoc_vi"]
+    },
+    "weight": {
+      "base": 65,
+      "modifiers": [
+        { "conditions": { "min_age": 18 }, "addWeight": 25 }
+      ]
+    },
+    "description": "Đã đến tuổi cập kê theo lệ Hoàng thất. Bệ hạ hạ chỉ ban phẩm trật Công chúa / Quận chúa cùng trang ấp riêng để bạn an hưởng vinh hoa hoặc lưu lại cung đình phụng dưỡng trưởng bối.",
+    "choices": [
+      {
+        "label": "Nhận phong hiệu và khai phủ Công chúa riêng ngoài Tử Cấm Thành",
+        "hint": "Phủ đệ · Tiền +1.500đ · Thanh danh +14 · Hạnh phúc +14",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Chiếu chỉ ban xuống! Phủ Công chúa nguy nga được dựng lên chốn kinh kỳ, cung nữ thị vệ tấp nập hầu hạ.",
+            "effects": {
+              "set_housing": "phu_de",
+              "copper": 1500,
+              "fame": 14,
+              "happiness": 14,
+              "add_flags": ["da_khai_phu_hoang_toc"],
+              "milestone_title": "Sắc phong Công chúa, khai phủ riêng ngoài kinh thành"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Lưu lại nội đình nhận trọng bổng và điền trang hoa lợi",
+        "hint": "Tiền +3.200đ · Ruộng tư · Quan hệ +10",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bệ hạ khen bạn hiếu thuận, ban thưởng 3.200 đồng cùng khoảnh ruộng tư làm của hồi môn.",
+            "effects": {
+              "copper": 3200,
+              "add_property": "ruong_tu",
+              "fame": 10,
+              "relationships": 10,
+              "happiness": 10,
+              "add_flags": ["da_nhan_tuoc_vi"],
+              "milestone_title": "Nhận sắc phong phẩm trật và điền trang Hoàng thất"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_female_noble_flower_banquet",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Yến Tiệc Thưởng Hoa Của Giới Khuê Các",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 35,
+      "gender": "female",
+      "origin_in": ["dia_chu", "quan_lai", "hoang_toc"],
+      "missing_flags": ["gia_toc_sa_sut", "trong_hau_cung", "nu_cai_nam_trang"]
+    },
+    "weight": {
+      "base": 36
+    },
+    "description": "Phu nhân phủ Thượng thư mở tiệc thưởng mẫu đơn mùa xuân, mời các tiểu thư danh môn đến bình thơ, đấu trà và giao lưu kết bạn.",
+    "choices": [
+      {
+        "label": "Trổ tài vịnh hoa và pha trà đãi khách tao nhã",
+        "hint": "Thanh danh +8 · Quan hệ +8 · Học thức +3",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bài thơ thanh thoát của bạn được các vị phu nhân truyền tay nhau khen ngợi suốt buổi tiệc.",
+            "effects": {
+              "fame": 8,
+              "relationships": 8,
+              "education": 3,
+              "happiness": 6
+            }
+          }
+        ]
+      },
+      {
+        "label": "Tranh thủ kết nối với các phu nhân bàn chuyện buôn bán tơ lụa",
+        "hint": "Thương tài +5 · Tiền +300đ · Quan hệ +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nhờ khéo léo giới thiệu mối hàng quý, bạn thu được một khoản hoa hồng và mở rộng mối làm ăn.",
+            "effects": {
+              "craft_trade": 5,
+              "copper": 300,
+              "relationships": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_female_crossdress_crossroads",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Ngã Rẽ Nữ Nhi: An Phận Khuê Các Hay Cải Nam Trang Ứng Thí?",
+    "conditions": {
+      "min_age": 16,
+      "max_age": 26,
+      "gender": "female",
+      "min_education": 15,
+      "missing_flags": ["nu_cai_nam_trang", "nu_quan_dac_xa", "trong_hau_cung", "da_ket_hon", "bi_ep_lam_gia_no"]
+    },
+    "weight": {
+      "base": 42,
+      "modifiers": [
+        { "conditions": { "has_any_trait": ["tham_vong", "kien_cuong"] }, "addWeight": 25 },
+        { "conditions": { "min_education": 25 }, "addWeight": 15 }
+      ]
+    },
+    "description": "Đèn sách nhiều năm, học thức của bạn chẳng kém bậc nam nhi nào. Trước thềm kỳ thi lớn, bạn đứng trước lựa chọn táo bạo: thay áo nho sinh cải nam trang lên đường ứng thí, hay giữ nguyên thân phận nữ nhi tự lập đường riêng.",
+    "choices": [
+      {
+        "label": "Thay áo nho sinh, cải nam trang bước vào trường thi Khoa cử!",
+        "hint": "Bật Nữ cải nam trang · Mở đường Thi cử & Quan trường (có rủi ro bại lộ)",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn búi tóc cao, khoác áo dài nho sinh, lấy tên giả bước vào con đường khoa bảng đầy chông gai nhưng rực rỡ!",
+            "effects": {
+              "add_flags": ["nu_cai_nam_trang"],
+              "education": 4,
+              "happiness": 6,
+              "milestone_title": "Nữ cải nam trang bước vào trường thi"
+            }
+          }
+        ]
+      },
+      {
+        "label": "Giữ trọn thân phận nữ nhi, dốc sức vào y thuật và thương nghiệp",
+        "hint": "Thương tài +5 · Thanh danh +4 · Hạnh phúc +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn tin rằng không cần mượn áo nam nhi, nữ giới vẫn có thể tạo dựng danh tiếng bằng tài năng thực thụ.",
+            "effects": {
+              "craft_trade": 5,
+              "fame": 4,
+              "happiness": 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_female_merchant_workshop",
+    "stage": "adulthood",
+    "severity": "major",
+    "cooldownDays": 1440,
+    "title": "Nữ Chủ Nhân Tiệm Lụa & Dược Thảo",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 50,
+      "gender": "female",
+      "min_craft_trade": 15,
+      "origin_in": ["ban_nong", "thu_cong", "dia_chu"],
+      "missing_flags": ["trong_hau_cung", "bi_ep_lam_gia_no", "dang_lam_quan"]
+    },
+    "weight": {
+      "base": 32
+    },
+    "description": "Nhờ đôi tay khéo léo và uy tín giữ chữ tín, các bà nội trợ và tiểu thư trong phủ thường tìm đến bạn đặt may áo gấm hoặc mua thang thuốc dưỡng nhan.",
+    "choices": [
+      {
+        "label": "Nhận đơn hàng lớn, mở rộng mạng lưới bạn hàng nữ giới",
+        "hint": "Tiền +380đ · Thương tài +4 · Quan hệ +5",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Tiếng lành đồn xa, cửa hàng của bạn lúc nào cũng nườm nượp khách quen ghé ủng hộ.",
+            "effects": {
+              "copper": 380,
+              "craft_trade": 4,
+              "relationships": 5,
+              "fame": 4
+            }
+          }
+        ]
+      },
+      {
+        "label": "Dạy nghề miễn phí cho vài cô gái nghèo trong vùng",
+        "hint": "Thanh danh +8 · Quan hệ +8 · Hạnh phúc +6",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nhiều chị em có thêm nghề kiếm sống tự lập, ai nấy đều kính trọng gọi bạn là ân nhân.",
+            "effects": {
+              "fame": 8,
+              "relationships": 8,
+              "happiness": 6
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_female_household_steward",
+    "stage": "adulthood",
+    "severity": "minor",
+    "cooldownDays": 1440,
+    "title": "Thu Vén Gia Đạo & Cân Đối Sổ Sách",
+    "conditions": {
+      "min_age": 18,
+      "max_age": 55,
+      "gender": "female",
+      "missing_flags": ["trong_hau_cung", "bi_ep_lam_gia_no"]
+    },
+    "weight": {
+      "base": 30
+    },
+    "description": "Cuối mùa, giá gạo và vải vóc biến động thất thường. Bạn ngồi lại bên ngọn đèn dầu rà soát toàn bộ chi tiêu gia đình để tránh thất thoát.",
+    "choices": [
+      {
+        "label": "Khéo léo tích trữ lương thực và cắt giảm khoản chi thừa",
+        "hint": "Gạo +6 đấu · Tiền +140đ · Thương tài +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Nhờ bàn tay vun vén chu toàn của bạn, trong nhà luôn đủ đầy ấm êm dù thời cuộc biến động.",
+            "effects": {
+              "rice": 6,
+              "copper": 140,
+              "craft_trade": 2,
+              "happiness": 3
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt_female_late_marriage_pressure",
+    "stage": "adulthood",
+    "severity": "major",
+    "oncePerLife": true,
+    "cooldownDays": 99999,
+    "title": "Lời Bàn Tán Chuyện Chồng Con Tuổi Quá Lứa",
+    "conditions": {
+      "min_age": 24,
+      "max_age": 38,
+      "gender": "female",
+      "missing_flags": ["da_ket_hon", "trong_hau_cung", "nu_cai_nam_trang", "bi_ep_lam_gia_no"]
+    },
+    "weight": {
+      "base": 34
+    },
+    "description": "Bước qua tuổi 24 mà vẫn chưa yên bề gia thất, họ hàng và hàng xóm bắt đầu xì xào bàn tán, giục giã chuyện kén rể gả chồng.",
+    "choices": [
+      {
+        "label": "Cười nhạt bỏ ngoài tai, chuyên tâm giữ sự tự chủ của bản thân",
+        "hint": "Kiên cường · Hạnh phúc +3 · Thanh danh +2",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Bạn giữ vững lập trường sống cho riêng mình, mặc kệ những lời dị nghị quanh xóm.",
+            "effects": {
+              "happiness": 3,
+              "fame": 2,
+              "add_traits": ["kien_cuong"]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Nhờ người thân mai mối một người hiền lành môn đăng hộ đối",
+        "hint": "Quan hệ +8 · Hạnh phúc +4",
+        "outcomes": [
+          {
+            "weight": { "base": 100 },
+            "resultText": "Gia đình phấn khởi hẳn lên khi thấy bạn mở lòng đón nhận nhân duyên mới.",
+            "effects": {
+              "relationships": 8,
+              "happiness": 4
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
